@@ -255,351 +255,171 @@ module.exports = class Sessions {
       ╚═╝┴   ┴ ┴└─┘┘└┘┴ ┴┴─┘  ╚═╝┴└─└─┘┴ ┴ ┴ └─┘  ╩  ┴ ┴┴└─┴ ┴┴ ┴└─┘ ┴ └─┘┴└─└─┘
    */
     //
-    if (serverConfig.engine === 'VENOM') {
-      console.log("- Engine Venom\n\n\n");
-      const client = await venom.create(session.name, (base64Qrimg, asciiQR, attempts, urlCode) => {
-          //
-          console.log("- Saudação:", saudacao());
-          //
-          console.log('- Nome da sessão:', session.name);
-          //
-          session.state = "QRCODE";
-          //
-          console.log('- Número de tentativas de ler o qr-code:', attempts);
-          session.attempts = attempts;
-          //
-          console.log("- Captura do QR-Code");
-          //console.log(base64Qrimg);
-          session.qrcode = base64Qrimg;
-          //
-          console.log("- Captura do asciiQR");
-          // Registrar o QR no terminal
-          //console.log(asciiQR);
-          session.CodeasciiQR = asciiQR;
-          //
-          console.log("- Captura do urlCode");
-          // Registrar o QR no terminal
-          //console.log(urlCode);
-          session.CodeurlCode = urlCode;
-          //
-          var qrCode = base64Qrimg.replace('data:image/png;base64,', '');
-          const imageBuffer = Buffer.from(qrCode, 'base64');
-          //
-          /*
-          // Para escrevê-lo em outro lugar em um arquivo
-          //exportQR(base64Qrimg, './public/images/marketing-qr.png');
-          var matches = base64Qrimg.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/),
-              response = {};
-
-          if (matches.length !== 3) {
-              return new Error('- Invalid input string');
-          }
-          response.type = matches[1];
-          response.data = new Buffer.from(matches[2], 'base64');
-          
-          // Gerar o arquivo png
-          var imageBuffer = response;
-          require('fs').writeFile('./public/images/marketing-qr.png',
-              imageBuffer['data'],
-              'binary',
-              function(err) {
-                  if (err != null) {
-                      console.log(err);
-                  }
-              }
-          );
-          */
-        },
-        // statusFind
-        (statusSession, session_venom) => {
-          console.log('- Status da sessão:', statusSession);
-          //return isLogged || notLogged || browserClose || qrReadSuccess || qrReadFail || autocloseCalled || desconnectedMobile || deleteToken
-          //Create session wss return "serverClose" case server for close
-          console.log('- Session name: ', session_venom);
-          //
-          switch (statusSession) {
-            case 'isLogged':
-            case 'qrReadSuccess':
-            case 'inChat':
-            case 'chatsAvailable':
-              session.state = "CONNECTED";
-              session.status = statusSession
-              session.qrcode = null;
-              session.CodeasciiQR = null;
-              session.CodeurlCode = null;
-              break;
-            case 'autocloseCalled':
-            case 'browserClose':
-            case 'serverClose':
-            case 'autocloseCalled':
-              session.state = "CLOSED";
-              session.status = statusSession;
-              session.qrcode = null;
-              session.CodeasciiQR = null;
-              session.CodeurlCode = null;
-              break;
-            case 'qrReadFail':
-            case 'notLogged':
-            case 'deviceNotConnected':
-            case 'desconnectedMobile':
-            case 'deleteToken':
-              session.state = "DISCONNECTED";
-              session.status = statusSession;
-              break;
-            default:
-              session.state = "DISCONNECTED";
-              session.status = statusSession;
-          }
-        },
-        // options
-        {
-          folderNameToken: 'tokens', //folder name when saving tokens
-          mkdirFolderToken: '', //folder directory tokens, just inside the venom folder, example:  { mkdirFolderToken: '/node_modules', } //will save the tokens folder in the node_modules directory
-          headless: true, // Headless chrome
-          devtools: false, // Open devtools by default
-          useChrome: false, // If false will use Chromium instance
-          debug: false, // Opens a debug session
-          logQR: false, // Logs QR automatically in terminal
-          browserWS: '', // If u want to use browserWSEndpoint
-          browserArgs: [
-            '--log-level=3',
-            '--no-default-browser-check',
-            '--disable-site-isolation-trials',
-            '--no-experiments',
-            '--ignore-gpu-blacklist',
-            '--ignore-ssl-errors',
-            '--ignore-certificate-errors',
-            '--ignore-certificate-errors-spki-list',
-            '--disable-gpu',
-            '--disable-extensions',
-            '--disable-default-apps',
-            '--enable-features=NetworkService',
-            '--disable-setuid-sandbox',
-            '--no-sandbox',
-            // Extras
-            '--disable-webgl',
-            '--disable-threaded-animation',
-            '--disable-threaded-scrolling',
-            '--disable-in-process-stack-traces',
-            '--disable-histogram-customizer',
-            '--disable-gl-extensions',
-            '--disable-composited-antialiasing',
-            '--disable-canvas-aa',
-            '--disable-3d-apis',
-            '--disable-accelerated-2d-canvas',
-            '--disable-accelerated-jpeg-decoding',
-            '--disable-accelerated-mjpeg-decode',
-            '--disable-app-list-dismiss-on-blur',
-            '--disable-accelerated-video-decode',
-            //Outros
-            '--disable-web-security',
-            '--disable-web-security',
-            '--aggressive-cache-discard',
-            '--disable-cache',
-            '--disable-application-cache',
-            '--disable-offline-load-stale-cache',
-            '--disk-cache-size=0',
-            '--disable-background-networking',
-            '--disable-sync',
-            '--disable-translate',
-            '--hide-scrollbars',
-            '--metrics-recording-only',
-            '--mute-audio',
-            '--no-first-run',
-            '--safebrowsing-disable-auto-update'
-          ],
-          puppeteerOptions: {}, // Will be passed to puppeteer.launch
-          //executablePath: '/usr/bin/chromium-browser',
-          disableSpins: true, // Will disable Spinnies animation, useful for containers (docker) for a better log
-          disableWelcome: false, // Will disable the welcoming message which appears in the beginning
-          updatesLog: true, // Logs info updates automatically in terminal
-          autoClose: false, // Automatically closes the venom-bot only when scanning the QR code (default 60 seconds, if you want to turn it off, assign 0 or false)
-          createPathFileToken: true, //creates a folder when inserting an object in the client's browser, to work it is necessary to pass the parameters in the function create browserSessionToken
-        },
-        session.browserSessionToken,
-        // BrowserInstance
-        (browser, waPage) => {
-          console.log("Browser PID:", browser.process().pid);
-          session.process = browser.process().pid;
-          waPage.screenshot({
-            path: './screenshot/screenshot.png'
-          });
+    const client = await wppconnect.create(session.name, (base64Qrimg, asciiQR, attempts, urlCode) => {
+        //
+        console.log("- Saudação:", saudacao());
+        //
+        console.log('- Nome da sessão:', session.name);
+        //
+        session.state = "QRCODE";
+        //
+        console.log('- Número de tentativas de ler o qr-code:', attempts);
+        session.attempts = attempts;
+        //
+        console.log("- Captura do QR-Code");
+        //console.log(base64Qrimg);
+        session.qrcode = base64Qrimg;
+        //
+        console.log("- Captura do asciiQR");
+        // Registrar o QR no terminal
+        //console.log(asciiQR);
+        session.CodeasciiQR = asciiQR;
+        //
+        console.log("- Captura do urlCode");
+        // Registrar o QR no terminal
+        //console.log(urlCode);
+        session.CodeurlCode = urlCode;
+        //
+        var qrCode = base64Qrimg.replace('data:image/png;base64,', '');
+        const imageBuffer = Buffer.from(qrCode, 'base64');
+        //
+        /*
+        // Para escrevê-lo em outro lugar em um arquivo
+        //exportQR(base64Qrimg, './public/images/marketing-qr.png');
+        var matches = base64Qrimg.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/),
+            response = {};
+        //
+        if (matches.length !== 3) {
+            return new Error('- Invalid input string');
         }
-      );
-      var browserSessionToken = await client.getSessionTokenBrowser();
-      console.log("- Token venom:\n", JSON.parse(JSON.stringify(browserSessionToken)));
-      session.state = "CONNECTED";
-      return client;
-    }
-    //
-    if (serverConfig.engine === 'WPPCONNECT') {
-      console.log("- Engine WPPConnect\n\n\n");
-      const client = await wppconnect.create(session.name, (base64Qrimg, asciiQR, attempts, urlCode) => {
-          //
-          console.log("- Saudação:", saudacao());
-          //
-          console.log('- Nome da sessão:', session.name);
-          //
-          session.state = "QRCODE";
-          //
-          console.log('- Número de tentativas de ler o qr-code:', attempts);
-          session.attempts = attempts;
-          //
-          console.log("- Captura do QR-Code");
-          //console.log(base64Qrimg);
-          session.qrcode = base64Qrimg;
-          //
-          console.log("- Captura do asciiQR");
-          // Registrar o QR no terminal
-          //console.log(asciiQR);
-          session.CodeasciiQR = asciiQR;
-          //
-          console.log("- Captura do urlCode");
-          // Registrar o QR no terminal
-          //console.log(urlCode);
-          session.CodeurlCode = urlCode;
-          //
-          var qrCode = base64Qrimg.replace('data:image/png;base64,', '');
-          const imageBuffer = Buffer.from(qrCode, 'base64');
-          //
-          /*
-          // Para escrevê-lo em outro lugar em um arquivo
-          //exportQR(base64Qrimg, './public/images/marketing-qr.png');
-          var matches = base64Qrimg.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/),
-              response = {};
-          //
-          if (matches.length !== 3) {
-              return new Error('- Invalid input string');
-          }
-          //
-          response.type = matches[1];
-          response.data = new Buffer.from(matches[2], 'base64');
-          //
-          // Gerar o arquivo png
-          var imageBuffer = response;
-          require('fs').writeFile('./public/images/marketing-qr.png',
-              imageBuffer['data'],
-              'binary',
-              function(err) {
-                  if (err != null) {
-                      console.log(err);
-                  }
-              }
-          );
-          */
-        },
-        // statusFind
-        (statusSession, session_wppconnect) => {
-          console.log('- Status da sessão:', statusSession);
-          //return isLogged || notLogged || browserClose || qrReadSuccess || qrReadFail || autocloseCalled || desconnectedMobile || deleteToken
-          //Create session wss return "serverClose" case server for close
-          console.log('- Session name: ', session_wppconnect);
-          //
-          switch (statusSession) {
-            case 'isLogged':
-            case 'qrReadSuccess':
-            case 'inChat':
-            case 'chatsAvailable':
-              session.state = "CONNECTED";
-              session.status = statusSession
-              session.qrcode = null;
-              session.CodeasciiQR = null;
-              session.CodeurlCode = null;
-              break;
-            case 'autocloseCalled':
-            case 'browserClose':
-            case 'serverClose':
-            case 'autocloseCalled':
-              session.state = "CLOSED";
-              session.status = statusSession;
-              session.qrcode = null;
-              session.CodeasciiQR = null;
-              session.CodeurlCode = null;
-              break;
-            case 'qrReadFail':
-            case 'notLogged':
-            case 'deviceNotConnected':
-            case 'desconnectedMobile':
-            case 'deleteToken':
-              session.state = "DISCONNECTED";
-              session.status = statusSession;
-              break;
-            default:
-              session.state = "DISCONNECTED";
-              session.status = statusSession;
-          }
-        },
-        // options
-        {
-          folderNameToken: 'tokens', //folder name when saving tokens
-          mkdirFolderToken: '', //folder directory tokens, just inside the venom folder, example:  { mkdirFolderToken: '/node_modules', } //will save the tokens folder in the node_modules directory
-          headless: true, // Headless chrome
-          devtools: false, // Open devtools by default
-          useChrome: false, // If false will use Chromium instance
-          debug: false, // Opens a debug session
-          logQR: false, // Logs QR automatically in terminal
-          browserWS: '', // If u want to use browserWSEndpoint
-          browserArgs: [
-            '--log-level=3',
-            '--no-default-browser-check',
-            '--disable-site-isolation-trials',
-            '--no-experiments',
-            '--ignore-gpu-blacklist',
-            '--ignore-ssl-errors',
-            '--ignore-certificate-errors',
-            '--ignore-certificate-errors-spki-list',
-            '--disable-gpu',
-            '--disable-extensions',
-            '--disable-default-apps',
-            '--enable-features=NetworkService',
-            '--disable-setuid-sandbox',
-            '--no-sandbox',
-            // Extras
-            '--disable-webgl',
-            '--disable-threaded-animation',
-            '--disable-threaded-scrolling',
-            '--disable-in-process-stack-traces',
-            '--disable-histogram-customizer',
-            '--disable-gl-extensions',
-            '--disable-composited-antialiasing',
-            '--disable-canvas-aa',
-            '--disable-3d-apis',
-            '--disable-accelerated-2d-canvas',
-            '--disable-accelerated-jpeg-decoding',
-            '--disable-accelerated-mjpeg-decode',
-            '--disable-app-list-dismiss-on-blur',
-            '--disable-accelerated-video-decode',
-            // Outros
-            '--disable-web-security',
-            '--disable-web-security',
-            '--aggressive-cache-discard',
-            '--disable-cache',
-            '--disable-application-cache',
-            '--disable-offline-load-stale-cache',
-            '--disk-cache-size=0',
-            '--disable-background-networking',
-            '--disable-sync',
-            '--disable-translate',
-            '--hide-scrollbars',
-            '--metrics-recording-only',
-            '--mute-audio',
-            '--no-first-run',
-            '--safebrowsing-disable-auto-update'
-          ],
-          puppeteerOptions: {}, // Will be passed to puppeteer.launch
-          //executablePath: '/usr/bin/chromium-browser',
-          disableSpins: true, // Will disable Spinnies animation, useful for containers (docker) for a better log
-          disableWelcome: false, // Will disable the welcoming message which appears in the beginning
-          updatesLog: true, // Logs info updates automatically in terminal
-          autoClose: false, // Automatically closes the venom-bot only when scanning the QR code (default 60 seconds, if you want to turn it off, assign 0 or false)
-          createPathFileToken: true, //creates a folder when inserting an object in the client's browser, to work it is necessary to pass the parameters in the function create browserSessionToken
-        });
-      wppconnect.defaultLogger.level = 'silly';
-      var browserSessionToken = await client.getSessionTokenBrowser();
-      console.log("- Token WPPConnect:\n", JSON.parse(JSON.stringify(browserSessionToken)));
-      session.state = "CONNECTED";
-      return client;
-    }
+        //
+        response.type = matches[1];
+        response.data = new Buffer.from(matches[2], 'base64');
+        //
+        // Gerar o arquivo png
+        var imageBuffer = response;
+        require('fs').writeFile('./public/images/marketing-qr.png',
+            imageBuffer['data'],
+            'binary',
+            function(err) {
+                if (err != null) {
+                    console.log(err);
+                }
+            }
+        );
+        */
+      },
+      // statusFind
+      (statusSession, session_wppconnect) => {
+        console.log('- Status da sessão:', statusSession);
+        //return isLogged || notLogged || browserClose || qrReadSuccess || qrReadFail || autocloseCalled || desconnectedMobile || deleteToken
+        //Create session wss return "serverClose" case server for close
+        console.log('- Session name: ', session_wppconnect);
+        //
+        switch (statusSession) {
+          case 'isLogged':
+          case 'qrReadSuccess':
+          case 'inChat':
+          case 'chatsAvailable':
+            session.state = "CONNECTED";
+            session.status = statusSession
+            session.qrcode = null;
+            session.CodeasciiQR = null;
+            session.CodeurlCode = null;
+            break;
+          case 'autocloseCalled':
+          case 'browserClose':
+          case 'serverClose':
+          case 'autocloseCalled':
+            session.state = "CLOSED";
+            session.status = statusSession;
+            session.qrcode = null;
+            session.CodeasciiQR = null;
+            session.CodeurlCode = null;
+            break;
+          case 'qrReadFail':
+          case 'notLogged':
+          case 'deviceNotConnected':
+          case 'desconnectedMobile':
+          case 'deleteToken':
+            session.state = "DISCONNECTED";
+            session.status = statusSession;
+            break;
+          default:
+            session.state = "DISCONNECTED";
+            session.status = statusSession;
+        }
+      },
+      // options
+      {
+        folderNameToken: 'tokens', //folder name when saving tokens
+        mkdirFolderToken: '', //folder directory tokens, just inside the venom folder, example:  { mkdirFolderToken: '/node_modules', } //will save the tokens folder in the node_modules directory
+        headless: true, // Headless chrome
+        devtools: false, // Open devtools by default
+        useChrome: false, // If false will use Chromium instance
+        debug: false, // Opens a debug session
+        logQR: false, // Logs QR automatically in terminal
+        browserWS: '', // If u want to use browserWSEndpoint
+        browserArgs: [
+          '--log-level=3',
+          '--no-default-browser-check',
+          '--disable-site-isolation-trials',
+          '--no-experiments',
+          '--ignore-gpu-blacklist',
+          '--ignore-ssl-errors',
+          '--ignore-certificate-errors',
+          '--ignore-certificate-errors-spki-list',
+          '--disable-gpu',
+          '--disable-extensions',
+          '--disable-default-apps',
+          '--enable-features=NetworkService',
+          '--disable-setuid-sandbox',
+          '--no-sandbox',
+          // Extras
+          '--disable-webgl',
+          '--disable-threaded-animation',
+          '--disable-threaded-scrolling',
+          '--disable-in-process-stack-traces',
+          '--disable-histogram-customizer',
+          '--disable-gl-extensions',
+          '--disable-composited-antialiasing',
+          '--disable-canvas-aa',
+          '--disable-3d-apis',
+          '--disable-accelerated-2d-canvas',
+          '--disable-accelerated-jpeg-decoding',
+          '--disable-accelerated-mjpeg-decode',
+          '--disable-app-list-dismiss-on-blur',
+          '--disable-accelerated-video-decode',
+          // Outros
+          '--disable-web-security',
+          '--disable-web-security',
+          '--aggressive-cache-discard',
+          '--disable-cache',
+          '--disable-application-cache',
+          '--disable-offline-load-stale-cache',
+          '--disk-cache-size=0',
+          '--disable-background-networking',
+          '--disable-sync',
+          '--disable-translate',
+          '--hide-scrollbars',
+          '--metrics-recording-only',
+          '--mute-audio',
+          '--no-first-run',
+          '--safebrowsing-disable-auto-update'
+        ],
+        puppeteerOptions: {}, // Will be passed to puppeteer.launch
+        //executablePath: '/usr/bin/chromium-browser',
+        disableSpins: true, // Will disable Spinnies animation, useful for containers (docker) for a better log
+        disableWelcome: false, // Will disable the welcoming message which appears in the beginning
+        updatesLog: true, // Logs info updates automatically in terminal
+        autoClose: false, // Automatically closes the venom-bot only when scanning the QR code (default 60 seconds, if you want to turn it off, assign 0 or false)
+        createPathFileToken: true, //creates a folder when inserting an object in the client's browser, to work it is necessary to pass the parameters in the function create browserSessionToken
+      });
+    wppconnect.defaultLogger.level = 'silly';
+    var browserSessionToken = await client.getSessionTokenBrowser();
+    console.log("- Token WPPConnect:\n", JSON.parse(JSON.stringify(browserSessionToken)));
+    session.state = "CONNECTED";
+    return client;
   } //initSession
   //
   // ------------------------------------------------------------------------------------------------//
