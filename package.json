@@ -1,0 +1,73 @@
+{
+  "name": "mywhats-api-node-wppconnect",
+  "version": "1.0.0",
+  "description": "Este projeto usa como base o Venom e/ou WPPConnect, um navegador virtual sem interface gráfica que abre o whatsapp web e executa todos os comandos via código possibilitando assim a automação de todas as funções.",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Erro: nenhum teste especificado\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AlanMartines/mywhats-api-node-wppconnect.git"
+  },
+  "keywords": [
+    "whatsapp",
+    "machine learning",
+    "ia",
+    "javascript",
+    "bot",
+    "chat bot",
+    "typescript",
+    "automatization",
+    "puppeteer"
+  ],
+  "author": "Alan Martines <alancpmartines@hotmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AlanMartines/mywhats-api-node-wppconnect/issues"
+  },
+  "homepage": "https://github.com/AlanMartines/mywhats-api-node-wppconnect#readme",
+  "dependencies": {
+    "@wppconnect-team/wppconnect": "^1.3.0",
+    "atob": "^2.1.2",
+    "axios": "^0.21.1",
+    "bcryptjs": "^2.4.3",
+    "boxen": "^5.0.0",
+    "chalk": "^4.0.0",
+    "chrome-launcher": "^0.13.1",
+    "cookie-session": "^1.4.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-handlebars": "^5.3.0",
+    "fsevents": "^2.3.1",
+    "futoin-hkdf": "^1.3.2",
+    "http": "0.0.1-security",
+    "https": "^1.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "latest-version": "^5.1.0",
+    "mime-types": "^2.1.28",
+    "mongoose": "^5.12.3",
+    "multer": "^1.4.2",
+    "nodemailer": "^6.5.0",
+    "nodemailer-express-handlebars": "^4.0.0",
+    "ora": "^5.4.0",
+    "p-iteration": "^1.1.8",
+    "path": "^0.12.7",
+    "puppeteer": "^5.5.0",
+    "puppeteer-extra": "^3.1.16",
+    "puppeteer-extra-plugin-stealth": "^2.6.6",
+    "qrcode-terminal": "^0.12.0",
+    "sharp": "^0.28.0",
+    "socket.io": "^4.0.1",
+    "spinnies": "^0.5.1",
+    "tree-kill": "^1.2.2",
+    "winston": "^3.3.3",
+    "yoo-hoo": "^1.2.0"
+  },
+  "optionalDependencies": {
+    "fsevents": "^2.3.2"
+  }
+}

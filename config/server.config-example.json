@@ -1,0 +1,19 @@
+{
+    "_comment_engine": "Configuração da engine VENOM ou WPPCONNECT",
+    "engine": "VENOM",
+    "_comment_host": "Configuração do host",
+    "host": "0.0.0.0",
+    "port": "9000",
+    "https": false,
+    "_comment_jsonbin": "Configuração do jsonbin",
+    "jsonbinio_bin_id": null,
+    "jsonbinio_secret_key": null,
+    "_comment_jwt": "Configuração do jwt",
+    "jwt_secret": "09f26e402586e2faa8da4c98a35f1b20d6b033c60",
+    "_comment_mongodb": "Configuração do mongo db",
+    "local_mongo_conn_url": "mongodb://localhost:27017/",
+    "mongo_db_name": "mywhats-api-node",
+    "_comment_ssl": "Configuração dos certificados key e csr",
+    "ssl_key_patch": "sslcert/server.key",
+    "ssl_csr_patch": "sslcert/server.crt"
+  }

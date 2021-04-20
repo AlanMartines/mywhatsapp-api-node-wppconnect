@@ -1,0 +1,3305 @@
+//
+// Configuração dos módulos
+const os = require('os');
+const {
+  forEach
+} = require('p-iteration');
+const fs = require('fs');
+const path = require('path');
+const express = require("express");
+const multer = require('multer');
+const upload = multer({})
+const router = express.Router();
+const Sessions = require("../sessions.js");
+const serverConfig = require("../config/server.config.json");
+//
+// ------------------------------------------------------------------------------------------------//
+//
+function emBase64(string) {
+  console.log("- Base64 Encode");
+  let buff = new Buffer.from(string);
+  let base64data = buff.toString('base64');
+  return base64data;
+}
+//
+function deBase64(string) {
+  console.log("- Base64 Decode");
+  let buff = new Buffer.from(string, 'base64');
+  let text = buff.toString('ascii');
+  return text;
+}
+//
+function sleep(ms) {
+  console.log("- Sleep:", ms + " ms");
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
+//
+// ------------------------------------------------------------------------------------------------//
+//
+function soNumeros(string) {
+  var numbers = string.replace(/[^0-9]/g, '');
+  return numbers;
+}
+//
+function validPhone(phone) {
+  // A função abaixo demonstra o uso de uma expressão regular que identifica, de forma simples, telefones válidos no Brasil.
+  // Nenhum DDD iniciado por 0 é aceito, e nenhum número de telefone pode iniciar com 0 ou 1.
+  // Exemplos válidos: +55 (11) 98888-8888 / 9999-9999 / 21 98888-8888 / 5511988888888
+  //
+  var isValid = /^(?:(?:\+|00)?(55)\s?)?(?:\(?([1-9][0-9])\)?\s?)?(?:((?:9\d|[2-9])\d{3})\-?(\d{4}))$/
+  return isValid.test(phone);
+}
+//
+// ------------------------------------------------------------------------------------------------//
+//
+String.prototype.toHHMMSS = function() {
+  var sec_num = parseInt(this, 10); // não se esqueça do segundo parâmetro
+
+  var hours = Math.floor(sec_num / 3600);
+  var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+  var seconds = sec_num - (hours * 3600) - (minutes * 60);
+
+  if (hours < 10) {
+    hours = "0" + hours;
+  }
+  if (minutes < 10) {
+    minutes = "0" + minutes;
+  }
+  if (seconds < 10) {
+    seconds = "0" + seconds;
+  }
+  var time = hours + ':' + minutes + ':' + seconds;
+  return time;
+}
+//
+// ------------------------------------------------------------------------------------------------//
+//
+const convertBytes = function(bytes) {
+  const sizes = ["Bytes", "KB", "MB", "GB", "TB"]
+
+  if (bytes == 0) {
+    return "n/a"
+  }
+
+  const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)))
+
+  if (i == 0) {
+    return bytes + " " + sizes[i]
+  }
+
+  return (bytes / Math.pow(1024, i)).toFixed(1) + " " + sizes[i]
+}
+//
+// ------------------------------------------------------------------------------------------------//
+//
+/*
+╔═╗┌─┐┌┬┐┌┬┐┬┌┐┌┌─┐  ┌─┐┌┬┐┌─┐┬─┐┌┬┐┌─┐┌┬┐
+║ ╦├┤  │  │ │││││ ┬  └─┐ │ ├─┤├┬┘ │ ├┤  ││
+╚═╝└─┘ ┴  ┴ ┴┘└┘└─┘  └─┘ ┴ ┴ ┴┴└─ ┴ └─┘─┴┘
+*/
+//
+router.post("/Start", upload.none(''), async (req, res, next) => {
+  //
+  if (serverConfig.jsonbinio_secret_key) {
+    var session = await Sessions.Start(req.body.sessionName, {
+      jsonbinio_secret_key: serverConfig.jsonbinio_secret_key,
+      jsonbinio_bin_id: serverConfig.jsonbinio_bin_id
+    });
+  } else {
+    var session = await Sessions.Start(req.body.SessionName);
+  }
+  //console.log(session);
+  if (["CONNECTED"].includes(session.state)) {
+    res.status(200).json({
+      result: "success",
+      state: session.state,
+      status: session.status,
+      message: "Sistema iniciado"
+    });
+  } else if (["STARTING"].includes(session.state)) {
+    res.status(200).json({
+      result: 'info',
+      state: session.state,
+      status: session.status,
+      message: "Sistema iniciando"
+    });
+  } else if (["QRCODE"].includes(session.state)) {
+    res.status(200).json({
+      result: 'warning',
+      state: session.state,
+      status: session.status,
+      message: "Sistema aguardando leitura do QR-Code"
+    });
+  } else if (["DISCONNECTED"].includes(session.state)) {
+    res.status(200).json({
+      result: 'warning',
+      state: session.state,
+      status: session.status,
+      message: "Sistema não desconectado"
+    });
+  } else {
+    res.status(200).json({
+      result: "error",
+      state: session.state,
+      status: session.status,
+      message: "Sistema Off-line"
+    });
+  }
+  //
+});
+//
+// ------------------------------------------------------------------------------------------------//
+//
+// Gera o QR-Code
+router.post("/QRCode", upload.none(''), async (req, res, next) => {
+  console.log("- getQRCode");
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var session = Sessions.getSession(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      res.status(200).json({
+        result: "success",
+        state: session.state,
+        status: session.status,
+        message: "Sistema iniciado"
+      });
+      //
+      break;
+    case 'notLogged':
+    case 'qrReadFail':
+    case 'deviceNotConnected':
+    case 'desconnectedMobile':
+    case 'deleteToken':
+      //
+      if (req.body.View === true) {
+        var xSession = session.qrcode;
+        const imageBuffer = Buffer.from(xSession.replace('data:image/png;base64,', ''), 'base64');
+        res.writeHead(200, {
+          'Content-Type': 'image/png',
+          'Content-Length': imageBuffer.length
+        });
+        res.end(imageBuffer);
+      } else {
+        var getQRCode = {
+          result: "success",
+          state: session.state,
+          status: session.status,
+          qrcode: session.qrcode,
+          message: "Aguardando leitura do QR-Code"
+        };
+      }
+      res.status(200).json({
+        getQRCode
+      });
+      //
+      break;
+    case 'autocloseCalled':
+      var getQRCode = {
+        result: 'error',
+        state: session.state,
+        status: session.status,
+        message: 'Navegador interno foi fechado'
+      };
+      break;
+    case 'browserClose':
+      var getQRCode = {
+        result: 'error',
+        state: session.state,
+        status: session.status,
+        message: 'Navegador interno foi fechado'
+      };
+      break;
+    case 'serverWssNotConnected':
+      var getQRCode = {
+        result: 'error',
+        state: session.state,
+        status: session.status,
+        message: 'O endereço wss não foi encontrado'
+      };
+      break;
+    case 'noOpenBrowser':
+      var getQRCode = {
+        result: 'error',
+        state: session.state,
+        status: session.status,
+        message: 'Não foi encontrado no navegador ou falta algum comando no args'
+      };
+      break;
+    default:
+      //
+      res.status(400).json({
+        "getQRCode": sessionStatus
+      });
+      //
+  }
+  //
+});
+//
+// ------------------------------------------------------------------------------------------------//
+//
+router.post("/getBase64Encoding", upload.none(''), async (req, res, next) => {
+  var getBase64Encoding = {
+    SessionName: req.body.SessionName,
+    phonefull: soNumeros(req.body.phonefull),
+    token: emBase64(soNumeros(req.body.phonefull))
+  };
+  //
+  res.status(200).json({
+    getBase64Encoding
+  });
+}); //getBase64Encoding
+//
+router.post("/getBase64Decoding", upload.none(''), async (req, res, next) => {
+  //
+  var getBase64Decoding = {
+    SessionName: req.body.SessionName,
+    token: req.body.token,
+    phonefull: deBase64(req.body.token)
+  };
+  //
+  res.status(200).json({
+    getBase64Decoding
+  });
+}); //getBase64Decoding
+//
+// ------------------------------------------------------------------------------------------------//
+//
+router.post("/getSessions", upload.none(''), async (req, res, next) => {
+  var getSessions = await Sessions.getSessions();
+  //
+  //console.log(result);
+  res.status(200).json({
+    getSessions
+  });
+}); //getSessions
+//
+// ------------------------------------------------------------------------------------------------//
+//
+router.post("/Status", upload.none(''), async (req, res, next) => {
+  var Status = await Sessions.Status(
+    req.body.SessionName
+  );
+  res.status(200).json({
+    Status
+  });
+}); //Status
+//
+// ------------------------------------------------------------------------------------------------//
+//
+router.post("/sendHook", upload.none(''), async (req, res, next) => {
+  var sendHook = await Sessions.saveHook(
+    req.body.SessionName,
+    req.body.hook
+  );
+  res.status(200).json({
+    sendHook
+  });
+}); //sendHook
+//
+// ------------------------------------------------------------------------------------------------//
+//
+// Dados de memoria e uptime
+router.post("/getHardWare", upload.none(''), async (req, res, next) => {
+  console.log("- getHardWare");
+  //
+  var getHardWare = {
+    "noformat": {
+      uptime: os.uptime(),
+      freemem: os.freemem(),
+      memusage: (os.totalmem() - os.freemem()),
+      totalmem: os.totalmem(),
+      freeusagemem: `${Math.round((os.freemem()*100)/os.totalmem()).toFixed(0)}`,
+      usagemem: `${Math.round(((os.totalmem()-os.freemem())*100)/os.totalmem()).toFixed(0)}`
+    },
+    "format": {
+      uptime: (os.uptime() + "").toHHMMSS(),
+      freemem: convertBytes(os.freemem()),
+      memusage: convertBytes((os.totalmem() - os.freemem())),
+      totalmem: convertBytes(os.totalmem()),
+      freeusagemem: `${Math.round((os.freemem()*100)/os.totalmem()).toFixed(0)} %`,
+      usagemem: `${Math.round(((os.totalmem()-os.freemem())*100)/os.totalmem()).toFixed(0)} %`
+    }
+  };
+  //console.log(result);
+  res.status(200).json({
+    getHardWare
+  });
+}); //getHardWare
+//
+// ------------------------------------------------------------------------------------------------//
+//
+// Fecha a sessão
+router.post("/Close", upload.none(''), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var closeSession = await Sessions.closeSession(req.body.SessionName);
+      res.status(200).json(closeSession);
+      break;
+    default:
+      res.status(400).json({
+        "closeSession": sessionStatus
+      });
+  }
+}); //Close
+//
+// ------------------------------------------------------------------------------------------------//
+//
+// Desconecta do whatsapp web
+router.post("/Logout", upload.none(''), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      if (typeof(Sessions.options) !== "undefined") {
+        //
+        if (Sessions.options.jsonbinio_secret_key !== undefined) { //se informou secret key pra salvar na nuvem
+          console.log("- Limpando token JSONBin");
+          //salva dados do token da sessão na nuvem
+          var data = JSON.stringify({
+            "nada": "nada"
+          });
+          var config = {
+            method: 'put',
+            url: 'https://api.jsonbin.io/b/' + Sessions.options.jsonbinio_bin_id,
+            headers: {
+              'Content-Type': 'application/json',
+              'secret-key': Sessions.options.jsonbinio_secret_key,
+              'versioning': 'false'
+            },
+            data: data
+          };
+          await axios(config)
+            .then(function(response) {
+              console.log("- Response JSONBin:", JSON.parse(JSON.stringify(response.data)));
+            })
+            .catch(function(error) {
+              console.log(error);
+            });
+        }
+      }
+      //
+      var LogoutSession = await Sessions.LogoutSession(req.body.SessionName);
+      res.status(200).json({
+        LogoutSession
+      });
+      break;
+    default:
+      res.status(400).json({
+        "LogoutSession": sessionStatus
+      });
+  }
+}); //Close
+//
+/*
+╔╗ ┌─┐┌─┐┬┌─┐  ╔═╗┬ ┬┌┐┌┌─┐┌┬┐┬┌─┐┌┐┌┌─┐  ┬ ┬┌─┐┌─┐┌─┐┌─┐
+╠╩╗├─┤└─┐││    ╠╣ │ │││││   │ ││ ││││└─┐  │ │└─┐├─┤│ ┬├┤ 
+╚═╝┴ ┴└─┘┴└─┘  ╚  └─┘┘└┘└─┘ ┴ ┴└─┘┘└┘└─┘  └─┘└─┘┴ ┴└─┘└─┘
+*/
+//
+//Eviar menssagem de voz
+router.post("/sendVoice", upload.single('audio_data'), async (req, res, next) => {
+  //
+  //Eviar menssagem de voz
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      //
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName + '-'));
+      var filePath = path.join(folderName, req.file.originalname);
+      fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
+      console.log("- File", filePath);
+      //
+      var checkNumberStatus = await Sessions.checkNumberStatus(
+        req.body.SessionName,
+        soNumeros(req.body.phonefull) + '@c.us'
+      );
+      //
+      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+        //
+        var sendVoice = await Sessions.sendVoice(
+          req.body.SessionName,
+          soNumeros(checkNumberStatus.number) + '@c.us',
+          filePath
+        );
+        //
+      } else {
+        var sendVoice = checkNumberStatus;
+      }
+      //
+      res.status(200).json({
+        sendVoice
+      });
+      break;
+    default:
+      res.status(400).json({
+        "sendVoice": sessionStatus
+      });
+  }
+}); //sendVoice
+//
+// ------------------------------------------------------------------------------------------------//
+//
+//Eviar menssagem de voz
+router.post("/sendVoiceBase64", upload.single('audio_data'), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var checkNumberStatus = await Sessions.checkNumberStatus(
+        req.body.SessionName,
+        soNumeros(req.body.phonefull) + '@c.us'
+      );
+      //
+      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+        //
+        var sendVoiceBase64 = await Sessions.sendVoiceBase64(
+          req.body.SessionName,
+          soNumeros(checkNumberStatus.number) + '@c.us',
+          req.body.base64MP3,
+          req.body.mimetype
+        );
+        //
+      } else {
+        var sendVoiceBase64 = checkNumberStatus;
+      }
+      //
+      res.status(200).json({
+        sendVoiceBase64
+      });
+      break;
+    default:
+      res.status(400).json({
+        "sendVoiceBase64": sessionStatus
+      });
+  }
+}); //sendVoice
+//
+// ------------------------------------------------------------------------------------------------//
+//
+//Eviar menssagem de voz
+router.post("/sendVoiceFileBase64", upload.single('audio_data'), async (req, res, next) => {
+  //
+  //Eviar menssagem de voz
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var checkNumberStatus = await Sessions.checkNumberStatus(
+        req.body.SessionName,
+        soNumeros(req.body.phonefull) + '@c.us'
+      );
+      //
+      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+        //
+        var sendVoiceBase64 = await Sessions.sendVoiceBase64(
+          req.body.SessionName,
+          soNumeros(checkNumberStatus.number) + '@c.us',
+          req.file.buffer.toString('base64'),
+          req.file.mimetype
+        );
+        //
+      } else {
+        var sendVoiceBase64 = checkNumberStatus;
+      }
+      //
+      //console.log(result);
+      res.status(200).json({
+        sendVoiceBase64
+      });
+      break;
+    default:
+      res.status(400).json({
+        "sendVoiceBase64": sessionStatus
+      });
+  }
+}); //sendVoice
+//
+// ------------------------------------------------------------------------------------------------//
+//
+// Enviar Contato
+router.post("/sendContactVcard", upload.none(''), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      //
+      var jsonStr = '{"sendResult":[]}';
+      var obj = JSON.parse(jsonStr);
+      //
+      var checkNumberStatus = await Sessions.checkNumberStatus(
+        req.body.SessionName,
+        soNumeros(req.body.phonefull) + '@c.us'
+      );
+      //
+      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+        //
+        var sendContactVcard = await Sessions.sendContactVcard(
+          req.body.SessionName,
+          soNumeros(checkNumberStatus.number) + '@c.us',
+          soNumeros(req.body.contact) + '@c.us',
+          req.body.namecontact
+        );
+        //
+      } else {
+        var sendContactVcard = checkNumberStatus;
+      }
+      //
+      //console.log(result);
+      res.status(200).json({
+        sendContactVcard
+      });
+      break;
+    default:
+      res.status(400).json({
+        "sendContactVcard": sessionStatus
+      });
+  }
+}); //sendContactVcard
+//
+// ------------------------------------------------------------------------------------------------//
+//
+// Enviar Lista de Contato
+router.post("/sendContactVcardList", upload.single('contactlist'), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      //
+      var jsonStr = '{"sendContactVcardList":[]}';
+      var obj = JSON.parse(jsonStr);
+      //
+      var checkNumberStatus = await Sessions.checkNumberStatus(
+        req.body.SessionName,
+        soNumeros(req.body.phonefull) + '@c.us'
+      );
+      //
+      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+        //
+        var folderName = fs.mkdtempSync(path.join(os.tmpdir(), req.body.SessionName + '-'));
+        var filePath = path.join(folderName, req.file.originalname);
+        fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
+        console.log("- File:", filePath);
+        //
+        var arrayNumbers = fs.readFileSync(filePath, 'utf-8').toString().split(/\r?\n/);
+        //
+        var contactlistValid = [];
+        var contactlistInvalid = [];
+        //
+        for (var i in arrayNumbers) {
+          //console.log(arrayNumbers[i]);
+          var numero = soNumeros(arrayNumbers[i]);
+          //
+          if (numero.length !== 0) {
+            //
+            if (validPhone(numero) === true) {
+              contactlistValid.push(numero + '@c.us');
+            } else {
+              contactlistInvalid.push(numero + '@c.us');
+            }
+            //
+          }
+          await sleep(1000);
+        }
+        //
+        var sendContactVcardList = await Sessions.sendContactVcardList(
+          req.body.SessionName,
+          soNumeros(checkNumberStatus.number) + '@c.us',
+          contactlistValid,
+          contactlistInvalid
+        );
+        //
+      } else {
+        var sendContactVcardList = sessionStatus;
+      }
+      //
+      obj['sendContactVcardList'].push(sendContactVcardList);
+      //
+      jsonStr = JSON.stringify(obj);
+      //console.log(JSON.parse(jsonStr));
+      var sendContactVcardList = JSON.parse(jsonStr);
+      //
+      //console.log(result);
+      res.status(200).json(sendContactVcardList);
+      break;
+    default:
+      res.status(400).json({
+        "sendContactVcardList": sessionStatus
+      });
+  }
+}); //sendContactVcardList
+//
+// ------------------------------------------------------------------------------------------------//
+//
+//Enviar Texto
+router.post("/sendText", upload.none(''), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var checkNumberStatus = await Sessions.checkNumberStatus(
+        req.body.SessionName,
+        soNumeros(req.body.phonefull) + '@c.us'
+      );
+      //
+      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+        //
+        var sendText = await Sessions.sendText(
+          req.body.SessionName,
+          soNumeros(checkNumberStatus.number) + '@c.us',
+          req.body.msg
+        );
+        //
+      } else {
+        var sendText = checkNumberStatus;
+      }
+      //
+      //console.log(result);
+      res.status(200).json({
+        sendText
+      });
+      break;
+    default:
+      res.status(400).json({
+        "sendText": sessionStatus
+      });
+  }
+}); //sendText
+//
+// ------------------------------------------------------------------------------------------------//
+//
+//Enviar Texto no stores
+router.post("/sendTextToStorie", async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var sendTextToStorie = await Sessions.sendTextToStorie(
+        req.body.SessionName,
+        req.body.text
+      );
+      //
+      //console.log(result);
+      res.status(200).json(sendTextToStorie);
+      break;
+    default:
+      res.status(400).json({
+        "sendTextToStorie": sessionStatus
+      });
+  }
+}); //sendTextToStorie
+//
+// ------------------------------------------------------------------------------------------------//
+//
+//Enviar Texto em Massa
+router.post("/sendTextMassa", upload.single('phonefull'), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      //
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName + '-'));
+      var filePath = path.join(folderName, req.file.originalname);
+      fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
+      console.log("- File:", filePath);
+      //
+      var jsonStr = '{"sendTextMassa":[]}';
+      var obj = JSON.parse(jsonStr);
+      //
+      var arrayNumbers = fs.readFileSync(filePath, 'utf-8').toString().split(/\r?\n/);
+      for (var i in arrayNumbers) {
+        //console.log(arrayNumbers[i]);
+        var numero = soNumeros(arrayNumbers[i]);
+        //
+        if (numero.length !== 0) {
+          //
+          var checkNumberStatus = await Sessions.checkNumberStatus(
+            req.body.SessionName,
+            soNumeros(numero) + '@c.us'
+          );
+          //
+          if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+            //
+            var sendTextMassa = await Sessions.sendText(
+              req.body.SessionName,
+              soNumeros(checkNumberStatus.number) + '@c.us',
+              req.body.msg
+            );
+            //
+          } else {
+            var sendTextMassa = checkNumberStatus;
+          }
+          //
+          //return sendResult;
+          //
+          obj['sendTextMassa'].push(sendTextMassa);
+        }
+        await sleep(1000);
+      }
+      //
+      jsonStr = JSON.stringify(obj);
+      //console.log(JSON.parse(jsonStr));
+      var sendTextMassa = JSON.parse(jsonStr);
+      //
+      //console.log(result);
+      res.status(200).json(sendTextMassa);
+      break;
+    default:
+      res.status(400).json({
+        "sendTextMassa": sessionStatus
+      });
+  }
+}); //sendText
+//
+// ------------------------------------------------------------------------------------------------//
+//
+//Enviar Texto em Grupo
+router.post("/sendTextGrupo", upload.none(''), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var sendTextGrupo = await Sessions.sendText(
+        req.body.SessionName,
+        req.body.GroupId + '@g.us',
+        req.body.msg
+      );
+      //
+      //console.log(result);
+      res.status(200).json({
+        sendTextGrupo
+      });
+      break;
+    default:
+      res.status(400).json({
+        "sendTextGrupo": sessionStatus
+      });
+  }
+}); //sendTextGrupo
+//
+// ------------------------------------------------------------------------------------------------//
+//
+//Enviar localização
+router.post("/sendLocation", upload.none(''), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var checkNumberStatus = await Sessions.checkNumberStatus(
+        req.body.SessionName,
+        soNumeros(req.body.phonefull) + '@c.us'
+      );
+      //
+      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+        //
+        var sendLocation = await Sessions.sendLocation(
+          req.body.SessionName,
+          soNumeros(checkNumberStatus.number) + '@c.us',
+          req.body.lat,
+          req.body.long,
+          req.body.local
+        );
+        //
+      } else {
+        var sendLocation = checkNumberStatus;
+      }
+      //
+      //console.log(result);
+      res.status(200).json({
+        sendLocation
+      });
+      break;
+    default:
+      res.status(400).json({
+        "sendLocation": sessionStatus
+      });
+  }
+}); //sendLocation
+//
+// ------------------------------------------------------------------------------------------------//
+//
+//Enviar links com preview
+router.post("/sendLinkPreview", upload.none(''), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var checkNumberStatus = await Sessions.checkNumberStatus(
+        req.body.SessionName,
+        soNumeros(req.body.phonefull) + '@c.us'
+      );
+      //
+      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+        //
+        var sendLinkPreview = await Sessions.sendLinkPreview(
+          req.body.SessionName,
+          soNumeros(checkNumberStatus.number) + '@c.us',
+          req.body.link,
+          req.body.detail
+        );
+        //
+      } else {
+        var sendLinkPreview = checkNumberStatus;
+      }
+      //
+      //console.log(result);
+      res.status(200).json({
+        sendLinkPreview
+      });
+      break;
+    default:
+      res.status(400).json({
+        "sendLinkPreview": sessionStatus
+      });
+  }
+}); //sendLinkPreview
+//
+// ------------------------------------------------------------------------------------------------//
+//
+//Enviar Imagem
+router.post("/sendImage", upload.single('fileimg'), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName + '-'));
+      var filePath = path.join(folderName, req.file.originalname);
+      fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
+      console.log("- File", filePath);
+      //
+      var checkNumberStatus = await Sessions.checkNumberStatus(
+        req.body.SessionName,
+        soNumeros(req.body.phonefull) + '@c.us'
+      );
+      //
+      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+        //
+        var sendImage = await Sessions.sendImage(
+          req.body.SessionName,
+          soNumeros(checkNumberStatus.number) + '@c.us',
+          filePath,
+          req.file.originalname,
+          req.body.caption
+        );
+        //
+      } else {
+        var sendImage = checkNumberStatus;
+      }
+      //
+      //console.log(result);
+      res.status(200).json({
+        sendImage
+      });
+      break;
+    default:
+      res.status(400).json({
+        "sendImage": sessionStatus
+      });
+  }
+}); //sendImage
+//
+// ------------------------------------------------------------------------------------------------//
+//
+// Enviar Imagem no stores
+router.post("/sendImageToStorie", upload.single('fileimg'), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      //
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName + '-'));
+      var filePath = path.join(folderName, req.file.originalname);
+      fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
+      console.log("- File", filePath);
+      //
+      var sendImageToStorie = await Sessions.sendImageToStorie(
+        req.body.sessionName,
+        filePath,
+        req.file.originalname,
+        req.body.caption
+      );
+      //
+      //console.log(result);
+      res.status(200).json({
+        sendImageToStorie
+      });
+      break;
+    default:
+      res.status(400).json({
+        "sendImageToStorie": sessionStatus
+      });
+  }
+}); //sendImageToStorie
+//
+// ------------------------------------------------------------------------------------------------//
+//
+// Enviar Imagem em Massa
+var sendImageMassa = upload.fields([{
+  name: 'phonefull',
+  maxCount: 1
+}, {
+  name: 'fileimg',
+  maxCount: 1
+}]);
+//
+router.post("/sendImageMassa", sendImageMassa, async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      //
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName + '-'));
+      var filePathContato = path.join(folderName, req.files['phonefull'][0].originalname);
+      fs.writeFileSync(filePathContato, req.files['phonefull'][0].buffer.toString('base64'), 'base64');
+      console.log("- File:", filePathContato);
+      //
+      //
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName + '-'));
+      var filePathImagem = path.join(folderName, req.files['fileimg'][0].originalname);
+      fs.writeFileSync(filePathImagem, req.files['fileimg'][0].buffer.toString('base64'), 'base64');
+      console.log("- File:", filePathImagem);
+      //
+      //
+      var jsonStr = '{"sendImageMassa":[]}';
+      var obj = JSON.parse(jsonStr);
+      //
+      var arrayNumbers = fs.readFileSync(filePathContato, 'utf-8').toString().split(/\r?\n/);
+      for (var i in arrayNumbers) {
+        //console.log(arrayNumbers[i]);
+        var numero = arrayNumbers[i].trim();
+        //
+        if (numero.length !== 0) {
+          //
+          var checkNumberStatus = await Sessions.checkNumberStatus(
+            req.body.SessionName,
+            soNumeros(numero) + '@c.us'
+          );
+          //
+          if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+            //
+            var sendImageMassa = await Sessions.sendImage(
+              req.body.SessionName,
+              soNumeros(checkNumberStatus.number) + '@c.us',
+              filePathImagem,
+              req.files['fileimg'][0].originalname,
+              req.body.caption
+            );
+            //
+          } else {
+            var sendImageMassa = checkNumberStatus;
+          }
+          //
+          //return sendResult;
+          //
+          obj['sendImageMassa'].push(sendImageMassa);
+        }
+        await sleep(1000);
+      }
+      //
+      jsonStr = JSON.stringify(obj);
+      //console.log(JSON.parse(jsonStr));
+      var sendImageMassa = JSON.parse(jsonStr);
+      //
+      //console.log(result);
+      res.status(200).json(sendImageMassa);
+      break;
+    default:
+      res.status(400).json({
+        "sendImageMassa": sessionStatus
+      });
+  }
+}); //sendImageMassa
+//
+// ------------------------------------------------------------------------------------------------//
+//
+// Enviar varia imagens
+router.post("/sendMultImage", upload.array('fileimgs', 50), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      //
+      var resultsFiles = req.files;
+      //
+      var jsonStr = '{"sendMultImage":[]}';
+      var obj = JSON.parse(jsonStr);
+      //
+      var checkNumberStatus = await Sessions.checkNumberStatus(
+        req.body.SessionName,
+        soNumeros(req.body.phonefull) + '@c.us'
+      );
+      //
+      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+        //
+        await forEach(resultsFiles, async (resultfile) => {
+          //
+          var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName + '-'));
+          var filePathImagem = path.join(folderName, resultfile.originalname);
+          fs.writeFileSync(filePathImagem, resultfile.buffer.toString('base64'), 'base64');
+          console.log("- File:", filePathImagem);
+          //
+          var sendMultImage = await Sessions.sendImage(
+            req.body.SessionName,
+            soNumeros(checkNumberStatus.number) + '@c.us',
+            filePathImagem,
+            resultfile.originalname,
+            req.body.caption
+          );
+          //
+          obj['sendMultImage'].push(sendMultImage);
+          //
+          await sleep(1000);
+        });
+      } else {
+        var sendMultImage = checkNumberStatus;
+      }
+      //
+      obj['sendMultImage'].push(sendMultImage);
+      //
+      jsonStr = JSON.stringify(obj);
+      //console.log(JSON.parse(jsonStr));
+      var sendMultImage = JSON.parse(jsonStr);
+      //
+      //console.log(result);
+      res.status(200).json(sendMultImage);
+      break;
+    default:
+      res.status(400).json({
+        "sendMultImage": sessionStatus
+      });
+  }
+}); //sendMultImage
+//
+// ------------------------------------------------------------------------------------------------//
+//
+// Enviar variar imagens para varios contaos
+var sendMultImageMassa = upload.fields([{
+  name: 'phonefull',
+  maxCount: 1
+}, {
+  name: 'fileimgs',
+  maxCount: 30
+}]);
+//
+router.post("/sendMultImageMassa", sendMultImageMassa, async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      //
+      var resultsFilesImg = req.files.fileimgs;
+      //
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName + '-'));
+      var filePathContato = path.join(folderName, req.files['phonefull'][0].originalname);
+      fs.writeFileSync(filePathContato, req.files['phonefull'][0].buffer.toString('base64'), 'base64');
+      console.log("- File Contato:", filePathContato);
+      var arrayNumbers = fs.readFileSync(filePathContato, 'utf-8').toString().split(/\r?\n/);
+      //
+      var jsonStr = '{"sendMultImageMassa":[]}';
+      var obj = JSON.parse(jsonStr);
+      //
+      for (var i in arrayNumbers) {
+        //console.log(arrayNumbers[i]);
+        var numero = arrayNumbers[i].trim();
+        //
+        if (numero.length !== 0) {
+          //
+          var checkNumberStatus = await Sessions.checkNumberStatus(
+            req.body.SessionName,
+            soNumeros(req.body.phonefull) + '@c.us'
+          );
+          //
+          if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+            //
+            await forEach(resultsFilesImg, async (resultfile) => {
+              //
+              var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName + '-'));
+              var filePathImagem = path.join(folderName, resultfile.originalname);
+              fs.writeFileSync(filePathImagem, resultfile.buffer.toString('base64'), 'base64');
+              console.log("- File Imagem:", filePathImagem);
+              //
+              var sendMultImageMassa = await Sessions.sendImage(
+                req.body.SessionName,
+                soNumeros(checkNumberStatus.number) + '@c.us',
+                filePathImagem,
+                resultfile.originalname,
+                req.body.caption
+              );
+              //
+              obj['sendMultImageMassa'].push(sendMultImageMassa);
+              //
+              await sleep(1000);
+              //
+            });
+            //
+          } else {
+            var sendMultImageMassa = checkNumberStatus;
+          }
+          //
+          obj['sendMultImageMassa'].push(sendMultImageMassa);
+        }
+        await sleep(1000);
+      }
+      jsonStr = JSON.stringify(obj);
+      //console.log(JSON.parse(jsonStr));
+      var sendMultImageMassa = JSON.parse(jsonStr);
+      //
+      //console.log(result);
+      res.status(200).json(sendMultImageMassa);
+      break;
+    default:
+      res.status(400).json({
+        "sendMultImageMassa": sessionStatus
+      });
+  }
+}); //sendMultImageMassa
+//
+// ------------------------------------------------------------------------------------------------//
+//
+// Enviar imagen no grupo
+router.post("/sendImageGrupo", upload.single('fileimg'), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName + '-'));
+      var filePath = path.join(folderName, req.file.originalname);
+      fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
+      console.log("- File", filePath);
+      //
+      var sendImageGrupo = await Sessions.sendImage(
+        req.body.SessionName,
+        req.body.GroupId + '@g.us',
+        filePath,
+        req.file.originalname,
+        req.body.caption
+      );
+      //
+      //console.log(result);
+      res.status(200).json({
+        sendImageGrupo
+      });
+      break;
+    default:
+      res.status(400).json({
+        "sendImageGrupo": sessionStatus
+      });
+  }
+}); //sendImageGrupo
+//
+// ------------------------------------------------------------------------------------------------//
+//
+// Enviar arquivo/documento
+router.post("/sendFile", upload.single('file'), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName + '-'));
+      var filePath = path.join(folderName, req.file.originalname);
+      fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
+      console.log("- File", filePath);
+      //
+      var checkNumberStatus = await Sessions.checkNumberStatus(
+        req.body.SessionName,
+        soNumeros(req.body.phonefull) + '@c.us'
+      );
+      //
+      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+        //
+        var sendFile = await Sessions.sendFile(
+          req.body.SessionName,
+          soNumeros(checkNumberStatus.number) + '@c.us',
+          filePath,
+          req.file.originalname,
+          req.body.caption
+        );
+        //
+      } else {
+        var sendFile = checkNumberStatus;
+      }
+      //
+      //console.log(result);
+      res.status(200).json({
+        sendFile
+      });
+      break;
+    default:
+      res.status(400).json({
+        "sendFile": sessionStatus
+      });
+  }
+}); //sendFile
+//
+// ------------------------------------------------------------------------------------------------//
+//
+// Enviar arquivo/documento
+router.post("/sendFileBase64", upload.none(''), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName + '-'));
+      var filePath = path.join(folderName, req.body.originalname);
+      fs.writeFileSync(filePath, req.body.base64, 'base64');
+      console.log("- File", filePath);
+      //
+      var checkNumberStatus = await Sessions.checkNumberStatus(
+        req.body.SessionName,
+        soNumeros(req.body.phonefull) + '@c.us'
+      );
+      //
+      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+        //
+        var sendFileBase64 = await Sessions.sendFile(
+          req.body.SessionName,
+          soNumeros(checkNumberStatus.number) + '@c.us',
+          filePath,
+          req.body.originalname,
+          req.body.caption
+        );
+        //
+      } else {
+        var sendFileBase64 = checkNumberStatus;
+      }
+      //
+      //console.log(result);
+      res.status(200).json({
+        sendFileBase64
+      });
+      break;
+    default:
+      res.status(400).json({
+        "sendImageGrupo": sessionStatus
+      });
+  }
+}); //sendFileBase64
+//
+// ------------------------------------------------------------------------------------------------//
+//
+// Enviar arquivo/documento
+router.post("/sendFileToBase64", upload.single('file'), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var checkNumberStatus = await Sessions.checkNumberStatus(
+        req.body.SessionName,
+        soNumeros(req.body.phonefull) + '@c.us'
+      );
+      //
+      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+        //
+        var sendFileFromBase64 = await Sessions.sendFileFromBase64(
+          req.body.SessionName,
+          soNumeros(checkNumberStatus.number) + '@c.us',
+          req.file.buffer.toString('base64'),
+          req.file.mimetype,
+          req.file.originalname,
+          req.body.msg
+        );
+        //
+      } else {
+        var sendFileFromBase64 = checkNumberStatus;
+      }
+      //
+      //console.log(result);
+      res.status(200).json({
+        sendFileFromBase64
+      });
+      break;
+    default:
+      res.status(400).json({
+        "sendFileFromBase64": sessionStatus
+      });
+  }
+}); //sendFileBase64
+//
+// ------------------------------------------------------------------------------------------------------- //
+//
+// Enviar arquivo/documento
+router.post("/sendFileFromBase64", upload.none(''), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var checkNumberStatus = await Sessions.checkNumberStatus(
+        req.body.SessionName,
+        soNumeros(req.body.phonefull) + '@c.us'
+      );
+      //
+      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+        //
+        var sendFileFromBase64 = await Sessions.sendFileFromBase64(
+          req.body.SessionName,
+          soNumeros(checkNumberStatus.number) + '@c.us',
+          req.body.base64Data,
+          req.body.mimetype,
+          req.body.originalname,
+          req.body.msg
+        );
+        //
+      } else {
+        var sendFileFromBase64 = checkNumberStatus;
+      }
+      //
+      //console.log(result);
+      res.status(200).json({
+        sendFileFromBase64
+      });
+      break;
+    default:
+      res.status(400).json({
+        "sendFileFromBase64": sessionStatus
+      });
+  }
+}); //sendFileFromBase64
+//
+// ------------------------------------------------------------------------------------------------//
+//
+//Enviar imagem em gif
+router.post("/sendImageAsStickerGif", upload.single('file'), async (req, res, next) => {
+  //
+  // Generates sticker from the provided animated gif image and sends it (Send image as animated sticker)
+  // image path imageBase64 A valid gif and webp image is required. 
+  // You can also send via http/https (http://www.website.com/img.gif)
+  //
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName + '-'));
+      var filePath = path.join(folderName, req.file.originalname);
+      fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
+      console.log("- File", filePath);
+      //
+      var checkNumberStatus = await Sessions.checkNumberStatus(
+        req.body.SessionName,
+        soNumeros(req.body.phonefull) + '@c.us'
+      );
+      //
+      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+        //
+        var sendImageAsStickerGif = await Sessions.sendImageAsStickerGif(
+          req.body.SessionName,
+          soNumeros(checkNumberStatus.number) + '@c.us',
+          filePath
+        );
+        //
+      } else {
+        var sendImageAsStickerGif = checkNumberStatus;
+      }
+      //
+      //console.log(result);
+      res.status(200).json({
+        sendImageAsStickerGif
+      });
+      break;
+    default:
+      res.status(400).json({
+        "sendImageAsStickerGif": sessionStatus
+      });
+  }
+}); //sendImageAsStickerGif
+//
+// ------------------------------------------------------------------------------------------------//
+//
+//Enviar imagem em gif
+router.post("/sendImageAsStickerGifUrl", upload.single('file'), async (req, res, next) => {
+  //
+  // Generates sticker from the provided animated gif image and sends it (Send image as animated sticker)
+  // image path imageBase64 A valid gif and webp image is required. 
+  // You can also send via http/https (http://www.website.com/img.gif)
+  //
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var checkNumberStatus = await Sessions.checkNumberStatus(
+        req.body.SessionName,
+        soNumeros(req.body.phonefull) + '@c.us'
+      );
+      //
+      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+        //
+        var sendImageAsStickerGifUrl = await Sessions.sendImageAsStickerGif(
+          req.body.SessionName,
+          soNumeros(checkNumberStatus.number) + '@c.us',
+          req.body.urlLink,
+        );
+        //
+      } else {
+        var sendImageAsStickerGifUrl = checkNumberStatus;
+      }
+      //
+      //console.log(result);
+      res.status(200).json({
+        sendImageAsStickerGifUrl
+      });
+      break;
+    default:
+      res.status(400).json({
+        "sendImageAsStickerGifUrl": sessionStatus
+      });
+  }
+}); //sendImageAsStickerGifUrl
+//
+// ------------------------------------------------------------------------------------------------//
+//
+//Enviar figura png ou jpg
+router.post("/sendImageAsSticker", upload.single('file'), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      //
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName + '-'));
+      var filePath = path.join(folderName, req.file.originalname);
+      fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
+      console.log("- File", filePath);
+      //
+      var jsonStr = '{"sendResult":[]}';
+      var obj = JSON.parse(jsonStr);
+      //
+      var checkNumberStatus = await Sessions.checkNumberStatus(
+        req.body.SessionName,
+        soNumeros(req.body.phonefull) + '@c.us'
+      );
+      //
+      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+        //
+        var sendImageAsSticker = await Sessions.sendImageAsSticker(
+          req.body.SessionName,
+          soNumeros(checkNumberStatus.number) + '@c.us',
+          filePath
+        );
+        //
+      } else {
+        var sendImageAsSticker = checkNumberStatus;
+      }
+      //
+      //console.log(result);
+      res.status(200).json({
+        sendImageAsSticker
+      });
+      break;
+    default:
+      res.status(400).json({
+        "sendImageAsSticker": sessionStatus
+      });
+  }
+}); //sendImageAsSticker
+//
+// ------------------------------------------------------------------------------------------------//
+//
+// Enviar opções de mensagem
+router.post("/sendMessageOptions", upload.none(''), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var jsonStr = '{"sendResult":[]}';
+      var obj = JSON.parse(jsonStr);
+      //
+      var checkNumberStatus = await Sessions.checkNumberStatus(
+        req.body.SessionName,
+        soNumeros(req.body.phonefull),
+        req.body.chatIdorgroupId
+      );
+      //
+      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+        //
+        var sendMessageOptions = await Sessions.sendMessageOptions(
+          req.body.SessionName,
+          soNumeros(checkNumberStatus.number) + '@c.us',
+          req.body.quotedMessageId,
+          req.body.msg
+        );
+        //
+      } else {
+        var sendMessageOptions = sendMessageOptions;
+      }
+      //
+      //console.log(result);
+      res.status(200).json({
+        sendMessageOptions
+      });
+      break;
+    default:
+      res.status(400).json({
+        "sendMessageOptions": sessionStatus
+      });
+  }
+}); //sendMessageOptions
+//
+// ------------------------------------------------------------------------------------------------//
+//
+//Enviar mp4 to gif
+router.post("/sendVideoAsGif", upload.single('file'), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      //
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName + '-'));
+      var filePath = path.join(folderName, req.file.originalname);
+      fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
+      console.log("- File", filePath);
+      //
+      var checkNumberStatus = await Sessions.checkNumberStatus(
+        req.body.SessionName,
+        soNumeros(req.body.phonefull) + '@c.us'
+      );
+      //
+      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+        //
+        var sendVideoAsGif = await Sessions.sendVideoAsGif(
+          req.body.SessionName,
+          soNumeros(checkNumberStatus.number) + '@c.us',
+          filePath,
+          req.file.originalname,
+          req.body.caption
+        );
+        //
+      } else {
+        var sendVideoAsGif = checkNumberStatus;
+      }
+      //
+      //console.log(result);
+      res.status(200).json({
+        sendVideoAsGif
+      });
+      break;
+    default:
+      res.status(400).json({
+        "sendVideoAsGif": sessionStatus
+      });
+  }
+}); //sendVideoAsGif
+//
+// ------------------------------------------------------------------------------------------------//
+//
+// Enviar visto ✔️✔️
+router.post("/sendSeen", upload.single('fileimg'), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var checkNumberStatus = await Sessions.checkNumberStatus(
+        req.body.SessionName,
+        soNumeros(req.body.phonefull) + '@c.us'
+      );
+      //
+      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+        //
+        var sendSeen = await Sessions.sendSeen(
+          req.body.SessionName,
+          soNumeros(checkNumberStatus.number) + '@c.us'
+        );
+        //
+      } else {
+        var sendSeen = checkNumberStatus;
+      }
+      //
+      //console.log(result);
+      res.status(200).json({
+        sendSeen
+      });
+      break;
+    default:
+      res.status(400).json({
+        "sendSeen": sessionStatus
+      });
+  }
+}); //sendSeen
+//
+// ------------------------------------------------------------------------------------------------//
+//
+// Enviar digitando
+router.post("/startTyping", upload.single('fileimg'), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var checkNumberStatus = await Sessions.checkNumberStatus(
+        req.body.SessionName,
+        soNumeros(req.body.phonefull) + '@c.us'
+      );
+      //
+      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+        //
+        var startTyping = await Sessions.startTyping(
+          req.body.SessionName,
+          soNumeros(checkNumberStatus.number) + '@c.us'
+        );
+        //
+      } else {
+        var startTyping = checkNumberStatus;
+      }
+      //
+      //console.log(result);
+      res.status(200).json({
+        startTyping
+      });
+      break;
+    default:
+      res.status(400).json({
+        "startTyping": sessionStatus
+      });
+  }
+}); //startTyping
+//
+// ------------------------------------------------------------------------------------------------//
+//
+// Enviar para digitando
+router.post("/stopTyping", upload.single('fileimg'), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var checkNumberStatus = await Sessions.checkNumberStatus(
+        req.body.SessionName,
+        soNumeros(req.body.phonefull) + '@c.us'
+      );
+      //
+      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+        //
+        var stopTyping = await Sessions.stopTyping(
+          req.body.SessionName,
+          soNumeros(checkNumberStatus.number) + '@c.us'
+        );
+        //
+      } else {
+        var stopTyping = checkNumberStatus;
+      }
+      //
+      //console.log(result);
+      res.status(200).json({
+        stopTyping
+      });
+      break;
+    default:
+      res.status(400).json({
+        "stopTyping": sessionStatus
+      });
+  }
+}); //stopTyping
+//
+// ------------------------------------------------------------------------------------------------//
+//
+// Envoar status do chat (0: Typing, 1: Recording, 2: Paused)
+router.post("/setChatState", upload.none(''), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var checkNumberStatus = await Sessions.checkNumberStatus(
+        req.body.SessionName,
+        soNumeros(req.body.phonefull) + '@c.us'
+      );
+      //
+      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+        //
+        var setChatState = await Sessions.setChatState(
+          req.body.SessionName,
+          soNumeros(checkNumberStatus.number) + '@c.us',
+          req.body.state
+        );
+        //
+      } else {
+        var setChatState = checkNumberStatus;
+      }
+      //
+      //console.log(result);
+      res.status(200).json({
+        setChatState
+      });
+      break;
+    default:
+      res.status(400).json({
+        "setChatState": sessionStatus
+      });
+  }
+}); //stopTyping
+//
+// ------------------------------------------------------------------------------------------------//
+//
+/*
+╦═╗┌─┐┌┬┐┬─┐┬┌─┐┬  ┬┬┌┐┌┌─┐  ╔╦╗┌─┐┌┬┐┌─┐                
+╠╦╝├┤  │ ├┬┘│├┤ └┐┌┘│││││ ┬   ║║├─┤ │ ├─┤                
+╩╚═└─┘ ┴ ┴└─┴└─┘ └┘ ┴┘└┘└─┘  ═╩╝┴ ┴ ┴ ┴ ┴                
+*/
+//
+// Recuperar todos os bate-papos
+router.post("/getAllChats", upload.none(''), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var getAllChats = await Sessions.getAllChats(req.body.SessionName);
+      //
+      res.json({
+        getAllChats
+      });
+      break;
+    default:
+      res.status(400).json({
+        "getAllChats": sessionStatus
+      });
+  }
+}); //getAllChats
+//
+// ------------------------------------------------------------------------------------------------------- //
+//
+// Recupera todas as novas mensagens de bate-papo
+router.post("/getAllChatsNewMsg", upload.none(''), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var getAllChatsNewMsg = await Sessions.getAllChatsNewMsg(req.body.SessionName);
+      //
+      res.json({
+        getAllChatsNewMsg
+      });
+      break;
+    default:
+      res.status(400).json({
+        "getAllChatsNewMsg": sessionStatus
+      });
+  }
+}); //getAllChatsNewMsg
+//
+// ------------------------------------------------------------------------------------------------------- //
+//
+// Recupera todos os contatos do bate-papo
+router.post("/getAllChatsContacts", upload.none(''), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var getAllChatsContacts = await Sessions.getAllChatsContacts(req.body.SessionName);
+      //
+      res.json({
+        getAllChatsContacts
+      });
+      break;
+    default:
+      res.status(400).json({
+        "getAllChatsContacts": sessionStatus
+      });
+  }
+}); //getAllChatsContacts
+//
+// ------------------------------------------------------------------------------------------------------- //
+//
+// Recuperar novas mensagens de todos os contatos
+router.post("/getChatContactNewMsg", upload.none(''), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var getChatContactNewMsg = await Sessions.getChatContactNewMsg(req.body.SessionName);
+      //
+      res.json({
+        getChatContactNewMsg
+      });
+      break;
+    default:
+      res.status(400).json({
+        "getChatContactNewMsg": sessionStatus
+      });
+  }
+}); //getChatContactNewMsg
+//
+// ------------------------------------------------------------------------------------------------------- //
+//
+// Recuperar todos os grupos
+router.post("/getAllChatsGroups", upload.none(''), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var getAllChatsGroups = await Sessions.getAllChatsGroups(req.body.SessionName);
+      //
+      res.json({
+        getAllChatsGroups
+      });
+      break;
+    default:
+      res.status(400).json({
+        "getAllChatsGroups": sessionStatus
+      });
+  }
+}); //getAllChatsGroups
+//
+// ------------------------------------------------------------------------------------------------------- //
+//
+// Recupera novas messagens de todos os contatos dos grupos
+router.post("/getChatGroupNewMsg", upload.none(''), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var getChatGroupNewMsg = await Sessions.getChatGroupNewMsg(req.body.SessionName);
+      //
+      res.json({
+        getChatGroupNewMsg
+      });
+      break;
+    default:
+      res.status(400).json({
+        "getChatGroupNewMsg": sessionStatus
+      });
+  }
+}); //getChatGroupNewMsg
+//
+// ------------------------------------------------------------------------------------------------------- //
+//
+// Recupera todos os chats Lista de transmissão
+router.post("/getAllChatsTransmission", upload.none(''), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var getAllChatsTransmission = await Sessions.getAllChatsTransmission(req.body.SessionName);
+      //
+      res.json({
+        getAllChatsTransmission
+      });
+      break;
+    default:
+      res.status(400).json({
+        "getAllChatsTransmission": sessionStatus
+      });
+  }
+}); //getAllChatsTransmission
+//
+// ------------------------------------------------------------------------------------------------------- //
+//
+// Recuperar contatos
+router.post("/getAllContacts", upload.none(''), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var getAllContacts = await Sessions.getAllContacts(
+        req.body.SessionName
+      );
+      //
+      res.json({
+        getAllContacts
+      });
+      break;
+    default:
+      res.status(400).json({
+        "getAllContacts": sessionStatus
+      });
+  }
+}); //getAllContacts
+//
+// ------------------------------------------------------------------------------------------------------- //
+//
+// Lista os contatos em mudo
+router.post("/getListMute", upload.none(''), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      // Returns a list of mute and non-mute users
+      // "all" List all mutes
+      // "toMute" List all silent chats
+      // "noMute" List all chats without silence
+      //
+      var getListMute = await Sessions.getListMute(
+        req.body.SessionName,
+        req.body.list
+      );
+      res.status(200).json({
+        getListMute
+      });
+      break;
+    default:
+      res.status(400).json({
+        "getListMute": sessionStatus
+      });
+  }
+}); //getListMute
+//
+// ------------------------------------------------------------------------------------------------------- //
+//
+// Returns browser session token
+router.post("/getSessionTokenBrowser", upload.none(''), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var getSessionTokenBrowser = await Sessions.getSessionTokenBrowser(
+        req.body.SessionName
+      );
+      res.status(200).json({
+        getSessionTokenBrowser
+      });
+      break;
+    default:
+      res.status(400).json({
+        "getSessionTokenBrowser": sessionStatus
+      });
+  }
+}); //getSessionTokenBrowser
+//
+// ------------------------------------------------------------------------------------------------------- //
+//
+// Chama sua lista de contatos bloqueados
+router.post("/getBlockList", upload.none(''), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var getBlockList = await Sessions.getBlockList(
+        req.body.SessionName
+      );
+      res.status(200).json({
+        getBlockList
+      });
+      break;
+    default:
+      res.status(400).json({
+        "getBlockList": sessionStatus
+      });
+  }
+}); //getBlockList
+//
+// ------------------------------------------------------------------------------------------------------- //
+//
+// Recuperar mensagens no bate-papo
+router.post("/getAllMessagesInChat", upload.none(''), async (req, res, next) => {
+  //
+  //chatID chat id
+  //includeMe will be by default true, if you do not want to pass false
+  //includeNotifications will be by default true, if you do not want to pass false
+  //const Messages = await client.getAllMessagesInChat(chatID, includeMe, includeNotifications)
+  //
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var checkNumberStatus = await Sessions.checkNumberStatus(
+        req.body.SessionName,
+        soNumeros(req.body.phonefull) + '@c.us'
+      );
+      //
+      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+        //
+        var getAllMessagesInChat = await Sessions.getAllMessagesInChat(
+          req.body.SessionName,
+          soNumeros(checkNumberStatus.number) + "@c.us",
+          req.body.includeMe,
+          req.body.includeNotifications,
+        );
+        //
+      } else {
+        var getAllMessagesInChat = checkNumberStatus;
+      }
+      //
+      //console.log(result);
+      res.status(200).json({
+        getAllMessagesInChat
+      });
+      break;
+    default:
+      res.status(400).json({
+        "getAllMessagesInChat": sessionStatus
+      });
+  }
+}); //getAllMessagesInChat
+//
+// ------------------------------------------------------------------------------------------------------- //
+//
+// Carregar mensagens anteriores
+router.post("/loadEarlierMessages", upload.none(''), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var checkNumberStatus = await Sessions.checkNumberStatus(
+        req.body.SessionName,
+        soNumeros(req.body.phonefull) + '@c.us'
+      );
+      //
+      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+        //
+        var loadEarlierMessages = await Sessions.loadEarlierMessages(
+          req.body.SessionName,
+          soNumeros(req.body.phonefull) + '@c.us'
+        );
+        //
+      } else {
+        var loadEarlierMessages = checkNumberStatus;
+      }
+      //
+      //console.log(result);
+      res.status(200).json({
+        loadEarlierMessages
+      });
+      break;
+    default:
+      res.status(400).json({
+        "loadEarlierMessages": sessionStatus
+      });
+  }
+}); //loadEarlierMessages
+//
+// ------------------------------------------------------------------------------------------------------- //
+//
+// Carregar e obter todas as mensagens no bate-papo
+router.post("/loadAndGetAllMessagesInChat", upload.none(''), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var checkNumberStatus = await Sessions.checkNumberStatus(
+        req.body.SessionName,
+        soNumeros(req.body.phonefull) + '@c.us'
+      );
+      //
+      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+        //
+        var loadAndGetAllMessagesInChat = await Sessions.loadAndGetAllMessagesInChat(
+          req.body.SessionName,
+          soNumeros(req.body.phonefull)
+        );
+        //
+      } else {
+        var loadAndGetAllMessagesInChat = checkNumberStatus;
+      }
+      //
+      //console.log(result);
+      res.status(200).json({
+        loadAndGetAllMessagesInChat
+      });
+      break;
+    default:
+      res.status(400).json({
+        "loadAndGetAllMessagesInChat": sessionStatus
+      });
+  }
+}); //loadAndGetAllMessagesInChat
+//
+// ------------------------------------------------------------------------------------------------//
+//
+// Recuperar status de contato
+router.post("/getStatus", upload.none(''), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var checkNumberStatus = await Sessions.checkNumberStatus(
+        req.body.SessionName,
+        soNumeros(req.body.phonefull) + '@c.us'
+      );
+      //
+      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+        //
+        var getStatus = await Sessions.getStatus(
+          req.body.SessionName,
+          soNumeros(req.body.phonefull) + '@c.us'
+        );
+        //
+      } else {
+        var getStatus = checkNumberStatus;
+      }
+      //
+      //console.log(result);
+      res.status(200).json({
+        getStatus
+      });
+      break;
+    default:
+      res.status(400).json({
+        "getStatus": sessionStatus
+      });
+  }
+}); //getStatus
+//
+// ------------------------------------------------------------------------------------------------------- //
+//
+// Obter o perfil do número
+router.post("/getNumberProfile", upload.none(''), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var checkNumberStatus = await Sessions.checkNumberStatus(
+        req.body.SessionName,
+        soNumeros(req.body.phonefull) + '@c.us'
+      );
+      //
+      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+        //
+        var getNumberProfile = await Sessions.getNumberProfile(
+          req.body.SessionName,
+          soNumeros(req.body.phonefull) + '@c.us'
+        );
+        //
+      } else {
+        var getNumberProfile = checkNumberStatus;
+      }
+      //
+      //console.log(result);
+      res.status(200).json({
+        getNumberProfile
+      });
+      break;
+    default:
+      res.status(400).json({
+        "getNumberProfile": sessionStatus
+      });
+  }
+}); //getNumberProfile
+//
+// ------------------------------------------------------------------------------------------------------- //
+//
+// Obter todas as mensagens não lidas
+router.post("/getAllUnreadMessages", upload.none(''), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var getAllUnreadMessages = await Sessions.getAllUnreadMessages(
+        req.body.SessionName
+      );
+      //
+      //console.log(result);
+      res.status(200).json({
+        getAllUnreadMessages
+      });
+      break;
+    default:
+      res.status(400).json({
+        "getAllUnreadMessages": sessionStatus
+      });
+  }
+}); //getAllUnreadMessages
+//
+// ------------------------------------------------------------------------------------------------------- //
+//
+// Obter a foto do perfil do servidor
+router.post("/getProfilePicFromServer", upload.none(''), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var checkNumberStatus = await Sessions.checkNumberStatus(
+        req.body.SessionName,
+        soNumeros(req.body.phonefull) + '@c.us'
+      );
+      //
+      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+        //
+        var getProfilePicFromServer = await Sessions.getProfilePicFromServer(
+          req.body.SessionName,
+          soNumeros(req.body.phonefull) + '@c.us'
+        );
+        //
+      } else {
+        var getProfilePicFromServer = checkNumberStatus;
+      }
+      //
+      //console.log(result);
+      res.status(200).json({
+        getProfilePicFromServer
+      });
+      break;
+    default:
+      res.status(400).json({
+        "getProfilePicFromServer": sessionStatus
+      });
+  }
+}); //getProfilePicFromServer
+//
+// ------------------------------------------------------------------------------------------------------- //
+//
+// Recuperar bate-papo / conversa
+router.post("/getChat", upload.none(''), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var checkNumberStatus = await Sessions.checkNumberStatus(
+        req.body.SessionName,
+        soNumeros(req.body.phonefull) + '@c.us'
+      );
+      //
+      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+        //
+        var getChat = await Sessions.getChat(
+          req.body.SessionName,
+          soNumeros(req.body.phonefull) + '@c.us'
+        );
+        //
+      } else {
+        var getChat = checkNumberStatus;
+      }
+      //
+      //console.log(result);
+      res.status(200).json({
+        getChat
+      });
+      break;
+    default:
+      res.status(400).json({
+        "getChat": sessionStatus
+      });
+  }
+}); //getChat
+//
+// ------------------------------------------------------------------------------------------------------- //
+//
+// Verificar o status do número
+router.post("/checkNumberStatus", upload.none(''), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var checkNumberStatus = await Sessions.checkNumberStatus(
+        req.body.SessionName,
+        soNumeros(req.body.phonefull) + '@c.us'
+      );
+      //
+      //console.log(result);
+      res.status(200).json({
+        checkNumberStatus
+      });
+      break;
+    default:
+      res.status(400).json({
+        "checkNumberStatus": sessionStatus
+      });
+  }
+}); //checkNumberStatus
+//
+// ------------------------------------------------------------------------------------------------------- //
+//
+// Verificar o status do número em massa
+router.post("/checkNumberStatusMassa", upload.single('contatos'), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), req.body.SessionName + '-'));
+      var filePath = path.join(folderName, req.file.originalname);
+      fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
+      console.log("- File:", filePath);
+      //
+      var checkNumberStatusMassa = [];
+      //
+      var arrayNumbers = fs.readFileSync(filePath, 'utf-8').toString().split(/\r?\n/);
+      for (var i in arrayNumbers) {
+        //console.log(soNumeros(arrayNumbers[i]));
+        var numero = soNumeros(arrayNumbers[i]);
+        //
+        if (numero.length !== 0) {
+          //
+          var checkNumberStatus = await Sessions.checkNumberStatus(
+            req.body.SessionName,
+            soNumeros(numero) + '@c.us'
+          );
+          //
+          if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+            //
+            checkNumberStatusMassa.push(checkNumberStatus);
+            //
+          } else {
+            var checkNumberStatusMassa = checkNumberStatus;
+          }
+        }
+        await sleep(1000);
+      }
+      //
+      //console.log(result);
+      res.status(200).json({
+        checkNumberStatusMassa
+      });
+      break;
+    default:
+      res.status(400).json({
+        "checkNumberStatusMassa": sessionStatus
+      });
+  }
+}); //sendText
+//
+// ------------------------------------------------------------------------------------------------------- //
+//
+/*
+╔═╗┬─┐┌─┐┬ ┬┌─┐  ╔═╗┬ ┬┌┐┌┌─┐┌┬┐┬┌─┐┌┐┌┌─┐               
+║ ╦├┬┘│ ││ │├─┘  ╠╣ │ │││││   │ ││ ││││└─┐               
+╚═╝┴└─└─┘└─┘┴    ╚  └─┘┘└┘└─┘ ┴ ┴└─┘┘└┘└─┘               
+*/
+//
+//Deixar o grupo
+router.post("/leaveGroup", upload.none(''), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var leaveGroup = await Sessions.leaveGroup(
+        req.body.SessionName,
+        req.body.groupId + '@g.us'
+      );
+      res.status(200).json({
+        leaveGroup
+      });
+      break;
+    default:
+      res.status(400).json({
+        "leaveGroup": sessionStatus
+      });
+  }
+}); //leaveGroup
+//
+// ------------------------------------------------------------------------------------------------------- //
+//
+// Obtenha membros do grupo
+router.post("/getGroupMembers", upload.none(''), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var getGroupMembers = await Sessions.getGroupMembers(
+        req.body.SessionName,
+        req.body.groupId + '@g.us'
+      );
+      res.status(200).json({
+        getGroupMembers
+      });
+      break;
+    default:
+      res.status(400).json({
+        "getGroupMembers": sessionStatus
+      });
+  }
+}); //getGroupMembers
+//
+// ------------------------------------------------------------------------------------------------//
+//
+// Obter IDs de membros do grupo 
+router.post("/getGroupMembersIds", upload.none(''), async (req, res, next) => {
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var getGroupMembersIds = await Sessions.getGroupMembersIds(
+        req.body.SessionName,
+        req.body.groupId + '@g.us'
+      );
+      res.status(200).json({
+        getGroupMembersIds
+      });
+      break;
+    default:
+      res.status(400).json({
+        "getGroupMembersIds": sessionStatus
+      });
+  }
+}); //getGroupMembersIds
+//
+// ------------------------------------------------------------------------------------------------//
+//
+// -> Continua aqui ->
+//
+// Gerar link de url de convite de grupo
+router.post("/getGroupInviteLink", upload.none(''), async (req, res, next) => {
+  //
+  // Gerar link de url de convite de grupo
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var GroupInviteLink = await Sessions.getGroupInviteLink(
+        req.body.SessionName,
+        req.body.groupId + '@g.us'
+      );
+      res.status(200).json(GroupInviteLink);
+      break;
+    default:
+      res.status(400).json(sessionStatus);
+  }
+}); //getGroupInviteLink
+//
+// ------------------------------------------------------------------------------------------------//
+//
+router.post("/createGroup", upload.single('participants'), async (req, res, next) => {
+  //
+  // Criar grupo (título, participantes a adicionar)
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      //
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), req.body.SessionName + '-'));
+      var filePath = path.join(folderName, req.file.originalname);
+      fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
+      console.log("- File:", filePath);
+      //
+      var arrayNumbers = fs.readFileSync(filePath, 'utf-8').toString().split(/\r?\n/);
+      //
+      var contactlistValid = [];
+      var contactlistInvalid = [];
+      //
+      for (var i in arrayNumbers) {
+        //console.log(arrayNumbers[i]);
+        var numero = soNumeros(arrayNumbers[i]);
+        //
+        if (numero.length !== 0) {
+          //
+          if (validPhone(numero) === true) {
+            //
+            var checkNumberStatus = await Sessions.checkNumberStatus(
+              req.body.SessionName,
+              soNumeros(numero),
+              req.body.chatIdorgroupId
+            );
+            //
+            if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+              //
+              contactlistValid.push(soNumeros(checkNumberStatus.number) + req.body.chatIdorgroupId);
+            } else {
+              contactlistInvalid.push(numero + req.body.chatIdorgroupId);
+            }
+          } else {
+            contactlistInvalid.push(numero + req.body.chatIdorgroupId);
+          }
+          //
+        }
+        //
+        await sleep(1000);
+      }
+      //
+      var createGroup = await Sessions.createGroup(
+        req.body.SessionName,
+        req.body.title,
+        contactlistValid,
+        contactlistInvalid
+      );
+      //
+      res.status(200).json(createGroup);
+      break;
+    default:
+      res.status(400).json(sessionStatus);
+  }
+}); //createGroup
+//
+// ------------------------------------------------------------------------------------------------//
+//
+router.post("/createGroupAdminMembers", upload.single('participants'), async (req, res, next) => {
+  //
+  // Criar grupo (título, participantes a adicionar)
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      //
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), req.body.SessionName + '-'));
+      var filePath = path.join(folderName, req.file.originalname);
+      fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
+      console.log("- File:", filePath);
+      //
+      var arrayNumbers = fs.readFileSync(filePath, 'utf-8').toString().split(/\r?\n/);
+      //
+      var contactlistValid = [];
+      var contactlistInvalid = [];
+      //
+      for (var i in arrayNumbers) {
+        //console.log(arrayNumbers[i]);
+        var numero = soNumeros(arrayNumbers[i]);
+        //
+        if (numero.length !== 0) {
+          //
+          if (validPhone(numero) === true) {
+            //
+            var checkNumberStatus = await Sessions.checkNumberStatus(
+              req.body.SessionName,
+              soNumeros(numero),
+              "@c.us"
+            );
+            //
+            if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+              //
+              contactlistValid.push(soNumeros(checkNumberStatus.number) + "@c.us");
+            } else {
+              contactlistInvalid.push(numero + "@c.us");
+            }
+          } else {
+            contactlistInvalid.push(numero + "@c.us");
+          }
+          //
+        }
+        //
+        await sleep(1000);
+      }
+      //
+      var createGroup = await Sessions.createGroup(
+        req.body.SessionName,
+        req.body.title,
+        contactlistValid,
+        contactlistInvalid
+      );
+      //
+      if (createGroup.createGroup.erro !== true && createGroup.createGroup.status !== 404) {
+        //
+        var jsonStr = '{"promoteParticipant":[]}';
+        var obj = JSON.parse(jsonStr);
+        //
+        await forEach(createGroup.createGroup.contactlistValid, async (resultfile) => {
+          //
+          var promoteParticipant = await Sessions.promoteParticipant(
+            req.body.SessionName,
+            createGroup.createGroup.gid.replace("@g.us", ""),
+            "@g.us",
+            soNumeros(resultfile.replace("@c.us", "")),
+            "@c.us"
+          );
+          //
+          obj['promoteParticipant'].push(promoteParticipant);
+          //
+          await sleep(1000);
+        });
+        //
+        jsonStr = JSON.stringify(obj);
+        var promoteParticipant = JSON.parse(jsonStr);
+        //
+      } else {
+        var promoteParticipant = "";
+      }
+      res.status(200).json({
+        createGroup,
+        promoteParticipant
+      });
+      break;
+    default:
+      res.status(400).json(sessionStatus);
+  }
+}); //createGroupAdminMenbers
+//
+// ------------------------------------------------------------------------------------------------//
+//
+router.post("/removeParticipant", upload.none(''), async (req, res, next) => {
+  //
+  // Remove participante
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var checkNumberStatus = await Sessions.checkNumberStatus(
+        req.body.SessionName,
+        soNumeros(req.body.phonefull),
+        req.body.chatId
+      );
+      //
+      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+        //
+        var sendResult = await Sessions.removeParticipant(
+          req.body.SessionName,
+          req.body.group,
+          req.body.groupId,
+          soNumeros(checkNumberStatus.number),
+          req.body.chatId
+        );
+        //
+      } else {
+        var sendResult = {
+          "removeParticipant": result
+        };
+      }
+      //
+      res.status(200).json(sendResult);
+      break;
+    default:
+      res.status(400).json(sessionStatus);
+  }
+}); //removeParticipant
+//
+// ------------------------------------------------------------------------------------------------//
+//
+router.post("/addParticipant", upload.none(''), async (req, res, next) => {
+  //
+  // Adicionar participante
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var checkNumberStatus = await Sessions.checkNumberStatus(
+        req.body.SessionName,
+        soNumeros(req.body.phonefull),
+        req.body.chatId
+      );
+      //
+      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+        //
+        var sendResult = await Sessions.addParticipant(
+          req.body.SessionName,
+          req.body.group,
+          req.body.groupId,
+          soNumeros(checkNumberStatus.number),
+          req.body.chatId
+        );
+        //
+      } else {
+        var sendResult = {
+          "addParticipant": result
+        };
+      }
+      //
+      res.status(200).json(sendResult);
+      break;
+    default:
+      res.status(400).json(sessionStatus);
+  }
+}); //addParticipant
+//
+// ------------------------------------------------------------------------------------------------//
+//
+router.post("/promoteParticipant", upload.none(''), async (req, res, next) => {
+  //
+  // Promote participant (Give admin privileges)
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var checkNumberStatus = await Sessions.checkNumberStatus(
+        req.body.SessionName,
+        soNumeros(req.body.phonefull),
+        req.body.chatId
+      );
+      //
+      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+        //
+        var sendResult = await Sessions.promoteParticipant(
+          req.body.SessionName,
+          req.body.group,
+          req.body.groupId,
+          soNumeros(checkNumberStatus.number),
+          req.body.chatId
+        );
+        //
+      } else {
+        var sendResult = {
+          "promoteParticipant": checkNumberStatus
+        };
+      }
+      //
+      res.status(200).json(sendResult);
+      break;
+    default:
+      res.status(400).json(sessionStatus);
+  }
+}); //promoteParticipant
+//
+// ------------------------------------------------------------------------------------------------//
+//
+router.post("/demoteParticipant", upload.none(''), async (req, res, next) => {
+  //
+  // Depromote participant (Give admin privileges)
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var checkNumberStatus = await Sessions.checkNumberStatus(
+        req.body.SessionName,
+        soNumeros(req.body.phonefull),
+        req.body.chatId
+      );
+      //
+      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+        //
+        var sendResult = await Sessions.demoteParticipant(
+          req.body.SessionName,
+          req.body.group,
+          req.body.groupId,
+          soNumeros(req.body.phonefull),
+          req.body.chatId
+        );
+        //
+      } else {
+        var sendResult = {
+          "demoteParticipant": result
+        };
+      }
+      //
+      res.status(200).json(sendResult);
+      break;
+    default:
+      res.status(400).json(sessionStatus);
+  }
+}); //demoteParticipant
+//
+// ------------------------------------------------------------------------------------------------//
+//
+router.post("/getGroupAdmins", upload.none(''), async (req, res, next) => {
+  //
+
+  //
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var sendResult = await Sessions.getGroupAdmins(
+        req.body.SessionName,
+        req.body.groupId,
+        req.body.chatIdorgroupId
+      );
+      res.status(200).json(sendResult);
+      break;
+    default:
+      res.status(400).json(sessionStatus);
+  }
+}); //getGroupAdmins
+//
+// ------------------------------------------------------------------------------------------------//
+//
+router.post("/getGroupInfoFromInviteLink", upload.none(''), async (req, res, next) => {
+  //
+  // Retorna o status do grupo, jid, descrição do link de convite
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var sendResult = await Sessions.getGroupInfoFromInviteLink(
+        req.body.SessionName,
+        req.body.InviteCode
+      );
+      res.status(200).json(sendResult);
+      break;
+    default:
+      res.status(400).json(sessionStatus);
+  }
+}); //getGroupInfoFromInviteLink
+//
+// ------------------------------------------------------------------------------------------------//
+//
+router.post("/joinGroup", upload.none(''), async (req, res, next) => {
+  //
+  // Junte-se a um grupo usando o código de convite do grupo
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var sendResult = await Sessions.joinGroup(
+        req.body.SessionName,
+        req.body.InviteCode
+      );
+      res.status(200).json(sendResult);
+      break;
+    default:
+      res.status(400).json(sessionStatus);
+  }
+}); //joinGroup
+//
+// ------------------------------------------------------------------------------------------------//
+//
+/*
+╔═╗┬─┐┌─┐┌─┐┬┬  ┌─┐  ╔═╗┬ ┬┌┐┌┌─┐┌┬┐┬┌─┐┌┐┌┌─┐           
+╠═╝├┬┘│ │├┤ ││  ├┤   ╠╣ │ │││││   │ ││ ││││└─┐           
+╩  ┴└─└─┘└  ┴┴─┘└─┘  ╚  └─┘┘└┘└─┘ ┴ ┴└─┘┘└┘└─┘           
+*/
+//
+router.post("/setProfileStatus", upload.none(''), async (req, res, next) => {
+  //
+  // Set client status
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var sendResult = await Sessions.setProfileStatus(
+        req.body.SessionName,
+        req.body.ProfileStatus
+      );
+      res.status(200).json(sendResult);
+      break;
+    default:
+      res.status(400).json(sessionStatus);
+  }
+}); //setProfileStatus
+//
+// ------------------------------------------------------------------------------------------------//
+//
+router.post("/setProfileName", upload.none(''), async (req, res, next) => {
+  //
+  // Set client profile name
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var sendResult = await Sessions.setProfileName(
+        req.body.SessionName,
+        req.body.ProfileName
+      );
+      res.status(200).json(sendResult);
+      break;
+    default:
+      res.status(400).json(sessionStatus);
+  }
+}); //setProfileName
+//
+// ------------------------------------------------------------------------------------------------//
+//
+router.post("/setProfilePic", upload.single('fileimg'), async (req, res, next) => {
+  //
+
+  //
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      //
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName + '-'));
+      var filePath = path.join(folderName, req.file.originalname);
+      fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
+      console.log("- File", filePath);
+      //
+      var sendResult = await Sessions.setProfilePic(
+        req.body.SessionName,
+        filePath
+      );
+      //
+      res.status(200).json(sendResult);
+      break;
+    default:
+      res.status(400).json(sessionStatus);
+  }
+}); //setProfilePic
+//
+// ------------------------------------------------------------------------------------------------//
+//
+/*
+╔╦╗┌─┐┬  ┬┬┌─┐┌─┐  ╔═╗┬ ┬┌┐┌┌─┐┌┬┐┬┌─┐┌┐┌┌─┐             
+ ║║├┤ └┐┌┘││  ├┤   ╠╣ │ │││││   │ ││ ││││└─┐             
+═╩╝└─┘ └┘ ┴└─┘└─┘  ╚  └─┘┘└┘└─┘ ┴ ┴└─┘┘└┘└─┘             
+*/
+//
+router.post("/killServiceWorker", upload.none(''), async (req, res, next) => {
+  //
+
+  //
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var result = await Sessions.killServiceWorker(req.body.SessionName);
+      res.status(200).json(result);
+      break;
+    default:
+      res.status(400).json(sessionStatus);
+  }
+}); //killServiceWorker
+//
+// ------------------------------------------------------------------------------------------------//
+//
+router.post("/restartService", upload.none(''), async (req, res, next) => {
+  //
+
+  //
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var result = await Sessions.restartService(req.body.SessionName);
+      res.status(200).json(result);
+      break;
+    default:
+      res.status(400).json(sessionStatus);
+  }
+}); //restartService
+//
+// ------------------------------------------------------------------------------------------------//
+//
+router.post("/getHostDevice", upload.none(''), async (req, res, next) => {
+  //
+
+  //
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      //
+      var jsonStr = '{"getHostDevice":[]}';
+      var obj = JSON.parse(jsonStr);
+      //
+      var sendResult = await Sessions.getHostDevice(req.body.SessionName);
+      //
+      obj['getHostDevice'].push(sendResult);
+      //
+      jsonStr = JSON.stringify(obj);
+      //console.log(JSON.parse(jsonStr));
+      var result = JSON.parse(jsonStr);
+      //
+      //console.log(result);
+      res.status(200).json(result);
+      break;
+    default:
+      res.status(400).json(sessionStatus);
+  }
+}); //getHostDevice
+//
+// ------------------------------------------------------------------------------------------------//
+//
+router.post("/getConnectionState", upload.none(''), async (req, res, next) => {
+  //
+
+  //
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var result = await Sessions.getConnectionState(req.body.SessionName);
+      res.status(200).json(result);
+      break;
+    default:
+      res.status(400).json(sessionStatus);
+  }
+}); //getConnectionState
+//
+// ------------------------------------------------------------------------------------------------//
+//
+router.post("/getBatteryLevel", upload.none(''), async (req, res, next) => {
+  //
+
+  //
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var result = await Sessions.getBatteryLevel(req.body.SessionName);
+      res.status(200).json(result);
+      break;
+    default:
+      res.status(400).json(sessionStatus);
+  }
+}); //getBatteryLevel
+//
+// ------------------------------------------------------------------------------------------------//
+//
+router.post("/isConnected", upload.none(''), async (req, res, next) => {
+  //
+
+  //
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var result = await Sessions.isConnected(req.body.SessionName);
+      res.status(200).json(result);
+      break;
+    default:
+      res.status(400).json(sessionStatus);
+  }
+}); //isConnected
+//
+// ------------------------------------------------------------------------------------------------//
+//
+router.post("/getWAVersion", upload.none(''), async (req, res, next) => {
+  //
+
+  //
+  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var result = await Sessions.getWAVersion(req.body.SessionName);
+      res.status(200).json(result);
+      break;
+    default:
+      res.status(400).json(sessionStatus);
+  }
+}); //getWAVersion
+//
+// ------------------------------------------------------------------------------------------------//
+//
+/*
+╔═╗┌┬┐┬ ┬┌─┐┬─┐                                          
+║ ║ │ ├─┤├┤ ├┬┘                                          
+╚═╝ ┴ ┴ ┴└─┘┴└─                                          
+*/
+//
+
+
+
+
+
+
+//
+// ------------------------------------------------------------------------------------------------//
+//
+/*
+╔╦╗┌─┐┌─┐┌┬┐┌─┐┌─┐  ┌┬┐┌─┐  ╦═╗┌─┐┌┬┐┌─┐┌─┐
+ ║ ├┤ └─┐ │ ├┤ └─┐   ││├┤   ╠╦╝│ │ │ ├─┤└─┐
+ ╩ └─┘└─┘ ┴ └─┘└─┘  ─┴┘└─┘  ╩╚═└─┘ ┴ ┴ ┴└─┘
+ */
+//
+// ------------------------------------------------------------------------------------------------//
+//
+router.post("/RotaTeste", upload.single('file'), async (req, res, next) => {
+  //
+  var teste = {
+    "createGroup": {
+      "erro": false,
+      "status": 200,
+      "gid": "556796787854-1618496180@g.us",
+      "contactlistValid": [
+        "5567992412137@c.us",
+        "5567991977682@c.us"
+      ],
+      "contactlistInvalid": [],
+      "message": "Grupo criado com a lista de contatos validos"
+    }
+  };
+  //
+  // Promote participant (Give admin privileges)
+  //await client.promoteParticipant('00000000-000000@g.us', '111111111111@c.us');
+  //
+  res.status(200).json({
+    "gid": teste.createGroup.gid,
+    "group": teste.createGroup.gid.replace("@g.us", "")
+  }); //RotaTeste
+});
+//
+// ------------------------------------------------------------------------------------------------//
+//
+module.exports = router;
