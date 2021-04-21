@@ -277,10 +277,10 @@ $ cd ~
 $ git clone https://github.com/AlanMartines/mywhats-api-node-wppconnect.git
 
 # Acesse a pasta do projeto no terminal/cmd
-$ cd mywhats-api
+$ cd nodejs-mywhats-api-node-wppconnect
 
 # Processando o arquivo Dockerfile
-$ docker build -t alanmartines/nodejs-mywhats-api-node-wppconnect:1.0 .
+$ docker build -t alanmartines/nodejs-mywhats-api-node-wppconnect:1.0
 
 # Criar um contêiner
 $ docker container run --name mywhats-api-node-wppconnect -p 9000:9000 -d alanmartines/nodejs-mywhats-api-node-wppconnect:1.0
@@ -324,6 +324,7 @@ Existem dois tipos diferentes de banimento.
  - O WhatsApp poderia anteriormente banir sua conta se você enviar a mesma mensagem para muitas pessoas. O WhatsApp não consegue ler o conteúdo da mensagem, mas se o aplicativo WhatsApp entender que você está encaminhando a mesma mensagem para muitos contatos, você pode ser banido temporariamente. Não deveria estar ativo hoje em dia ou é muito raro, pois o WhatsApp permite encaminhar uma mensagem para no máximo 5 contatos, a fim de evitar a divulgação de notícias falsas.
  - O WhatsApp pode banir temporariamente sua conta se muitas pessoas bloquearem você em um determinado tempo.
  Se o usuário foi banido temporariamente várias vezes, ele pode ser banido permanentemente de usar o WhatsApp.
+
  **BANIMENTO PERMANENTE**
  Principais razões pelas quais o WhatsApp pode banir sua conta:
  - O WhatsApp proíbe permanentemente contas que executam ações em massa ou automatizadas: elas violam totalmente seus Termos de Serviço porque essas ações usam os serviços do WhatsApp sem qualquer autorização. O WhatsApp proíbe mais de 2,5 milhões de contas por mês devido a mensagens em massa e automatizadas.
