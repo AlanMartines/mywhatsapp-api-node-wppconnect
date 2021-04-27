@@ -4,7 +4,7 @@ const {
   forEach
 } = require('p-iteration');
 const axios = require('axios');
-const wppconnect = require('@wppconnect-team/wppconnect');
+//const wppconnect = require('@wppconnect-team/wppconnect');
 const serverConfig = require("./config/server.config.json");
 //
 // ------------------------------------------------------------------------------------------------------- //
