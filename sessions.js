@@ -231,27 +231,6 @@ module.exports = class Sessions {
     session.browserSessionToken = null;
     //
     /*
-    if (Sessions.options.jsonbinio_secret_key !== undefined) {
-      console.log("- Checando JSONBin");
-      //se informou secret key pra salvar na nuvem
-      //busca token da session na nuvem
-      var config = {
-        method: 'get',
-        url: 'https://api.jsonbin.io/b/' + Sessions.options.jsonbinio_bin_id,
-        headers: {
-          'secret-key': Sessions.options.jsonbinio_secret_key
-        }
-      };
-      const response = await axios(config);
-      if (response.data.WAToken1 !== undefined) {
-        session.browserSessionToken = response.data;
-        //console.log("- Browser Session Token: " + JSON.stringify(session.browserSessionToken));
-      } else {
-        console.log("- Sem token na nuvem.");
-      }
-    } //if jsonbinio_secret_key
-    */
-    /*
       ╔═╗┌─┐┌┬┐┬┌─┐┌┐┌┌─┐┬    ╔═╗┬─┐┌─┐┌─┐┌┬┐┌─┐  ╔═╗┌─┐┬─┐┌─┐┌┬┐┌─┐┌┬┐┌─┐┬─┐┌─┐
       ║ ║├─┘ │ ││ ││││├─┤│    ║  ├┬┘├┤ ├─┤ │ ├┤   ╠═╝├─┤├┬┘├─┤│││├┤  │ ├┤ ├┬┘└─┐
       ╚═╝┴   ┴ ┴└─┘┘└┘┴ ┴┴─┘  ╚═╝┴└─└─┘┴ ┴ ┴ └─┘  ╩  ┴ ┴┴└─┴ ┴┴ ┴└─┘ ┴ └─┘┴└─└─┘
@@ -355,7 +334,7 @@ module.exports = class Sessions {
         }
       },
       // options
-      headless: true, // Headless chrome
+      headless: false, // Headless chrome
       devtools: false, // Open devtools by default
       useChrome: false, // If false will use Chromium instance
       debug: false, // Opens a debug session
@@ -454,33 +433,7 @@ module.exports = class Sessions {
         console.log('- Connection status: ', state);
         clearTimeout(time);
         if (state == "CONNECTED") {
-          /*
-          if (Sessions.options.jsonbinio_secret_key !== undefined && session.browserSessionToken == undefined) { //se informou secret key pra salvar na nuvem
-            setTimeout(async () => {
-              console.log("gravando token na nuvem...");
-              //salva dados do token da sessão na nuvem
-              const browserSessionToken = await client.getSessionTokenBrowser();
-              var data = JSON.stringify(browserSessionToken);
-              var config = {
-                method: 'put',
-                url: 'https://api.jsonbin.io/b/' + Sessions.options.jsonbinio_bin_id,
-                headers: {
-                  'Content-Type': 'application/json',
-                  'secret-key': Sessions.options.jsonbinio_secret_key,
-                  'versioning': 'false'
-                },
-                data: data
-              };
-              await axios(config)
-                .then(function(response) {
-                  console.log(JSON.stringify(response.data));
-                })
-                .catch(function(error) {
-                  console.log(error);
-                });
-            }, 2000);
-          } //if jsonbinio_secret_key
-          */
+
         } //if CONNECTED
         //
         //  DISCONNECTED when the mobile device is disconnected
