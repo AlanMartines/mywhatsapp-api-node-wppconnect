@@ -257,9 +257,7 @@ module.exports = class Sessions {
       ╚═╝┴   ┴ ┴└─┘┘└┘┴ ┴┴─┘  ╚═╝┴└─└─┘┴ ┴ ┴ └─┘  ╩  ┴ ┴┴└─┴ ┴┴ ┴└─┘ ┴ └─┘┴└─└─┘
    */
     //
-    const client = await wppconnect.create({
-      session: session.name,
-      catchQR: (base64Qrimg, asciiQR, attempts, urlCode) => {
+    const client = await wppconnect.create(session.name, (base64Qrimg, asciiQR, attempts, urlCode) => {
         //
         console.log("- Saudação:", saudacao());
         //
@@ -314,7 +312,7 @@ module.exports = class Sessions {
         */
       },
       // statusFind
-      statusFind: (statusSession, session_wppconnect) => {
+      (statusSession, session_wppconnect) => {
         console.log('- Status da sessão:', statusSession);
         //return isLogged || notLogged || browserClose || qrReadSuccess || qrReadFail || autocloseCalled || desconnectedMobile || deleteToken
         //Create session wss return "serverClose" case server for close
@@ -355,74 +353,70 @@ module.exports = class Sessions {
         }
       },
       // options
-      folderNameToken: 'tokens', //folder name when saving tokens
-      mkdirFolderToken: '', //folder directory tokens, just inside the venom folder, example:  { mkdirFolderToken: '/node_modules', } //will save the tokens folder in the node_modules directory
-      headless: true, // Headless chrome
-      devtools: false, // Open devtools by default
-      useChrome: false, // If false will use Chromium instance
-      debug: false, // Opens a debug session
-      logQR: false, // Logs QR automatically in terminal
-      browserWS: '', // If u want to use browserWSEndpoint
-      browserArgs: [
-        '--log-level=3',
-        '--no-default-browser-check',
-        '--disable-site-isolation-trials',
-        '--no-experiments',
-        '--ignore-gpu-blacklist',
-        '--ignore-ssl-errors',
-        '--ignore-certificate-errors',
-        '--ignore-certificate-errors-spki-list',
-        '--disable-gpu',
-        '--disable-extensions',
-        '--disable-default-apps',
-        '--enable-features=NetworkService',
-        '--disable-setuid-sandbox',
-        '--no-sandbox',
-        // Extras
-        '--disable-webgl',
-        '--disable-threaded-animation',
-        '--disable-threaded-scrolling',
-        '--disable-in-process-stack-traces',
-        '--disable-histogram-customizer',
-        '--disable-gl-extensions',
-        '--disable-composited-antialiasing',
-        '--disable-canvas-aa',
-        '--disable-3d-apis',
-        '--disable-accelerated-2d-canvas',
-        '--disable-accelerated-jpeg-decoding',
-        '--disable-accelerated-mjpeg-decode',
-        '--disable-app-list-dismiss-on-blur',
-        '--disable-accelerated-video-decode',
-        // Outros
-        '--disable-web-security',
-        '--disable-web-security',
-        '--aggressive-cache-discard',
-        '--disable-cache',
-        '--disable-application-cache',
-        '--disable-offline-load-stale-cache',
-        '--disk-cache-size=0',
-        '--disable-background-networking',
-        '--disable-sync',
-        '--disable-translate',
-        '--hide-scrollbars',
-        '--metrics-recording-only',
-        '--mute-audio',
-        '--no-first-run',
-        '--safebrowsing-disable-auto-update'
-      ],
-      puppeteerOptions: {}, // Will be passed to puppeteer.launch
-      //executablePath: '/usr/bin/chromium-browser',
-      disableSpins: true, // Will disable Spinnies animation, useful for containers (docker) for a better log
-      disableWelcome: false, // Will disable the welcoming message which appears in the beginning
-      updatesLog: true, // Logs info updates automatically in terminal
-      autoClose: false, // Automatically closes the venom-bot only when scanning the QR code (default 60 seconds, if you want to turn it off, assign 0 or false)
-      tokenStore: 'file', // Define how work with tokens, that can be a custom interface
-      folderNameToken: './tokens', //folder name when saving tokens
-      //createPathFileToken: true, //creates a folder when inserting an object in the client's browser, to work it is necessary to pass the parameters in the function create browserSessionToken
-      // BrowserSessionToken
-      // To receive the client's token use the function await clinet.getSessionTokenBrowser()
-      sessionToken: await client.getSessionTokenBrowser()
-    });
+      {
+        folderNameToken: 'tokens', //folder name when saving tokens
+        mkdirFolderToken: '', //folder directory tokens, just inside the venom folder, example:  { mkdirFolderToken: '/node_modules', } //will save the tokens folder in the node_modules directory
+        headless: true, // Headless chrome
+        devtools: false, // Open devtools by default
+        useChrome: false, // If false will use Chromium instance
+        debug: false, // Opens a debug session
+        logQR: false, // Logs QR automatically in terminal
+        browserWS: '', // If u want to use browserWSEndpoint
+        browserArgs: [
+          '--log-level=3',
+          '--no-default-browser-check',
+          '--disable-site-isolation-trials',
+          '--no-experiments',
+          '--ignore-gpu-blacklist',
+          '--ignore-ssl-errors',
+          '--ignore-certificate-errors',
+          '--ignore-certificate-errors-spki-list',
+          '--disable-gpu',
+          '--disable-extensions',
+          '--disable-default-apps',
+          '--enable-features=NetworkService',
+          '--disable-setuid-sandbox',
+          '--no-sandbox',
+          // Extras
+          '--disable-webgl',
+          '--disable-threaded-animation',
+          '--disable-threaded-scrolling',
+          '--disable-in-process-stack-traces',
+          '--disable-histogram-customizer',
+          '--disable-gl-extensions',
+          '--disable-composited-antialiasing',
+          '--disable-canvas-aa',
+          '--disable-3d-apis',
+          '--disable-accelerated-2d-canvas',
+          '--disable-accelerated-jpeg-decoding',
+          '--disable-accelerated-mjpeg-decode',
+          '--disable-app-list-dismiss-on-blur',
+          '--disable-accelerated-video-decode',
+          // Outros
+          '--disable-web-security',
+          '--disable-web-security',
+          '--aggressive-cache-discard',
+          '--disable-cache',
+          '--disable-application-cache',
+          '--disable-offline-load-stale-cache',
+          '--disk-cache-size=0',
+          '--disable-background-networking',
+          '--disable-sync',
+          '--disable-translate',
+          '--hide-scrollbars',
+          '--metrics-recording-only',
+          '--mute-audio',
+          '--no-first-run',
+          '--safebrowsing-disable-auto-update'
+        ],
+        puppeteerOptions: {}, // Will be passed to puppeteer.launch
+        //executablePath: '/usr/bin/chromium-browser',
+        disableSpins: true, // Will disable Spinnies animation, useful for containers (docker) for a better log
+        disableWelcome: false, // Will disable the welcoming message which appears in the beginning
+        updatesLog: true, // Logs info updates automatically in terminal
+        autoClose: false, // Automatically closes the venom-bot only when scanning the QR code (default 60 seconds, if you want to turn it off, assign 0 or false)
+        createPathFileToken: true, //creates a folder when inserting an object in the client's browser, to work it is necessary to pass the parameters in the function create browserSessionToken
+      });
     wppconnect.defaultLogger.level = 'silly';
     var browserSessionToken = await client.getSessionTokenBrowser();
     console.log("- Token WPPConnect:\n", JSON.parse(JSON.stringify(browserSessionToken)));
