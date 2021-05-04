@@ -80,7 +80,7 @@ module.exports = class Sessions {
     return session;
   } //getStatus
   //
-  static async Status(SessionName) {
+  static async ApiStatus(SessionName) {
     console.log("- Status");
     var session = Sessions.getSession(SessionName);
     if (session) { //só adiciona se não existir
