@@ -10,70 +10,70 @@
 
 #### Dependências (Ubuntu)
 ```bash
-$ sudo apt-get install -y gconf-service libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget build-essential apt-transport-https libgbm-dev python3-pip libssl-dev libffi-dev python3-dev build-essential cmake clang libicu-dev procps
+sudo apt-get install -y gconf-service libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget build-essential apt-transport-https libgbm-dev python3-pip libssl-dev libffi-dev python3-dev build-essential cmake clang libicu-dev procps
 ```
 
 #### Instalar MongoDB Community Edition (Ubuntu)
 
 ###### Instalar gnupg
 ```bash
-$ sudo apt-get install -y gnupg
+sudo apt-get install -y gnupg
 ```
 
 ###### Importar a chave
 ```bash
-$ wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | sudo apt-key add -
+wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | sudo apt-key add -
 ```
 
 ###### Importar a chave
 ```bash
-$ wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | sudo apt-key add -
+wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | sudo apt-key add -
 ```
 
 #### Crie um arquivo de lista para MongoDB
 
 ###### Ubuntu 20.04 (Focal)
 ```bash
-$ echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
+echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
 ```
 
 ###### Ubuntu 18.04 (Bionic)
 ```bash
-$ echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
+echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
 ```
 
 ###### Ubuntu 16.04 (Xenial)
 ```bash
-$ echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
+echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
 ```
 
 #### Instale o MongoDB e iniciar (Ubuntu)
 
 ###### Instalar
 ```bash
-$ sudo apt-get update
+sudo apt-get update
 
-$ sudo apt-get install -y mongodb-org
+sudo apt-get install -y mongodb-org
 ```
 
 ###### Iniciar/Status/Habilitar/Parar
 ```bash
-$ sudo systemctl daemon-reload
+sudo systemctl daemon-reload
 
 # Inicia
-$ sudo systemctl start mongod
+sudo systemctl start mongod
 
 # Status
-$ sudo systemctl status mongod
+sudo systemctl status mongod
 
 # Habilita
-$ sudo systemctl enable mongod
+sudo systemctl enable mongod
 
 # Para
-$ sudo systemctl stop mongod
+sudo systemctl stop mongod
 
 # Reinicia
-$ sudo systemctl restart mongod
+sudo systemctl restart mongod
 ```
 
 #### Instale o NodeJs (Ubuntu)
@@ -81,52 +81,52 @@ $ sudo systemctl restart mongod
 ###### Instalar
 ```bash
 # Ir para seu diretório home
-$ cd ~
+cd ~
 
 # Recuperar o script de instalação para sua versão de preferência
-$ curl -sL https://deb.nodesource.com/setup_14.x -o nodesource_setup.sh
+curl -sL https://deb.nodesource.com/setup_14.x -o nodesource_setup.sh
 
 # Execute o script 
-$ sudo bash nodesource_setup.sh
+sudo bash nodesource_setup.sh
 
 # Instalar o pacote Node.js
-$ sudo apt install -y git nodejs yarn gcc g++ make
+sudo apt install -y git nodejs yarn gcc g++ make
 
 # Remover pacotes que não são mais necessários
-$ sudo apt autoremove -y
+sudo apt autoremove -y
 ```
 
 ## Rodando a aplicação
 
 ```bash
 # Ir para seu diretório home
-$ cd ~
+cd ~
 
 # Clone este repositório
-$ git clone https://github.com/AlanMartines/mywhatsapp-api-node-wppconnect.git
+git clone https://github.com/AlanMartines/mywhatsapp-api-node-wppconnect.git
 
 # Acesse a pasta do projeto no terminal/cmd
-$ cd mywhatsapp-api-node-wppconnect
+cd mywhatsapp-api-node-wppconnect
 
 # Instale as dependências
-$ npm install
+npm install
 
 # Execute a aplicação 
-$ node index.js
+node index.js
 
 # Manter os processos ativos a cada reinicialização do servidor
-$ sudo npm install pm2 -g
+sudo npm install pm2 -g
 
-$ pm2 start index.js
+pm2 start index.js
 
-$ pm2 save
+pm2 save
 
-$ pm2 startup
+pm2 startup
 
-$ sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u ${USER} --hp /home/${USER}
+sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u ${USER} --hp /home/${USER}
 
 # Para remover do init script
-$ pm2 unstartup systemd
+pm2 unstartup systemd
 
 # O servidor iniciará na porta:9000
 
@@ -242,7 +242,7 @@ router.post("/Close", (req, res, next) => {
 
 ## Gerar TOKEN_SECRET para uso no jwt
 ```bash
-$ node -e "console.log(require('crypto').randomBytes(256).toString('base64'));"
+node -e "console.log(require('crypto').randomBytes(256).toString('base64'));"
 ```
 
 ## Configuração do arquivo "config/server.config.json"
@@ -271,35 +271,35 @@ $ node -e "console.log(require('crypto').randomBytes(256).toString('base64'));"
 ## Dockerfile
 ```bash
 # Ir para seu diretório home
-$ cd ~
+cd ~
 
 # Clone este repositório
-$ git clone https://github.com/AlanMartines/mywhatsapp-api-node-wppconnect.git
+git clone https://github.com/AlanMartines/mywhatsapp-api-node-wppconnect.git
 
 # Acesse a pasta do projeto no terminal/cmd
-$ cd nodejs-mywhatsapp-api-node-wppconnect
+cd nodejs-mywhatsapp-api-node-wppconnect
 
 # Processando o arquivo Dockerfile
-$ docker build -t alanmartines/nodejs-mywhatsapp-api-node-wppconnect:1.0
+docker build -t alanmartines/nodejs-mywhatsapp-api-node-wppconnect:1.0
 
 # Criar um contêiner
-$ docker container run --name mywhatsapp-api-node-wppconnect -p 9000:9000 -d alanmartines/nodejs-mywhatsapp-api-node-wppconnect:1.0
+docker container run --name mywhatsapp-api-node-wppconnect -p 9000:9000 -d alanmartines/nodejs-mywhatsapp-api-node-wppconnect:1.0
 ```
 ## Para instalar o certbot e criar o certificado SSL para domínios https
 ```bash
-$ sudo apt update
+sudo apt update
 
-$ sudo apt install -y software-properties-common
+sudo apt install -y software-properties-common
 
-$ sudo add-apt-repository universe
+sudo add-apt-repository universe
 
-$ sudo add-apt-repository ppa:certbot/certbot
+sudo add-apt-repository ppa:certbot/certbot
 
-$ sudo apt update
+sudo apt update
 
-$ sudo apt install -y certbot
+sudo apt install -y certbot
 
-$ sudo certbot certonly --manual --force-renewal -d *.yourdomain.net -d yourdomain.net --agree-tos --no-bootstrap --manual-public-ip-logging-ok --preferred-challenges dns-01 --server https://acme-v02.api.letsencrypt.org/directory
+sudo certbot certonly --manual --force-renewal -d *.yourdomain.net -d yourdomain.net --agree-tos --no-bootstrap --manual-public-ip-logging-ok --preferred-challenges dns-01 --server https://acme-v02.api.letsencrypt.org/directory
 ```
 
 ## Em desenvolvimento
