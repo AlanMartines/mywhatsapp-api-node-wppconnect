@@ -203,6 +203,11 @@ router.post("/QRCode", upload.none(''), async (req, res, next) => {
             status: 'notLogged',
             message: 'Sistema Off-line'
           };
+          //
+          res.status(200).json({
+            getQRCode
+          });
+          //
         }
       } else {
         var getQRCode = {
@@ -212,12 +217,12 @@ router.post("/QRCode", upload.none(''), async (req, res, next) => {
           qrcode: session.qrcode,
           message: "Aguardando leitura do QR-Code"
         };
+        //
+        res.status(200).json({
+          getQRCode
+        });
+        //
       }
-      //
-      res.status(200).json({
-        getQRCode
-      });
-      //
       break;
     case 'autocloseCalled':
       var getQRCode = {
