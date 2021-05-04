@@ -103,10 +103,10 @@ $ sudo apt autoremove -y
 $ cd ~
 
 # Clone este repositório
-$ git clone https://github.com/AlanMartines/mywhats-api-node-wppconnect.git
+$ git clone https://github.com/AlanMartines/mywhatsapp-api-node-wppconnect.git
 
 # Acesse a pasta do projeto no terminal/cmd
-$ cd mywhats-api-node-wppconnect
+$ cd mywhatsapp-api-node-wppconnect
 
 # Instale as dependências
 $ npm install
@@ -238,7 +238,7 @@ router.post("/Close", (req, res, next) => {
 }
 ```
 
- - Com esses dados o mywhats-api-node-wppconnect irá gravar o token na nuvem e poderá ser executado em várias instancias diferentes por exemplo no Gooogle Cloud Run
+ - Com esses dados o mywhatsapp-api-node-wppconnect irá gravar o token na nuvem e poderá ser executado em várias instancias diferentes por exemplo no Gooogle Cloud Run
 
 ## Gerar TOKEN_SECRET para uso no jwt
 ```bash
@@ -261,7 +261,7 @@ $ node -e "console.log(require('crypto').randomBytes(256).toString('base64'));"
     "jwt_secret": "09f26e402586e2faa8da4c98a35f1b20d6b033c60",
     "_comment_mongodb": "Configuração do mongo db",
     "local_mongo_conn_url": "mongodb://localhost:27017/",
-    "mongo_db_name": "mywhats-api-node-wppconnect",
+    "mongo_db_name": "mywhatsapp-api-node-wppconnect",
     "_comment_ssl": "Configuração dos certificados key e csr",
     "ssl_key_patch": "sslcert/server.key",
     "ssl_csr_patch": "sslcert/server.crt"
@@ -274,16 +274,16 @@ $ node -e "console.log(require('crypto').randomBytes(256).toString('base64'));"
 $ cd ~
 
 # Clone este repositório
-$ git clone https://github.com/AlanMartines/mywhats-api-node-wppconnect.git
+$ git clone https://github.com/AlanMartines/mywhatsapp-api-node-wppconnect.git
 
 # Acesse a pasta do projeto no terminal/cmd
-$ cd nodejs-mywhats-api-node-wppconnect
+$ cd nodejs-mywhatsapp-api-node-wppconnect
 
 # Processando o arquivo Dockerfile
-$ docker build -t alanmartines/nodejs-mywhats-api-node-wppconnect:1.0
+$ docker build -t alanmartines/nodejs-mywhatsapp-api-node-wppconnect:1.0
 
 # Criar um contêiner
-$ docker container run --name mywhats-api-node-wppconnect -p 9000:9000 -d alanmartines/nodejs-mywhats-api-node-wppconnect:1.0
+$ docker container run --name mywhatsapp-api-node-wppconnect -p 9000:9000 -d alanmartines/nodejs-mywhatsapp-api-node-wppconnect:1.0
 ```
 ## Para instalar o certbot e criar o certificado SSL para domínios https
 ```bash
