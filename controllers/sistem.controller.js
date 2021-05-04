@@ -102,6 +102,7 @@ const convertBytes = function(bytes) {
 //
 router.post("/Start", upload.none(''), async (req, res, next) => {
   //
+  /*
   if (serverConfig.jsonbinio_secret_key) {
     var session = await Sessions.Start(req.body.sessionName, {
       jsonbinio_secret_key: serverConfig.jsonbinio_secret_key,
@@ -110,6 +111,8 @@ router.post("/Start", upload.none(''), async (req, res, next) => {
   } else {
     var session = await Sessions.Start(req.body.SessionName);
   }
+  */
+  var session = await Sessions.Start(req.body.SessionName);
   //console.log(session);
   if (["CONNECTED"].includes(session.state)) {
     res.status(200).json({
@@ -155,7 +158,7 @@ router.post("/Start", upload.none(''), async (req, res, next) => {
 // Gera o QR-Code
 router.post("/QRCode", upload.none(''), async (req, res, next) => {
   console.log("- getQRCode");
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   var session = Sessions.getSession(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
@@ -163,11 +166,15 @@ router.post("/QRCode", upload.none(''), async (req, res, next) => {
     case 'isLogged':
     case 'chatsAvailable':
       //
-      res.status(200).json({
+      var getQRCode = {
         result: "success",
         state: session.state,
         status: session.status,
         message: "Sistema iniciado"
+      };
+      //
+      res.status(200).json({
+        getQRCode
       });
       //
       break;
@@ -179,12 +186,24 @@ router.post("/QRCode", upload.none(''), async (req, res, next) => {
       //
       if (req.body.View === true) {
         var xSession = session.qrcode;
-        const imageBuffer = Buffer.from(xSession.replace('data:image/png;base64,', ''), 'base64');
-        res.writeHead(200, {
-          'Content-Type': 'image/png',
-          'Content-Length': imageBuffer.length
-        });
-        res.end(imageBuffer);
+        if (xSession) {
+          const imageBuffer = Buffer.from(xSession.replace('data:image/png;base64,', ''), 'base64');
+          //
+          res.writeHead(200, {
+            'Content-Type': 'image/png',
+            'Content-Length': imageBuffer.length
+          });
+          //
+          res.status(200).end(imageBuffer);
+          //
+        } else {
+          var getQRCode = {
+            result: 'error',
+            state: 'NOTFOUND',
+            status: 'notLogged',
+            message: 'Sistema Off-line'
+          };
+        }
       } else {
         var getQRCode = {
           result: "success",
@@ -194,6 +213,7 @@ router.post("/QRCode", upload.none(''), async (req, res, next) => {
           message: "Aguardando leitura do QR-Code"
         };
       }
+      //
       res.status(200).json({
         getQRCode
       });
@@ -206,6 +226,11 @@ router.post("/QRCode", upload.none(''), async (req, res, next) => {
         status: session.status,
         message: 'Navegador interno foi fechado'
       };
+      //
+      res.status(400).json({
+        getQRCode
+      });
+      //
       break;
     case 'browserClose':
       var getQRCode = {
@@ -214,6 +239,11 @@ router.post("/QRCode", upload.none(''), async (req, res, next) => {
         status: session.status,
         message: 'Navegador interno foi fechado'
       };
+      //
+      res.status(400).json({
+        getQRCode
+      });
+      //
       break;
     case 'serverWssNotConnected':
       var getQRCode = {
@@ -222,6 +252,11 @@ router.post("/QRCode", upload.none(''), async (req, res, next) => {
         status: session.status,
         message: 'O endereço wss não foi encontrado'
       };
+      //
+      res.status(400).json({
+        getQRCode
+      });
+      //
       break;
     case 'noOpenBrowser':
       var getQRCode = {
@@ -230,6 +265,11 @@ router.post("/QRCode", upload.none(''), async (req, res, next) => {
         status: session.status,
         message: 'Não foi encontrado no navegador ou falta algum comando no args'
       };
+      //
+      res.status(400).json({
+        getQRCode
+      });
+      //
       break;
     default:
       //
@@ -282,25 +322,13 @@ router.post("/getSessions", upload.none(''), async (req, res, next) => {
 // ------------------------------------------------------------------------------------------------//
 //
 router.post("/Status", upload.none(''), async (req, res, next) => {
-  var Status = await Sessions.Status(
+  var Status = await Sessions.ApiStatus(
     req.body.SessionName
   );
   res.status(200).json({
     Status
   });
 }); //Status
-//
-// ------------------------------------------------------------------------------------------------//
-//
-router.post("/sendHook", upload.none(''), async (req, res, next) => {
-  var sendHook = await Sessions.saveHook(
-    req.body.SessionName,
-    req.body.hook
-  );
-  res.status(200).json({
-    sendHook
-  });
-}); //sendHook
 //
 // ------------------------------------------------------------------------------------------------//
 //
@@ -336,7 +364,7 @@ router.post("/getHardWare", upload.none(''), async (req, res, next) => {
 //
 // Fecha a sessão
 router.post("/Close", upload.none(''), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
@@ -357,13 +385,14 @@ router.post("/Close", upload.none(''), async (req, res, next) => {
 //
 // Desconecta do whatsapp web
 router.post("/Logout", upload.none(''), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
     case 'isLogged':
     case 'chatsAvailable':
       //
+      /*
       if (typeof(Sessions.options) !== "undefined") {
         //
         if (Sessions.options.jsonbinio_secret_key !== undefined) { //se informou secret key pra salvar na nuvem
@@ -391,6 +420,7 @@ router.post("/Logout", upload.none(''), async (req, res, next) => {
             });
         }
       }
+      */
       //
       var LogoutSession = await Sessions.LogoutSession(req.body.SessionName);
       res.status(200).json({
@@ -414,7 +444,7 @@ router.post("/Logout", upload.none(''), async (req, res, next) => {
 router.post("/sendVoice", upload.single('audio_data'), async (req, res, next) => {
   //
   //Eviar menssagem de voz
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
@@ -459,7 +489,7 @@ router.post("/sendVoice", upload.single('audio_data'), async (req, res, next) =>
 //
 //Eviar menssagem de voz
 router.post("/sendVoiceBase64", upload.single('audio_data'), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
@@ -501,7 +531,7 @@ router.post("/sendVoiceBase64", upload.single('audio_data'), async (req, res, ne
 router.post("/sendVoiceFileBase64", upload.single('audio_data'), async (req, res, next) => {
   //
   //Eviar menssagem de voz
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
@@ -542,16 +572,12 @@ router.post("/sendVoiceFileBase64", upload.single('audio_data'), async (req, res
 //
 // Enviar Contato
 router.post("/sendContactVcard", upload.none(''), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
     case 'isLogged':
     case 'chatsAvailable':
-      //
-      //
-      var jsonStr = '{"sendResult":[]}';
-      var obj = JSON.parse(jsonStr);
       //
       var checkNumberStatus = await Sessions.checkNumberStatus(
         req.body.SessionName,
@@ -587,16 +613,12 @@ router.post("/sendContactVcard", upload.none(''), async (req, res, next) => {
 //
 // Enviar Lista de Contato
 router.post("/sendContactVcardList", upload.single('contactlist'), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
     case 'isLogged':
     case 'chatsAvailable':
-      //
-      //
-      var jsonStr = '{"sendContactVcardList":[]}';
-      var obj = JSON.parse(jsonStr);
       //
       var checkNumberStatus = await Sessions.checkNumberStatus(
         req.body.SessionName,
@@ -642,14 +664,10 @@ router.post("/sendContactVcardList", upload.single('contactlist'), async (req, r
         var sendContactVcardList = sessionStatus;
       }
       //
-      obj['sendContactVcardList'].push(sendContactVcardList);
-      //
-      jsonStr = JSON.stringify(obj);
-      //console.log(JSON.parse(jsonStr));
-      var sendContactVcardList = JSON.parse(jsonStr);
-      //
       //console.log(result);
-      res.status(200).json(sendContactVcardList);
+      res.status(200).json({
+        sendContactVcardList
+      });
       break;
     default:
       res.status(400).json({
@@ -662,7 +680,7 @@ router.post("/sendContactVcardList", upload.single('contactlist'), async (req, r
 //
 //Enviar Texto
 router.post("/sendText", upload.none(''), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
@@ -700,49 +718,21 @@ router.post("/sendText", upload.none(''), async (req, res, next) => {
 //
 // ------------------------------------------------------------------------------------------------//
 //
-//Enviar Texto no stores
-router.post("/sendTextToStorie", async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
-  switch (sessionStatus.status) {
-    case 'inChat':
-    case 'qrReadSuccess':
-    case 'isLogged':
-    case 'chatsAvailable':
-      //
-      var sendTextToStorie = await Sessions.sendTextToStorie(
-        req.body.SessionName,
-        req.body.text
-      );
-      //
-      //console.log(result);
-      res.status(200).json(sendTextToStorie);
-      break;
-    default:
-      res.status(400).json({
-        "sendTextToStorie": sessionStatus
-      });
-  }
-}); //sendTextToStorie
-//
-// ------------------------------------------------------------------------------------------------//
-//
 //Enviar Texto em Massa
 router.post("/sendTextMassa", upload.single('phonefull'), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
     case 'isLogged':
     case 'chatsAvailable':
       //
+      var sendTextMassa = [];
       //
       var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName + '-'));
       var filePath = path.join(folderName, req.file.originalname);
       fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
       console.log("- File:", filePath);
-      //
-      var jsonStr = '{"sendTextMassa":[]}';
-      var obj = JSON.parse(jsonStr);
       //
       var arrayNumbers = fs.readFileSync(filePath, 'utf-8').toString().split(/\r?\n/);
       for (var i in arrayNumbers) {
@@ -758,29 +748,26 @@ router.post("/sendTextMassa", upload.single('phonefull'), async (req, res, next)
           //
           if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
             //
-            var sendTextMassa = await Sessions.sendText(
+            var sendTextMassaRes = await Sessions.sendText(
               req.body.SessionName,
               soNumeros(checkNumberStatus.number) + '@c.us',
               req.body.msg
             );
             //
           } else {
-            var sendTextMassa = checkNumberStatus;
+            var sendTextMassaRes = checkNumberStatus;
           }
           //
-          //return sendResult;
+          sendTextMassa.push(sendTextMassaRes);
           //
-          obj['sendTextMassa'].push(sendTextMassa);
         }
         await sleep(1000);
       }
       //
-      jsonStr = JSON.stringify(obj);
-      //console.log(JSON.parse(jsonStr));
-      var sendTextMassa = JSON.parse(jsonStr);
-      //
       //console.log(result);
-      res.status(200).json(sendTextMassa);
+      res.status(200).json({
+        sendTextMassa
+      });
       break;
     default:
       res.status(400).json({
@@ -793,7 +780,7 @@ router.post("/sendTextMassa", upload.single('phonefull'), async (req, res, next)
 //
 //Enviar Texto em Grupo
 router.post("/sendTextGrupo", upload.none(''), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
@@ -822,7 +809,7 @@ router.post("/sendTextGrupo", upload.none(''), async (req, res, next) => {
 //
 //Enviar localização
 router.post("/sendLocation", upload.none(''), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
@@ -862,9 +849,40 @@ router.post("/sendLocation", upload.none(''), async (req, res, next) => {
 //
 // ------------------------------------------------------------------------------------------------//
 //
+//Enviar localização no grupo
+router.post("/sendLocationGroup", upload.none(''), async (req, res, next) => {
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var sendLocationGroup = await Sessions.sendLocation(
+        req.body.SessionName,
+        req.body.GroupId + '@g.us',
+        req.body.lat,
+        req.body.long,
+        req.body.local
+      );
+      //
+      //console.log(result);
+      res.status(200).json({
+        sendLocationGroup
+      });
+      break;
+    default:
+      res.status(400).json({
+        "sendLocationGroup": sessionStatus
+      });
+  }
+}); //sendLocationGroup
+//
+// ------------------------------------------------------------------------------------------------//
+//
 //Enviar links com preview
 router.post("/sendLinkPreview", upload.none(''), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
@@ -905,7 +923,7 @@ router.post("/sendLinkPreview", upload.none(''), async (req, res, next) => {
 //
 //Enviar Imagem
 router.post("/sendImage", upload.single('fileimg'), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
@@ -950,42 +968,6 @@ router.post("/sendImage", upload.single('fileimg'), async (req, res, next) => {
 //
 // ------------------------------------------------------------------------------------------------//
 //
-// Enviar Imagem no stores
-router.post("/sendImageToStorie", upload.single('fileimg'), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
-  switch (sessionStatus.status) {
-    case 'inChat':
-    case 'qrReadSuccess':
-    case 'isLogged':
-    case 'chatsAvailable':
-      //
-      //
-      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName + '-'));
-      var filePath = path.join(folderName, req.file.originalname);
-      fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
-      console.log("- File", filePath);
-      //
-      var sendImageToStorie = await Sessions.sendImageToStorie(
-        req.body.sessionName,
-        filePath,
-        req.file.originalname,
-        req.body.caption
-      );
-      //
-      //console.log(result);
-      res.status(200).json({
-        sendImageToStorie
-      });
-      break;
-    default:
-      res.status(400).json({
-        "sendImageToStorie": sessionStatus
-      });
-  }
-}); //sendImageToStorie
-//
-// ------------------------------------------------------------------------------------------------//
-//
 // Enviar Imagem em Massa
 var sendImageMassa = upload.fields([{
   name: 'phonefull',
@@ -996,7 +978,7 @@ var sendImageMassa = upload.fields([{
 }]);
 //
 router.post("/sendImageMassa", sendImageMassa, async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
@@ -1015,9 +997,7 @@ router.post("/sendImageMassa", sendImageMassa, async (req, res, next) => {
       fs.writeFileSync(filePathImagem, req.files['fileimg'][0].buffer.toString('base64'), 'base64');
       console.log("- File:", filePathImagem);
       //
-      //
-      var jsonStr = '{"sendImageMassa":[]}';
-      var obj = JSON.parse(jsonStr);
+      var sendImageMassa = [];
       //
       var arrayNumbers = fs.readFileSync(filePathContato, 'utf-8').toString().split(/\r?\n/);
       for (var i in arrayNumbers) {
@@ -1033,7 +1013,7 @@ router.post("/sendImageMassa", sendImageMassa, async (req, res, next) => {
           //
           if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
             //
-            var sendImageMassa = await Sessions.sendImage(
+            var sendImageMassaRes = await Sessions.sendImage(
               req.body.SessionName,
               soNumeros(checkNumberStatus.number) + '@c.us',
               filePathImagem,
@@ -1042,22 +1022,20 @@ router.post("/sendImageMassa", sendImageMassa, async (req, res, next) => {
             );
             //
           } else {
-            var sendImageMassa = checkNumberStatus;
+            var sendImageMassaRes = checkNumberStatus;
           }
           //
           //return sendResult;
           //
-          obj['sendImageMassa'].push(sendImageMassa);
+          sendImageMassa.push(sendImageMassaRes);
         }
         await sleep(1000);
       }
       //
-      jsonStr = JSON.stringify(obj);
-      //console.log(JSON.parse(jsonStr));
-      var sendImageMassa = JSON.parse(jsonStr);
-      //
       //console.log(result);
-      res.status(200).json(sendImageMassa);
+      res.status(200).json({
+        sendImageMassa
+      });
       break;
     default:
       res.status(400).json({
@@ -1070,7 +1048,7 @@ router.post("/sendImageMassa", sendImageMassa, async (req, res, next) => {
 //
 // Enviar varia imagens
 router.post("/sendMultImage", upload.array('fileimgs', 50), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
@@ -1080,8 +1058,7 @@ router.post("/sendMultImage", upload.array('fileimgs', 50), async (req, res, nex
       //
       var resultsFiles = req.files;
       //
-      var jsonStr = '{"sendMultImage":[]}';
-      var obj = JSON.parse(jsonStr);
+      var sendMultImage = [];
       //
       var checkNumberStatus = await Sessions.checkNumberStatus(
         req.body.SessionName,
@@ -1097,7 +1074,7 @@ router.post("/sendMultImage", upload.array('fileimgs', 50), async (req, res, nex
           fs.writeFileSync(filePathImagem, resultfile.buffer.toString('base64'), 'base64');
           console.log("- File:", filePathImagem);
           //
-          var sendMultImage = await Sessions.sendImage(
+          var sendMultImageRes = await Sessions.sendImage(
             req.body.SessionName,
             soNumeros(checkNumberStatus.number) + '@c.us',
             filePathImagem,
@@ -1105,7 +1082,7 @@ router.post("/sendMultImage", upload.array('fileimgs', 50), async (req, res, nex
             req.body.caption
           );
           //
-          obj['sendMultImage'].push(sendMultImage);
+          sendMultImage.push(sendMultImageRes);
           //
           await sleep(1000);
         });
@@ -1113,14 +1090,10 @@ router.post("/sendMultImage", upload.array('fileimgs', 50), async (req, res, nex
         var sendMultImage = checkNumberStatus;
       }
       //
-      obj['sendMultImage'].push(sendMultImage);
-      //
-      jsonStr = JSON.stringify(obj);
-      //console.log(JSON.parse(jsonStr));
-      var sendMultImage = JSON.parse(jsonStr);
-      //
       //console.log(result);
-      res.status(200).json(sendMultImage);
+      res.status(200).json({
+        sendMultImage
+      });
       break;
     default:
       res.status(400).json({
@@ -1141,7 +1114,7 @@ var sendMultImageMassa = upload.fields([{
 }]);
 //
 router.post("/sendMultImageMassa", sendMultImageMassa, async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
@@ -1157,8 +1130,7 @@ router.post("/sendMultImageMassa", sendMultImageMassa, async (req, res, next) =>
       console.log("- File Contato:", filePathContato);
       var arrayNumbers = fs.readFileSync(filePathContato, 'utf-8').toString().split(/\r?\n/);
       //
-      var jsonStr = '{"sendMultImageMassa":[]}';
-      var obj = JSON.parse(jsonStr);
+      var sendMultImageMassa = [];
       //
       for (var i in arrayNumbers) {
         //console.log(arrayNumbers[i]);
@@ -1168,7 +1140,7 @@ router.post("/sendMultImageMassa", sendMultImageMassa, async (req, res, next) =>
           //
           var checkNumberStatus = await Sessions.checkNumberStatus(
             req.body.SessionName,
-            soNumeros(req.body.phonefull) + '@c.us'
+            soNumeros(numero) + '@c.us'
           );
           //
           if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
@@ -1180,7 +1152,7 @@ router.post("/sendMultImageMassa", sendMultImageMassa, async (req, res, next) =>
               fs.writeFileSync(filePathImagem, resultfile.buffer.toString('base64'), 'base64');
               console.log("- File Imagem:", filePathImagem);
               //
-              var sendMultImageMassa = await Sessions.sendImage(
+              var sendMultImageMassaRes = await Sessions.sendImage(
                 req.body.SessionName,
                 soNumeros(checkNumberStatus.number) + '@c.us',
                 filePathImagem,
@@ -1188,7 +1160,7 @@ router.post("/sendMultImageMassa", sendMultImageMassa, async (req, res, next) =>
                 req.body.caption
               );
               //
-              obj['sendMultImageMassa'].push(sendMultImageMassa);
+              sendMultImageMassa.push(sendMultImageMassaRes);
               //
               await sleep(1000);
               //
@@ -1197,17 +1169,14 @@ router.post("/sendMultImageMassa", sendMultImageMassa, async (req, res, next) =>
           } else {
             var sendMultImageMassa = checkNumberStatus;
           }
-          //
-          obj['sendMultImageMassa'].push(sendMultImageMassa);
         }
         await sleep(1000);
       }
-      jsonStr = JSON.stringify(obj);
-      //console.log(JSON.parse(jsonStr));
-      var sendMultImageMassa = JSON.parse(jsonStr);
       //
       //console.log(result);
-      res.status(200).json(sendMultImageMassa);
+      res.status(200).json({
+        sendMultImageMassa
+      });
       break;
     default:
       res.status(400).json({
@@ -1220,7 +1189,7 @@ router.post("/sendMultImageMassa", sendMultImageMassa, async (req, res, next) =>
 //
 // Enviar imagen no grupo
 router.post("/sendImageGrupo", upload.single('fileimg'), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
@@ -1256,7 +1225,7 @@ router.post("/sendImageGrupo", upload.single('fileimg'), async (req, res, next) 
 //
 // Enviar arquivo/documento
 router.post("/sendFile", upload.single('file'), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
@@ -1303,7 +1272,7 @@ router.post("/sendFile", upload.single('file'), async (req, res, next) => {
 //
 // Enviar arquivo/documento
 router.post("/sendFileBase64", upload.none(''), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
@@ -1350,7 +1319,7 @@ router.post("/sendFileBase64", upload.none(''), async (req, res, next) => {
 //
 // Enviar arquivo/documento
 router.post("/sendFileToBase64", upload.single('file'), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
@@ -1393,7 +1362,7 @@ router.post("/sendFileToBase64", upload.single('file'), async (req, res, next) =
 //
 // Enviar arquivo/documento
 router.post("/sendFileFromBase64", upload.none(''), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
@@ -1441,7 +1410,7 @@ router.post("/sendImageAsStickerGif", upload.single('file'), async (req, res, ne
   // image path imageBase64 A valid gif and webp image is required. 
   // You can also send via http/https (http://www.website.com/img.gif)
   //
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
@@ -1491,7 +1460,7 @@ router.post("/sendImageAsStickerGifUrl", upload.single('file'), async (req, res,
   // image path imageBase64 A valid gif and webp image is required. 
   // You can also send via http/https (http://www.website.com/img.gif)
   //
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
@@ -1531,7 +1500,7 @@ router.post("/sendImageAsStickerGifUrl", upload.single('file'), async (req, res,
 //
 //Enviar figura png ou jpg
 router.post("/sendImageAsSticker", upload.single('file'), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
@@ -1578,433 +1547,15 @@ router.post("/sendImageAsSticker", upload.single('file'), async (req, res, next)
 //
 // ------------------------------------------------------------------------------------------------//
 //
-// Enviar opções de mensagem
-router.post("/sendMessageOptions", upload.none(''), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
-  switch (sessionStatus.status) {
-    case 'inChat':
-    case 'qrReadSuccess':
-    case 'isLogged':
-    case 'chatsAvailable':
-      //
-      var jsonStr = '{"sendResult":[]}';
-      var obj = JSON.parse(jsonStr);
-      //
-      var checkNumberStatus = await Sessions.checkNumberStatus(
-        req.body.SessionName,
-        soNumeros(req.body.phonefull),
-        req.body.chatIdorgroupId
-      );
-      //
-      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
-        //
-        var sendMessageOptions = await Sessions.sendMessageOptions(
-          req.body.SessionName,
-          soNumeros(checkNumberStatus.number) + '@c.us',
-          req.body.quotedMessageId,
-          req.body.msg
-        );
-        //
-      } else {
-        var sendMessageOptions = sendMessageOptions;
-      }
-      //
-      //console.log(result);
-      res.status(200).json({
-        sendMessageOptions
-      });
-      break;
-    default:
-      res.status(400).json({
-        "sendMessageOptions": sessionStatus
-      });
-  }
-}); //sendMessageOptions
-//
-// ------------------------------------------------------------------------------------------------//
-//
-//Enviar mp4 to gif
-router.post("/sendVideoAsGif", upload.single('file'), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
-  switch (sessionStatus.status) {
-    case 'inChat':
-    case 'qrReadSuccess':
-    case 'isLogged':
-    case 'chatsAvailable':
-      //
-      //
-      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName + '-'));
-      var filePath = path.join(folderName, req.file.originalname);
-      fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
-      console.log("- File", filePath);
-      //
-      var checkNumberStatus = await Sessions.checkNumberStatus(
-        req.body.SessionName,
-        soNumeros(req.body.phonefull) + '@c.us'
-      );
-      //
-      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
-        //
-        var sendVideoAsGif = await Sessions.sendVideoAsGif(
-          req.body.SessionName,
-          soNumeros(checkNumberStatus.number) + '@c.us',
-          filePath,
-          req.file.originalname,
-          req.body.caption
-        );
-        //
-      } else {
-        var sendVideoAsGif = checkNumberStatus;
-      }
-      //
-      //console.log(result);
-      res.status(200).json({
-        sendVideoAsGif
-      });
-      break;
-    default:
-      res.status(400).json({
-        "sendVideoAsGif": sessionStatus
-      });
-  }
-}); //sendVideoAsGif
-//
-// ------------------------------------------------------------------------------------------------//
-//
-// Enviar visto ✔️✔️
-router.post("/sendSeen", upload.single('fileimg'), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
-  switch (sessionStatus.status) {
-    case 'inChat':
-    case 'qrReadSuccess':
-    case 'isLogged':
-    case 'chatsAvailable':
-      //
-      var checkNumberStatus = await Sessions.checkNumberStatus(
-        req.body.SessionName,
-        soNumeros(req.body.phonefull) + '@c.us'
-      );
-      //
-      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
-        //
-        var sendSeen = await Sessions.sendSeen(
-          req.body.SessionName,
-          soNumeros(checkNumberStatus.number) + '@c.us'
-        );
-        //
-      } else {
-        var sendSeen = checkNumberStatus;
-      }
-      //
-      //console.log(result);
-      res.status(200).json({
-        sendSeen
-      });
-      break;
-    default:
-      res.status(400).json({
-        "sendSeen": sessionStatus
-      });
-  }
-}); //sendSeen
-//
-// ------------------------------------------------------------------------------------------------//
-//
-// Enviar digitando
-router.post("/startTyping", upload.single('fileimg'), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
-  switch (sessionStatus.status) {
-    case 'inChat':
-    case 'qrReadSuccess':
-    case 'isLogged':
-    case 'chatsAvailable':
-      //
-      var checkNumberStatus = await Sessions.checkNumberStatus(
-        req.body.SessionName,
-        soNumeros(req.body.phonefull) + '@c.us'
-      );
-      //
-      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
-        //
-        var startTyping = await Sessions.startTyping(
-          req.body.SessionName,
-          soNumeros(checkNumberStatus.number) + '@c.us'
-        );
-        //
-      } else {
-        var startTyping = checkNumberStatus;
-      }
-      //
-      //console.log(result);
-      res.status(200).json({
-        startTyping
-      });
-      break;
-    default:
-      res.status(400).json({
-        "startTyping": sessionStatus
-      });
-  }
-}); //startTyping
-//
-// ------------------------------------------------------------------------------------------------//
-//
-// Enviar para digitando
-router.post("/stopTyping", upload.single('fileimg'), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
-  switch (sessionStatus.status) {
-    case 'inChat':
-    case 'qrReadSuccess':
-    case 'isLogged':
-    case 'chatsAvailable':
-      //
-      var checkNumberStatus = await Sessions.checkNumberStatus(
-        req.body.SessionName,
-        soNumeros(req.body.phonefull) + '@c.us'
-      );
-      //
-      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
-        //
-        var stopTyping = await Sessions.stopTyping(
-          req.body.SessionName,
-          soNumeros(checkNumberStatus.number) + '@c.us'
-        );
-        //
-      } else {
-        var stopTyping = checkNumberStatus;
-      }
-      //
-      //console.log(result);
-      res.status(200).json({
-        stopTyping
-      });
-      break;
-    default:
-      res.status(400).json({
-        "stopTyping": sessionStatus
-      });
-  }
-}); //stopTyping
-//
-// ------------------------------------------------------------------------------------------------//
-//
-// Envoar status do chat (0: Typing, 1: Recording, 2: Paused)
-router.post("/setChatState", upload.none(''), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
-  switch (sessionStatus.status) {
-    case 'inChat':
-    case 'qrReadSuccess':
-    case 'isLogged':
-    case 'chatsAvailable':
-      //
-      var checkNumberStatus = await Sessions.checkNumberStatus(
-        req.body.SessionName,
-        soNumeros(req.body.phonefull) + '@c.us'
-      );
-      //
-      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
-        //
-        var setChatState = await Sessions.setChatState(
-          req.body.SessionName,
-          soNumeros(checkNumberStatus.number) + '@c.us',
-          req.body.state
-        );
-        //
-      } else {
-        var setChatState = checkNumberStatus;
-      }
-      //
-      //console.log(result);
-      res.status(200).json({
-        setChatState
-      });
-      break;
-    default:
-      res.status(400).json({
-        "setChatState": sessionStatus
-      });
-  }
-}); //stopTyping
-//
-// ------------------------------------------------------------------------------------------------//
-//
 /*
 ╦═╗┌─┐┌┬┐┬─┐┬┌─┐┬  ┬┬┌┐┌┌─┐  ╔╦╗┌─┐┌┬┐┌─┐                
 ╠╦╝├┤  │ ├┬┘│├┤ └┐┌┘│││││ ┬   ║║├─┤ │ ├─┤                
 ╩╚═└─┘ ┴ ┴└─┴└─┘ └┘ ┴┘└┘└─┘  ═╩╝┴ ┴ ┴ ┴ ┴                
 */
 //
-// Recuperar todos os bate-papos
-router.post("/getAllChats", upload.none(''), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
-  switch (sessionStatus.status) {
-    case 'inChat':
-    case 'qrReadSuccess':
-    case 'isLogged':
-    case 'chatsAvailable':
-      //
-      var getAllChats = await Sessions.getAllChats(req.body.SessionName);
-      //
-      res.json({
-        getAllChats
-      });
-      break;
-    default:
-      res.status(400).json({
-        "getAllChats": sessionStatus
-      });
-  }
-}); //getAllChats
-//
-// ------------------------------------------------------------------------------------------------------- //
-//
-// Recupera todas as novas mensagens de bate-papo
-router.post("/getAllChatsNewMsg", upload.none(''), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
-  switch (sessionStatus.status) {
-    case 'inChat':
-    case 'qrReadSuccess':
-    case 'isLogged':
-    case 'chatsAvailable':
-      //
-      var getAllChatsNewMsg = await Sessions.getAllChatsNewMsg(req.body.SessionName);
-      //
-      res.json({
-        getAllChatsNewMsg
-      });
-      break;
-    default:
-      res.status(400).json({
-        "getAllChatsNewMsg": sessionStatus
-      });
-  }
-}); //getAllChatsNewMsg
-//
-// ------------------------------------------------------------------------------------------------------- //
-//
-// Recupera todos os contatos do bate-papo
-router.post("/getAllChatsContacts", upload.none(''), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
-  switch (sessionStatus.status) {
-    case 'inChat':
-    case 'qrReadSuccess':
-    case 'isLogged':
-    case 'chatsAvailable':
-      //
-      var getAllChatsContacts = await Sessions.getAllChatsContacts(req.body.SessionName);
-      //
-      res.json({
-        getAllChatsContacts
-      });
-      break;
-    default:
-      res.status(400).json({
-        "getAllChatsContacts": sessionStatus
-      });
-  }
-}); //getAllChatsContacts
-//
-// ------------------------------------------------------------------------------------------------------- //
-//
-// Recuperar novas mensagens de todos os contatos
-router.post("/getChatContactNewMsg", upload.none(''), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
-  switch (sessionStatus.status) {
-    case 'inChat':
-    case 'qrReadSuccess':
-    case 'isLogged':
-    case 'chatsAvailable':
-      //
-      var getChatContactNewMsg = await Sessions.getChatContactNewMsg(req.body.SessionName);
-      //
-      res.json({
-        getChatContactNewMsg
-      });
-      break;
-    default:
-      res.status(400).json({
-        "getChatContactNewMsg": sessionStatus
-      });
-  }
-}); //getChatContactNewMsg
-//
-// ------------------------------------------------------------------------------------------------------- //
-//
-// Recuperar todos os grupos
-router.post("/getAllChatsGroups", upload.none(''), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
-  switch (sessionStatus.status) {
-    case 'inChat':
-    case 'qrReadSuccess':
-    case 'isLogged':
-    case 'chatsAvailable':
-      //
-      var getAllChatsGroups = await Sessions.getAllChatsGroups(req.body.SessionName);
-      //
-      res.json({
-        getAllChatsGroups
-      });
-      break;
-    default:
-      res.status(400).json({
-        "getAllChatsGroups": sessionStatus
-      });
-  }
-}); //getAllChatsGroups
-//
-// ------------------------------------------------------------------------------------------------------- //
-//
-// Recupera novas messagens de todos os contatos dos grupos
-router.post("/getChatGroupNewMsg", upload.none(''), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
-  switch (sessionStatus.status) {
-    case 'inChat':
-    case 'qrReadSuccess':
-    case 'isLogged':
-    case 'chatsAvailable':
-      //
-      var getChatGroupNewMsg = await Sessions.getChatGroupNewMsg(req.body.SessionName);
-      //
-      res.json({
-        getChatGroupNewMsg
-      });
-      break;
-    default:
-      res.status(400).json({
-        "getChatGroupNewMsg": sessionStatus
-      });
-  }
-}); //getChatGroupNewMsg
-//
-// ------------------------------------------------------------------------------------------------------- //
-//
-// Recupera todos os chats Lista de transmissão
-router.post("/getAllChatsTransmission", upload.none(''), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
-  switch (sessionStatus.status) {
-    case 'inChat':
-    case 'qrReadSuccess':
-    case 'isLogged':
-    case 'chatsAvailable':
-      //
-      var getAllChatsTransmission = await Sessions.getAllChatsTransmission(req.body.SessionName);
-      //
-      res.json({
-        getAllChatsTransmission
-      });
-      break;
-    default:
-      res.status(400).json({
-        "getAllChatsTransmission": sessionStatus
-      });
-  }
-}); //getAllChatsTransmission
-//
-// ------------------------------------------------------------------------------------------------------- //
-//
 // Recuperar contatos
 router.post("/getAllContacts", upload.none(''), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
@@ -2028,40 +1579,9 @@ router.post("/getAllContacts", upload.none(''), async (req, res, next) => {
 //
 // ------------------------------------------------------------------------------------------------------- //
 //
-// Lista os contatos em mudo
-router.post("/getListMute", upload.none(''), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
-  switch (sessionStatus.status) {
-    case 'inChat':
-    case 'qrReadSuccess':
-    case 'isLogged':
-    case 'chatsAvailable':
-      //
-      // Returns a list of mute and non-mute users
-      // "all" List all mutes
-      // "toMute" List all silent chats
-      // "noMute" List all chats without silence
-      //
-      var getListMute = await Sessions.getListMute(
-        req.body.SessionName,
-        req.body.list
-      );
-      res.status(200).json({
-        getListMute
-      });
-      break;
-    default:
-      res.status(400).json({
-        "getListMute": sessionStatus
-      });
-  }
-}); //getListMute
-//
-// ------------------------------------------------------------------------------------------------------- //
-//
 // Returns browser session token
 router.post("/getSessionTokenBrowser", upload.none(''), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
@@ -2086,7 +1606,7 @@ router.post("/getSessionTokenBrowser", upload.none(''), async (req, res, next) =
 //
 // Chama sua lista de contatos bloqueados
 router.post("/getBlockList", upload.none(''), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
@@ -2107,136 +1627,11 @@ router.post("/getBlockList", upload.none(''), async (req, res, next) => {
   }
 }); //getBlockList
 //
-// ------------------------------------------------------------------------------------------------------- //
-//
-// Recuperar mensagens no bate-papo
-router.post("/getAllMessagesInChat", upload.none(''), async (req, res, next) => {
-  //
-  //chatID chat id
-  //includeMe will be by default true, if you do not want to pass false
-  //includeNotifications will be by default true, if you do not want to pass false
-  //const Messages = await client.getAllMessagesInChat(chatID, includeMe, includeNotifications)
-  //
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
-  switch (sessionStatus.status) {
-    case 'inChat':
-    case 'qrReadSuccess':
-    case 'isLogged':
-    case 'chatsAvailable':
-      //
-      var checkNumberStatus = await Sessions.checkNumberStatus(
-        req.body.SessionName,
-        soNumeros(req.body.phonefull) + '@c.us'
-      );
-      //
-      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
-        //
-        var getAllMessagesInChat = await Sessions.getAllMessagesInChat(
-          req.body.SessionName,
-          soNumeros(checkNumberStatus.number) + "@c.us",
-          req.body.includeMe,
-          req.body.includeNotifications,
-        );
-        //
-      } else {
-        var getAllMessagesInChat = checkNumberStatus;
-      }
-      //
-      //console.log(result);
-      res.status(200).json({
-        getAllMessagesInChat
-      });
-      break;
-    default:
-      res.status(400).json({
-        "getAllMessagesInChat": sessionStatus
-      });
-  }
-}); //getAllMessagesInChat
-//
-// ------------------------------------------------------------------------------------------------------- //
-//
-// Carregar mensagens anteriores
-router.post("/loadEarlierMessages", upload.none(''), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
-  switch (sessionStatus.status) {
-    case 'inChat':
-    case 'qrReadSuccess':
-    case 'isLogged':
-    case 'chatsAvailable':
-      //
-      var checkNumberStatus = await Sessions.checkNumberStatus(
-        req.body.SessionName,
-        soNumeros(req.body.phonefull) + '@c.us'
-      );
-      //
-      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
-        //
-        var loadEarlierMessages = await Sessions.loadEarlierMessages(
-          req.body.SessionName,
-          soNumeros(req.body.phonefull) + '@c.us'
-        );
-        //
-      } else {
-        var loadEarlierMessages = checkNumberStatus;
-      }
-      //
-      //console.log(result);
-      res.status(200).json({
-        loadEarlierMessages
-      });
-      break;
-    default:
-      res.status(400).json({
-        "loadEarlierMessages": sessionStatus
-      });
-  }
-}); //loadEarlierMessages
-//
-// ------------------------------------------------------------------------------------------------------- //
-//
-// Carregar e obter todas as mensagens no bate-papo
-router.post("/loadAndGetAllMessagesInChat", upload.none(''), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
-  switch (sessionStatus.status) {
-    case 'inChat':
-    case 'qrReadSuccess':
-    case 'isLogged':
-    case 'chatsAvailable':
-      //
-      var checkNumberStatus = await Sessions.checkNumberStatus(
-        req.body.SessionName,
-        soNumeros(req.body.phonefull) + '@c.us'
-      );
-      //
-      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
-        //
-        var loadAndGetAllMessagesInChat = await Sessions.loadAndGetAllMessagesInChat(
-          req.body.SessionName,
-          soNumeros(req.body.phonefull)
-        );
-        //
-      } else {
-        var loadAndGetAllMessagesInChat = checkNumberStatus;
-      }
-      //
-      //console.log(result);
-      res.status(200).json({
-        loadAndGetAllMessagesInChat
-      });
-      break;
-    default:
-      res.status(400).json({
-        "loadAndGetAllMessagesInChat": sessionStatus
-      });
-  }
-}); //loadAndGetAllMessagesInChat
-//
 // ------------------------------------------------------------------------------------------------//
 //
 // Recuperar status de contato
 router.post("/getStatus", upload.none(''), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
@@ -2275,7 +1670,7 @@ router.post("/getStatus", upload.none(''), async (req, res, next) => {
 //
 // Obter o perfil do número
 router.post("/getNumberProfile", upload.none(''), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
@@ -2312,114 +1707,9 @@ router.post("/getNumberProfile", upload.none(''), async (req, res, next) => {
 //
 // ------------------------------------------------------------------------------------------------------- //
 //
-// Obter todas as mensagens não lidas
-router.post("/getAllUnreadMessages", upload.none(''), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
-  switch (sessionStatus.status) {
-    case 'inChat':
-    case 'qrReadSuccess':
-    case 'isLogged':
-    case 'chatsAvailable':
-      //
-      var getAllUnreadMessages = await Sessions.getAllUnreadMessages(
-        req.body.SessionName
-      );
-      //
-      //console.log(result);
-      res.status(200).json({
-        getAllUnreadMessages
-      });
-      break;
-    default:
-      res.status(400).json({
-        "getAllUnreadMessages": sessionStatus
-      });
-  }
-}); //getAllUnreadMessages
-//
-// ------------------------------------------------------------------------------------------------------- //
-//
-// Obter a foto do perfil do servidor
-router.post("/getProfilePicFromServer", upload.none(''), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
-  switch (sessionStatus.status) {
-    case 'inChat':
-    case 'qrReadSuccess':
-    case 'isLogged':
-    case 'chatsAvailable':
-      //
-      var checkNumberStatus = await Sessions.checkNumberStatus(
-        req.body.SessionName,
-        soNumeros(req.body.phonefull) + '@c.us'
-      );
-      //
-      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
-        //
-        var getProfilePicFromServer = await Sessions.getProfilePicFromServer(
-          req.body.SessionName,
-          soNumeros(req.body.phonefull) + '@c.us'
-        );
-        //
-      } else {
-        var getProfilePicFromServer = checkNumberStatus;
-      }
-      //
-      //console.log(result);
-      res.status(200).json({
-        getProfilePicFromServer
-      });
-      break;
-    default:
-      res.status(400).json({
-        "getProfilePicFromServer": sessionStatus
-      });
-  }
-}); //getProfilePicFromServer
-//
-// ------------------------------------------------------------------------------------------------------- //
-//
-// Recuperar bate-papo / conversa
-router.post("/getChat", upload.none(''), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
-  switch (sessionStatus.status) {
-    case 'inChat':
-    case 'qrReadSuccess':
-    case 'isLogged':
-    case 'chatsAvailable':
-      //
-      var checkNumberStatus = await Sessions.checkNumberStatus(
-        req.body.SessionName,
-        soNumeros(req.body.phonefull) + '@c.us'
-      );
-      //
-      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
-        //
-        var getChat = await Sessions.getChat(
-          req.body.SessionName,
-          soNumeros(req.body.phonefull) + '@c.us'
-        );
-        //
-      } else {
-        var getChat = checkNumberStatus;
-      }
-      //
-      //console.log(result);
-      res.status(200).json({
-        getChat
-      });
-      break;
-    default:
-      res.status(400).json({
-        "getChat": sessionStatus
-      });
-  }
-}); //getChat
-//
-// ------------------------------------------------------------------------------------------------------- //
-//
 // Verificar o status do número
 router.post("/checkNumberStatus", upload.none(''), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
@@ -2447,7 +1737,7 @@ router.post("/checkNumberStatus", upload.none(''), async (req, res, next) => {
 //
 // Verificar o status do número em massa
 router.post("/checkNumberStatusMassa", upload.single('contatos'), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
@@ -2506,7 +1796,7 @@ router.post("/checkNumberStatusMassa", upload.single('contatos'), async (req, re
 //
 //Deixar o grupo
 router.post("/leaveGroup", upload.none(''), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
@@ -2532,7 +1822,7 @@ router.post("/leaveGroup", upload.none(''), async (req, res, next) => {
 //
 // Obtenha membros do grupo
 router.post("/getGroupMembers", upload.none(''), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
@@ -2558,7 +1848,7 @@ router.post("/getGroupMembers", upload.none(''), async (req, res, next) => {
 //
 // Obter IDs de membros do grupo 
 router.post("/getGroupMembersIds", upload.none(''), async (req, res, next) => {
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
@@ -2582,13 +1872,11 @@ router.post("/getGroupMembersIds", upload.none(''), async (req, res, next) => {
 //
 // ------------------------------------------------------------------------------------------------//
 //
-// -> Continua aqui ->
-//
 // Gerar link de url de convite de grupo
 router.post("/getGroupInviteLink", upload.none(''), async (req, res, next) => {
   //
   // Gerar link de url de convite de grupo
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
@@ -2599,10 +1887,14 @@ router.post("/getGroupInviteLink", upload.none(''), async (req, res, next) => {
         req.body.SessionName,
         req.body.groupId + '@g.us'
       );
-      res.status(200).json(GroupInviteLink);
+      res.status(200).json({
+        GroupInviteLink
+      });
       break;
     default:
-      res.status(400).json(sessionStatus);
+      res.status(400).json({
+        "GroupInviteLink": sessionStatus
+      });
   }
 }); //getGroupInviteLink
 //
@@ -2611,7 +1903,7 @@ router.post("/getGroupInviteLink", upload.none(''), async (req, res, next) => {
 router.post("/createGroup", upload.single('participants'), async (req, res, next) => {
   //
   // Criar grupo (título, participantes a adicionar)
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
@@ -2639,18 +1931,17 @@ router.post("/createGroup", upload.single('participants'), async (req, res, next
             //
             var checkNumberStatus = await Sessions.checkNumberStatus(
               req.body.SessionName,
-              soNumeros(numero),
-              req.body.chatIdorgroupId
+              soNumeros(numero) + '@c.us'
             );
             //
             if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
               //
-              contactlistValid.push(soNumeros(checkNumberStatus.number) + req.body.chatIdorgroupId);
+              contactlistValid.push(soNumeros(checkNumberStatus.number) + '@c.us');
             } else {
-              contactlistInvalid.push(numero + req.body.chatIdorgroupId);
+              contactlistInvalid.push(numero + '@c.us');
             }
           } else {
-            contactlistInvalid.push(numero + req.body.chatIdorgroupId);
+            contactlistInvalid.push(numero + '@c.us');
           }
           //
         }
@@ -2665,25 +1956,29 @@ router.post("/createGroup", upload.single('participants'), async (req, res, next
         contactlistInvalid
       );
       //
-      res.status(200).json(createGroup);
+      res.status(200).json({
+        createGroup
+      });
       break;
     default:
-      res.status(400).json(sessionStatus);
+      res.status(400).json({
+        "createGroup": sessionStatus
+      });
   }
 }); //createGroup
 //
 // ------------------------------------------------------------------------------------------------//
 //
-router.post("/createGroupAdminMembers", upload.single('participants'), async (req, res, next) => {
-  //
-  // Criar grupo (título, participantes a adicionar)
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+// Criar grupo (título, participantes a adicionar)
+router.post("/createGroupSetAdminMembers", upload.single('participants'), async (req, res, next) => {
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
     case 'isLogged':
     case 'chatsAvailable':
       //
+      var createGroupSetAdminMembers = [];
       //
       var folderName = fs.mkdtempSync(path.join(os.tmpdir(), req.body.SessionName + '-'));
       var filePath = path.join(folderName, req.file.originalname);
@@ -2705,8 +2000,7 @@ router.post("/createGroupAdminMembers", upload.single('participants'), async (re
             //
             var checkNumberStatus = await Sessions.checkNumberStatus(
               req.body.SessionName,
-              soNumeros(numero),
-              "@c.us"
+              soNumeros(numero) + '@c.us'
             );
             //
             if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
@@ -2731,48 +2025,144 @@ router.post("/createGroupAdminMembers", upload.single('participants'), async (re
         contactlistInvalid
       );
       //
-      if (createGroup.createGroup.erro !== true && createGroup.createGroup.status !== 404) {
+      await sleep(5000);
+      //
+      createGroupSetAdminMembers.push(createGroup);
+      //
+      if (createGroup.erro !== true && createGroup.status !== 404) {
         //
-        var jsonStr = '{"promoteParticipant":[]}';
-        var obj = JSON.parse(jsonStr);
-        //
-        await forEach(createGroup.createGroup.contactlistValid, async (resultfile) => {
+        await forEach(contactlistValid, async (resultfile) => {
           //
           var promoteParticipant = await Sessions.promoteParticipant(
             req.body.SessionName,
-            createGroup.createGroup.gid.replace("@g.us", ""),
-            "@g.us",
-            soNumeros(resultfile.replace("@c.us", "")),
-            "@c.us"
+            createGroup.gid + '@g.us',
+            resultfile
           );
           //
-          obj['promoteParticipant'].push(promoteParticipant);
+          createGroupSetAdminMembers.push(promoteParticipant);
           //
           await sleep(1000);
         });
         //
-        jsonStr = JSON.stringify(obj);
-        var promoteParticipant = JSON.parse(jsonStr);
-        //
       } else {
-        var promoteParticipant = "";
+        var createGroupSetAdminMembers = createGroup;
       }
       res.status(200).json({
-        createGroup,
-        promoteParticipant
+        createGroupSetAdminMembers
       });
       break;
     default:
-      res.status(400).json(sessionStatus);
+      res.status(400).json({
+        "createGroupSetAdminMembers": sessionStatus
+      });
   }
-}); //createGroupAdminMenbers
+}); //createGroupSetAdminMembers
+//
+// ------------------------------------------------------------------------------------------------//
+//
+// Criar grupo (título, participantes a adicionar)
+router.post("/createCountGroupSetAdminMembers", upload.single('participants'), async (req, res, next) => {
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var createCountGroupSetAdminMembers = [];
+      var createGroup = [];
+      //
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), req.body.SessionName + '-'));
+      var filePath = path.join(folderName, req.file.originalname);
+      fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
+      console.log("- File:", filePath);
+      //
+      var arrayNumbers = fs.readFileSync(filePath, 'utf-8').toString().split(/\r?\n/);
+      //
+      var contactlistValid = [];
+      var contactlistInvalid = [];
+      //
+      for (var i in arrayNumbers) {
+        //console.log(arrayNumbers[i]);
+        var numero = soNumeros(arrayNumbers[i]);
+        //
+        if (numero.length !== 0) {
+          //
+          if (validPhone(numero) === true) {
+            //
+            var checkNumberStatus = await Sessions.checkNumberStatus(
+              req.body.SessionName,
+              soNumeros(numero) + '@c.us'
+            );
+            //
+            if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+              //
+              contactlistValid.push(soNumeros(checkNumberStatus.number) + "@c.us");
+            } else {
+              contactlistInvalid.push(numero + "@c.us");
+            }
+          } else {
+            contactlistInvalid.push(numero + "@c.us");
+          }
+          //
+        }
+        //
+        await sleep(1000);
+      }
+      //
+      for (count = 1; count <= req.body.count; count++) {
+        var resCreateGroup = await Sessions.createGroup(
+          req.body.SessionName,
+          req.body.title + "-" + count,
+          contactlistValid,
+          contactlistInvalid
+        );
+        //
+        await sleep(5000);
+        //
+        createCountGroupSetAdminMembers.push(resCreateGroup);
+        //
+        if (resCreateGroup.erro !== true && resCreateGroup.status !== 404) {
+          //
+          await forEach(contactlistValid, async (resultfile) => {
+            //
+            var promoteParticipant = await Sessions.promoteParticipant(
+              req.body.SessionName,
+              resCreateGroup.gid + '@g.us',
+              resultfile
+            );
+            //
+            createCountGroupSetAdminMembers.push(promoteParticipant);
+            //
+            await sleep(1000);
+          });
+          //
+        } else {
+          var createCountGroupSetAdminMembers = resCreateGroup;
+        }
+        //
+        createGroup.push({
+          "createGroup": createCountGroupSetAdminMembers
+        });
+        //
+      }
+      res.status(200).json({
+        "createCountGroupSetAdminMembers": createGroup
+      });
+      break;
+    default:
+      res.status(400).json({
+        "createCountGroupSetAdminMembers": sessionStatus
+      });
+  }
+}); //createCountGroupSetAdminMembers
 //
 // ------------------------------------------------------------------------------------------------//
 //
 router.post("/removeParticipant", upload.none(''), async (req, res, next) => {
   //
   // Remove participante
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
@@ -2781,30 +2171,29 @@ router.post("/removeParticipant", upload.none(''), async (req, res, next) => {
       //
       var checkNumberStatus = await Sessions.checkNumberStatus(
         req.body.SessionName,
-        soNumeros(req.body.phonefull),
-        req.body.chatId
+        soNumeros(req.body.phonefull) + '@c.us'
       );
       //
       if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
         //
-        var sendResult = await Sessions.removeParticipant(
+        var removeParticipant = await Sessions.removeParticipant(
           req.body.SessionName,
-          req.body.group,
-          req.body.groupId,
-          soNumeros(checkNumberStatus.number),
-          req.body.chatId
+          req.body.group + '@g.us',
+          soNumeros(checkNumberStatus.number) + '@c.us'
         );
         //
       } else {
-        var sendResult = {
-          "removeParticipant": result
-        };
+        var removeParticipant = checkNumberStatus;
       }
       //
-      res.status(200).json(sendResult);
+      res.status(200).json({
+        removeParticipant
+      });
       break;
     default:
-      res.status(400).json(sessionStatus);
+      res.status(400).json({
+        "removeParticipant": sessionStatus
+      });
   }
 }); //removeParticipant
 //
@@ -2813,7 +2202,7 @@ router.post("/removeParticipant", upload.none(''), async (req, res, next) => {
 router.post("/addParticipant", upload.none(''), async (req, res, next) => {
   //
   // Adicionar participante
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
@@ -2822,30 +2211,29 @@ router.post("/addParticipant", upload.none(''), async (req, res, next) => {
       //
       var checkNumberStatus = await Sessions.checkNumberStatus(
         req.body.SessionName,
-        soNumeros(req.body.phonefull),
-        req.body.chatId
+        soNumeros(req.body.phonefull) + '@c.us'
       );
       //
       if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
         //
-        var sendResult = await Sessions.addParticipant(
+        var addParticipant = await Sessions.addParticipant(
           req.body.SessionName,
-          req.body.group,
-          req.body.groupId,
-          soNumeros(checkNumberStatus.number),
-          req.body.chatId
+          req.body.groupId + '@g.us',
+          soNumeros(checkNumberStatus.number) + '@c.us'
         );
         //
       } else {
-        var sendResult = {
-          "addParticipant": result
-        };
+        var addParticipant = checkNumberStatus;
       }
       //
-      res.status(200).json(sendResult);
+      res.status(200).json({
+        addParticipant
+      });
       break;
     default:
-      res.status(400).json(sessionStatus);
+      res.status(400).json({
+        "addParticipant": sessionStatus
+      });
   }
 }); //addParticipant
 //
@@ -2854,7 +2242,7 @@ router.post("/addParticipant", upload.none(''), async (req, res, next) => {
 router.post("/promoteParticipant", upload.none(''), async (req, res, next) => {
   //
   // Promote participant (Give admin privileges)
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
@@ -2863,39 +2251,37 @@ router.post("/promoteParticipant", upload.none(''), async (req, res, next) => {
       //
       var checkNumberStatus = await Sessions.checkNumberStatus(
         req.body.SessionName,
-        soNumeros(req.body.phonefull),
-        req.body.chatId
+        soNumeros(req.body.phonefull) + '@c.us'
       );
       //
       if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
         //
-        var sendResult = await Sessions.promoteParticipant(
+        var promoteParticipant = await Sessions.promoteParticipant(
           req.body.SessionName,
-          req.body.group,
-          req.body.groupId,
-          soNumeros(checkNumberStatus.number),
-          req.body.chatId
+          req.body.groupId + '@g.us',
+          soNumeros(checkNumberStatus.number) + '@c.us'
         );
         //
       } else {
-        var sendResult = {
-          "promoteParticipant": checkNumberStatus
-        };
+        var promoteParticipant = checkNumberStatus;
       }
       //
-      res.status(200).json(sendResult);
+      res.status(200).json({
+        promoteParticipant
+      });
       break;
     default:
-      res.status(400).json(sessionStatus);
+      res.status(400).json({
+        "promoteParticipant": sessionStatus
+      });
   }
 }); //promoteParticipant
 //
 // ------------------------------------------------------------------------------------------------//
 //
+// Depromote participant (Give admin privileges)
 router.post("/demoteParticipant", upload.none(''), async (req, res, next) => {
-  //
-  // Depromote participant (Give admin privileges)
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
@@ -2904,78 +2290,55 @@ router.post("/demoteParticipant", upload.none(''), async (req, res, next) => {
       //
       var checkNumberStatus = await Sessions.checkNumberStatus(
         req.body.SessionName,
-        soNumeros(req.body.phonefull),
-        req.body.chatId
+        soNumeros(req.body.phonefull) + '@c.us'
       );
       //
       if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
         //
-        var sendResult = await Sessions.demoteParticipant(
+        var demoteParticipant = await Sessions.demoteParticipant(
           req.body.SessionName,
-          req.body.group,
-          req.body.groupId,
-          soNumeros(req.body.phonefull),
-          req.body.chatId
+          req.body.groupId + '@g.us',
+          soNumeros(req.body.phonefull) + '@c.us'
         );
         //
       } else {
-        var sendResult = {
-          "demoteParticipant": result
-        };
+        var demoteParticipant = checkNumberStatus;
       }
       //
-      res.status(200).json(sendResult);
+      res.status(200).json({
+        demoteParticipant
+      });
       break;
     default:
-      res.status(400).json(sessionStatus);
+      res.status(400).json({
+        "demoteParticipant": sessionStatus
+      });
   }
 }); //demoteParticipant
 //
 // ------------------------------------------------------------------------------------------------//
 //
-router.post("/getGroupAdmins", upload.none(''), async (req, res, next) => {
-  //
-
-  //
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
-  switch (sessionStatus.status) {
-    case 'inChat':
-    case 'qrReadSuccess':
-    case 'isLogged':
-    case 'chatsAvailable':
-      //
-      var sendResult = await Sessions.getGroupAdmins(
-        req.body.SessionName,
-        req.body.groupId,
-        req.body.chatIdorgroupId
-      );
-      res.status(200).json(sendResult);
-      break;
-    default:
-      res.status(400).json(sessionStatus);
-  }
-}); //getGroupAdmins
-//
-// ------------------------------------------------------------------------------------------------//
-//
+// Retorna o status do grupo, jid, descrição do link de convite
 router.post("/getGroupInfoFromInviteLink", upload.none(''), async (req, res, next) => {
-  //
-  // Retorna o status do grupo, jid, descrição do link de convite
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
     case 'isLogged':
     case 'chatsAvailable':
       //
-      var sendResult = await Sessions.getGroupInfoFromInviteLink(
+      var getGroupInfoFromInviteLink = await Sessions.getGroupInfoFromInviteLink(
         req.body.SessionName,
         req.body.InviteCode
       );
-      res.status(200).json(sendResult);
+      res.status(200).json({
+        getGroupInfoFromInviteLink
+      });
       break;
     default:
-      res.status(400).json(sessionStatus);
+      res.status(400).json({
+        "getGroupInfoFromInviteLink": sessionStatus
+      });
   }
 }); //getGroupInfoFromInviteLink
 //
@@ -2984,21 +2347,25 @@ router.post("/getGroupInfoFromInviteLink", upload.none(''), async (req, res, nex
 router.post("/joinGroup", upload.none(''), async (req, res, next) => {
   //
   // Junte-se a um grupo usando o código de convite do grupo
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
     case 'isLogged':
     case 'chatsAvailable':
       //
-      var sendResult = await Sessions.joinGroup(
+      var joinGroup = await Sessions.joinGroup(
         req.body.SessionName,
         req.body.InviteCode
       );
-      res.status(200).json(sendResult);
+      res.status(200).json({
+        joinGroup
+      });
       break;
     default:
-      res.status(400).json(sessionStatus);
+      res.status(400).json({
+        "joinGroup": sessionStatus
+      });
   }
 }); //joinGroup
 //
@@ -3013,21 +2380,25 @@ router.post("/joinGroup", upload.none(''), async (req, res, next) => {
 router.post("/setProfileStatus", upload.none(''), async (req, res, next) => {
   //
   // Set client status
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
     case 'isLogged':
     case 'chatsAvailable':
       //
-      var sendResult = await Sessions.setProfileStatus(
+      var setProfileStatus = await Sessions.setProfileStatus(
         req.body.SessionName,
         req.body.ProfileStatus
       );
-      res.status(200).json(sendResult);
+      res.status(200).json({
+        setProfileStatus
+      });
       break;
     default:
-      res.status(400).json(sessionStatus);
+      res.status(400).json({
+        "setProfileStatus": sessionStatus
+      });
   }
 }); //setProfileStatus
 //
@@ -3036,21 +2407,25 @@ router.post("/setProfileStatus", upload.none(''), async (req, res, next) => {
 router.post("/setProfileName", upload.none(''), async (req, res, next) => {
   //
   // Set client profile name
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
     case 'isLogged':
     case 'chatsAvailable':
       //
-      var sendResult = await Sessions.setProfileName(
+      var setProfileName = await Sessions.setProfileName(
         req.body.SessionName,
         req.body.ProfileName
       );
-      res.status(200).json(sendResult);
+      res.status(200).json({
+        setProfileName
+      });
       break;
     default:
-      res.status(400).json(sessionStatus);
+      res.status(400).json({
+        "setProfileName": sessionStatus
+      });
   }
 }); //setProfileName
 //
@@ -3060,7 +2435,7 @@ router.post("/setProfilePic", upload.single('fileimg'), async (req, res, next) =
   //
 
   //
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
@@ -3073,15 +2448,19 @@ router.post("/setProfilePic", upload.single('fileimg'), async (req, res, next) =
       fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
       console.log("- File", filePath);
       //
-      var sendResult = await Sessions.setProfilePic(
+      var setProfilePic = await Sessions.setProfilePic(
         req.body.SessionName,
         filePath
       );
       //
-      res.status(200).json(sendResult);
+      res.status(200).json({
+        setProfilePic
+      });
       break;
     default:
-      res.status(400).json(sessionStatus);
+      res.status(400).json({
+        "setProfilePic": sessionStatus
+      });
   }
 }); //setProfilePic
 //
@@ -3093,177 +2472,167 @@ router.post("/setProfilePic", upload.single('fileimg'), async (req, res, next) =
 ═╩╝└─┘ └┘ ┴└─┘└─┘  ╚  └─┘┘└┘└─┘ ┴ ┴└─┘┘└┘└─┘             
 */
 //
+// Delete the Service Worker
 router.post("/killServiceWorker", upload.none(''), async (req, res, next) => {
-  //
-
-  //
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
     case 'isLogged':
     case 'chatsAvailable':
       //
-      var result = await Sessions.killServiceWorker(req.body.SessionName);
-      res.status(200).json(result);
+      var killServiceWorker = await Sessions.killServiceWorker(req.body.SessionName);
+      res.status(200).json({
+        killServiceWorker
+      });
       break;
     default:
-      res.status(400).json(sessionStatus);
+      res.status(400).json({
+        "killServiceWorker": sessionStatus
+      });
   }
 }); //killServiceWorker
 //
 // ------------------------------------------------------------------------------------------------//
 //
+// Load the service again
 router.post("/restartService", upload.none(''), async (req, res, next) => {
-  //
-
-  //
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
     case 'isLogged':
     case 'chatsAvailable':
       //
-      var result = await Sessions.restartService(req.body.SessionName);
-      res.status(200).json(result);
+      var restartService = await Sessions.restartService(req.body.SessionName);
+      res.status(200).json({
+        restartService
+      });
       break;
     default:
-      res.status(400).json(sessionStatus);
+      res.status(400).json({
+        "restartService": sessionStatus
+      });
   }
 }); //restartService
 //
 // ------------------------------------------------------------------------------------------------//
 //
+// Get device info
 router.post("/getHostDevice", upload.none(''), async (req, res, next) => {
-  //
-
-  //
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
     case 'isLogged':
     case 'chatsAvailable':
       //
-      //
-      var jsonStr = '{"getHostDevice":[]}';
-      var obj = JSON.parse(jsonStr);
-      //
-      var sendResult = await Sessions.getHostDevice(req.body.SessionName);
-      //
-      obj['getHostDevice'].push(sendResult);
-      //
-      jsonStr = JSON.stringify(obj);
-      //console.log(JSON.parse(jsonStr));
-      var result = JSON.parse(jsonStr);
+      var getHostDevice = await Sessions.getHostDevice(req.body.SessionName);
       //
       //console.log(result);
-      res.status(200).json(result);
+      res.status(200).json({
+        getHostDevice
+      });
       break;
     default:
-      res.status(400).json(sessionStatus);
+      res.status(400).json({
+        "getHostDevice": sessionStatus
+      });
   }
 }); //getHostDevice
 //
 // ------------------------------------------------------------------------------------------------//
 //
+// Get connection state
 router.post("/getConnectionState", upload.none(''), async (req, res, next) => {
-  //
-
-  //
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
     case 'isLogged':
     case 'chatsAvailable':
       //
-      var result = await Sessions.getConnectionState(req.body.SessionName);
-      res.status(200).json(result);
+      var getConnectionState = await Sessions.getConnectionState(req.body.SessionName);
+      res.status(200).json({
+        getConnectionState
+      });
       break;
     default:
-      res.status(400).json(sessionStatus);
+      res.status(400).json({
+        "getConnectionState": sessionStatus
+      });
   }
 }); //getConnectionState
 //
 // ------------------------------------------------------------------------------------------------//
 //
+// Get battery level
 router.post("/getBatteryLevel", upload.none(''), async (req, res, next) => {
-  //
-
-  //
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
     case 'isLogged':
     case 'chatsAvailable':
       //
-      var result = await Sessions.getBatteryLevel(req.body.SessionName);
-      res.status(200).json(result);
+      var getBatteryLevel = await Sessions.getBatteryLevel(req.body.SessionName);
+      //
+      res.status(200).json({
+        getBatteryLevel
+      });
       break;
     default:
-      res.status(400).json(sessionStatus);
+      res.status(400).json({
+        "getBatteryLevel": sessionStatus
+      });
   }
 }); //getBatteryLevel
 //
 // ------------------------------------------------------------------------------------------------//
 //
+// Is Connected
 router.post("/isConnected", upload.none(''), async (req, res, next) => {
-  //
-
-  //
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
     case 'isLogged':
     case 'chatsAvailable':
       //
-      var result = await Sessions.isConnected(req.body.SessionName);
-      res.status(200).json(result);
+      var isConnected = await Sessions.isConnected(req.body.SessionName);
+      res.status(200).json({
+        isConnected
+      });
       break;
     default:
-      res.status(400).json(sessionStatus);
+      res.status(400).json({
+        "isConnected": sessionStatus
+      });
   }
 }); //isConnected
 //
 // ------------------------------------------------------------------------------------------------//
 //
+// Obter versão da web do Whatsapp
 router.post("/getWAVersion", upload.none(''), async (req, res, next) => {
-  //
-
-  //
-  var sessionStatus = await Sessions.Status(req.body.SessionName);
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
     case 'isLogged':
     case 'chatsAvailable':
       //
-      var result = await Sessions.getWAVersion(req.body.SessionName);
-      res.status(200).json(result);
+      var getWAVersion = await Sessions.getWAVersion(req.body.SessionName);
+      res.status(200).json({
+        getWAVersion
+      });
       break;
     default:
-      res.status(400).json(sessionStatus);
+      res.status(400).json({
+        "getWAVersion": sessionStatus
+      });
   }
 }); //getWAVersion
-//
-// ------------------------------------------------------------------------------------------------//
-//
-/*
-╔═╗┌┬┐┬ ┬┌─┐┬─┐                                          
-║ ║ │ ├─┤├┤ ├┬┘                                          
-╚═╝ ┴ ┴ ┴└─┘┴└─                                          
-*/
-//
-
-
-
-
-
-
 //
 // ------------------------------------------------------------------------------------------------//
 //
@@ -3277,27 +2646,8 @@ router.post("/getWAVersion", upload.none(''), async (req, res, next) => {
 //
 router.post("/RotaTeste", upload.single('file'), async (req, res, next) => {
   //
-  var teste = {
-    "createGroup": {
-      "erro": false,
-      "status": 200,
-      "gid": "556796787854-1618496180@g.us",
-      "contactlistValid": [
-        "5567992412137@c.us",
-        "5567991977682@c.us"
-      ],
-      "contactlistInvalid": [],
-      "message": "Grupo criado com a lista de contatos validos"
-    }
-  };
+
   //
-  // Promote participant (Give admin privileges)
-  //await client.promoteParticipant('00000000-000000@g.us', '111111111111@c.us');
-  //
-  res.status(200).json({
-    "gid": teste.createGroup.gid,
-    "group": teste.createGroup.gid.replace("@g.us", "")
-  }); //RotaTeste
 });
 //
 // ------------------------------------------------------------------------------------------------//
