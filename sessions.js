@@ -421,7 +421,14 @@ module.exports = class Sessions {
       //createPathFileToken: true, //creates a folder when inserting an object in the client's browser, to work it is necessary to pass the parameters in the function create browserSessionToken
       // BrowserSessionToken
       // To receive the client's token use the function await clinet.getSessionTokenBrowser()
-      sessionToken: await client.getSessionTokenBrowser()
+      /*
+      sessionToken: {
+        WABrowserId: '"UnXjH....."',
+        WASecretBundle: '{"key":"+i/nRgWJ....","encKey":"kGdMR5t....","macKey":"+i/nRgW...."}',
+        WAToken1: '"0i8...."',
+        WAToken2: '"1@lPpzwC...."',
+      }
+      */
     });
     wppconnect.defaultLogger.level = 'silly';
     var browserSessionToken = await client.getSessionTokenBrowser();
