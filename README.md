@@ -3,7 +3,7 @@
   <img src="./public/imagens/whatsapp-bot.png" width="150" alt="My Whats">
 </p>
 
-# API - My Whats
+# API - My WhatsApp
  Este projeto usa como base o [WPPConnect](https://github.com/wppconnect-team/wppconnect "WPPConnect"), um navegador virtual sem interface gráfica que abre o whatsapp web e executa todos os comandos via código possibilitando assim a automação de todas as funções, e um fork do projeto [myzap](https://github.com/billbarsch/myzap "myzap") do [@billbarsch](https://github.com/billbarsch "@billbarsch").
 
 ## Começando
@@ -11,69 +11,6 @@
 #### Dependências (Ubuntu)
 ```bash
 sudo apt-get install -y gconf-service libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget build-essential apt-transport-https libgbm-dev python3-pip libssl-dev libffi-dev python3-dev build-essential cmake clang libicu-dev procps
-```
-
-#### Instalar MongoDB Community Edition (Ubuntu)
-
-###### Instalar gnupg
-```bash
-sudo apt-get install -y gnupg
-```
-
-###### Importar a chave
-```bash
-wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | sudo apt-key add -
-```
-
-###### Importar a chave
-```bash
-wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | sudo apt-key add -
-```
-
-#### Crie um arquivo de lista para MongoDB
-
-###### Ubuntu 20.04 (Focal)
-```bash
-echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
-```
-
-###### Ubuntu 18.04 (Bionic)
-```bash
-echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
-```
-
-###### Ubuntu 16.04 (Xenial)
-```bash
-echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
-```
-
-#### Instale o MongoDB e iniciar (Ubuntu)
-
-###### Instalar
-```bash
-sudo apt-get update
-
-sudo apt-get install -y mongodb-org
-```
-
-###### Iniciar/Status/Habilitar/Parar
-```bash
-sudo systemctl daemon-reload
-
-# Inicia
-sudo systemctl start mongod
-
-# Status
-sudo systemctl status mongod
-
-# Habilita
-sudo systemctl enable mongod
-
-# Para
-sudo systemctl stop mongod
-
-# Reinicia
-sudo systemctl restart mongod
 ```
 
 #### Instale o NodeJs (Ubuntu)
@@ -112,12 +49,12 @@ cd mywhatsapp-api-node-wppconnect
 npm install
 
 # Execute a aplicação 
-node index.js
+node server.js
 
 # Manter os processos ativos a cada reinicialização do servidor
 sudo npm install pm2 -g
 
-pm2 start index.js
+pm2 start server.js
 
 pm2 save
 
