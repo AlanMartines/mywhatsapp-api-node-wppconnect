@@ -102,53 +102,43 @@ const convertBytes = function(bytes) {
 //
 router.post("/Start", upload.none(''), async (req, res, next) => {
   //
-  /*
-  if (serverConfig.jsonbinio_secret_key) {
-    var session = await Sessions.Start(req.body.sessionName, {
-      jsonbinio_secret_key: serverConfig.jsonbinio_secret_key,
-      jsonbinio_bin_id: serverConfig.jsonbinio_bin_id
-    });
-  } else {
-    var session = await Sessions.Start(req.body.SessionName);
-  }
-  */
-  var session = await Sessions.Start(req.body.SessionName);
-  //console.log(session);
-  if (["CONNECTED"].includes(session.state)) {
-    res.status(200).json({
-      result: "success",
-      state: session.state,
-      status: session.status,
-      message: "Sistema iniciado"
-    });
-  } else if (["STARTING"].includes(session.state)) {
-    res.status(200).json({
-      result: 'info',
-      state: session.state,
-      status: session.status,
-      message: "Sistema iniciando"
-    });
-  } else if (["QRCODE"].includes(session.state)) {
-    res.status(200).json({
-      result: 'warning',
-      state: session.state,
-      status: session.status,
-      message: "Sistema aguardando leitura do QR-Code"
-    });
-  } else if (["DISCONNECTED"].includes(session.state)) {
-    res.status(200).json({
-      result: 'warning',
-      state: session.state,
-      status: session.status,
-      message: "Sistema não desconectado"
-    });
-  } else {
-    res.status(200).json({
-      result: "error",
-      state: session.state,
-      status: session.status,
-      message: "Sistema Off-line"
-    });
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      res.status(200).json({
+        "Status": sessionStatus
+      });
+      break;
+    case 'notLogged':
+    case 'deviceNotConnected':
+    case 'desconnectedMobile':
+    case 'deleteToken':
+    case 'CLOSED':
+    case 'qrRead':
+      //
+      var session = await Sessions.Start(req.body.SessionName);
+      session.state = 'STARTING';
+      session.status = 'notLogged';
+      var Start = {
+        result: "info",
+        state: 'STARTING',
+        status: 'notLogged',
+        message: 'Sistema iniciando e indisponivel para uso'
+      };
+      //
+      res.status(200).json({
+        "Status": Start
+      });
+      //
+      break;
+    default:
+      res.status(400).json({
+        "Status": sessionStatus
+      });
   }
   //
 });
@@ -166,23 +156,17 @@ router.post("/QRCode", upload.none(''), async (req, res, next) => {
     case 'isLogged':
     case 'chatsAvailable':
       //
-      var getQRCode = {
-        result: "success",
-        state: session.state,
-        status: session.status,
-        message: "Sistema iniciado"
-      };
-      //
       res.status(200).json({
-        getQRCode
+        sessionStatus
       });
-      //
       break;
+      //
     case 'notLogged':
     case 'qrReadFail':
     case 'deviceNotConnected':
     case 'desconnectedMobile':
     case 'deleteToken':
+    case 'qrRead':
       //
       if (req.body.View === true) {
         var xSession = session.qrcode;
@@ -223,95 +207,15 @@ router.post("/QRCode", upload.none(''), async (req, res, next) => {
         });
         //
       }
-      break;
-    case 'autocloseCalled':
-      var getQRCode = {
-        result: 'error',
-        state: session.state,
-        status: session.status,
-        message: 'Navegador interno foi fechado'
-      };
-      //
-      res.status(400).json({
-        getQRCode
-      });
-      //
-      break;
-    case 'browserClose':
-      var getQRCode = {
-        result: 'error',
-        state: session.state,
-        status: session.status,
-        message: 'Navegador interno foi fechado'
-      };
-      //
-      res.status(400).json({
-        getQRCode
-      });
-      //
-      break;
-    case 'serverWssNotConnected':
-      var getQRCode = {
-        result: 'error',
-        state: session.state,
-        status: session.status,
-        message: 'O endereço wss não foi encontrado'
-      };
-      //
-      res.status(400).json({
-        getQRCode
-      });
-      //
-      break;
-    case 'noOpenBrowser':
-      var getQRCode = {
-        result: 'error',
-        state: session.state,
-        status: session.status,
-        message: 'Não foi encontrado no navegador ou falta algum comando no args'
-      };
-      //
-      res.status(400).json({
-        getQRCode
-      });
       //
       break;
     default:
-      //
       res.status(400).json({
-        "getQRCode": sessionStatus
+        sessionStatus
       });
-      //
   }
   //
 });
-//
-// ------------------------------------------------------------------------------------------------//
-//
-router.post("/getBase64Encoding", upload.none(''), async (req, res, next) => {
-  var getBase64Encoding = {
-    SessionName: req.body.SessionName,
-    phonefull: soNumeros(req.body.phonefull),
-    token: emBase64(soNumeros(req.body.phonefull))
-  };
-  //
-  res.status(200).json({
-    getBase64Encoding
-  });
-}); //getBase64Encoding
-//
-router.post("/getBase64Decoding", upload.none(''), async (req, res, next) => {
-  //
-  var getBase64Decoding = {
-    SessionName: req.body.SessionName,
-    token: req.body.token,
-    phonefull: deBase64(req.body.token)
-  };
-  //
-  res.status(200).json({
-    getBase64Decoding
-  });
-}); //getBase64Decoding
 //
 // ------------------------------------------------------------------------------------------------//
 //
@@ -375,6 +279,7 @@ router.post("/Close", upload.none(''), async (req, res, next) => {
     case 'qrReadSuccess':
     case 'isLogged':
     case 'chatsAvailable':
+    case 'qrRead':
       //
       var closeSession = await Sessions.closeSession(req.body.SessionName);
       res.status(200).json(closeSession);
@@ -396,36 +301,7 @@ router.post("/Logout", upload.none(''), async (req, res, next) => {
     case 'qrReadSuccess':
     case 'isLogged':
     case 'chatsAvailable':
-      //
-      /*
-      if (typeof(Sessions.options) !== "undefined") {
-        //
-        if (Sessions.options.jsonbinio_secret_key !== undefined) { //se informou secret key pra salvar na nuvem
-          console.log("- Limpando token JSONBin");
-          //salva dados do token da sessão na nuvem
-          var data = JSON.stringify({
-            "nada": "nada"
-          });
-          var config = {
-            method: 'put',
-            url: 'https://api.jsonbin.io/b/' + Sessions.options.jsonbinio_bin_id,
-            headers: {
-              'Content-Type': 'application/json',
-              'secret-key': Sessions.options.jsonbinio_secret_key,
-              'versioning': 'false'
-            },
-            data: data
-          };
-          await axios(config)
-            .then(function(response) {
-              console.log("- Response JSONBin:", JSON.parse(JSON.stringify(response.data)));
-            })
-            .catch(function(error) {
-              console.log(error);
-            });
-        }
-      }
-      */
+    case 'CLOSED':
       //
       var LogoutSession = await Sessions.LogoutSession(req.body.SessionName);
       res.status(200).json({
