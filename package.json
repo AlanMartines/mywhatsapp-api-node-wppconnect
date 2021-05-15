@@ -59,6 +59,7 @@
     "qrcode-terminal": "^0.12.0",
     "sharp": "^0.28.2",
     "socket.io": "^4.1.1",
+    "socket.io-client": "^4.1.1",
     "spinnies": "^0.5.1",
     "tree-kill": "^1.2.2",
     "winston": "^3.3.3",
