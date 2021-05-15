@@ -83,13 +83,14 @@ module.exports = class Sessions {
   static async ApiStatus(SessionName) {
     console.log("- Status");
     var session = Sessions.getSession(SessionName);
+
     if (session) { //só adiciona se não existir
       if (session.state == "STARTING") {
         return {
           result: "info",
           state: session.state,
           status: session.status,
-          message: "Sistema iniciando"
+          message: "'Sistema iniciando e indisponivel para uso'"
         };
       } else if (session.state == "QRCODE") {
         return {
@@ -98,34 +99,180 @@ module.exports = class Sessions {
           status: session.status,
           message: "Sistema aguardando leitura do QR-Code"
         };
-      } else if (session.state == "CONNECTED") {
-        return {
-          result: "success",
-          state: session.state,
-          status: session.status,
-          message: "Sistema iniciado"
-        };
-      } else if (session.state == "CLOSED") {
-        return {
-          result: "info",
-          state: session.state,
-          status: session.status,
-          message: "Sistema encerrado"
-        };
-      } else if (session.state == "DISCONNECTED") {
-        return {
-          result: "info",
-          state: session.state,
-          status: session.status,
-          message: "Sistema não desconectado"
-        };
       } else {
-        return {
-          result: 'error',
-          state: 'NOTFOUND',
-          status: 'notLogged',
-          message: 'Sistema Off-line'
-        };
+        switch (session.status) {
+          case 'isLogged':
+            return {
+              result: "success",
+                state: session.state,
+                status: session.status,
+                message: "Sistema iniciado e disponivel para uso"
+            };
+            break;
+          case 'notLogged':
+            return {
+              result: "error",
+                state: session.state,
+                status: session.status,
+                message: "Sistema indisponivel para uso"
+            };
+            break;
+          case 'browserClose':
+            return {
+              result: "info",
+                state: session.state,
+                status: session.status,
+                message: "Navegador interno fechado"
+            };
+            break;
+          case 'qrReadSuccess':
+            return {
+              result: "success",
+                state: session.state,
+                status: session.status,
+                message: "Verificação do QR-Code feita com sucesso"
+            };
+            break;
+          case 'qrReadFail':
+            return {
+              result: "warning",
+                state: session.state,
+                status: session.status,
+                message: "Falha na verificação do QR-Code"
+            };
+            break;
+          case 'qrRead':
+            return {
+              result: "warning",
+                state: session.state,
+                status: session.status,
+                message: "Sistema aguardando leitura do QR-Code"
+            };
+            break;
+          case 'autocloseCalled':
+            return {
+              result: "info",
+                state: session.state,
+                status: session.status,
+                message: "Navegador interno fechado"
+            };
+            break;
+          case 'desconnectedMobile':
+            return {
+              result: "info",
+                state: session.state,
+                status: session.status,
+                message: "Dispositivo desconectado"
+            };
+            break;
+          case 'deleteToken':
+            return {
+              result: "info",
+                state: session.state,
+                status: session.status,
+                message: "Token de sessão removido"
+            };
+            break;
+          case 'chatsAvailable':
+            return {
+              result: "success",
+                state: session.state,
+                status: session.status,
+                message: "Sistema iniciado e disponivel para uso"
+            };
+            break;
+          case 'deviceNotConnected':
+            return {
+              result: "info",
+                state: session.state,
+                status: session.status,
+                message: "Dispositivo desconectado"
+            };
+            break;
+          case 'serverWssNotConnected':
+            return {
+              result: "info",
+                state: session.state,
+                status: session.status,
+                message: "O endereço wss não foi encontrado"
+            };
+            break;
+          case 'noOpenBrowser':
+            return {
+              result: "error",
+                state: session.state,
+                status: session.status,
+                message: "Não foi encontrado o navegador ou falta algum comando no args"
+            };
+            break;
+          case 'serverClose':
+            return {
+              result: "info",
+                state: session.state,
+                status: session.status,
+                message: "O cliente se desconectou do wss"
+            };
+            break;
+          case 'OPENING':
+            return {
+              result: "warning",
+                state: session.state,
+                status: session.status,
+                message: "'Sistema iniciando e indisponivel para uso'"
+            };
+            break;
+          case 'CONFLICT':
+            return {
+              result: "info",
+                state: session.state,
+                status: session.status,
+                message: "Dispositivo conectado em outra sessão, reconectando"
+            };
+            break;
+          case 'UNPAIRED':
+          case 'UNLAUNCHED':
+          case 'UNPAIRED_IDLE':
+            return {
+              result: "warning",
+                state: session.state,
+                status: session.status,
+                message: "Dispositivo desconectado"
+            };
+            break;
+          case 'DISCONNECTED':
+            return {
+              result: "info",
+                state: session.state,
+                status: session.status,
+                message: "Dispositivo desconectado"
+            };
+            break;
+          case 'SYNCING':
+            return {
+              result: "warning",
+                state: session.state,
+                status: session.status,
+                message: "Dispositivo sincronizando"
+            };
+            break;
+          case 'CLOSED':
+            return {
+              result: "info",
+                state: session.state,
+                status: session.status,
+                message: "O cliente fechou a sessão ativa"
+            };
+            break;
+          default:
+            //
+            res.status(400).json({
+              result: 'error',
+              state: 'NOTFOUND',
+              status: 'notLogged',
+              message: 'Sistema Off-line'
+            });
+            //
+        }
       }
     } else {
       return {
@@ -145,21 +292,25 @@ module.exports = class Sessions {
 
     var session = Sessions.getSession(SessionName);
 
+
     if (session == false) {
       //create new session
       session = await Sessions.addSesssion(SessionName);
     } else if (["CLOSED"].includes(session.state)) {
       //restart session
       console.log("- State: CLOSED");
+      session.result = "info";
       session.state = "STARTING";
       session.status = "notLogged";
       session.attempts = 0;
-      //session.socketio = null;
+      session.message = 'Sistema iniciando e indisponivel para uso';
       session.prossesid = null;
       session.client = Sessions.initSession(SessionName);
       Sessions.setup(SessionName);
     } else if (["CONFLICT", "UNPAIRED", "UNLAUNCHED", "UNPAIRED_IDLE"].includes(session.state)) {
+      session.result = "info";
       session.status = 'notLogged';
+      session.message = 'Sistema desconectado';
       console.log('- Status do sistema:', session.state);
       console.log('- Status da sessão:', session.status);
       console.log("- Client UseHere");
@@ -167,6 +318,17 @@ module.exports = class Sessions {
         client.useHere();
       });
       session.client = Sessions.initSession(SessionName);
+    } else if (["DISCONNECTED"].includes(session.state)) {
+      //restart session
+      console.log("- State: DISCONNECTED");
+      session.result = "info";
+      session.state = "STARTING";
+      session.status = "notLogged";
+      session.attempts = 0;
+      session.message = 'Sistema desconectado';
+      session.prossesid = null;
+      session.client = Sessions.initSession(SessionName);
+      Sessions.setup(SessionName);
     } else {
       console.log('- Nome da sessão:', session.name);
       console.log('- State do sistema:', session.state);
@@ -181,14 +343,15 @@ module.exports = class Sessions {
     console.log("- Adicionando sessão");
     var newSession = {
       name: SessionName,
-      hook: null,
       process: null,
       qrcode: false,
       client: false,
-      status: 'notLogged',
+      result: null,
       state: 'STARTING',
-      message: null,
-      attempts: 0
+      status: 'notLogged',
+      message: 'Sistema iniciando e indisponivel para uso',
+      attempts: 0,
+      browserSessionToken: null
     }
     Sessions.sessions.push(newSession);
     console.log("- Nova sessão: " + newSession.state);
@@ -245,6 +408,8 @@ module.exports = class Sessions {
         console.log('- Nome da sessão:', session.name);
         //
         session.state = "QRCODE";
+        session.status = "qrRead";
+        session.message = 'Sistema iniciando e indisponivel para uso';
         //
         console.log('- Número de tentativas de ler o qr-code:', attempts);
         session.attempts = attempts;
@@ -299,38 +464,47 @@ module.exports = class Sessions {
         //Create session wss return "serverClose" case server for close
         console.log('- Session name: ', session_wppconnect);
         //
+        //
         switch (statusSession) {
           case 'isLogged':
           case 'qrReadSuccess':
           case 'inChat':
           case 'chatsAvailable':
+            session.result = "success";
             session.state = "CONNECTED";
             session.status = statusSession
             session.qrcode = null;
             session.CodeasciiQR = null;
             session.CodeurlCode = null;
+            session.message = "Sistema iniciado e disponivel para uso";
             break;
           case 'autocloseCalled':
           case 'browserClose':
           case 'serverClose':
           case 'autocloseCalled':
+            session.result = "info";
             session.state = "CLOSED";
             session.status = statusSession;
             session.qrcode = null;
             session.CodeasciiQR = null;
             session.CodeurlCode = null;
+            session.message = "Sistema fechado";
             break;
           case 'qrReadFail':
           case 'notLogged':
           case 'deviceNotConnected':
           case 'desconnectedMobile':
           case 'deleteToken':
+            session.result = "info";
             session.state = "DISCONNECTED";
             session.status = statusSession;
+            session.message = "Dispositivo desconetado";
             break;
           default:
+            session.result = "info";
             session.state = "DISCONNECTED";
             session.status = statusSession;
+            session.message = "Dispositivo desconetado";
         }
       },
       // options
@@ -419,6 +593,7 @@ module.exports = class Sessions {
     var browserSessionToken = await client.getSessionTokenBrowser();
     console.log("- Token WPPConnect:\n", JSON.parse(JSON.stringify(browserSessionToken)));
     session.state = "CONNECTED";
+    session.browserSessionToken = browserSessionToken;
     return client;
   } //initSession
   //
@@ -440,12 +615,13 @@ module.exports = class Sessions {
         session.state = state;
         console.log('- Connection status: ', state);
         clearTimeout(time);
-        if (state == "CONNECTED") {
-
-        } //if CONNECTED
-        //
-        //  DISCONNECTED when the mobile device is disconnected
-        if (state === 'DISCONNECTED' || state === 'SYNCING') {
+        if (state == "OPENING") {
+          session.state = state;
+          session.status = 'notLogged';
+        } else if (state == "UNPAIRED_IDLE") {
+          session.state = state;
+          session.status = 'notLogged';
+        } else if (state === 'DISCONNECTED' || state === 'SYNCING') {
           session.state = state;
           time = setTimeout(() => {
             client.close();
@@ -580,7 +756,7 @@ module.exports = class Sessions {
       try {
         await client.close();
         session.state = "CLOSED";
-        session.status = "notLogged";
+        session.status = 'CLOSED';
         session.client = false;
         console.log("- Sessão fechada");
         //
@@ -613,14 +789,14 @@ module.exports = class Sessions {
     await session.client.then(async client => {
       try {
         await client.logout();
-        session.state = "CLOSED";
-        session.status = "notLogged";
+        session.state = "DISCONNECTED";
+        session.status = session.state;
         session.client = false;
         console.log("- Sessão fechada");
         //
         return {
           result: "success",
-          state: session.state,
+          state: "DISCONNECTED",
           status: session.status,
           message: "Sessão fechada"
         };
@@ -638,40 +814,6 @@ module.exports = class Sessions {
       }
     });
   } //LogoutSession
-  //
-  // ------------------------------------------------------------------------------------------------------- //
-  //
-  static async saveHook(
-    sessionName,
-    hook
-  ) {
-    var sessionName = sessionName;
-    var foundSession = false;
-    var foundSessionId = null;
-    if (Sessions.sessions)
-      Sessions.sessions.forEach((session, id) => {
-        if (sessionName == session.name) {
-          foundSession = session;
-          foundSessionId = id;
-        }
-      });
-    // Se não encontrar retorna erro
-    if (!foundSession) {
-      return {
-        result: "error",
-        message: 'Session not found'
-      };
-    } else {
-      // Se encontrar cria variáveis
-      var hook = hook;
-      foundSession.hook = hook;
-      Sessions.sessions[foundSessionId] = foundSession;
-      return {
-        result: "success",
-        message: 'Hook Atualizado'
-      };
-    }
-  }
   //
   // ------------------------------------------------------------------------------------------------------- //
   //
@@ -702,6 +844,7 @@ module.exports = class Sessions {
         return {
           "erro": false,
           "status": 200,
+          "number": number,
           "canReceiveMessage": true,
           "text": "success",
           "message": "Menssagem envida com sucesso."
@@ -715,6 +858,7 @@ module.exports = class Sessions {
         return {
           "erro": true,
           "status": 404,
+          "number": number,
           "canReceiveMessage": false,
           "text": erro.text,
           "message": "Erro ao enviar menssagem"
@@ -748,6 +892,7 @@ module.exports = class Sessions {
         return {
           "erro": false,
           "status": 200,
+          "number": number,
           "canReceiveMessage": true,
           "text": "success",
           "message": "Menssagem envida com sucesso."
@@ -761,6 +906,7 @@ module.exports = class Sessions {
         return {
           "erro": true,
           "status": 404,
+          "number": number,
           "canReceiveMessage": false,
           "text": erro.text,
           "message": "Erro ao enviar menssagem"
@@ -795,6 +941,7 @@ module.exports = class Sessions {
           return {
             "erro": false,
             "status": 200,
+            "number": number,
             "canReceiveMessage": true,
             "text": "success",
             "message": "Contato envido com sucesso."
@@ -807,6 +954,7 @@ module.exports = class Sessions {
           return {
             "erro": true,
             "status": 404,
+            "number": number,
             "canReceiveMessage": false,
             "text": erro.text,
             "message": "Erro ao enviar contato"
@@ -884,14 +1032,12 @@ module.exports = class Sessions {
         msg
       ).then((result) => {
         //console.log("Result: ", result); //return object success
-        //return { result: "success", state: session.state, message: "Sucesso ao enviar menssagem" };
-        //return (result);
         //
         return {
           "erro": false,
           "status": 200,
+          "number": number,
           "canReceiveMessage": true,
-          "text": "success",
           "message": "Menssagem envida com sucesso."
         };
         //
@@ -903,8 +1049,8 @@ module.exports = class Sessions {
         return {
           "erro": true,
           "status": 404,
+          "number": number,
           "canReceiveMessage": false,
-          "text": erro.text,
           "message": "Erro ao enviar menssagem"
         };
         //
@@ -912,43 +1058,6 @@ module.exports = class Sessions {
     });
     return sendResult;
   } //sendText
-  //
-  // ------------------------------------------------------------------------------------------------//
-  //
-  //Enviar Texto no stores
-  static async sendTextToStorie(
-    SessionName,
-    text
-  ) {
-    var session = Sessions.getSession(SessionName);
-    var sendResult = await session.client.then(async client => {
-      return await client.sendText(
-        'status@broadcast',
-        text
-      ).then((result) => {
-        //
-        return {
-          "erro": false,
-          "status": 200,
-          "canReceiveMessage": true,
-          "text": "success",
-          "message": "Texto envido com sucesso."
-        };
-        //
-      }).catch((erro) => {
-        //
-        return {
-          "erro": true,
-          "status": 404,
-          "canReceiveMessage": false,
-          "text": erro.text,
-          "message": "Erro ao enviar texto"
-        };
-        //
-      });
-    });
-    return sendResult;
-  } //sendTextToStorie
   //
   // ------------------------------------------------------------------------------------------------//
   //
@@ -977,6 +1086,7 @@ module.exports = class Sessions {
         return {
           "erro": false,
           "status": 200,
+          "number": number,
           "canReceiveMessage": true,
           "text": "success",
           "message": "Localização envida com sucesso."
@@ -990,6 +1100,7 @@ module.exports = class Sessions {
         return {
           "erro": true,
           "status": 404,
+          "number": number,
           "canReceiveMessage": false,
           "text": erro.text,
           "message": "Erro ao enviar localização."
@@ -1025,6 +1136,7 @@ module.exports = class Sessions {
         return {
           "erro": false,
           "status": 200,
+          "number": number,
           "canReceiveMessage": true,
           "text": "success",
           "message": "Link envida com sucesso."
@@ -1038,6 +1150,7 @@ module.exports = class Sessions {
         return {
           "erro": true,
           "status": 404,
+          "number": number,
           "canReceiveMessage": false,
           "text": erro.text,
           "message": "Erro ao enviar link."
@@ -1073,6 +1186,7 @@ module.exports = class Sessions {
         return {
           "erro": false,
           "status": 200,
+          "number": number,
           "canReceiveMessage": true,
           "text": "success",
           "message": "Menssagem envida com sucesso."
@@ -1085,6 +1199,7 @@ module.exports = class Sessions {
         return {
           "erro": true,
           "status": 404,
+          "number": number,
           "canReceiveMessage": false,
           "text": erro.text,
           "message": "Erro ao enviar menssagem"
@@ -1094,54 +1209,6 @@ module.exports = class Sessions {
     });
     return resultsendImage;
   } //sendImage
-  //
-  // ------------------------------------------------------------------------------------------------//
-  //
-  //Enviar Imagem no store
-  static async sendImageToStorie(
-    SessionName,
-    filePath,
-    fileName,
-    caption
-  ) {
-    console.log("- Enviando imagem.");
-    var session = Sessions.getSession(SessionName);
-    var sendResult = await session.client.then(async (client) => {
-      return await client.sendFile(
-          'status@broadcast',
-          filePath,
-          fileName,
-          caption
-        )
-        .then((result) => {
-          //console.log('Result: ', result); //return object success
-          //return (result);
-          //
-          return {
-            "erro": false,
-            "status": 200,
-            "canReceiveMessage": true,
-            "text": "success",
-            "message": "Imagem envida com sucesso."
-          };
-          //
-        })
-        .catch((erro) => {
-          //console.error('Error when sending: ', erro); //return object error
-          //return (erro);
-          //
-          return {
-            "erro": true,
-            "status": 404,
-            "canReceiveMessage": false,
-            "text": erro.text,
-            "message": "Erro ao enviar imagem"
-          };
-          //
-        });
-    });
-    return sendResult;
-  } //sendImageToStorie
   //
   // ------------------------------------------------------------------------------------------------//
   //
@@ -1168,6 +1235,7 @@ module.exports = class Sessions {
         return {
           "erro": false,
           "status": 200,
+          "number": number,
           "canReceiveMessage": true,
           "text": "success",
           "message": "Arquivo envido com sucesso."
@@ -1180,6 +1248,7 @@ module.exports = class Sessions {
         return {
           "erro": true,
           "status": 404,
+          "number": number,
           "canReceiveMessage": false,
           "text": erro.text,
           "message": "Erro ao enviar arquivo"
@@ -1216,6 +1285,7 @@ module.exports = class Sessions {
         return {
           "erro": false,
           "status": 200,
+          "number": number,
           "canReceiveMessage": true,
           "text": "success",
           "message": "Arquivo envida com sucesso."
@@ -1228,10 +1298,10 @@ module.exports = class Sessions {
         return {
           "erro": true,
           "status": 404,
+          "number": number,
           "canReceiveMessage": false,
           "text": erro.text,
-          "message": "Erro ao enviar arquivo",
-          "erro": erro
+          "message": "Erro ao enviar arquivo"
         };
         //
       });
@@ -1261,6 +1331,7 @@ module.exports = class Sessions {
         return {
           "erro": false,
           "status": 200,
+          "number": number,
           "canReceiveMessage": true,
           "text": "success",
           "message": "Gif envida com sucesso."
@@ -1273,6 +1344,7 @@ module.exports = class Sessions {
         return {
           "erro": true,
           "status": 404,
+          "number": number,
           "canReceiveMessage": false,
           "text": erro.text,
           "message": "Erro ao enviar gif"
@@ -1304,6 +1376,7 @@ module.exports = class Sessions {
         return {
           "erro": false,
           "status": 200,
+          "number": number,
           "canReceiveMessage": true,
           "text": "success",
           "message": "Figura envida com sucesso."
@@ -1316,6 +1389,7 @@ module.exports = class Sessions {
         return {
           "erro": true,
           "status": 404,
+          "number": number,
           "canReceiveMessage": false,
           "text": erro.text,
           "message": "Erro ao enviar figura"
@@ -1328,660 +1402,11 @@ module.exports = class Sessions {
   //
   // ------------------------------------------------------------------------------------------------//
   //
-  //Enviar opções de mensagem
-  static async sendMessageOptions(
-    SessionName,
-    number,
-    quotedMessage,
-    msg
-  ) {
-    console.log("- Enviando responder.");
-    var session = Sessions.getSession(SessionName);
-    var resultsendImage = await session.client.then(async (client) => {
-      return await client.sendImageAsSticker(
-        number,
-        msg, {
-          quotedMessageId: quotedMessage,
-        }
-      ).then((result) => {
-        //console.log('Result: ', result); //return object success
-        //return (result);
-        //
-        return {
-          "erro": false,
-          "status": 200,
-          "canReceiveMessage": true,
-          "text": "success",
-          "message": "Responder envida com sucesso."
-        };
-        //
-      }).catch((erro) => {
-        //console.error('Error when sending: ', erro); //return object error
-        //return (erro);
-        //
-        return {
-          "erro": true,
-          "status": 404,
-          "canReceiveMessage": false,
-          "text": erro.text,
-          "message": "Erro ao enviar responder"
-        };
-        //
-      });
-    });
-    return resultsendImage;
-  } //sendImageAsSticker
-  //
-  // ------------------------------------------------------------------------------------------------//
-  //
-  //Enviar mp4 to gif
-  static async sendVideoAsGif(
-    SessionName,
-    number,
-    filePath,
-    fileName,
-    caption
-  ) {
-    console.log("- Enviando gig.");
-    var session = Sessions.getSession(SessionName);
-    var resultsendImage = await session.client.then(async (client) => {
-      try {
-        await client.sendVideoAsGif(
-          number,
-          filePath,
-          fileName.split(".")[0] + ".gif",
-          caption
-        );
-        //console.log('Result: ', result); //return object success
-        //return (result);
-        //
-        return {
-          "erro": false,
-          "status": 200,
-          "canReceiveMessage": true,
-          "text": "success",
-          "message": "Mp4 para gif envida com sucesso."
-        };
-        //
-      } catch (erro) {
-        //console.error('Error when sending: ', erro); //return object error
-        //return (erro);
-        //
-        return {
-          "erro": true,
-          "status": 404,
-          "canReceiveMessage": false,
-          "text": erro.text,
-          "message": "Erro ao enviar mp4 para gif"
-        };
-        //
-      }
-    });
-    return resultsendImage;
-  } //sendVideoAsGif
-  //
-  // ------------------------------------------------------------------------------------------------//
-  //
-  // Verifica e retorna se uma mensagem ou uma resposta
-  static async returnReply(
-    SessionName,
-    message
-  ) {
-    console.log("- Enviando mensagem replicada");
-    var session = Sessions.getSession(SessionName);
-    var resultreturnReply = await session.client.then(async (client) => {
-      //
-      // Exemple: 
-      // await client.onMessage(async (message) => {
-      //     console.log(await client.returnReply(message)); // replicated message
-      //     console.log(message.body ); //customer message
-      //   });
-      //
-      try {
-        await client.returnReply(message);
-        //console.log('Result: ', result); //return object success
-        //return (result);
-        //
-        return {
-          "erro": false,
-          "status": 200,
-          "canReceiveMessage": true,
-          "text": "success",
-          "message": "Mensagem replicada com sucesso."
-        };
-        //
-      } catch (erro) {
-        //console.error('Error when sending: ', erro); //return object error
-        //return (erro);
-        //
-        return {
-          "erro": true,
-          "status": 404,
-          "canReceiveMessage": false,
-          "text": erro.text,
-          "message": "Erro ao replicada mensagem"
-        };
-        //
-      }
-    });
-    return resultreturnReply;
-  } //returnReply
-  //
-  // ------------------------------------------------------------------------------------------------//
-  //
-  // Enviar visto ✔️✔️
-  static async sendSeen(
-    SessionName,
-    number
-  ) {
-    console.log("- Enviando ✔️✔️.");
-    var session = Sessions.getSession(SessionName);
-    var resultsendSeen = await session.client.then(async (client) => {
-      try {
-        await client.sendSeen(number + chatIdorgroupId);
-        //
-        return {
-          "erro": false,
-          "status": 200,
-          "canReceiveMessage": true,
-          "text": "success",
-          "message": "✔️✔️ envida com sucesso."
-        };
-        //
-      } catch (error) {
-        //
-        return {
-          "erro": true,
-          "status": 404,
-          "canReceiveMessage": false,
-          "text": erro.text,
-          "message": "Erro ao enviar ✔️✔️"
-        };
-        //
-      }
-    });
-    return resultsendSeen;
-  } //sendSeen
-  //
-  // ------------------------------------------------------------------------------------------------//
-  //
-  // Enviar digitando
-  static async startTyping(
-    SessionName,
-    number,
-    chatIdorgroupId
-  ) {
-    console.log("- Enviando digitando");
-    var session = Sessions.getSession(SessionName);
-    var resultsendImage = await session.client.then(async (client) => {
-      try {
-        await client.startTyping(number + chatIdorgroupId);
-        //
-        return {
-          "erro": false,
-          "status": 200,
-          "canReceiveMessage": true,
-          "text": "success",
-          "message": "Digitando envida com sucesso."
-        };
-        //
-      } catch (error) {
-        //
-        return {
-          "erro": true,
-          "status": 404,
-          "canReceiveMessage": false,
-          "text": erro.text,
-          "message": "Erro ao enviar digitando"
-        };
-        //
-      }
-    });
-    return resultsendImage;
-  } //startTyping
-  //
-  // ------------------------------------------------------------------------------------------------//
-  //
-  // Enviar parar digitando
-  static async stopTyping(
-    SessionName,
-    number,
-    chatIdorgroupId
-  ) {
-    console.log("- Enviando stop digitando");
-    var session = Sessions.getSession(SessionName);
-    var resultsendImage = await session.client.then(async (client) => {
-      try {
-        await client.stopTyping(number + chatIdorgroupId);
-        //
-        return {
-          "erro": false,
-          "status": 200,
-          "canReceiveMessage": true,
-          "text": "success",
-          "message": "Stop digitando envida com sucesso."
-        };
-        //
-      } catch (error) {
-        //
-        return {
-          "erro": true,
-          "status": 404,
-          "canReceiveMessage": false,
-          "text": erro.text,
-          "message": "Erro ao enviar stop digitando"
-        };
-        //
-      }
-    });
-    return resultsendImage;
-  } //stopTyping
-  //
-  // ------------------------------------------------------------------------------------------------//
-  //
-  // Enviar status do chat (0: Typing, 1: Recording, 2: Paused)
-  static async setChatState(
-    SessionName,
-    number,
-    chatIdorgroupId,
-    state
-  ) {
-    console.log("- Enviando stop digitando");
-    var session = Sessions.getSession(SessionName);
-    var resultsetChatState = await session.client.then(async (client) => {
-      try {
-        await client.setChatState(number + chatIdorgroupId, state);
-        //
-        return {
-          "erro": false,
-          "status": 200,
-          "canReceiveMessage": true,
-          "text": "success",
-          "message": "Status envido com sucesso."
-        };
-        //
-      } catch (error) {
-        //
-        return {
-          "erro": true,
-          "status": 404,
-          "canReceiveMessage": false,
-          "text": erro.text,
-          "message": "Erro ao enviar status"
-        };
-        //
-      }
-    });
-    return resultsetChatState;
-  } //stopTyping
-  //
-  // ------------------------------------------------------------------------------------------------//
-  //
   /*
   ╦═╗┌─┐┌┬┐┬─┐┬┌─┐┬  ┬┬┌┐┌┌─┐  ╔╦╗┌─┐┌┬┐┌─┐                
   ╠╦╝├┤  │ ├┬┘│├┤ └┐┌┘│││││ ┬   ║║├─┤ │ ├─┤                
   ╩╚═└─┘ ┴ ┴└─┴└─┘ └┘ ┴┘└┘└─┘  ═╩╝┴ ┴ ┴ ┴ ┴                
   */
-  //
-  // Recuperar todos os bate-papos
-  static async getAllChats(SessionName) {
-    console.log("- Recuperar todos os bate-papos");
-    var session = Sessions.getSession(SessionName);
-    var resultgetAllChats = await session.client.then(async client => {
-      //
-      try {
-        const chats = await client.getAllChats();
-        //console.log('Result: ', chats); //return object success
-        //
-        var AllChats = [];
-        //
-        await forEach(chats, async (resultChat) => {
-          //
-          if (resultChat.isGroup === false) {
-            //
-            AllChats.push({
-              "user": resultChat.contact.id.user,
-              "lastReceivedKey": resultChat.lastReceivedKey.id,
-              "formattedName": resultChat.contact.name,
-              "pendingMsgs": resultChat.pendingMsgs,
-              "isBusiness:": resultChat.contact.isBusiness,
-              "isBusiness:": resultChat.contact.isMyContact
-            });
-          }
-          //
-        });
-        //
-        return AllChats;
-        //
-      } catch (erro) {
-        //console.error('Error when sending: ', erro); //return object error
-        //
-        return {
-          "erro": true,
-          "status": 404,
-          "canReceiveMessage": false,
-          "text": "Error",
-          "message": "Erro ao recuperar bate-papos"
-        };
-        //
-      }
-      //
-    });
-    //
-    return resultgetAllChats;
-  } //getAllChats
-  //
-  // ------------------------------------------------------------------------------------------------//
-  //
-  // Recupera todas as novas mensagens de bate-papo
-  static async getAllChatsNewMsg(SessionName) {
-    console.log("- Recupera todas as novas mensagens de bate-papo");
-    var session = Sessions.getSession(SessionName);
-    var resultgetAllChatsNewMsg = await session.client.then(async client => {
-      //
-      try {
-        const chatsAllNew = getAllChatsNewMsg();
-        //console.log('Result: ', chats); //return object success
-        //
-        var getAllChatsNewMsg = [];
-        //
-        await forEach(chatsAllNew, async (resultChat) => {
-          //
-          if (resultChat.isGroup === false) {
-            //
-            getAllChatsNewMsg.push({
-              "user": resultChat.contact.id.user,
-              "lastReceivedKey": resultChat.lastReceivedKey.id,
-              "formattedName": resultChat.contact.name,
-              "pendingMsgs": resultChat.pendingMsgs,
-              "isBusiness:": resultChat.contact.isBusiness,
-              "isBusiness:": resultChat.contact.isMyContact
-            });
-          }
-          //
-        });
-        //
-        return getAllChatsNewMsg;
-        //
-      } catch (erro) {
-        //console.error('Error when sending: ', erro); //return object error
-        //
-        return {
-          "erro": true,
-          "status": 404,
-          "canReceiveMessage": false,
-          "text": "Error",
-          "message": "Erro ao recuperar bate-papos"
-        };
-        //
-      }
-      //
-    });
-    //
-    return resultgetAllChatsNewMsg;
-  } //getAllChatsNewMsg
-  //
-  // ------------------------------------------------------------------------------------------------//
-  //
-  // Recupera todos os contatos do bate-papo
-  static async getAllChatsContacts(SessionName) {
-    console.log("- Recupera todas as novas mensagens de bate-papo");
-    var session = Sessions.getSession(SessionName);
-    var resultgetAllChatsContacts = await session.client.then(async client => {
-      //
-      try {
-        const contacts = await client.getAllChatsContacts();
-        //console.log('Result: ', chats); //return object success
-        //
-        var getAllChatsContacts = [];
-        //
-        await forEach(contacts, async (resultChat) => {
-          //
-          if (resultChat.isGroup === false) {
-            //
-            getAllChatsContacts.push({
-              "user": resultChat.contact.id.user,
-              "lastReceivedKey": resultChat.lastReceivedKey.id,
-              "formattedName": resultChat.contact.name,
-              "pendingMsgs": resultChat.pendingMsgs,
-              "isBusiness:": resultChat.contact.isBusiness,
-              "isMyContact:": resultChat.contact.isMyContact
-            });
-          }
-          //
-        });
-        //
-        return getAllChatsContacts;
-        //
-      } catch (erro) {
-        //console.error('Error when sending: ', erro); //return object error
-        //
-        return {
-          "erro": true,
-          "status": 404,
-          "canReceiveMessage": false,
-          "text": "Error",
-          "message": "Erro ao recuperar bate-papos"
-        };
-        //
-      }
-      //
-    });
-    //
-    return resultgetAllChatsContacts;
-  } //getAllChatsContacts
-  //
-  // ------------------------------------------------------------------------------------------------//
-  //
-  // Recuperar novas mensagens de todos os contatos
-  static async getChatContactNewMsg(
-    SessionName
-  ) {
-    console.log("- getChatContactNewMsg");
-    var session = Sessions.getSession(SessionName);
-    var resultgetChatContactNewMsg = await session.client.then(async client => {
-      //
-      try {
-        const contactNewMsg = await client.getChatContactNewMsg();
-        //console.log('Result: ', chats); //return object success
-        //
-        /*
-        var getChatContactNewMsg = [];
-        //
-        await forEach(contactNewMsg, async (resultChat) => {
-          //
-          if (resultChat.isGroup === true) {
-            //
-            getChatContactNewMsg.push({
-              "user": resultChat.id.user,
-              "name": resultChat.contact.name,
-              "formattedName": resultChat.contact.formattedName,
-              "pendingMsgs": resultChat.pendingMsgs,
-              "isBusiness:": resultChat.contact.isBusiness
-            });
-          }
-          //
-        });
-        //
-        */
-        return contactNewMsg;
-        //
-      } catch (erro) {
-        console.error('Error when sending:\n', erro); //return object error
-        //
-        return {
-          "erro": true,
-          "status": 404,
-          "canReceiveMessage": false,
-          "text": "Error",
-          "message": "Erro ao recuperar bate-papos"
-        };
-        //
-      }
-      //
-    });
-    //
-    return resultgetChatContactNewMsg;
-  } //getChatContactNewMsg
-  //
-  // ------------------------------------------------------------------------------------------------//
-  //
-  // Recuperar todos os grupos
-  static async getAllChatsGroups(
-    SessionName
-  ) {
-    console.log("- Obtendo todos os grupos!");
-    var session = Sessions.getSession(SessionName);
-    var resultgetAllChatsGroups = await session.client.then(async client => {
-      //
-      try {
-        const chats = await client.getAllChatsGroups();
-        //console.log('Result: ', chats); //return object success
-        //
-        var getAllChatsGroups = [];
-        //
-        await forEach(chats, async (resultChat) => {
-          //
-          if (resultChat.isGroup === true) {
-            //
-            getAllChatsGroups.push({
-              "user": resultChat.id.user,
-              "name": resultChat.contact.name,
-              "formattedName": resultChat.contact.formattedName,
-              "pendingMsgs": resultChat.pendingMsgs,
-              "isBusiness:": resultChat.contact.isBusiness
-            });
-          }
-          //
-        });
-        //
-        return getAllChatsGroups;
-        //
-      } catch (erro) {
-        console.error('Error when sending:\n', erro); //return object error
-        //
-        return {
-          "erro": true,
-          "status": 404,
-          "canReceiveMessage": false,
-          "text": "Error",
-          "message": "Erro ao recuperar bate-papos"
-        };
-        //
-      }
-      //
-    });
-    //
-    return resultgetAllChatsGroups;
-  } //getAllChatsGroups
-  //
-  // ------------------------------------------------------------------------------------------------//
-  //
-  // Recupera novas messagens de todos os contatos dos grupos
-  static async getChatGroupNewMsg(
-    SessionName
-  ) {
-    console.log("- getChatGroupNewMsg");
-    var session = Sessions.getSession(SessionName);
-    var resultgetAllChatsGroups = await session.client.then(async client => {
-      //
-      try {
-        const chats = await client.getChatGroupNewMsg();
-        //console.log('Result: ', chats); //return object success
-        //
-        /*
-        var getChatGroupNewMsg = [];
-        //
-        await forEach(chats, async (resultChat) => {
-          //
-          if (resultChat.isGroup === true) {
-            //
-            getChatGroupNewMsg.push({
-              "user": resultChat.id.user,
-              "name": resultChat.contact.name,
-              "formattedName": resultChat.contact.formattedName,
-              "pendingMsgs": resultChat.pendingMsgs,
-              "isBusiness:": resultChat.contact.isBusiness
-            });
-          }
-          //
-        });
-        */
-        //
-        return chats;
-        //
-      } catch (erro) {
-        console.error('Error when sending:\n', erro); //return object error
-        //
-        return {
-          "erro": true,
-          "status": 404,
-          "canReceiveMessage": false,
-          "text": "Error",
-          "message": "Erro ao recuperar novas menssagens dos bate-papos"
-        };
-        //
-      }
-      //
-    });
-    //
-    return resultgetAllChatsGroups;
-  } //getChatGroupNewMsg
-  //
-  // ------------------------------------------------------------------------------------------------//
-  //
-  // Recupera novas messagens de todos os contatos dos grupos
-  static async getAllChatsTransmission(
-    SessionName
-  ) {
-    console.log("- getAllChatsTransmission");
-    var session = Sessions.getSession(SessionName);
-    var resultgetAllChatsGroups = await session.client.then(async client => {
-      //
-      try {
-        const chats = await client.getAllChatsTransmission();
-        //console.log('Result: ', chats); //return object success
-        //
-        /*
-        var getAllChatsTransmission = [];
-        //
-        await forEach(chats, async (resultChat) => {
-          //
-          if (resultChat.isGroup === true) {
-            //
-            getAllChatsTransmission.push({
-              "user": resultChat.id.user,
-              "name": resultChat.contact.name,
-              "formattedName": resultChat.contact.formattedName,
-              "pendingMsgs": resultChat.pendingMsgs,
-              "isBusiness:": resultChat.contact.isBusiness
-            });
-          }
-          //
-        });
-        */
-        //
-        return chats;
-        //
-      } catch (erro) {
-        console.error('Error when sending:\n', erro); //return object error
-        //
-        return {
-          "erro": true,
-          "status": 404,
-          "canReceiveMessage": false,
-          "text": "Error",
-          "message": "Erro ao recuperar novas menssagens dos bate-papos"
-        };
-        //
-      }
-      //
-    });
-    //
-    return resultgetAllChatsGroups;
-  } //getChatGroupNewMsg
-  //
-  // ------------------------------------------------------------------------------------------------//
   //
   // Recuperar contatos
   static async getAllContacts(
@@ -1991,14 +1416,12 @@ module.exports = class Sessions {
     //
     var session = Sessions.getSession(SessionName);
     var resultgetAllContacts = await session.client.then(async client => {
-      //
-      try {
-        const AllContacts = await client.getAllContacts();
+      return await client.getAllContacts().then(async (result) => {
         //console.log('Result: ', result); //return object success
         //
         var getChatGroupNewMsg = [];
         //
-        await forEach(AllContacts, async (resultAllContacts) => {
+        await forEach(result, async (resultAllContacts) => {
           //
           if (resultAllContacts.isMyContact === true || resultAllContacts.isMyContact === false) {
             //
@@ -2017,8 +1440,8 @@ module.exports = class Sessions {
         //
         return getChatGroupNewMsg;
         //
-      } catch (erro) {
-        console.error('Error when sending: ', erro); //return object error
+      }).catch((erro) => {
+        //console.error('Error when sending: ', erro); //return object error
         //
         return {
           "erro": true,
@@ -2028,7 +1451,7 @@ module.exports = class Sessions {
           "message": "Erro ao recuperar contatos"
         };
         //
-      }
+      });
       //
     });
     //
@@ -2037,52 +1460,16 @@ module.exports = class Sessions {
   //
   // ------------------------------------------------------------------------------------------------//
   //
-  // Lista os contatos em mudo
-  // Returns a list of mute and non-mute users
-  // "all" List all mutes
-  // "toMute" List all silent chats
-  // "noMute" List all chats without silence
-  static async getListMute(
-    SessionName,
-    list
-  ) {
-    console.log("- Obtendo lista de mudos.");
-    var session = Sessions.getSession(SessionName);
-    var resultgetListMute = await session.client.then(async client => {
-      try {
-        const listMute = await client.getListMute(list);
-        //console.log('Result: ', result); //return object success
-        return listMute;
-      } catch (erro) {
-        //console.error('Error when sending: ', erro); //return object error
-        console.error('Error when sending: ', erro); //return object error
-        //
-        return {
-          "erro": true,
-          "status": 404,
-          "canReceiveMessage": false,
-          "text": "Error",
-          "message": "Erro ao recuperar lista"
-        };
-        //
-      };
-    });
-    return resultgetListMute;
-  } //getListMute
-  //
-  // ------------------------------------------------------------------------------------------------//
-  //
   // Returns browser session token
   static async getSessionTokenBrowser(SessionName) {
     console.log("- Obtendo  Session Token Browser.");
     var session = Sessions.getSession(SessionName);
     var resultgetSessionTokenBrowser = await session.client.then(async client => {
-      try {
-        const browserSessionToken = await client.getSessionTokenBrowser();
+      return await client.getSessionTokenBrowser().then((result) => {
         //console.log('Result: ', result); //return object success
-        return browserSessionToken;
-      } catch (erro) {
-        console.error('Error when sending: ', erro); //return object error
+        return result;
+      }).catch((erro) => {
+        //console.error('Error when sending: ', erro); //return object error
         //
         return {
           "erro": true,
@@ -2092,7 +1479,7 @@ module.exports = class Sessions {
           "message": "Erro ao recuperar token browser"
         };
         //
-      };
+      });
     });
     return resultgetSessionTokenBrowser;
   } //getSessionTokenBrowser
@@ -2104,12 +1491,11 @@ module.exports = class Sessions {
     console.log("- getBlockList");
     var session = Sessions.getSession(SessionName);
     var resultgetBlockList = await session.client.then(async client => {
-      try {
-        const getBlockList = await client.getBlockList();
+      return await client.getBlockList().then((result) => {
         //console.log('Result: ', result); //return object success
-        return getBlockList;
-      } catch (erro) {
-        console.error('Error when sending: ', erro); //return object error
+        return result;
+      }).catch((erro) => {
+        //console.error('Error when sending: ', erro); //return object error
         //
         return {
           "erro": true,
@@ -2119,102 +1505,10 @@ module.exports = class Sessions {
           "message": "Erro ao recuperar lista de contatos bloqueados"
         };
         //
-      };
+      });
     });
     return resultgetBlockList;
   } //getBlockList
-  //
-  // ------------------------------------------------------------------------------------------------//
-  //
-  // Recuperar mensagens no bate-papo
-  static async getAllMessagesInChat(
-    SessionName,
-    number,
-    includeMe,
-    includeNotifications
-  ) {
-    console.log("- getAllMessagesInChat");
-    var session = Sessions.getSession(SessionName);
-    var resultgetAllMessagesInChat = await session.client.then(async client => {
-      try {
-        const Messages = await client.getAllMessagesInChat(number, includeMe, includeNotifications);
-        //console.log('Result: ', result); //return object success
-        return Messages;
-      } catch (erro) {
-        console.error('Error when sending: ', erro); //return object error
-        //
-        return {
-          "erro": true,
-          "status": 404,
-          "canReceiveMessage": false,
-          "text": "Error",
-          "message": "Erro ao recuperar mensagens"
-        };
-        //
-      };
-    });
-    return resultgetAllMessagesInChat;
-  } // getAllMessagesInChat
-  //
-  // ------------------------------------------------------------------------------------------------//
-  //
-  // Carregar mensagens anteriores
-  static async loadEarlierMessages(
-    SessionName,
-    number
-  ) {
-    console.log("- loadEarlierMessages");
-    var session = Sessions.getSession(SessionName);
-    var resultloadEarlierMessages = await session.client.then(async client => {
-      try {
-        const moreMessages = await client.loadEarlierMessages(number);
-        //
-        return moreMessages;
-      } catch (erro) {
-        console.error('Error when sending: ', erro); //return object error
-        //
-        return {
-          "erro": true,
-          "status": 404,
-          "canReceiveMessage": false,
-          "text": "Error",
-          "message": "Erro ao carregar mensagens anteriores"
-        };
-        //
-      };
-    });
-    return resultloadEarlierMessages;
-  } //loadEarlierMessages
-  //
-  // ------------------------------------------------------------------------------------------------//
-  //
-  // Carregar e obter todas as mensagens no bate-papo
-  static async loadAndGetAllMessagesInChat(
-    SessionName,
-    number
-  ) {
-    console.log("- loadAndGetAllMessagesInChat");
-    var session = Sessions.getSession(SessionName);
-    var resultloadAndGetAllMessagesInChat = await session.client.then(async client => {
-      try {
-        const allMessages = await client.loadAndGetAllMessagesInChat(number);
-        //console.log('Result: ', result); //return object success
-        return allMessages;
-      } catch (erro) {
-        console.error('Error when sending:\n', erro); //return object error
-        //
-        return {
-          "erro": true,
-          "status": 404,
-          "canReceiveMessage": false,
-          "text": "Error",
-          "message": "Erro ao obter todas as mensagens no bate-papo"
-        };
-        //
-      };
-    });
-    return resultloadAndGetAllMessagesInChat;
-  } //loadAndGetAllMessagesInChat
   //
   // ------------------------------------------------------------------------------------------------//
   //
@@ -2226,12 +1520,11 @@ module.exports = class Sessions {
     console.log("- Obtendo status!");
     var session = Sessions.getSession(SessionName);
     var resultgetStatus = await session.client.then(async client => {
-      try {
-        const status = await client.getStatus(number);
+      return await client.getStatus(number).then((result) => {
         //console.log('Result: ', result); //return object success
-        return status;
-      } catch (erro) {
-        console.error('Error when sending:\n', erro); //return object error
+        return result;
+      }).catch((erro) => {
+        //console.error('Error when sending:\n', erro); //return object error
         //
         return {
           "erro": true,
@@ -2241,128 +1534,39 @@ module.exports = class Sessions {
           "message": "Erro ao recuperar status de contato"
         };
         //
-      };
+      });
     });
     return resultgetStatus;
   } //getStatus
   //
   // ------------------------------------------------------------------------------------------------//
   //
-  // Obter o perfil do número
+  // Recuperar status de contato
   static async getNumberProfile(
     SessionName,
     number
   ) {
-    console.log("- Obtendo o perfil do número!");
+    console.log("- Obtendo status!");
     var session = Sessions.getSession(SessionName);
-    var getNumberProfile = await session.client.then(async client => {
-      try {
-        const status = await client.getStatus(number);
+    var resultgetNumberProfile = await session.client.then(async client => {
+      return await client.getNumberProfile(number).then((result) => {
         //console.log('Result: ', result); //return object success
-        return status;
-      } catch (erro) {
-        console.error('Error when sending:\n', erro); //return object error
+        return result;
+      }).catch((erro) => {
+        //console.error('Error when sending:\n', erro); //return object error
         //
         return {
           "erro": true,
           "status": 404,
           "canReceiveMessage": false,
           "text": "Error",
-          "message": "Erro ao obter perfil do número"
+          "message": "Erro ao recuperar profile"
         };
         //
-      };
+      });
     });
-    return getNumberProfile;
-  } //getNumberProfile
-  //
-  // ------------------------------------------------------------------------------------------------//
-  //
-  // Obter todas as mensagens não lidas
-  static async getAllUnreadMessages(SessionName) {
-    console.log("- Obtendo todas as mensagens não lidas!");
-    var session = Sessions.getSession(SessionName);
-    var resultgetAllUnreadMessages = await session.client.then(async client => {
-      try {
-        const messages = await client.getAllUnreadMessages();
-        //console.log('Result: ', messages); //return object success
-        return messages;
-      } catch (erro) {
-        console.error('Error when sending:\n', erro); //return object error
-        //
-        return {
-          "erro": true,
-          "status": 404,
-          "canReceiveMessage": false,
-          "text": "Error",
-          "message": "Erro ao obter todas as mensagens não lidas"
-        };
-        //
-      };
-    });
-    return resultgetAllUnreadMessages;
-    //return { result: "success" };
-  } //getAllUnreadMessages
-  //
-  // ------------------------------------------------------------------------------------------------//
-  //
-  // Obter a foto do perfil do servidor
-  static async getProfilePicFromServer(
-    SessionName,
-    number
-  ) {
-    console.log("- Obtendo a foto do perfil do servidor!");
-    var session = Sessions.getSession(SessionName);
-    var resultgetProfilePicFromServer = await session.client.then(async client => {
-      try {
-        const url = await client.getProfilePicFromServer(number);
-        //console.log('Result: ', result); //return object success
-        return url;
-      } catch (erro) {
-        console.error('Error when sending:\n', erro); //return object error
-        //
-        return {
-          "erro": true,
-          "status": 404,
-          "canReceiveMessage": false,
-          "text": "Error",
-          "message": "Erro ao obtendo a foto do perfil do servidor"
-        };
-        //
-      };
-    });
-    return resultgetProfilePicFromServer;
-  } //getProfilePicFromServer
-  //
-  // ------------------------------------------------------------------------------------------------//
-  //
-  // Recuperar bate-papo / conversa
-  static async getChat(
-    SessionName,
-    number
-  ) {
-    console.log("- Obtendo chats!");
-    var session = Sessions.getSession(SessionName);
-    var resultgetChat = await session.client.then(async client => {
-      try {
-        const chat = await client.getChat(number);
-        //console.log('Result: ', result); //return object success
-        return chat;
-      } catch (erro) {
-        console.error('Error when sending:\n', erro); //return object error
-        //
-        return {
-          "erro": true,
-          "status": 404,
-          "canReceiveMessage": false,
-          "text": "Error",
-          "message": "Erro ao recuperar bate-papo / conversa"
-        };
-        //
-      };
-    });
-    return resultgetChat;
-  } //getChat
+    return resultgetNumberProfile;
+  } //getStatus
   //
   // ------------------------------------------------------------------------------------------------//
   //
@@ -2374,27 +1578,26 @@ module.exports = class Sessions {
     console.log("- canReceiveMessage");
     var session = Sessions.getSession(SessionName);
     var resultcheckNumberStatus = await session.client.then(async client => {
-      try {
-        const chat = await client.checkNumberStatus(number);
+      return await client.checkNumberStatus(number).then((result) => {
         //console.log('Result: ', chat); //return object success
         //
-        if (chat.status === 200 && chat.canReceiveMessage === true) {
+        if (result.status === 200 && result.canReceiveMessage === true) {
           //
           return {
             "erro": false,
-            "status": chat.status,
-            "canReceiveMessage": chat.canReceiveMessage,
-            "number": chat.id.user,
+            "status": result.status,
+            "canReceiveMessage": result.canReceiveMessage,
+            "number": result.id.user,
             "message": "O número informado pode receber mensagens via whatsapp"
           };
           //
-        } else if (chat.status === 404 && chat.canReceiveMessage === false) {
+        } else if (result.status === 404 && result.canReceiveMessage === false) {
           //
           return {
             "erro": true,
-            "status": chat.status,
-            "canReceiveMessage": chat.canReceiveMessage,
-            "number": chat.id.user,
+            "status": result.status,
+            "canReceiveMessage": result.canReceiveMessage,
+            "number": result.id.user,
             "message": "O número informado não pode receber mensagens via whatsapp"
           };
           //
@@ -2409,8 +1612,8 @@ module.exports = class Sessions {
           };
           //
         }
-      } catch (erro) {
-        console.error('Error when sending:\n', erro); //return object error
+      }).catch((erro) => {
+        //console.error('Error when sending:\n', erro); //return object error
         //
         return {
           "erro": true,
@@ -2420,7 +1623,7 @@ module.exports = class Sessions {
           "message": "Erro ao verificar número informado"
         };
         //
-      };
+      });
     });
     return resultcheckNumberStatus;
   } //checkNumberStatus
@@ -2441,8 +1644,7 @@ module.exports = class Sessions {
     console.log("- leaveGroup");
     var session = Sessions.getSession(SessionName);
     var resultleaveGroup = await session.client.then(async client => {
-      try {
-        await client.leaveGroup(groupId);
+      return await client.leaveGroup(groupId).then((result) => {
         //console.log('Result: ', result); //return object success
         //
         return {
@@ -2453,8 +1655,8 @@ module.exports = class Sessions {
           "message": "Grupo deixado com sucesso"
         };
         //
-      } catch (erro) {
-        console.error('Error when sending: ', erro); //return object error
+      }).catch((erro) => {
+        // console.error('Error when sending: ', erro); //return object error
         //
         return {
           "erro": true,
@@ -2464,7 +1666,7 @@ module.exports = class Sessions {
           "message": "Erro ao deixar o grupo"
         };
         //
-      };
+      });
     });
     return resultleaveGroup;
   } //leaveGroup
@@ -2479,22 +1681,21 @@ module.exports = class Sessions {
     console.log("- getGroupMembers");
     var session = Sessions.getSession(SessionName);
     var resultgetGroupMembers = await session.client.then(async client => {
-      try {
-        const GroupMembers = await client.getGroupMembers(groupId);
+      return await client.getGroupMembers(groupId).then(async (result) => {
         //console.log('Result: ', result); //return object success
         //
         var getGroupMembers = [];
         //
-        await forEach(GroupMembers, async (resultAllContacts) => {
+        await forEach(result, async (resultGroupMembers) => {
           //
-          if (resultAllContacts.isMyContact === true || resultAllContacts.isMyContact === false) {
+          if (resultGroupMembers.isMyContact === true || resultGroupMembers.isMyContact === false) {
             //
             getGroupMembers.push({
-              "user": resultAllContacts.id.user,
-              "name": resultAllContacts.name,
-              "shortName": resultAllContacts.shortName,
-              "pushname": resultAllContacts.pushname,
-              "formattedName": resultAllContacts.formattedName
+              "user": resultGroupMembers.id.user,
+              "name": resultGroupMembers.name,
+              "shortName": resultGroupMembers.shortName,
+              "pushname": resultGroupMembers.pushname,
+              "formattedName": resultGroupMembers.formattedName
             });
           }
           //
@@ -2502,8 +1703,8 @@ module.exports = class Sessions {
         //
         return getGroupMembers;
         //
-      } catch (erro) {
-        console.error('Error when sending:\n', erro); //return object error
+      }).catch((erro) => {
+        //console.error('Error when sending:\n', erro); //return object error
         //
         return {
           "erro": true,
@@ -2513,7 +1714,7 @@ module.exports = class Sessions {
           "message": "Erro ao obter membros do grupo"
         };
         //
-      };
+      });
     });
     return resultgetGroupMembers;
   } //getGroupMembers
@@ -2528,11 +1729,10 @@ module.exports = class Sessions {
     console.log("- getGroupMembersIds");
     var session = Sessions.getSession(SessionName);
     var resultgetGroupMembersIds = await session.client.then(async client => {
-      try {
-        const GroupMembersIds = await client.getGroupMembersIds(groupId);
+      return await client.getGroupMembersIds(groupId).then((result) => {
         //console.log('Result: ', result); //return object success
-        return GroupMembersIds;
-      } catch (erro) {
+        return result;
+      }).catch((erro) => {
         console.error('Error when sending:\n', erro); //return object error
         //
         return {
@@ -2543,29 +1743,25 @@ module.exports = class Sessions {
           "message": "Erro ao obter membros do grupo"
         };
         //
-      };
+      });
     });
     return resultgetGroupMembersIds;
   } //getGroupMembersIds
   //
   // ------------------------------------------------------------------------------------------------//
   //
-  // -> Continua aqui ->
-  //
   // Gerar link de url de convite de grupo
   static async getGroupInviteLink(
     SessionName,
-    groupId,
-    chatIdorgroupId
+    groupId
   ) {
     console.log("- getGroupInviteLink");
     var session = Sessions.getSession(SessionName);
     var resultgetGroupInviteLink = await session.client.then(async client => {
-      try {
-        var result = await client.getGroupInviteLink(groupId);
+      return await client.getGroupInviteLink(groupId).then((result) => {
         //console.log('Result: ', result); //return object success
         return result;
-      } catch (erro) {
+      }).catch((erro) => {
         //console.error('Error when sending: ', erro); //return object error
         //
         return {
@@ -2576,7 +1772,7 @@ module.exports = class Sessions {
           "message": "Erro ao obter link de convite de grupo"
         };
         //
-      };
+      });
     });
     return resultgetGroupInviteLink;
   } //getGroupInviteLink
@@ -2593,8 +1789,7 @@ module.exports = class Sessions {
     console.log("- createGroup");
     var session = Sessions.getSession(SessionName);
     var resultgetGroupInviteLink = await session.client.then(async client => {
-      try {
-        var result = await client.createGroup(title, contactlistValid);
+      return await client.createGroup(title, contactlistValid).then((result) => {
         //console.log('Result: ', result); //return object success
         //
         if (result.status === 200) {
@@ -2619,7 +1814,7 @@ module.exports = class Sessions {
           //
         }
         //
-      } catch (erro) {
+      }).catch((erro) => {
         //console.error('Error when sending: ', erro); //return object error
         //
         return {
@@ -2631,12 +1826,9 @@ module.exports = class Sessions {
           "message": "Erro ao criar grupo"
         };
         //
-      };
+      });
     });
-    return {
-      createGroup: resultgetGroupInviteLink
-    };
-    //return { result: "success" };
+    return resultgetGroupInviteLink;
   } //createGroup
   //
   // ------------------------------------------------------------------------------------------------//
@@ -2644,19 +1836,16 @@ module.exports = class Sessions {
   // Remove participante
   static async removeParticipant(
     SessionName,
-    group,
     groupId,
-    phonefull,
-    chatIdorgroupId
+    phonefull
   ) {
     console.log("- removeParticipant");
     var session = Sessions.getSession(SessionName);
     var resultremoveParticipant = await session.client.then(async client => {
-      try {
-        const removeParticipant = await client.removeParticipant(group + groupId, phonefull + chatIdorgroupId);
+      return await await client.removeParticipant(groupId, phonefull).then((result) => {
         //console.log('Result: ', result); //return object success
         //
-        if (removeParticipant === true) {
+        if (result === true) {
           return {
             "erro": false,
             "status": 200,
@@ -2674,7 +1863,7 @@ module.exports = class Sessions {
           //
         }
         //
-      } catch (erro) {
+      }).catch((erro) => {
         //console.error('Error when sending: ', erro); //return object error
         //
         return {
@@ -2684,11 +1873,9 @@ module.exports = class Sessions {
           "message": "Erro ao remover participante"
         };
         //
-      };
+      });
     });
-    return {
-      "removeParticipant": resultremoveParticipant
-    };
+    return resultremoveParticipant;
   } //removeParticipant
   //
   // ------------------------------------------------------------------------------------------------//
@@ -2696,19 +1883,16 @@ module.exports = class Sessions {
   // Adicionar participante
   static async addParticipant(
     SessionName,
-    group,
     groupId,
-    phonefull,
-    chatId
+    phonefull
   ) {
     console.log("- addParticipant");
     var session = Sessions.getSession(SessionName);
     var resultaddParticipant = await session.client.then(async client => {
-      try {
-        var addParticipant = await client.addParticipant(group + groupId, phonefull + chatId);
+      return await client.addParticipant(groupId, phonefull).then((result) => {
         //console.log('Result: ', addParticipant); //return object success
         //
-        if (addParticipant === true) {
+        if (result === true) {
           return {
             "erro": false,
             "status": 200,
@@ -2726,7 +1910,7 @@ module.exports = class Sessions {
           //
         }
         //
-      } catch (erro) {
+      }).catch((erro) => {
         //console.error('Error when sending: ', erro); //return object error
         //
         return {
@@ -2736,11 +1920,9 @@ module.exports = class Sessions {
           "message": "Erro ao adicionar participante"
         };
         //
-      };
+      });
     });
-    return {
-      "addParticipant": resultaddParticipant
-    };
+    return resultaddParticipant;
   } //addParticipant
   //
   // ------------------------------------------------------------------------------------------------//
@@ -2748,24 +1930,20 @@ module.exports = class Sessions {
   // Promote participant (Give admin privileges)
   static async promoteParticipant(
     SessionName,
-    group,
     groupId,
-    phonefull,
-    chatId
+    number
   ) {
     console.log("- promoteParticipant");
     var session = Sessions.getSession(SessionName);
     var resultpromoteParticipant = await session.client.then(async client => {
-      try {
-        //await client.promoteParticipant('00000000-000000@g.us', '111111111111@c.us');
-        var promoteParticipant = await client.promoteParticipant(group + groupId, phonefull + chatId);
+      return await client.promoteParticipant(groupId, number).then((result) => {
         //console.log('Result: ', promoteParticipant); //return object success
         //
-        if (promoteParticipant === true) {
+        if (result === true) {
           return {
             "erro": false,
             "status": 200,
-            "number": phonefull,
+            "number": number,
             "message": "Participante promovido a administrador"
           };
         } else {
@@ -2773,27 +1951,25 @@ module.exports = class Sessions {
           return {
             "erro": true,
             "status": 404,
-            "number": phonefull,
+            "number": number,
             "message": "Erro ao promover participante a administrador"
           };
           //
         }
         //
-      } catch (erro) {
+      }).catch((erro) => {
         console.error('Error when sending: ', erro); //return object error
         //
         return {
           "erro": true,
           "status": 404,
-          "number": phonefull,
+          "number": number,
           "message": "Erro ao promover participante a administrador"
         };
         //
-      };
+      });
     });
-    return {
-      "promoteParticipant": resultpromoteParticipant
-    };
+    return resultpromoteParticipant;
   } //promoteParticipant
   //
   // ------------------------------------------------------------------------------------------------//
@@ -2801,16 +1977,13 @@ module.exports = class Sessions {
   // Depromote participant (Give admin privileges)
   static async demoteParticipant(
     SessionName,
-    group,
     groupId,
-    phonefull,
-    chatId
+    phonefull
   ) {
     console.log("- demoteParticipant");
     var session = Sessions.getSession(SessionName);
     var resultdemoteParticipant = await session.client.then(async client => {
-      try {
-        var demoteParticipant = await client.demoteParticipant(group + groupId, phonefull + chatId);
+      return await client.demoteParticipant(groupId, phonefull).then((result) => {
         //console.log('Result: ', demoteParticipant); //return object success
         //
         if (demoteParticipant === true) {
@@ -2831,7 +2004,7 @@ module.exports = class Sessions {
           //
         }
         //
-      } catch (erro) {
+      }).catch((erro) => {
         //console.error('Error when sending: ', erro); //return object error
         //
         return {
@@ -2841,45 +2014,10 @@ module.exports = class Sessions {
           "message": "Erro ao remover participante de administrador"
         };
         //
-      };
+      });
     });
-    return {
-      "demoteParticipant": resultdemoteParticipant
-    };
+    return resultdemoteParticipant;
   } //demoteParticipant
-  //
-  // ------------------------------------------------------------------------------------------------//
-  //
-  // Get group admins
-  static async getGroupAdmins(
-    SessionName,
-    number,
-    chatIdorgroupId
-  ) {
-    console.log("- getGroupAdmins");
-    var session = Sessions.getSession(SessionName);
-    var resultgetGroupAdmins = await session.client.then(async client => {
-      try {
-        var getGroupAdmins = await client.getGroupAdmins(number + chatIdorgroupId);
-        //console.log('Result: ', result); //return object success
-        return getGroupAdmins;
-      } catch (erro) {
-        //console.error('Error when sending: ', erro); //return object error
-        //
-        return {
-          "erro": true,
-          "status": 404,
-          "number": phonefull,
-          "message": "Erro ao obter administradores"
-        };
-        //
-      };
-    });
-    return {
-      "GroupAdmins": resultgetGroupAdmins
-    };
-    //return { result: "success" };
-  } //getGroupAdmins
   //
   // ------------------------------------------------------------------------------------------------//
   //
@@ -2891,25 +2029,20 @@ module.exports = class Sessions {
     console.log("- Obtendo chats!");
     var session = Sessions.getSession(SessionName);
     var resultgetGroupInfoFromInviteLink = await session.client.then(async client => {
-      try {
-        var grtInviteCode = await client.getGroupInfoFromInviteLink(InviteCode);
+      return await client.getGroupInfoFromInviteLink(InviteCode).then((result) => {
         //console.log('Result: ', result); //return object success
-        return grtInviteCode;
-      } catch (erro) {
+        return result;
+      }).catch((erro) => {
         //console.error('Error when sending: ', erro); //return object error
-        //
         return {
           "erro": true,
           "status": 404,
           "message": "Erro ao obter link de convite"
         };
         //
-      };
+      });
     });
-    return {
-      "GroupInfoFromInviteLink": resultgetGroupInfoFromInviteLink
-    };
-    //return { result: "success" };
+    return resultgetGroupInfoFromInviteLink;
   } //getGroupInfoFromInviteLink
   //
   // ------------------------------------------------------------------------------------------------//
@@ -2922,11 +2055,10 @@ module.exports = class Sessions {
     console.log("- joinGroup");
     var session = Sessions.getSession(SessionName);
     var resultjoinGroup = await session.client.then(async client => {
-      try {
-        var joinGroup = await client.joinGroup(InviteCode);
+      return await await client.joinGroup(InviteCode).then((result) => {
         //console.log('Result: ', result); //return object success
         //
-        if (joinGroup.status === 200) {
+        if (result.status === 200) {
           return {
             "erro": false,
             "status": 200,
@@ -2937,12 +2069,12 @@ module.exports = class Sessions {
           return {
             "erro": true,
             "status": 404,
-            "message": "erro ao aceitar convite para grupo"
+            "message": "Erro ao aceitar convite para grupo"
           };
           //
         }
         //
-      } catch (erro) {
+      }).catch((erro) => {
         //console.error('Error when sending: ', erro); //return object error
         //
         return {
@@ -2951,12 +2083,9 @@ module.exports = class Sessions {
           "message": "Erro ao entra no grupo via convite"
         };
         //
-      };
+      });
     });
-    return {
-      "joinGroup": resultjoinGroup
-    };
-    //return { result: "success" };
+    return resultjoinGroup;
   } //joinGroup
   //
   // ------------------------------------------------------------------------------------------------//
@@ -2975,15 +2104,16 @@ module.exports = class Sessions {
     console.log("- setProfileStatus");
     var session = Sessions.getSession(SessionName);
     var resultsetProfileStatus = await session.client.then(async client => {
-      try {
-        await client.setProfileStatus(ProfileStatus);
+      return await client.setProfileStatus(ProfileStatus).then((result) => {
+        //console.log('Result: ', result); //return object success
+        //
         return {
           "erro": false,
           "status": 200,
           "message": "Profile status alterado com sucesso."
         };
         //
-      } catch (error) {
+      }).catch((erro) => {
         //console.error('Error when sending: ', erro); //return object error
         //return erro;
         return {
@@ -2992,12 +2122,9 @@ module.exports = class Sessions {
           "message": "Erro ao alterar profile status."
         };
         //
-      }
+      });
     });
-    return {
-      "ProfileStatus": resultsetProfileStatus
-    };
-    //return { result: "success" };
+    return resultsetProfileStatus;
   } //setProfileStatus
   //
   // ------------------------------------------------------------------------------------------------//
@@ -3010,15 +2137,16 @@ module.exports = class Sessions {
     console.log("- setProfileName");
     var session = Sessions.getSession(SessionName);
     var resultsetProfileName = await session.client.then(async client => {
-      try {
-        await client.setProfileName(ProfileName);
+      return await client.setProfileName(ProfileName).then((result) => {
+        //console.log('Result: ', result); //return object success
+        //
         return {
           "erro": false,
           "status": 200,
           "message": "Profile name alterado com sucesso."
         };
         //
-      } catch (error) {
+      }).catch((erro) => {
         //console.error('Error when sending: ', erro); //return object error
         //return erro;
         return {
@@ -3027,12 +2155,9 @@ module.exports = class Sessions {
           "message": "Erro ao alterar profile name."
         };
         //
-      }
+      });
     });
-    return {
-      "setProfileName": resultsetProfileName
-    };
-    //return { result: "success" };
+    return resultsetProfileName;
   } //setProfileName
   //
   // ------------------------------------------------------------------------------------------------//
@@ -3045,29 +2170,27 @@ module.exports = class Sessions {
     console.log("- setProfilePic");
     var session = Sessions.getSession(SessionName);
     var resultsetProfilePic = await session.client.then(async client => {
-      try {
-        await client.setProfilePic(path);
+      return await client.setProfilePic(path).then((result) => {
+        //console.log('Result: ', result); //return object success
+        //
         return {
           "erro": false,
           "status": 200,
           "message": "Profile pic alterado com sucesso."
         };
         //
-      } catch (error) {
+      }).catch((erro) => {
         //console.error('Error when sending: ', erro); //return object error
-        //return erro;
+        //
         return {
           "erro": true,
           "status": 404,
           "message": "Erro ao alterar profile pic."
         };
         //
-      }
+      });
     });
-    return {
-      "setProfilePic": resultsetProfilePic
-    };
-    //return { result: "success" };
+    return resultsetProfilePic;
   } //setProfilePic
   //
   // ------------------------------------------------------------------------------------------------//
@@ -3083,11 +2206,28 @@ module.exports = class Sessions {
     console.log("- killServiceWorker");
     var session = Sessions.getSession(SessionName);
     var resultkillServiceWorker = await session.client.then(async client => {
-      return await client.killServiceWorker();
+      return await client.killServiceWorker().then((result) => {
+        //console.log('Result: ', result); //return object success
+        //
+        return {
+          "erro": false,
+          "status": 200,
+          "message": "Serviço parado com sucesso.",
+          "killService": result
+        };
+        //
+      }).catch((erro) => {
+        //console.error('Error when sending: ', erro); //return object error
+        //
+        return {
+          "erro": true,
+          "status": 404,
+          "message": "Erro ao parar serviço."
+        };
+        //
+      });
     });
-    return {
-      "killServiceWorker": resultkillServiceWorker
-    };
+    return resultkillServiceWorker;
   } //killServiceWorker
   //
   // ------------------------------------------------------------------------------------------------//
@@ -3097,11 +2237,28 @@ module.exports = class Sessions {
     console.log("- restartService");
     var session = Sessions.getSession(SessionName);
     var resultrestartService = await session.client.then(async client => {
-      return await client.restartService();
+      return await client.restartService().then((result) => {
+        //console.log('Result: ', result); //return object success
+        //
+        return {
+          "erro": false,
+          "status": 200,
+          "message": "Serviço reiniciado com sucesso.",
+          "restartService": result
+        };
+        //
+      }).catch((erro) => {
+        //console.error('Error when sending: ', erro); //return object error
+        //
+        return {
+          "erro": true,
+          "status": 404,
+          "message": "Erro ao reiniciar serviço."
+        };
+        //
+      });
     });
-    return {
-      "restartService": resultrestartService
-    };
+    return resultrestartService;
   } //restartService
   //
   // ------------------------------------------------------------------------------------------------//
@@ -3111,7 +2268,26 @@ module.exports = class Sessions {
     console.log("- getHostDevice");
     var session = Sessions.getSession(SessionName);
     var resultgetHostDevice = await session.client.then(async client => {
-      return await client.getHostDevice();
+      return await client.getHostDevice().then((result) => {
+        //console.log('Result: ', result); //return object success
+        //
+        return {
+          "erro": false,
+          "status": 200,
+          "message": "Dados do dispositivo obtido com sucesso",
+          "HostDevice": result
+        };
+        //
+      }).catch((erro) => {
+        //console.error('Error when sending: ', erro); //return object error
+        //
+        return {
+          "erro": true,
+          "status": 404,
+          "message": "Erro ao obter dados do dispositivo"
+        };
+        //
+      });
     });
     return resultgetHostDevice;
   } //getHostDevice
@@ -3123,11 +2299,29 @@ module.exports = class Sessions {
     console.log("- getConnectionState");
     var session = Sessions.getSession(SessionName);
     var resultisConnected = await session.client.then(async client => {
-      return await client.getConnectionState();
+      return await client.getConnectionState().then((result) => {
+        //console.log('Result: ', result); //return object success
+        //
+        return {
+          "erro": false,
+          "status": 200,
+          "message": "Estado do dispositivo obtido com sucesso",
+          "ConnectionState": result
+
+        };
+        //
+      }).catch((erro) => {
+        //console.error('Error when sending: ', erro); //return object error
+        //
+        return {
+          "erro": true,
+          "status": 404,
+          "message": "Erro ao obter o estado da conexão"
+        };
+        //
+      });
     });
-    return {
-      "getConnectionState": resultisConnected
-    };
+    return resultisConnected;
   } //getConnectionState
   //
   // ------------------------------------------------------------------------------------------------//
@@ -3137,11 +2331,29 @@ module.exports = class Sessions {
     console.log("- getBatteryLevel");
     var session = Sessions.getSession(SessionName);
     var resultgetBatteryLevel = await session.client.then(async client => {
-      return await client.getBatteryLevel();
+      return await client.getBatteryLevel().then((result) => {
+        //console.log('Result: ', result); //return object success
+        //
+        return {
+          "erro": false,
+          "status": 200,
+          "message": "Nivel da bateria obtido com sucesso",
+          "BatteryLevel": result
+
+        };
+        //
+      }).catch((erro) => {
+        //console.error('Error when sending: ', erro); //return object error
+        //
+        return {
+          "erro": true,
+          "status": 404,
+          "message": "Erro ao obter o nivel da bateria"
+        };
+        //
+      });
     });
-    return {
-      "getBatteryLevel": resultgetBatteryLevel
-    };
+    return resultgetBatteryLevel;
   } //getBatteryLevel
   //
   // ------------------------------------------------------------------------------------------------//
@@ -3151,41 +2363,60 @@ module.exports = class Sessions {
     console.log("- isConnected");
     var session = Sessions.getSession(SessionName);
     var resultisConnected = await session.client.then(async client => {
-      return await client.isConnected();
+      return await client.isConnected().then((result) => {
+        //console.log('Result: ', result); //return object success
+        //
+        return {
+          "erro": false,
+          "status": 200,
+          "message": "Estatus obtido com sucesso",
+          "Connected": result
+        };
+        //
+      }).catch((erro) => {
+        //console.error('Error when sending: ', erro); //return object error
+        //
+        return {
+          "erro": true,
+          "status": 404,
+          "message": "Erro ao obter estatus"
+        };
+        //
+      });
     });
-    return {
-      "isConnected": resultisConnected
-    };
+    return resultisConnected;
   } //isConnected
   //
   // ------------------------------------------------------------------------------------------------//
   //
-  // Get whatsapp web version
+  // Obter versão do WhatsappWeb
   static async getWAVersion(SessionName) {
     console.log("- getWAVersion");
     var session = Sessions.getSession(SessionName);
     var resultgetWAVersion = await session.client.then(async client => {
-      return await client.getWAVersion();
+      return await client.getWAVersion().then((result) => {
+        //console.log('Result: ', result); //return object success
+        //
+        return {
+          "erro": false,
+          "status": 200,
+          "message": "Versão do WhatsappWeb obtido com sucesso",
+          "WAVersion": result
+        };
+        //
+      }).catch((erro) => {
+        //console.error('Error when sending: ', erro); //return object error
+        //
+        return {
+          "erro": true,
+          "status": 404,
+          "message": "Erro ao obter versão do WhatsappWeb"
+        };
+        //
+      });
     });
-    return {
-      "WAVersion": resultgetWAVersion
-    };
+    return resultgetWAVersion;
   } //getWAVersion
-  //
-  // ------------------------------------------------------------------------------------------------//
-  //
-  /*
-  ╔═╗┌┬┐┬ ┬┌─┐┬─┐                                          
-  ║ ║ │ ├─┤├┤ ├┬┘                                          
-  ╚═╝ ┴ ┴ ┴└─┘┴└─                                          
-  */
-  //
-
-
-
-
-
-
   //
   // ------------------------------------------------------------------------------------------------//
   //
