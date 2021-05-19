@@ -15,18 +15,20 @@ const serverConfig = require("../config/server.config.json");
 //
 // ------------------------------------------------------------------------------------------------//
 //
-function emBase64(string) {
-  console.log("- Base64 Encode");
-  let buff = new Buffer.from(string);
-  let base64data = buff.toString('base64');
-  return base64data;
-}
-//
-function deBase64(string) {
-  console.log("- Base64 Decode");
-  let buff = new Buffer.from(string, 'base64');
-  let text = buff.toString('ascii');
-  return text;
+const getAllDirFiles = function(dirPath, arrayOfFiles) {
+  files = fs.readdirSync(dirPath)
+
+  arrayOfFiles = arrayOfFiles || []
+
+  files.forEach(function(file) {
+    if (fs.statSync(dirPath + "/" + file).isDirectory()) {
+      arrayOfFiles = getAllDirFiles(dirPath + "/" + file, arrayOfFiles)
+    } else {
+      arrayOfFiles.push(file)
+    }
+  })
+
+  return arrayOfFiles
 }
 //
 function sleep(ms) {
@@ -238,6 +240,25 @@ router.post("/Status", upload.none(''), async (req, res, next) => {
     Status
   });
 }); //Status
+//
+// ------------------------------------------------------------------------------------------------//
+//
+router.post("/countTokenFile", upload.none(''), async (req, res, next) => {
+  const resultFile = getAllDirFiles(req.body.dirPath);
+  const resultCount = getAllDirFiles(req.body.dirPath).length;
+  //
+  console.log(resultFile);
+  console.log(resultCount);
+  //
+  var countTokenFile = {
+    "resultFile": resultFile,
+    "resultCount": resultCount
+  }
+  //
+  res.status(200).json({
+    countTokenFile
+  });
+}); //countTokenFile
 //
 // ------------------------------------------------------------------------------------------------//
 //
