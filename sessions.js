@@ -5,6 +5,7 @@ const {
 } = require('p-iteration');
 const axios = require('axios');
 const wppconnect = require('@wppconnect-team/wppconnect');
+//const wppconnect = require('./wppconnect/src/');
 const serverConfig = require("./config/server.config.json");
 //
 // ------------------------------------------------------------------------------------------------------- //
@@ -85,7 +86,14 @@ module.exports = class Sessions {
     var session = Sessions.getSession(SessionName);
 
     if (session) { //só adiciona se não existir
-      if (session.state == "STARTING") {
+      if (session.state == "CONNECTED") {
+        return {
+          result: "info",
+          state: session.state,
+          status: session.status,
+          message: "'Sistema iniciado e disponivel para uso'"
+        };
+      } else if (session.state == "STARTING") {
         return {
           result: "info",
           state: session.state,
@@ -265,12 +273,12 @@ module.exports = class Sessions {
             break;
           default:
             //
-            res.status(400).json({
+            return {
               result: 'error',
-              state: 'NOTFOUND',
-              status: 'notLogged',
-              message: 'Sistema Off-line'
-            });
+                state: 'NOTFOUND',
+                status: 'notLogged',
+                message: 'Sistema Off-line'
+            };
             //
         }
       }
@@ -292,41 +300,58 @@ module.exports = class Sessions {
 
     var session = Sessions.getSession(SessionName);
 
-
     if (session == false) {
       //create new session
+      //
+      console.log('- Nome da sessão:', session.name);
+      console.log('- State do sistema:', session.state);
+      console.log('- Status da sessão:', session.status);
+      //
       session = await Sessions.addSesssion(SessionName);
     } else if (["CLOSED"].includes(session.state)) {
       //restart session
       console.log("- State: CLOSED");
       session.result = "info";
-      session.state = "STARTING";
+      session.state = "CLOSED";
       session.status = "notLogged";
       session.attempts = 0;
       session.message = 'Sistema iniciando e indisponivel para uso';
       session.prossesid = null;
+      //
+      console.log('- Nome da sessão:', session.name);
+      console.log('- State do sistema:', session.state);
+      console.log('- Status da sessão:', session.status);
+      //
       session.client = Sessions.initSession(SessionName);
       Sessions.setup(SessionName);
     } else if (["CONFLICT", "UNPAIRED", "UNLAUNCHED", "UNPAIRED_IDLE"].includes(session.state)) {
       session.result = "info";
+      session.state = "CLOSED";
       session.status = 'notLogged';
       session.message = 'Sistema desconectado';
-      console.log('- Status do sistema:', session.state);
+      //
+      console.log('- Nome da sessão:', session.name);
+      console.log('- State do sistema:', session.state);
       console.log('- Status da sessão:', session.status);
-      console.log("- Client UseHere");
+      //
       session.client.then(client => {
+        console.log("- Client UseHere");
         client.useHere();
       });
       session.client = Sessions.initSession(SessionName);
     } else if (["DISCONNECTED"].includes(session.state)) {
       //restart session
-      console.log("- State: DISCONNECTED");
       session.result = "info";
-      session.state = "STARTING";
+      session.state = "CLOSE";
       session.status = "notLogged";
       session.attempts = 0;
       session.message = 'Sistema desconectado';
       session.prossesid = null;
+      //
+      console.log('- Nome da sessão:', session.name);
+      console.log('- State do sistema:', session.state);
+      console.log('- Status da sessão:', session.status);
+      //
       session.client = Sessions.initSession(SessionName);
       Sessions.setup(SessionName);
     } else {
@@ -430,7 +455,7 @@ module.exports = class Sessions {
         //
         var qrCode = base64Qrimg.replace('data:image/png;base64,', '');
         const imageBuffer = Buffer.from(qrCode, 'base64');
-        //
+        //	
         /*
         // Para escrevê-lo em outro lugar em um arquivo
         //exportQR(base64Qrimg, './public/images/marketing-qr.png');
@@ -464,7 +489,6 @@ module.exports = class Sessions {
         //Create session wss return "serverClose" case server for close
         console.log('- Session name: ', session_wppconnect);
         //
-        //
         switch (statusSession) {
           case 'isLogged':
           case 'qrReadSuccess':
@@ -495,12 +519,14 @@ module.exports = class Sessions {
           case 'deviceNotConnected':
           case 'desconnectedMobile':
           case 'deleteToken':
+            //session.client = false;
             session.result = "info";
             session.state = "DISCONNECTED";
             session.status = statusSession;
             session.message = "Dispositivo desconetado";
             break;
           default:
+            //session.client = false;
             session.result = "info";
             session.state = "DISCONNECTED";
             session.status = statusSession;
@@ -648,24 +674,7 @@ module.exports = class Sessions {
         console.log("- Is Group.:", message.isGroupMsg);
         */
         //
-        var session = Sessions.getSession(SessionName);
-        if (session.hook != null) {
-          var config = {
-            method: 'post',
-            url: session.hook,
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            data: message
-          };
-          await axios(config)
-            .then(function(response) {
-              console.log(JSON.stringify(response.data));
-            })
-            .catch(function(error) {
-              console.log(error);
-            });
-        } else if (message.body === 'Hi' && message.isGroupMsg === false) {
+        if (message.body === 'Hi' && message.isGroupMsg === false) {
           client
             .sendText(message.from, saudacao() + ",\nWelcome Venom 🕷")
             .then((result) => {
@@ -683,7 +692,7 @@ module.exports = class Sessions {
       });
       // Listen when client has been added to a group
       client.onAddedToGroup(async (chatEvent) => {
-        console.log('- Listen when client has been added to a group:', chatEvent.name);
+        //console.log('- Listen when client has been added to a group:', chatEvent.name);
       });
       // Listen to ack's
       // See the status of the message when sent.
@@ -752,7 +761,7 @@ module.exports = class Sessions {
   static async closeSession(SessionName) {
     console.log("- Fechando sessão");
     var session = Sessions.getSession(SessionName);
-    await session.client.then(async client => {
+    var closeSession = await session.client.then(async client => {
       try {
         await client.close();
         session.state = "CLOSED";
@@ -779,14 +788,15 @@ module.exports = class Sessions {
         //
       }
     });
+    return closeSession;
   } //closeSession
   //
   // ------------------------------------------------------------------------------------------------//
   //
-  static async LogoutSession(SessionName) {
+  static async logoutSession(SessionName) {
     console.log("- Fechando sessão");
     var session = Sessions.getSession(SessionName);
-    await session.client.then(async client => {
+    var LogoutSession = await session.client.then(async client => {
       try {
         await client.logout();
         session.state = "DISCONNECTED";
@@ -813,9 +823,10 @@ module.exports = class Sessions {
         //
       }
     });
+    return LogoutSession;
   } //LogoutSession
   //
-  // ------------------------------------------------------------------------------------------------------- //
+  // ------------------------------------------------------------------------------------------------//
   //
   /*
   ╔╗ ┌─┐┌─┐┬┌─┐  ╔═╗┬ ┬┌┐┌┌─┐┌┬┐┬┌─┐┌┐┌┌─┐  ┬ ┬┌─┐┌─┐┌─┐┌─┐
