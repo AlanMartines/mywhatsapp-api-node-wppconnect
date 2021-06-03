@@ -1,10 +1,4 @@
 const fs = require('fs');
-const customExpress = require('./config/custom-express');
-const http = customExpress();
-const serverConfig = require("./config/server.config.json");
-const Sessions = require("./sessions.js");
-//
-// ------------------------------------------------------------------------------------------------//
 //
 fs.access("./config/server.config.json", fs.constants.F_OK, (err) => {
   if (err) {
@@ -23,6 +17,13 @@ fs.access("./config/server.config.json", fs.constants.F_OK, (err) => {
       //
       // ------------------------------------------------------------------------------------------------//
       //
+      const customExpress = require('./config/custom-express');
+      const http = customExpress();
+      const serverConfig = require("./config/server.config.json");
+      const Sessions = require("./sessions.js");
+      //
+      // ------------------------------------------------------------------------------------------------//
+      //
       http.listen(serverConfig.port, serverConfig.host, function(err) {
         if (err) {
           console.log(err);
@@ -37,6 +38,13 @@ fs.access("./config/server.config.json", fs.constants.F_OK, (err) => {
       //
     }
   } else {
+    //
+    // ------------------------------------------------------------------------------------------------//
+    //
+    const customExpress = require('./config/custom-express');
+    const http = customExpress();
+    const serverConfig = require("./config/server.config.json");
+    const Sessions = require("./sessions.js");
     //
     // ------------------------------------------------------------------------------------------------//
     //
