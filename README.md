@@ -150,60 +150,21 @@ router.post("/Close", (req, res, next) => {
 });
 ```
 
-## Configuração da engine
-
-```json
-{
-    "_comment_engine": "Configuração da engine VENOM ou WPPCONNECT",
-    "engine": "VENOM",
-  ...
-}
-```
-
-## Salvar token na nuvem
-
-- Crie uma conta grátis no https://jsonbin.io/
-- Crie um novo "bin" (objeto json) com quaisquer dados e copie o id dele e coloque no arquivo .env
-- Copie também o seu token de acesso à api do jsonbin.io e coloque no arquivo .env
-
-```json
-{
-  ...
-  "jsonbinio_bin_id": "246247hsfsjkfjksbfhsgf", // <- aqui
-  "jsonbinio_secret_key": "jkhfdfasdgahgsdfdsjfgjfg", // <- aqui
-  ...
-}
-```
-
-- Com esses dados o mywhatsapp-api-node-wppconnect irá gravar o token na nuvem e poderá ser executado em várias instancias diferentes por exemplo no Gooogle Cloud Run
-
 ## Gerar TOKEN_SECRET para uso no jwt
 
 ```bash
 node -e "console.log(require('crypto').randomBytes(256).toString('base64'));"
 ```
 
-## Configuração do arquivo "config/server.config.json"
+## Configuração inicial do arquivo "config/server.config.json"
 
 ```json
 {
-  "_comment_engine": "Configuração da engine VENOM ou WPPCONNECT",
-  "engine": "VENOM",
   "_comment_host": "Configuração do host",
   "host": "0.0.0.0",
   "port": "9000",
-  "https": false,
-  "_comment_jsonbin": "Configuração do jsonbin",
-  "jsonbinio_bin_id": null,
-  "jsonbinio_secret_key": null,
   "_comment_jwt": "Configuração do jwt",
-  "jwt_secret": "09f26e402586e2faa8da4c98a35f1b20d6b033c60",
-  "_comment_mongodb": "Configuração do mongo db",
-  "local_mongo_conn_url": "mongodb://localhost:27017/",
-  "mongo_db_name": "mywhatsapp-api-node-wppconnect",
-  "_comment_ssl": "Configuração dos certificados key e csr",
-  "ssl_key_patch": "sslcert/server.key",
-  "ssl_csr_patch": "sslcert/server.crt"
+  "jwt_secret": "09f26e402586e2faa8da4c98a35f1b20d6b033c60"
 }
 ```
 
