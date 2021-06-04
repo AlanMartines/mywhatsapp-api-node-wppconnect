@@ -55,7 +55,7 @@ module.exports = () => {
   app.use("/sistema", sistem);
   //
   app.get('/', function(req, res) {
-    res.status(200).send('Server is running');
+    res.status(200).send('Server WPPConnect is running');
   });
   //
   return http
