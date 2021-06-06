@@ -11,7 +11,7 @@ Este projeto usa como base o [WPPConnect](https://github.com/wppconnect-team/wpp
 #### Dependências (Ubuntu)
 
 ```bash
-sudo apt-get install -y gconf-service libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget build-essential apt-transport-https libgbm-dev python3-pip libssl-dev libffi-dev python3-dev build-essential cmake clang libicu-dev procps
+sudo apt-get install -y gconf-service libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget build-essential apt-transport-https libgbm-dev python3-pip libssl-dev libffi-dev python3-dev build-essential cmake clang libicu-dev procps virt-top sysstat python g++ make
 ```
 
 #### Instale o NodeJs (Ubuntu)
@@ -76,7 +76,7 @@ pm2 unstartup systemd
 
 ```node
 router.post("/Start", (req, res, next) => {
-  const response = await fetch("http://localhost:9000/sistema/Start", {
+  const response = await fetch("http://localhost:9001/sistema/Start", {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -95,7 +95,7 @@ router.post("/Start", (req, res, next) => {
 
 ```node
 router.post("/QRCode", (req, res, next) => {
-  const response = await fetch("http://localhost:9000/sistema/QRCode", {
+  const response = await fetch("http://localhost:9001/sistema/QRCode", {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -115,7 +115,7 @@ router.post("/QRCode", (req, res, next) => {
 
 ```node
 router.post("/QRCode", (req, res, next) => {
-  const response = await fetch("http://localhost:9000/sistema/QRCode", {
+  const response = await fetch("http://localhost:9001/sistema/QRCode", {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -135,7 +135,7 @@ router.post("/QRCode", (req, res, next) => {
 
 ```node
 router.post("/Close", (req, res, next) => {
-  const response = await fetch("http://localhost:9000/sistema/Close", {
+  const response = await fetch("http://localhost:9001/sistema/Close", {
     method: "POST",
     headers: {
       Accept: "application/json",
