@@ -156,15 +156,32 @@ router.post("/Close", (req, res, next) => {
 node -e "console.log(require('crypto').randomBytes(256).toString('base64'));"
 ```
 
+## Criar pasta tokens (Linux)
+
+```bash
+mkdir /usr/local/tokens
+
+chmod -R 755 /usr/local/tokens
+```
+
+## Criar pasta tokens (Windows)
+
+```cmd
+mkdir c:\tokens
+```
+
 ## Configuração inicial do arquivo "config/server.config.json"
 
 ```json
 {
   "_comment_host": "Configuração do host",
   "host": "0.0.0.0",
-  "port": "9001",
+  "port": "9000",
   "_comment_jwt": "Configuração do jwt",
-  "jwt_secret": "09f26e402586e2faa8da4c98a35f1b20d6b033c60"
+  "jwt_secret": "09f26e402586e2faa8da4c98a35f1b20d6b033c60",
+  "_comment_jwt": "Pasta de tokens",
+  "tokenspatch_linux": "/usr/local/tokens",
+  "tokenspatch_win": "c:/tokens"
 }
 ```
 
