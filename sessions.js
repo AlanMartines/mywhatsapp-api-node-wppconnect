@@ -1,5 +1,6 @@
 //
 // Configuração dos módulos
+const os = require("os");
 const {
   forEach
 } = require('p-iteration');
@@ -62,11 +63,32 @@ function saudacao() {
   } else if (hr >= 12 && hr < 18) {
     var saudacao = "Boa tarde";
     //
-  } else {
+  } else if (hr >= 18 && hr < 23) {
     var saudacao = "Boa noite";
+    //
+  } else {
+    var saudacao = "---";
     //
   }
   return saudacao;
+}
+//
+function osplatform() {
+  //
+  var opsys = process.platform;
+  if (opsys == "darwin") {
+    opsys = "MacOS";
+  } else if (opsys == "win32" || opsys == "win64") {
+    opsys = "Windows";
+  } else if (opsys == "linux") {
+    opsys = "Linux";
+  }
+  console.log(opsys) // I don't know what linux is.
+  console.log(os.type());
+  console.log(os.release());
+  console.log(os.platform());
+  //
+  return opsys;
 }
 //
 // ------------------------------------------------------------------------------------------------------- //
@@ -424,6 +446,14 @@ module.exports = class Sessions {
       ╚═╝┴   ┴ ┴└─┘┘└┘┴ ┴┴─┘  ╚═╝┴└─└─┘┴ ┴ ┴ └─┘  ╩  ┴ ┴┴└─┴ ┴┴ ┴└─┘ ┴ └─┘┴└─└─┘
    */
     //
+    if (osplatform() === 'linux') {
+      var folderToken = serverConfig.tokenspatch_linux;
+    } else if (osplatform() === 'win32' || osplatform() === 'win64') {
+      var folderToken = serverConfig.tokenspatch_win;
+    } else {
+      var folderToken = './tokens';
+    }
+    //
     const client = await wppconnect.create({
       session: session.name,
       catchQR: (base64Qrimg, asciiQR, attempts, urlCode) => {
@@ -602,7 +632,7 @@ module.exports = class Sessions {
       updatesLog: true, // Logs info updates automatically in terminal
       autoClose: 0, // Automatically closes the venom-bot only when scanning the QR code (default 60 seconds, if you want to turn it off, assign 0 or false)
       tokenStore: 'file', // Define how work with tokens, that can be a custom interface
-      folderNameToken: './tokens', //folder name when saving tokens
+      folderNameToken: folderToken, //folder name when saving tokens
       //createPathFileToken: true, //creates a folder when inserting an object in the client's browser, to work it is necessary to pass the parameters in the function create browserSessionToken
       // BrowserSessionToken
       // To receive the client's token use the function await clinet.getSessionTokenBrowser()
