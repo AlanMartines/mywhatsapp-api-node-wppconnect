@@ -446,9 +446,11 @@ module.exports = class Sessions {
       ╚═╝┴   ┴ ┴└─┘┘└┘┴ ┴┴─┘  ╚═╝┴└─└─┘┴ ┴ ┴ └─┘  ╩  ┴ ┴┴└─┴ ┴┴ ┴└─┘ ┴ └─┘┴└─└─┘
    */
     //
-    if (osplatform() === 'linux') {
+    const osnow = osplatform();
+    //
+    if (osnow === 'linux') {
       var folderToken = serverConfig.tokenspatch_linux;
-    } else if (osplatform() === 'win32' || osplatform() === 'win64') {
+    } else if (osnow === 'win32' || osnow === 'win64') {
       var folderToken = serverConfig.tokenspatch_win;
     } else {
       var folderToken = './tokens';
