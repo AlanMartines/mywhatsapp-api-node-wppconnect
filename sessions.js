@@ -83,10 +83,10 @@ function osplatform() {
   } else if (opsys == "linux") {
     opsys = "Linux";
   }
-  console.log(opsys) // I don't know what linux is.
-  console.log(os.type());
-  console.log(os.release());
-  console.log(os.platform());
+  console.log("-", opsys) // I don't know what linux is.
+  console.log("-", os.type());
+  console.log("-", os.release());
+  console.log("-", os.platform());
   //
   return opsys;
 }
