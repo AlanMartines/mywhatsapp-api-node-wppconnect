@@ -83,10 +83,10 @@ function osplatform() {
   } else if (opsys == "linux") {
     opsys = "Linux";
   }
-  console.log("-", opsys) // I don't know what linux is.
-  console.log("-", os.type());
-  console.log("-", os.release());
-  console.log("-", os.platform());
+  console.log("- Sistema operacional", opsys) // I don't know what linux is.
+  //console.log("-", os.type());
+  //console.log("-", os.release());
+  //console.log("-", os.platform());
   //
   return opsys;
 }
@@ -448,9 +448,11 @@ module.exports = class Sessions {
     //
     const osnow = osplatform();
     //
-    if (osnow === 'linux') {
+    if (osnow == 'linux' || osnow == 'Linux') {
+      console.log("- Sistema operacional:", osnow);
       var folderToken = serverConfig.tokenspatch_linux;
-    } else if (osnow === 'win32' || osnow === 'win64') {
+    } else if (osnow == 'win32' || osnow == 'win64' || osnow == 'Windows') {
+      console.log("- Sistema operacional:", osnow);
       var folderToken = serverConfig.tokenspatch_win;
     } else {
       var folderToken = './tokens';
