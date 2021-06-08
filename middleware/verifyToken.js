@@ -30,20 +30,8 @@ exports.verify = async (req, res, next) => {
           const tokenToken = results[0].token;
           const tokenEndDate = results[0].datafinal;
           const tokenActive = results[0].active;
-          const tokenPay = results[0].pay;
           //
           req.userToken = tokenToken;
-          //
-          if (tokenPay !== 'true') {
-            return res.status(400).json({
-              "Status": {
-                "result": "info",
-                "state": "FAILURE",
-                "status": "notLogged",
-                "message": "Token invalido para uso, contate o administrador do sistema"
-              }
-            });
-          }
           //
           if (tokenActive !== 'true') {
             return res.status(401).json({
