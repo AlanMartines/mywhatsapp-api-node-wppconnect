@@ -8,6 +8,7 @@ const cors = require('cors');
 const path = require('path');
 //
 const sistem = require("../controllers/sistem.controller");
+const verifyToken = require("../middleware/verifyToken");
 //
 module.exports = () => {
   const http = require('http').createServer({}, app);
@@ -52,7 +53,7 @@ module.exports = () => {
   });
   //
   // Rotas
-  app.use("/sistema", sistem);
+  app.use("/sistema", verifyToken.verify, sistem);
   //
   app.get('/', function(req, res) {
     res.status(200).send('Server WPPConnect is running');

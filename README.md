@@ -72,6 +72,16 @@ pm2 unstartup systemd
 # Pronto, escaneie o código QR-Code do Whatsapp e aproveite!
 ```
 
+#### Json (POST)
+
+```json
+{
+  "AuthorizationToken": "a56ad842-c707-4446-871c-e570240cd730",
+  "SessionName": "teste"
+	...
+}
+```
+
 #### Iniciar sessão whatsapp (POST method)
 
 ```node
@@ -83,6 +93,7 @@ router.post("/Start", (req, res, next) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
+      AuthorizationToken: req.body.AuthorizationToken,
       sessionName: req.body.SessionName,
     }),
   });
@@ -102,6 +113,7 @@ router.post("/QRCode", (req, res, next) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
+      AuthorizationToken: req.body.AuthorizationToken,
       sessionName: req.body.SessionName,
       View: "true",
     }),
@@ -122,6 +134,7 @@ router.post("/QRCode", (req, res, next) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
+      AuthorizationToken: req.body.AuthorizationToken,
       sessionName: req.body.SessionName,
       View: "false",
     }),
@@ -142,6 +155,7 @@ router.post("/Close", (req, res, next) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
+      AuthorizationToken: req.body.AuthorizationToken,
       sessionName: req.body.SessionName,
     }),
   });

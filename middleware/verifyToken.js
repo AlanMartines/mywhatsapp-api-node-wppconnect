@@ -10,7 +10,7 @@ exports.verify = async (req, res, next) => {
         res.status(422).json({
           "verify": {
             auth: false,
-            message: "Token não informado",
+            message: "Token not entered",
           }
         });
       } else {
