@@ -181,7 +181,13 @@ mkdir c:\tokens
   "jwt_secret": "09f26e402586e2faa8da4c98a35f1b20d6b033c60",
   "_comment_token": "Pasta de tokens",
   "tokenspatch_linux": "/usr/local/tokens",
-  "tokenspatch_win": "c:/tokens"
+  "tokenspatch_win": "c:/tokens",
+  "_comment_mysql": "Conexão com bando de dados",
+  "validate_mysql": true,
+  "host_mysql": "localhost",
+  "user_mysql": "user",
+  "password_mysql": "password",
+  "database_mysql": "database"
 }
 ```
 
