@@ -6,16 +6,18 @@ var todayDate = new Date().toISOString().slice(0, 10);
 exports.verify = async (req, res, next) => {
   try {
     if (serverConfig.validate_mysql === true) {
-      if (!req.body.AuthorizationToken) {
+      if (!req.body.SessionName) {
         res.status(422).json({
-          "verify": {
-            auth: false,
-            message: "Token not entered",
+          "Status": {
+            "result": "info",
+            "state": "FAILURE",
+            "status": "notLogged",
+            "message": "Token não informado, verifique e tente novamente"
           }
         });
       } else {
         //
-        const theToken = req.body.AuthorizationToken;
+        const theToken = req.body.SessionName;
         //
         const sql = "SELECT * FROM tokens WHERE token=? LIMIT 1";
         const values = [theToken];
@@ -34,30 +36,33 @@ exports.verify = async (req, res, next) => {
           //
           if (tokenPay !== 'true') {
             return res.status(400).json({
-              "verify": {
-                auth: false,
-                token: tokenToken,
-                message: 'Token Bad Request'
+              "Status": {
+                "result": "info",
+                "state": "FAILURE",
+                "status": "notLogged",
+                "message": "Token invalido para uso, contate o administrador do sistema"
               }
             });
           }
           //
           if (tokenActive !== 'true') {
             return res.status(401).json({
-              "verify": {
-                auth: false,
-                token: tokenToken,
-                message: 'Token Unauthorized'
+              "Status": {
+                "result": "info",
+                "state": "FAILURE",
+                "status": "notLogged",
+                "message": "Token não habilitado para uso, contate o administrador do sistema"
               }
             });
           }
           //
           if (tokenEndDate < todayDate) {
             return res.status(408).json({
-              "verify": {
-                auth: false,
-                token: tokenToken,
-                message: 'Token Request Timeout'
+              "Status": {
+                "result": "info",
+                "state": "FAILURE",
+                "status": "notLogged",
+                "message": "Token vencido, contate o administrador do sistema"
               }
             });
           }
@@ -65,10 +70,11 @@ exports.verify = async (req, res, next) => {
           next();
         } else {
           return res.status(404).json({
-            "verify": {
-              auth: false,
-              token: tokenToken,
-              message: 'Token Not Found'
+            "Status": {
+              "result": "info",
+              "state": "FAILURE",
+              "status": "notLogged",
+              "message": "Token não encontrado, verifique e tente novamente"
             }
           });
         }
@@ -79,10 +85,11 @@ exports.verify = async (req, res, next) => {
   } catch (err) {
     console.error(err);
     return res.status(400).json({
-      "verify": {
-        auth: false,
-        token: tokenToken,
-        message: 'Bad Request'
+      "Status": {
+        "result": "info",
+        "state": "FAILURE",
+        "status": "notLogged",
+        "message": "Solicitação invaliga, verifique e tente novamente"
       }
     });
   }
