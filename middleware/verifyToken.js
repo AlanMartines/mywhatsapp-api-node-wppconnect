@@ -8,8 +8,10 @@ exports.verify = async (req, res, next) => {
     if (serverConfig.validate_mysql === true) {
       if (!req.body.AuthorizationToken) {
         res.status(422).json({
-          auth: false,
-          message: "Token não informado",
+          "verify": {
+            auth: false,
+            message: "Token não informado",
+          }
         });
       } else {
         //
@@ -32,34 +34,42 @@ exports.verify = async (req, res, next) => {
           //
           if (tokenPay !== 'true') {
             return res.status(400).json({
-              auth: false,
-              token: tokenToken,
-              message: 'Token Bad Request'
+              "verify": {
+                auth: false,
+                token: tokenToken,
+                message: 'Token Bad Request'
+              }
             });
           }
           //
           if (tokenActive !== 'true') {
             return res.status(401).json({
-              auth: false,
-              token: tokenToken,
-              message: 'Token Unauthorized'
+              "verify": {
+                auth: false,
+                token: tokenToken,
+                message: 'Token Unauthorized'
+              }
             });
           }
           //
           if (tokenEndDate < todayDate) {
             return res.status(408).json({
-              auth: false,
-              token: tokenToken,
-              message: 'Token Request Timeout'
+              "verify": {
+                auth: false,
+                token: tokenToken,
+                message: 'Token Request Timeout'
+              }
             });
           }
           //
           next();
         } else {
           return res.status(404).json({
-            auth: false,
-            token: tokenToken,
-            message: 'Token Not Found'
+            "verify": {
+              auth: false,
+              token: tokenToken,
+              message: 'Token Not Found'
+            }
           });
         }
       }
@@ -69,9 +79,11 @@ exports.verify = async (req, res, next) => {
   } catch (err) {
     console.error(err);
     return res.status(400).json({
-      auth: false,
-      token: tokenToken,
-      message: 'Bad Request'
+      "verify": {
+        auth: false,
+        token: tokenToken,
+        message: 'Bad Request'
+      }
     });
   }
 }
