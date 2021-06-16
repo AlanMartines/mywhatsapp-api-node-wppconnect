@@ -17,7 +17,11 @@ exports.verify = async (req, res, next) => {
         });
       } else {
         //
-        const theToken = req.body.SessionName;
+        if (!req.body.AuthorizationToken) {
+          var theToken = req.body.AuthorizationToken;
+        } else {
+          var theToken = req.body.SessionName;
+        }
         //
         const sql = "SELECT * FROM tokens WHERE token=? LIMIT 1";
         const values = [theToken];
@@ -77,7 +81,7 @@ exports.verify = async (req, res, next) => {
         "result": "info",
         "state": "FAILURE",
         "status": "notLogged",
-        "message": "Solicitação invaliga, verifique e tente novamente"
+        "message": "Erro na verificação do token, contate o administrador do sistema"
       }
     });
   }
