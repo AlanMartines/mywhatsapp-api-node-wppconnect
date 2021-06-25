@@ -11,7 +11,7 @@ exports.verify = async (req, res, next) => {
           "Status": {
             "result": "info",
             "state": "FAILURE",
-            "status": "notLogged",
+            "status": "notProvided",
             "message": "Token não informado, verifique e tente novamente"
           }
         });
@@ -21,15 +21,15 @@ exports.verify = async (req, res, next) => {
         const theTokenAuth = req.body.AuthorizationToken;
         const theTokenSess = req.body.SessionName;
         //
-        if (typeof bearerHeader !== undefined) {
+        if (bearerHeader) {
           const bearer = bearerHeader.split(' ');
           const bearerToken = bearer[1];
           var theToken = bearerToken;
           console.log("Authorization:", bearerToken);
-        } else if (typeof theTokenAuth !== undefined) {
+        } else if (theTokenAuth) {
           var theToken = theTokenAuth;
           console.log("AuthorizationToken:", theTokenAuth);
-        } else if (typeof theTokenSess !== undefined) {
+        } else if (theTokenSess) {
           var theToken = theTokenSess;
           console.log("SessionName:", theTokenSess);
         } else {
@@ -37,7 +37,7 @@ exports.verify = async (req, res, next) => {
             "Status": {
               "result": "info",
               "state": "FAILURE",
-              "status": "notLogged",
+              "status": "notProvided",
               "message": "Token não informado, verifique e tente novamente"
             }
           });
@@ -62,7 +62,7 @@ exports.verify = async (req, res, next) => {
               "Status": {
                 "result": "info",
                 "state": "FAILURE",
-                "status": "notLogged",
+                "status": "notUsage",
                 "message": "Token não habilitado para uso, contate o administrador do sistema"
               }
             });
@@ -73,7 +73,7 @@ exports.verify = async (req, res, next) => {
               "Status": {
                 "result": "info",
                 "state": "FAILURE",
-                "status": "notLogged",
+                "status": "notValid",
                 "message": "Token vencido, contate o administrador do sistema"
               }
             });
@@ -85,7 +85,7 @@ exports.verify = async (req, res, next) => {
             "Status": {
               "result": "info",
               "state": "FAILURE",
-              "status": "notLogged",
+              "status": "notProvided",
               "message": "Token não encontrado, verifique e tente novamente"
             }
           });
@@ -100,7 +100,7 @@ exports.verify = async (req, res, next) => {
       "Status": {
         "result": "info",
         "state": "FAILURE",
-        "status": "notLogged",
+        "status": "notChequed",
         "message": "Erro na verificação do token, contate o administrador do sistema"
       }
     });
