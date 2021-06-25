@@ -68,7 +68,7 @@ exports.verify = async (req, res, next) => {
             });
           }
           //
-          if (tokenEndDate > todayDate) {
+          if (todayDate > tokenEndDate) {
             return res.status(408).json({
               "Status": {
                 "result": "info",
