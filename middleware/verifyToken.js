@@ -5,8 +5,8 @@ var todayDate = new Date().toISOString().slice(0, 10);
 
 exports.verify = async (req, res, next) => {
   try {
-    if (serverConfig.validate_mysql == true) {
-      if (!req.body.SessionName) {
+    if (serverConfig.validate_mysql === true) {
+      if (typeof req.body.SessionName !== 'undefined') {
         res.status(422).json({
           "Status": {
             "result": "info",
@@ -21,15 +21,15 @@ exports.verify = async (req, res, next) => {
         const theTokenAuth = req.body.AuthorizationToken;
         const theTokenSess = req.body.SessionName;
         //
-        if (bearerHeader) {
+        if (typeof bearerHeader !== 'undefined') {
           const bearer = bearerHeader.split(' ');
           const bearerToken = bearer[1];
           var theToken = bearerToken;
           console.log("Authorization:", bearerToken);
-        } else if (theTokenAuth) {
+        } else if (typeof theTokenAuth !== 'undefined') {
           var theToken = theTokenAuth;
           console.log("AuthorizationToken:", theTokenAuth);
-        } else if (theTokenSess) {
+        } else if (typeof theTokenSess !== 'undefined') {
           var theToken = theTokenSess;
           console.log("SessionName:", theTokenSess);
         } else {
