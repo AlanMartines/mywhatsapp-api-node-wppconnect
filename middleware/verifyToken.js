@@ -6,7 +6,7 @@ var todayDate = new Date().toISOString().slice(0, 10);
 exports.verify = async (req, res, next) => {
   try {
     if (serverConfig.validate_mysql == true) {
-      if (!req.headers['authorization'] && !req.body.AuthorizationToken && !req.body.SessionName) {
+      if (!req.body.SessionName) {
         res.status(422).json({
           "Status": {
             "result": "info",
