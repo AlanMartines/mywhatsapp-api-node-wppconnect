@@ -21,15 +21,15 @@ exports.verify = async (req, res, next) => {
         const theTokenAuth = req.body.AuthorizationToken;
         const theTokenSess = req.body.SessionName;
         //
-        if (typeof bearerHeader !== 'undefined') {
+        if (typeof bearerHeader !== undefined) {
           const bearer = bearerHeader.split(' ');
           const bearerToken = bearer[1];
           var theToken = bearerToken;
           console.log("Authorization:", bearerToken);
-        } else if (typeof theTokenAuth !== 'undefined') {
+        } else if (typeof theTokenAuth !== undefined) {
           var theToken = theTokenAuth;
           console.log("AuthorizationToken:", theTokenAuth);
-        } else if (typeof theTokenSess !== 'undefined') {
+        } else if (typeof theTokenSess !== undefined) {
           var theToken = theTokenSess;
           console.log("SessionName:", theTokenSess);
         } else {
