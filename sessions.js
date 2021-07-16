@@ -1,17 +1,23 @@
-//
 // Configuração dos módulos
 const os = require("os");
+const fs = require('fs-extra');
 const {
   forEach
 } = require('p-iteration');
 const axios = require('axios');
 const wppconnect = require('@wppconnect-team/wppconnect');
-//const wppconnect = require('./wppconnect/src/');
+const conn = require('./config/dbConnection').promise();
 const serverConfig = require("./config/server.config.json");
+const io = require("socket.io-client"),
+  ioClient = io.connect("http://" + serverConfig.host + ":" + serverConfig.port);
+const {
+  cache
+} = require('sharp');
+const con = require("./config/dbConnection");
 //
 // ------------------------------------------------------------------------------------------------------- //
 //
-function DataHora() {
+async function DataHora() {
   //
   let date_ob = new Date();
 
@@ -52,7 +58,7 @@ function DataHora() {
   return date + "/" + month + "/" + year + " " + hours + ":" + minutes + ":" + seconds;
 }
 //
-function saudacao() {
+async function saudacao() {
   //
   var data = new Date();
   var hr = data.getHours();
@@ -73,7 +79,7 @@ function saudacao() {
   return saudacao;
 }
 //
-function osplatform() {
+async function osplatform() {
   //
   var opsys = process.platform;
   if (opsys == "darwin") {
@@ -93,6 +99,31 @@ function osplatform() {
 //
 // ------------------------------------------------------------------------------------------------------- //
 //
+async function updateStateDb(state, status, session_venom) {
+  //
+  const sql = "UPDATE tokens SET state=?, status=? WHERE token=?";
+  const values = [state, status, session_venom];
+  const resUpdate = await conn.execute(sql, values);
+  if (resUpdate) {
+    console.log('- Status atualizado');
+  } else {
+    console.log('- Status não atualizado');
+  }
+  //
+}
+//
+// ------------------------------------------------------------------------------------------------------- //
+//
+async function deletaToken(filePath) {
+  //
+  const cacheExists = await fs.pathExists(filePath);
+  console.log('- O arquivo é: ' + cacheExists);
+  if (cacheExists) {
+    fs.remove(filePath);
+    console.log('- O arquivo removido: ' + cacheExists);
+  }
+}
+//
 module.exports = class Sessions {
   //
   static async getStatusApi(sessionName, options = []) {
@@ -111,22 +142,28 @@ module.exports = class Sessions {
       if (session.state == "CONNECTED") {
         return {
           result: "info",
+          SessionName: SessionName,
           state: session.state,
           status: session.status,
-          message: "'Sistema iniciado e disponivel para uso'"
+          qrcode: session.qrcode,
+          message: "Sistema iniciado e disponivel para uso"
         };
       } else if (session.state == "STARTING") {
         return {
           result: "info",
+          SessionName: SessionName,
           state: session.state,
           status: session.status,
-          message: "'Sistema iniciando e indisponivel para uso'"
+          qrcode: session.qrcode,
+          message: "Sistema iniciando e indisponivel para uso"
         };
       } else if (session.state == "QRCODE") {
         return {
           result: "warning",
+          SessionName: SessionName,
           state: session.state,
           status: session.status,
+          qrcode: session.qrcode,
           message: "Sistema aguardando leitura do QR-Code"
         };
       } else {
@@ -134,16 +171,20 @@ module.exports = class Sessions {
           case 'isLogged':
             return {
               result: "success",
+                SessionName: SessionName,
                 state: session.state,
                 status: session.status,
+                qrcode: session.qrcode,
                 message: "Sistema iniciado e disponivel para uso"
             };
             break;
           case 'notLogged':
             return {
               result: "error",
+                SessionName: SessionName,
                 state: session.state,
                 status: session.status,
+                qrcode: session.qrcode,
                 message: "Sistema indisponivel para uso"
             };
             break;
@@ -151,7 +192,9 @@ module.exports = class Sessions {
             return {
               result: "info",
                 state: session.state,
+                SessionName: SessionName,
                 status: session.status,
+                qrcode: session.qrcode,
                 message: "Navegador interno fechado"
             };
             break;
@@ -159,103 +202,129 @@ module.exports = class Sessions {
             return {
               result: "success",
                 state: session.state,
+                SessionName: SessionName,
                 status: session.status,
+                qrcode: session.qrcode,
                 message: "Verificação do QR-Code feita com sucesso"
             };
             break;
           case 'qrReadFail':
             return {
               result: "warning",
+                SessionName: SessionName,
                 state: session.state,
                 status: session.status,
+                qrcode: session.qrcode,
                 message: "Falha na verificação do QR-Code"
             };
             break;
           case 'qrRead':
             return {
               result: "warning",
+                SessionName: SessionName,
                 state: session.state,
                 status: session.status,
+                qrcode: session.qrcode,
                 message: "Sistema aguardando leitura do QR-Code"
             };
             break;
           case 'autocloseCalled':
             return {
               result: "info",
+                SessionName: SessionName,
                 state: session.state,
                 status: session.status,
+                qrcode: session.qrcode,
                 message: "Navegador interno fechado"
             };
             break;
           case 'desconnectedMobile':
             return {
               result: "info",
+                SessionName: SessionName,
                 state: session.state,
                 status: session.status,
+                qrcode: session.qrcode,
                 message: "Dispositivo desconectado"
             };
             break;
           case 'deleteToken':
             return {
               result: "info",
+                SessionName: SessionName,
                 state: session.state,
                 status: session.status,
+                qrcode: session.qrcode,
                 message: "Token de sessão removido"
             };
             break;
           case 'chatsAvailable':
             return {
               result: "success",
+                SessionName: SessionName,
                 state: session.state,
                 status: session.status,
+                qrcode: session.qrcode,
                 message: "Sistema iniciado e disponivel para uso"
             };
             break;
           case 'deviceNotConnected':
             return {
               result: "info",
+                SessionName: SessionName,
                 state: session.state,
                 status: session.status,
+                qrcode: session.qrcode,
                 message: "Dispositivo desconectado"
             };
             break;
           case 'serverWssNotConnected':
             return {
               result: "info",
+                SessionName: SessionName,
                 state: session.state,
                 status: session.status,
+                qrcode: session.qrcode,
                 message: "O endereço wss não foi encontrado"
             };
             break;
           case 'noOpenBrowser':
             return {
               result: "error",
+                SessionName: SessionName,
                 state: session.state,
                 status: session.status,
+                qrcode: session.qrcode,
                 message: "Não foi encontrado o navegador ou falta algum comando no args"
             };
             break;
           case 'serverClose':
             return {
               result: "info",
+                SessionName: SessionName,
                 state: session.state,
                 status: session.status,
+                qrcode: session.qrcode,
                 message: "O cliente se desconectou do wss"
             };
             break;
           case 'OPENING':
             return {
               result: "warning",
+                SessionName: SessionName,
                 state: session.state,
                 status: session.status,
+                qrcode: session.qrcode,
                 message: "'Sistema iniciando e indisponivel para uso'"
             };
             break;
           case 'CONFLICT':
             return {
               result: "info",
+                SessionName: SessionName,
                 state: session.state,
                 status: session.status,
+                qrcode: session.qrcode,
                 message: "Dispositivo conectado em outra sessão, reconectando"
             };
             break;
@@ -264,32 +333,40 @@ module.exports = class Sessions {
           case 'UNPAIRED_IDLE':
             return {
               result: "warning",
+                SessionName: SessionName,
                 state: session.state,
                 status: session.status,
+                qrcode: session.qrcode,
                 message: "Dispositivo desconectado"
             };
             break;
           case 'DISCONNECTED':
             return {
               result: "info",
+                SessionName: SessionName,
                 state: session.state,
                 status: session.status,
+                qrcode: session.qrcode,
                 message: "Dispositivo desconectado"
             };
             break;
           case 'SYNCING':
             return {
               result: "warning",
+                SessionName: SessionName,
                 state: session.state,
                 status: session.status,
+                qrcode: session.qrcode,
                 message: "Dispositivo sincronizando"
             };
             break;
           case 'CLOSED':
             return {
               result: "info",
+                SessionName: SessionName,
                 state: session.state,
                 status: session.status,
+                qrcode: session.qrcode,
                 message: "O cliente fechou a sessão ativa"
             };
             break;
@@ -297,8 +374,10 @@ module.exports = class Sessions {
             //
             return {
               result: 'error',
+                SessionName: SessionName,
                 state: 'NOTFOUND',
                 status: 'notLogged',
+                qrcode: null,
                 message: 'Sistema Off-line'
             };
             //
@@ -307,8 +386,10 @@ module.exports = class Sessions {
     } else {
       return {
         result: 'error',
+        SessionName: SessionName,
         state: 'NOTFOUND',
         status: 'notLogged',
+        qrcode: null,
         message: 'Sistema Off-line'
       };
     }
@@ -333,11 +414,11 @@ module.exports = class Sessions {
     } else if (["CLOSED"].includes(session.state)) {
       //restart session
       console.log("- State: CLOSED");
-      session.result = "info";
       session.state = "CLOSED";
       session.status = "notLogged";
+      session.qrcode = null;
       session.attempts = 0;
-      session.message = 'Sistema iniciando e indisponivel para uso';
+      session.message = "Sistema iniciando e indisponivel para uso";
       session.prossesid = null;
       //
       console.log('- Nome da sessão:', session.name);
@@ -347,9 +428,9 @@ module.exports = class Sessions {
       session.client = Sessions.initSession(SessionName);
       Sessions.setup(SessionName);
     } else if (["CONFLICT", "UNPAIRED", "UNLAUNCHED", "UNPAIRED_IDLE"].includes(session.state)) {
-      session.result = "info";
       session.state = "CLOSED";
       session.status = 'notLogged';
+      session.qrcode = null;
       session.message = 'Sistema desconectado';
       //
       console.log('- Nome da sessão:', session.name);
@@ -363,9 +444,9 @@ module.exports = class Sessions {
       session.client = Sessions.initSession(SessionName);
     } else if (["DISCONNECTED"].includes(session.state)) {
       //restart session
-      session.result = "info";
       session.state = "CLOSE";
       session.status = "notLogged";
+      session.qrcode = null;
       session.attempts = 0;
       session.message = 'Sistema desconectado';
       session.prossesid = null;
@@ -381,6 +462,9 @@ module.exports = class Sessions {
       console.log('- State do sistema:', session.state);
       console.log('- Status da sessão:', session.status);
     }
+    //
+    await updateStateDb(session.state, session.status, SessionName);
+    //
     return session;
   } //start
   //
@@ -391,9 +475,10 @@ module.exports = class Sessions {
     var newSession = {
       name: SessionName,
       process: null,
-      qrcode: false,
+      qrcode: null,
       client: false,
       result: null,
+      tokenPatch: null,
       state: 'STARTING',
       status: 'notLogged',
       message: 'Sistema iniciando e indisponivel para uso',
@@ -446,23 +531,26 @@ module.exports = class Sessions {
       ╚═╝┴   ┴ ┴└─┘┘└┘┴ ┴┴─┘  ╚═╝┴└─└─┘┴ ┴ ┴ └─┘  ╩  ┴ ┴┴└─┴ ┴┴ ┴└─┘ ┴ └─┘┴└─└─┘
    */
     //
-    const osnow = osplatform();
+    const osnow = await osplatform();
     //
     if (osnow == 'linux' || osnow == 'Linux') {
       console.log("- Sistema operacional:", osnow);
       var folderToken = serverConfig.tokenspatch_linux;
+      session.tokenPatch = folderToken;
     } else if (osnow == 'win32' || osnow == 'win64' || osnow == 'Windows') {
       console.log("- Sistema operacional:", osnow);
       var folderToken = serverConfig.tokenspatch_win;
+      session.tokenPatch = folderToken;
     } else {
       var folderToken = './tokens';
+      session.tokenPatch = folderToken;
     }
     //
     const client = await wppconnect.create({
       session: session.name,
       catchQR: (base64Qrimg, asciiQR, attempts, urlCode) => {
         //
-        console.log("- Saudação:", saudacao());
+        console.log("- Saudação:", await saudacao());
         //
         console.log('- Nome da sessão:', session.name);
         //
@@ -489,20 +577,19 @@ module.exports = class Sessions {
         //
         var qrCode = base64Qrimg.replace('data:image/png;base64,', '');
         const imageBuffer = Buffer.from(qrCode, 'base64');
-        //	
+        //
         /*
         // Para escrevê-lo em outro lugar em um arquivo
         //exportQR(base64Qrimg, './public/images/marketing-qr.png');
         var matches = base64Qrimg.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/),
             response = {};
-        //
+
         if (matches.length !== 3) {
             return new Error('- Invalid input string');
         }
-        //
         response.type = matches[1];
         response.data = new Buffer.from(matches[2], 'base64');
-        //
+        
         // Gerar o arquivo png
         var imageBuffer = response;
         require('fs').writeFile('./public/images/marketing-qr.png',
@@ -523,6 +610,7 @@ module.exports = class Sessions {
         //Create session wss return "serverClose" case server for close
         console.log('- Session name: ', session_wppconnect);
         //
+        //
         switch (statusSession) {
           case 'isLogged':
           case 'qrReadSuccess':
@@ -535,6 +623,9 @@ module.exports = class Sessions {
             session.CodeasciiQR = null;
             session.CodeurlCode = null;
             session.message = "Sistema iniciado e disponivel para uso";
+            //
+            await updateStateDb(session.state, session.status, SessionName);
+            //
             break;
           case 'autocloseCalled':
           case 'browserClose':
@@ -547,6 +638,9 @@ module.exports = class Sessions {
             session.CodeasciiQR = null;
             session.CodeurlCode = null;
             session.message = "Sistema fechado";
+            //
+            await updateStateDb(session.state, session.status, SessionName);
+            //
             break;
           case 'qrReadFail':
           case 'notLogged':
@@ -557,14 +651,22 @@ module.exports = class Sessions {
             session.result = "info";
             session.state = "DISCONNECTED";
             session.status = statusSession;
+            session.qrcode = null;
             session.message = "Dispositivo desconetado";
+            //
+            await updateStateDb(session.state, session.status, SessionName);
+            //
             break;
           default:
             //session.client = false;
             session.result = "info";
             session.state = "DISCONNECTED";
             session.status = statusSession;
+            session.qrcode = null;
             session.message = "Dispositivo desconetado";
+            //
+            await updateStateDb(session.state, session.status, SessionName);
+            //
         }
       },
       // options
@@ -636,18 +738,8 @@ module.exports = class Sessions {
       updatesLog: true, // Logs info updates automatically in terminal
       autoClose: 0, // Automatically closes the venom-bot only when scanning the QR code (default 60 seconds, if you want to turn it off, assign 0 or false)
       tokenStore: 'file', // Define how work with tokens, that can be a custom interface
-      folderNameToken: folderToken, //folder name when saving tokens
+      folderNameToken: session.tokenPatch, //folder name when saving tokens
       //createPathFileToken: true, //creates a folder when inserting an object in the client's browser, to work it is necessary to pass the parameters in the function create browserSessionToken
-      // BrowserSessionToken
-      // To receive the client's token use the function await clinet.getSessionTokenBrowser()
-      /*
-      sessionToken: {
-        WABrowserId: '"UnXjH....."',
-        WASecretBundle: '{"key":"+i/nRgWJ....","encKey":"kGdMR5t....","macKey":"+i/nRgW...."}',
-        WAToken1: '"0i8...."',
-        WAToken2: '"1@lPpzwC...."',
-      }
-      */
     });
     wppconnect.defaultLogger.level = 'silly';
     var browserSessionToken = await client.getSessionTokenBrowser();
@@ -678,16 +770,27 @@ module.exports = class Sessions {
         if (state == "OPENING") {
           session.state = state;
           session.status = 'notLogged';
-        } else if (state == "UNPAIRED_IDLE") {
+          session.qrcode = null;
+        } else if (state == "UNPAIRED") {
           session.state = state;
           session.status = 'notLogged';
+          session.qrcode = null;
+          //
+          await deletaToken(session.tokenPatch + "/" + SessionName + ".data.json");
+          //
         } else if (state === 'DISCONNECTED' || state === 'SYNCING') {
           session.state = state;
+          session.qrcode = null;
+          //
+          await deletaToken(session.tokenPatch + "/" + SessionName + ".data.json");
+          //
           time = setTimeout(() => {
             client.close();
             // process.exit(); //optional function if you work with only one session
           }, 80000);
         }
+        //
+        await updateStateDb(session.state, session.status, SessionName);
         //
         // force whatsapp take over
         if ('CONFLICT'.includes(state)) client.useHere();
@@ -710,7 +813,7 @@ module.exports = class Sessions {
         //
         if (message.body === 'Hi' && message.isGroupMsg === false) {
           client
-            .sendText(message.from, saudacao() + ",\nWelcome Venom 🕷")
+            .sendText(message.from, await saudacao() + ",\nWelcome Venom 🕷")
             .then((result) => {
               //console.log('- Result: ', result); //retorna um objeto de successo
             })
@@ -722,7 +825,7 @@ module.exports = class Sessions {
       //
       // function to detect incoming call
       client.onIncomingCall(async (call) => {
-        client.sendText(call.peerJid, saudacao() + ",\nDesculpe-me mas não consigo atender sua chamada, se for urgente manda msg de texto, grato.");
+        client.sendText(call.peerJid, await saudacao() + ",\nDesculpe-me mas não consigo atender sua chamada, se for urgente manda msg de texto, grato.");
       });
       // Listen when client has been added to a group
       client.onAddedToGroup(async (chatEvent) => {
