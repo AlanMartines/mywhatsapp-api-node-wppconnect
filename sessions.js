@@ -900,18 +900,35 @@ module.exports = class Sessions {
     var session = Sessions.getSession(SessionName);
     var closeSession = await session.client.then(async client => {
       try {
-        await client.close();
-        session.state = "CLOSED";
-        session.status = 'CLOSED';
-        session.client = false;
-        console.log("- Sessão fechada");
-        //
-        return {
-          result: "success",
-          state: session.state,
-          status: session.status,
-          message: "Sessão fechada"
-        };
+        const strClosed = await client.close();
+        if (strClosed) {
+          //
+          session.state = "CLOSED";
+          session.status = 'CLOSED';
+          session.client = false;
+          session.qrcode = null;
+          console.log("- Sessão fechada");
+          //
+          var returnClosed = {
+            result: "success",
+            state: session.state,
+            status: session.status,
+            qrcode: session.qrcode,
+            message: "Erro ao fechar sessão"
+          };
+          //
+        } else {
+          //
+          var returnClosed = {
+            result: "error",
+            state: session.state,
+            status: session.status,
+            qrcode: session.qrcode,
+            message: "Erro ao fechar sessão"
+          };
+          //
+        }
+        return returnClosed;
         //
       } catch (error) {
         console.log("- Erro ao fechar sessão:", error.message);
@@ -920,11 +937,15 @@ module.exports = class Sessions {
           result: "error",
           state: session.state,
           status: session.status,
+          qrcode: session.qrcode,
           message: "Erro ao fechar sessão"
         };
         //
       }
     });
+    //
+    await updateStateDb(session.state, session.status, SessionName);
+    //
     return closeSession;
   } //closeSession
   //
@@ -935,35 +956,61 @@ module.exports = class Sessions {
     var session = Sessions.getSession(SessionName);
     var LogoutSession = await session.client.then(async client => {
       try {
-        await client.logout();
-        session.state = "DISCONNECTED";
-        session.status = session.state;
-        session.client = false;
-        console.log("- Sessão fechada");
+        const strLogout = await client.logout();
+        if (strLogout) {
+          //
+          const strClosed = await client.close();
+          //
+          session.state = "DISCONNECTED";
+          session.status = "DISCONNECTED";
+          session.client = false;
+          session.qrcode = null;
+          console.log("- Sessão desconetada");
+          //
+          var returnLogout = {
+            result: "success",
+            state: session.state,
+            status: session.status,
+            qrcode: session.qrcode,
+            message: "Sessão desconetada"
+          };
+          //
+        } else {
+          //
+          var returnLogout = {
+            result: "error",
+            state: session.state,
+            status: session.status,
+            message: "Erro ao desconetar sessão"
+          };
+          //
+        }
         //
-        return {
-          result: "success",
-          state: "DISCONNECTED",
-          status: session.status,
-          message: "Sessão fechada"
-        };
+        await deletaToken(session.tokenPatch + "/" + SessionName + ".data.json");
+        //
+        await updateStateDb(session.state, session.status, SessionName);
+        //
+        return returnLogout;
         //
       } catch (error) {
-        console.log("- Erro ao fechar sessão:", error.message);
+        console.log("- Erro ao desconetar sessão:", error.message);
         //
         return {
           result: "error",
           state: session.state,
           status: session.status,
-          message: "Erro ao fechar sessão"
+          message: "Erro ao desconetar sessão"
         };
         //
       }
     });
+    //
+    await updateStateDb(session.state, session.status, SessionName);
+    //
     return LogoutSession;
   } //LogoutSession
   //
-  // ------------------------------------------------------------------------------------------------//
+  // ------------------------------------------------------------------------------------------------------- //
   //
   /*
   ╔╗ ┌─┐┌─┐┬┌─┐  ╔═╗┬ ┬┌┐┌┌─┐┌┬┐┬┌─┐┌┐┌┌─┐  ┬ ┬┌─┐┌─┐┌─┐┌─┐
@@ -1778,6 +1825,36 @@ module.exports = class Sessions {
   //
   // ------------------------------------------------------------------------------------------------//
   //
+  // Obter a foto do perfil do servidor
+  static async getProfilePicFromServer(
+    SessionName,
+    number
+  ) {
+    console.log("- Obtendo a foto do perfil do servidor!");
+    var session = Sessions.getSession(SessionName);
+    var resultgetProfilePicFromServer = await session.client.then(async client => {
+      try {
+        const url = await client.getProfilePicFromServer(number);
+        //console.log('Result: ', result); //return object success
+        return url;
+      } catch (erro) {
+        //console.error('Error when sending:\n', erro); //return object error
+        //
+        return {
+          "erro": true,
+          "status": 404,
+          "canReceiveMessage": false,
+          "text": "Error",
+          "message": "Erro ao obtendo a foto do perfil no servidor"
+        };
+        //
+      };
+    });
+    return resultgetProfilePicFromServer;
+  } //getProfilePicFromServer
+  //
+  // ------------------------------------------------------------------------------------------------//
+  //
   /*
   ╔═╗┬─┐┌─┐┬ ┬┌─┐  ╔═╗┬ ┬┌┐┌┌─┐┌┬┐┬┌─┐┌┐┌┌─┐               
   ║ ╦├┬┘│ ││ │├─┘  ╠╣ │ │││││   │ ││ ││││└─┐               
@@ -2423,7 +2500,20 @@ module.exports = class Sessions {
           "erro": false,
           "status": 200,
           "message": "Dados do dispositivo obtido com sucesso",
-          "HostDevice": result
+          "HostDevice": {
+            "user": result.wid.user,
+            "connected": result.connected,
+            "isResponse": result.isResponse,
+            "battery": result.battery,
+            "plugged": result.plugged,
+            "locales": result.locales,
+            "is24h": result.is24h,
+            "device_manufacturer": result.phone.device_manufacturer,
+            "platform": result.platform,
+            "os_version": result.phone.os_version,
+            "wa_version": result.phone.wa_version,
+            "pushname": result.pushname
+          }
         };
         //
       }).catch((erro) => {
