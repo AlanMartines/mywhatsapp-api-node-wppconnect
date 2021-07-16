@@ -1,9 +1,12 @@
 const conn = require('../config/dbConnection').promise();
 const serverConfig = require("../config/server.config.json");
-
+//
 var todayDate = new Date().toISOString().slice(0, 10);
-
+//
 exports.verify = async (req, res, next) => {
+  //
+  //console.log(req.body);
+  //
   try {
     if (serverConfig.validate_mysql === true) {
       if (!req.body.SessionName) {
@@ -12,7 +15,7 @@ exports.verify = async (req, res, next) => {
             "result": "info",
             "state": "FAILURE",
             "status": "notProvided",
-            "message": "Token não informado, verifique e tente novamente"
+            "message": "Nome da sessão não informado, verifique e tente novamente"
           }
         });
       } else {
@@ -25,13 +28,13 @@ exports.verify = async (req, res, next) => {
           const bearer = bearerHeader.split(' ');
           const bearerToken = bearer[1];
           var theToken = bearerToken;
-          console.log("Authorization:", bearerToken);
+          console.log("- Authorization Bearer:", bearerToken);
         } else if (theTokenAuth) {
           var theToken = theTokenAuth;
-          console.log("AuthorizationToken:", theTokenAuth);
+          console.log("- AuthorizationToken:", theTokenAuth);
         } else if (theTokenSess) {
           var theToken = theTokenSess;
-          console.log("SessionName:", theTokenSess);
+          console.log("- SessionName:", theTokenSess);
         } else {
           res.status(422).json({
             "Status": {
@@ -43,17 +46,19 @@ exports.verify = async (req, res, next) => {
           });
         }
         //
+        //const conn = pool.getConnection();
         const sql = "SELECT * FROM tokens WHERE token=? LIMIT 1";
         const values = [theToken];
-        const [rows] = await conn.execute(sql, values);
+        const [row] = await conn.execute(sql, values);
+        //conn.release();
         //
-        if (rows.length > 0) {
+        if (row.length > 0) {
           //
-          const results = JSON.parse(JSON.stringify(rows));
+          const results = JSON.parse(JSON.stringify(row[0]));
           //
-          const tokenToken = results[0].token;
-          const tokenEndDate = results[0].datafinal;
-          const tokenActive = results[0].active;
+          const tokenToken = results.token;
+          const tokenEndDate = results.datafinal;
+          const tokenActive = results.active;
           //
           req.userToken = tokenToken;
           //

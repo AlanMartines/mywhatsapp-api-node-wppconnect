@@ -4,7 +4,7 @@ const os = require('os');
 const {
   forEach
 } = require('p-iteration');
-const fs = require('fs');
+const fs = require('fs-extra');
 const path = require('path');
 const express = require("express");
 const multer = require('multer');
@@ -12,23 +12,18 @@ const upload = multer({})
 const router = express.Router();
 const Sessions = require("../sessions.js");
 const serverConfig = require("../config/server.config.json");
+const verifyToken = require("../middleware/verifyToken");
 //
 // ------------------------------------------------------------------------------------------------//
 //
-const getAllDirFiles = function(dirPath, arrayOfFiles) {
-  files = fs.readdirSync(dirPath)
-
-  arrayOfFiles = arrayOfFiles || []
-
-  files.forEach(function(file) {
-    if (fs.statSync(dirPath + "/" + file).isDirectory()) {
-      arrayOfFiles = getAllDirFiles(dirPath + "/" + file, arrayOfFiles)
-    } else {
-      arrayOfFiles.push(file)
-    }
-  })
-
-  return arrayOfFiles
+async function deletaToken(filePath) {
+  //
+  const cacheExists = await fs.pathExists(filePath);
+  console.log('- O arquivo é: ' + cacheExists);
+  if (cacheExists) {
+    fs.remove(filePath);
+    console.log('- O arquivo removido: ' + cacheExists);
+  }
 }
 //
 function sleep(ms) {
@@ -102,7 +97,7 @@ const convertBytes = function(bytes) {
 ╚═╝└─┘ ┴  ┴ ┴┘└┘└─┘  └─┘ ┴ ┴ ┴┴└─ ┴ └─┘─┴┘
 */
 //
-router.post("/Start", upload.none(''), async (req, res, next) => {
+router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next) => {
   //
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
@@ -118,8 +113,10 @@ router.post("/Start", upload.none(''), async (req, res, next) => {
     case 'notLogged':
     case 'deviceNotConnected':
     case 'desconnectedMobile':
+    case 'qrReadFail':
     case 'deleteToken':
     case 'CLOSED':
+    case 'DISCONNECTED':
     case 'qrRead':
       //
       var session = await Sessions.Start(req.body.SessionName.trim());
@@ -148,7 +145,7 @@ router.post("/Start", upload.none(''), async (req, res, next) => {
 // ------------------------------------------------------------------------------------------------//
 //
 // Gera o QR-Code
-router.post("/QRCode", upload.none(''), async (req, res, next) => {
+router.post("/QRCode", upload.none(''), verifyToken.verify, async (req, res, next) => {
   console.log("- getQRCode");
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   var session = Sessions.getSession(req.body.SessionName.trim());
@@ -159,7 +156,7 @@ router.post("/QRCode", upload.none(''), async (req, res, next) => {
     case 'chatsAvailable':
       //
       res.status(200).json({
-        sessionStatus
+        "Status": sessionStatus
       });
       break;
       //
@@ -191,7 +188,7 @@ router.post("/QRCode", upload.none(''), async (req, res, next) => {
           };
           //
           res.status(200).json({
-            getQRCode
+            "Status": getQRCode
           });
           //
         }
@@ -205,7 +202,7 @@ router.post("/QRCode", upload.none(''), async (req, res, next) => {
         };
         //
         res.status(200).json({
-          getQRCode
+          "Status": getQRCode
         });
         //
       }
@@ -213,7 +210,7 @@ router.post("/QRCode", upload.none(''), async (req, res, next) => {
       break;
     default:
       res.status(400).json({
-        sessionStatus
+        "Status": sessionStatus
       });
   }
   //
@@ -221,7 +218,7 @@ router.post("/QRCode", upload.none(''), async (req, res, next) => {
 //
 // ------------------------------------------------------------------------------------------------//
 //
-router.post("/getSessions", upload.none(''), async (req, res, next) => {
+router.post("/getSessions", upload.none(''), verifyToken.verify, async (req, res, next) => {
   var getSessions = await Sessions.getSessions();
   //
   //console.log(result);
@@ -232,9 +229,9 @@ router.post("/getSessions", upload.none(''), async (req, res, next) => {
 //
 // ------------------------------------------------------------------------------------------------//
 //
-router.post("/Status", upload.none(''), async (req, res, next) => {
+router.post("/Status", upload.none(''), verifyToken.verify, async (req, res, next) => {
   var Status = await Sessions.ApiStatus(
-    req.body.SessionName.trim()
+    req.body.SessionName
   );
   res.status(200).json({
     Status
@@ -243,27 +240,8 @@ router.post("/Status", upload.none(''), async (req, res, next) => {
 //
 // ------------------------------------------------------------------------------------------------//
 //
-router.post("/countTokenFile", upload.none(''), async (req, res, next) => {
-  const resultFile = getAllDirFiles(req.body.dirPath);
-  const resultCount = getAllDirFiles(req.body.dirPath).length;
-  //
-  console.log(resultFile);
-  console.log(resultCount);
-  //
-  var countTokenFile = {
-    "resultFile": resultFile,
-    "resultCount": resultCount
-  }
-  //
-  res.status(200).json({
-    countTokenFile
-  });
-}); //countTokenFile
-//
-// ------------------------------------------------------------------------------------------------//
-//
 // Dados de memoria e uptime
-router.post("/getHardWare", upload.none(''), async (req, res, next) => {
+router.post("/getHardWare", upload.none(''), verifyToken.verify, async (req, res, next) => {
   console.log("- getHardWare");
   //
   var getHardWare = {
@@ -293,7 +271,7 @@ router.post("/getHardWare", upload.none(''), async (req, res, next) => {
 // ------------------------------------------------------------------------------------------------//
 //
 // Fecha a sessão
-router.post("/Close", upload.none(''), async (req, res, next) => {
+router.post("/Close", upload.none(''), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
     case 'inChat':
@@ -317,14 +295,13 @@ router.post("/Close", upload.none(''), async (req, res, next) => {
 // ------------------------------------------------------------------------------------------------//
 //
 // Desconecta do whatsapp web
-router.post("/Logout", upload.none(''), async (req, res, next) => {
+router.post("/Logout", upload.none(''), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
     case 'isLogged':
     case 'chatsAvailable':
-    case 'CLOSED':
       //
       var LogoutSession = await Sessions.logoutSession(req.body.SessionName.trim());
       res.status(200).json({
@@ -345,7 +322,7 @@ router.post("/Logout", upload.none(''), async (req, res, next) => {
 */
 //
 //Eviar menssagem de voz
-router.post("/sendVoice", upload.single('audio_data'), async (req, res, next) => {
+router.post("/sendVoice", upload.single('audio_data'), verifyToken.verify, async (req, res, next) => {
   //
   //Eviar menssagem de voz
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
@@ -378,6 +355,8 @@ router.post("/sendVoice", upload.single('audio_data'), async (req, res, next) =>
         var sendVoice = checkNumberStatus;
       }
       //
+      await deletaArquivosTemp(filePath);
+      //
       res.status(200).json({
         sendVoice
       });
@@ -392,7 +371,7 @@ router.post("/sendVoice", upload.single('audio_data'), async (req, res, next) =>
 // ------------------------------------------------------------------------------------------------//
 //
 //Eviar menssagem de voz
-router.post("/sendVoiceBase64", upload.single('audio_data'), async (req, res, next) => {
+router.post("/sendVoiceBase64", upload.single('audio_data'), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
     case 'inChat':
@@ -432,7 +411,7 @@ router.post("/sendVoiceBase64", upload.single('audio_data'), async (req, res, ne
 // ------------------------------------------------------------------------------------------------//
 //
 //Eviar menssagem de voz
-router.post("/sendVoiceFileBase64", upload.single('audio_data'), async (req, res, next) => {
+router.post("/sendVoiceFileBase64", upload.single('audio_data'), verifyToken.verify, async (req, res, next) => {
   //
   //Eviar menssagem de voz
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
@@ -475,7 +454,7 @@ router.post("/sendVoiceFileBase64", upload.single('audio_data'), async (req, res
 // ------------------------------------------------------------------------------------------------//
 //
 // Enviar Contato
-router.post("/sendContactVcard", upload.none(''), async (req, res, next) => {
+router.post("/sendContactVcard", upload.none(''), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
     case 'inChat':
@@ -516,7 +495,7 @@ router.post("/sendContactVcard", upload.none(''), async (req, res, next) => {
 // ------------------------------------------------------------------------------------------------//
 //
 // Enviar Lista de Contato
-router.post("/sendContactVcardList", upload.single('contactlist'), async (req, res, next) => {
+router.post("/sendContactVcardList", upload.single('contactlist'), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
     case 'inChat':
@@ -583,7 +562,7 @@ router.post("/sendContactVcardList", upload.single('contactlist'), async (req, r
 // ------------------------------------------------------------------------------------------------//
 //
 //Enviar Texto
-router.post("/sendText", upload.none(''), async (req, res, next) => {
+router.post("/sendText", upload.none(''), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
     case 'inChat':
@@ -624,7 +603,7 @@ router.post("/sendText", upload.none(''), async (req, res, next) => {
 // ------------------------------------------------------------------------------------------------//
 //
 //Enviar Texto em Massa
-router.post("/sendTextMassa", upload.single('phonefull'), async (req, res, next) => {
+router.post("/sendTextMassa", upload.single('phonefull'), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
     case 'inChat':
@@ -669,6 +648,9 @@ router.post("/sendTextMassa", upload.single('phonefull'), async (req, res, next)
         await sleep(1000);
       }
       //
+      //
+      await deletaArquivosTemp(filePath);
+      //
       //console.log(result);
       res.status(200).json({
         sendTextMassa
@@ -684,7 +666,7 @@ router.post("/sendTextMassa", upload.single('phonefull'), async (req, res, next)
 // ------------------------------------------------------------------------------------------------//
 //
 //Enviar Texto em Grupo
-router.post("/sendTextGrupo", upload.none(''), async (req, res, next) => {
+router.post("/sendTextGrupo", upload.none(''), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
     case 'inChat':
@@ -713,7 +695,7 @@ router.post("/sendTextGrupo", upload.none(''), async (req, res, next) => {
 // ------------------------------------------------------------------------------------------------//
 //
 //Enviar localização
-router.post("/sendLocation", upload.none(''), async (req, res, next) => {
+router.post("/sendLocation", upload.none(''), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
     case 'inChat':
@@ -755,7 +737,7 @@ router.post("/sendLocation", upload.none(''), async (req, res, next) => {
 // ------------------------------------------------------------------------------------------------//
 //
 //Enviar localização no grupo
-router.post("/sendLocationGroup", upload.none(''), async (req, res, next) => {
+router.post("/sendLocationGroup", upload.none(''), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
     case 'inChat':
@@ -786,7 +768,7 @@ router.post("/sendLocationGroup", upload.none(''), async (req, res, next) => {
 // ------------------------------------------------------------------------------------------------//
 //
 //Enviar links com preview
-router.post("/sendLinkPreview", upload.none(''), async (req, res, next) => {
+router.post("/sendLinkPreview", upload.none(''), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
     case 'inChat':
@@ -827,7 +809,7 @@ router.post("/sendLinkPreview", upload.none(''), async (req, res, next) => {
 // ------------------------------------------------------------------------------------------------//
 //
 //Enviar Imagem
-router.post("/sendImage", upload.single('fileimg'), async (req, res, next) => {
+router.post("/sendImage", upload.single('fileimg'), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
     case 'inChat':
@@ -859,6 +841,9 @@ router.post("/sendImage", upload.single('fileimg'), async (req, res, next) => {
         var sendImage = checkNumberStatus;
       }
       //
+      //
+      await deletaArquivosTemp(filePath);
+      //
       //console.log(result);
       res.status(200).json({
         sendImage
@@ -882,7 +867,7 @@ var sendImageMassa = upload.fields([{
   maxCount: 1
 }]);
 //
-router.post("/sendImageMassa", sendImageMassa, async (req, res, next) => {
+router.post("/sendImageMassa", sendImageMassa, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
     case 'inChat':
@@ -937,6 +922,11 @@ router.post("/sendImageMassa", sendImageMassa, async (req, res, next) => {
         await sleep(1000);
       }
       //
+      await deletaArquivosTemp(filePathContato);
+      //
+      //
+      await deletaArquivosTemp(filePathImagem);
+      //
       //console.log(result);
       res.status(200).json({
         sendImageMassa
@@ -952,7 +942,7 @@ router.post("/sendImageMassa", sendImageMassa, async (req, res, next) => {
 // ------------------------------------------------------------------------------------------------//
 //
 // Enviar varia imagens
-router.post("/sendMultImage", upload.array('fileimgs', 50), async (req, res, next) => {
+router.post("/sendMultImage", upload.array('fileimgs', 50), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
     case 'inChat':
@@ -990,6 +980,9 @@ router.post("/sendMultImage", upload.array('fileimgs', 50), async (req, res, nex
           sendMultImage.push(sendMultImageRes);
           //
           await sleep(1000);
+          //
+          await deletaArquivosTemp(filePathImagem);
+          //
         });
       } else {
         var sendMultImage = checkNumberStatus;
@@ -1018,7 +1011,7 @@ var sendMultImageMassa = upload.fields([{
   maxCount: 30
 }]);
 //
-router.post("/sendMultImageMassa", sendMultImageMassa, async (req, res, next) => {
+router.post("/sendMultImageMassa", sendMultImageMassa, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
     case 'inChat':
@@ -1069,7 +1062,12 @@ router.post("/sendMultImageMassa", sendMultImageMassa, async (req, res, next) =>
               //
               await sleep(1000);
               //
+              //
+              await deletaArquivosTemp(filePathImagem);
+              //
             });
+            //
+            await deletaArquivosTemp(filePathContato);
             //
           } else {
             var sendMultImageMassa = checkNumberStatus;
@@ -1093,7 +1091,7 @@ router.post("/sendMultImageMassa", sendMultImageMassa, async (req, res, next) =>
 // ------------------------------------------------------------------------------------------------//
 //
 // Enviar imagen no grupo
-router.post("/sendImageGrupo", upload.single('fileimg'), async (req, res, next) => {
+router.post("/sendImageGrupo", upload.single('fileimg'), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
     case 'inChat':
@@ -1114,6 +1112,9 @@ router.post("/sendImageGrupo", upload.single('fileimg'), async (req, res, next) 
         req.body.caption
       );
       //
+      //
+      await deletaArquivosTemp(filePath);
+      //
       //console.log(result);
       res.status(200).json({
         sendImageGrupo
@@ -1129,7 +1130,7 @@ router.post("/sendImageGrupo", upload.single('fileimg'), async (req, res, next) 
 // ------------------------------------------------------------------------------------------------//
 //
 // Enviar arquivo/documento
-router.post("/sendFile", upload.single('file'), async (req, res, next) => {
+router.post("/sendFile", upload.single('file'), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
     case 'inChat':
@@ -1161,6 +1162,9 @@ router.post("/sendFile", upload.single('file'), async (req, res, next) => {
         var sendFile = checkNumberStatus;
       }
       //
+      //
+      await deletaArquivosTemp(filePath);
+      //
       //console.log(result);
       res.status(200).json({
         sendFile
@@ -1176,7 +1180,7 @@ router.post("/sendFile", upload.single('file'), async (req, res, next) => {
 // ------------------------------------------------------------------------------------------------//
 //
 // Enviar arquivo/documento
-router.post("/sendFileBase64", upload.none(''), async (req, res, next) => {
+router.post("/sendFileBase64", upload.none(''), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
     case 'inChat':
@@ -1208,6 +1212,8 @@ router.post("/sendFileBase64", upload.none(''), async (req, res, next) => {
         var sendFileBase64 = checkNumberStatus;
       }
       //
+      await deletaArquivosTemp(filePath);
+      //
       //console.log(result);
       res.status(200).json({
         sendFileBase64
@@ -1223,7 +1229,7 @@ router.post("/sendFileBase64", upload.none(''), async (req, res, next) => {
 // ------------------------------------------------------------------------------------------------//
 //
 // Enviar arquivo/documento
-router.post("/sendFileToBase64", upload.single('file'), async (req, res, next) => {
+router.post("/sendFileToBase64", upload.single('file'), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
     case 'inChat':
@@ -1266,7 +1272,7 @@ router.post("/sendFileToBase64", upload.single('file'), async (req, res, next) =
 // ------------------------------------------------------------------------------------------------------- //
 //
 // Enviar arquivo/documento
-router.post("/sendFileFromBase64", upload.none(''), async (req, res, next) => {
+router.post("/sendFileFromBase64", upload.none(''), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
     case 'inChat':
@@ -1309,7 +1315,7 @@ router.post("/sendFileFromBase64", upload.none(''), async (req, res, next) => {
 // ------------------------------------------------------------------------------------------------//
 //
 //Enviar imagem em gif
-router.post("/sendImageAsStickerGif", upload.single('file'), async (req, res, next) => {
+router.post("/sendImageAsStickerGif", upload.single('file'), verifyToken.verify, async (req, res, next) => {
   //
   // Generates sticker from the provided animated gif image and sends it (Send image as animated sticker)
   // image path imageBase64 A valid gif and webp image is required. 
@@ -1344,6 +1350,8 @@ router.post("/sendImageAsStickerGif", upload.single('file'), async (req, res, ne
         var sendImageAsStickerGif = checkNumberStatus;
       }
       //
+      await deletaArquivosTemp(filePath);
+      //
       //console.log(result);
       res.status(200).json({
         sendImageAsStickerGif
@@ -1359,7 +1367,7 @@ router.post("/sendImageAsStickerGif", upload.single('file'), async (req, res, ne
 // ------------------------------------------------------------------------------------------------//
 //
 //Enviar imagem em gif
-router.post("/sendImageAsStickerGifUrl", upload.single('file'), async (req, res, next) => {
+router.post("/sendImageAsStickerGifUrl", upload.single('file'), verifyToken.verify, async (req, res, next) => {
   //
   // Generates sticker from the provided animated gif image and sends it (Send image as animated sticker)
   // image path imageBase64 A valid gif and webp image is required. 
@@ -1404,7 +1412,7 @@ router.post("/sendImageAsStickerGifUrl", upload.single('file'), async (req, res,
 // ------------------------------------------------------------------------------------------------//
 //
 //Enviar figura png ou jpg
-router.post("/sendImageAsSticker", upload.single('file'), async (req, res, next) => {
+router.post("/sendImageAsSticker", upload.single('file'), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
     case 'inChat':
@@ -1438,6 +1446,8 @@ router.post("/sendImageAsSticker", upload.single('file'), async (req, res, next)
         var sendImageAsSticker = checkNumberStatus;
       }
       //
+      await deletaArquivosTemp(filePath);
+      //
       //console.log(result);
       res.status(200).json({
         sendImageAsSticker
@@ -1459,7 +1469,7 @@ router.post("/sendImageAsSticker", upload.single('file'), async (req, res, next)
 */
 //
 // Recuperar contatos
-router.post("/getAllContacts", upload.none(''), async (req, res, next) => {
+router.post("/getAllContacts", upload.none(''), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
     case 'inChat':
@@ -1485,7 +1495,7 @@ router.post("/getAllContacts", upload.none(''), async (req, res, next) => {
 // ------------------------------------------------------------------------------------------------------- //
 //
 // Returns browser session token
-router.post("/getSessionTokenBrowser", upload.none(''), async (req, res, next) => {
+router.post("/getSessionTokenBrowser", upload.none(''), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
     case 'inChat':
@@ -1510,7 +1520,7 @@ router.post("/getSessionTokenBrowser", upload.none(''), async (req, res, next) =
 // ------------------------------------------------------------------------------------------------------- //
 //
 // Chama sua lista de contatos bloqueados
-router.post("/getBlockList", upload.none(''), async (req, res, next) => {
+router.post("/getBlockList", upload.none(''), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
     case 'inChat':
@@ -1535,7 +1545,7 @@ router.post("/getBlockList", upload.none(''), async (req, res, next) => {
 // ------------------------------------------------------------------------------------------------//
 //
 // Recuperar status de contato
-router.post("/getStatus", upload.none(''), async (req, res, next) => {
+router.post("/getStatus", upload.none(''), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
     case 'inChat':
@@ -1574,7 +1584,7 @@ router.post("/getStatus", upload.none(''), async (req, res, next) => {
 // ------------------------------------------------------------------------------------------------------- //
 //
 // Obter o perfil do número
-router.post("/getNumberProfile", upload.none(''), async (req, res, next) => {
+router.post("/getNumberProfile", upload.none(''), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
     case 'inChat':
@@ -1613,7 +1623,7 @@ router.post("/getNumberProfile", upload.none(''), async (req, res, next) => {
 // ------------------------------------------------------------------------------------------------------- //
 //
 // Verificar o status do número
-router.post("/checkNumberStatus", upload.none(''), async (req, res, next) => {
+router.post("/checkNumberStatus", upload.none(''), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
     case 'inChat':
@@ -1641,7 +1651,7 @@ router.post("/checkNumberStatus", upload.none(''), async (req, res, next) => {
 // ------------------------------------------------------------------------------------------------------- //
 //
 // Verificar o status do número em massa
-router.post("/checkNumberStatusMassa", upload.single('contatos'), async (req, res, next) => {
+router.post("/checkNumberStatusMassa", upload.single('contatos'), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
     case 'inChat':
@@ -1679,6 +1689,8 @@ router.post("/checkNumberStatusMassa", upload.single('contatos'), async (req, re
         await sleep(1000);
       }
       //
+      await deletaArquivosTemp(filePath);
+      //
       //console.log(result);
       res.status(200).json({
         checkNumberStatusMassa
@@ -1694,7 +1706,7 @@ router.post("/checkNumberStatusMassa", upload.single('contatos'), async (req, re
 // ------------------------------------------------------------------------------------------------------- //
 //
 // Obter a foto do perfil no servidor
-router.post("/getProfilePicFromServer", upload.none(''), async (req, res, next) => {
+router.post("/getProfilePicFromServer", upload.none(''), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
     case 'inChat':
@@ -1739,7 +1751,7 @@ router.post("/getProfilePicFromServer", upload.none(''), async (req, res, next) 
 */
 //
 //Deixar o grupo
-router.post("/leaveGroup", upload.none(''), async (req, res, next) => {
+router.post("/leaveGroup", upload.none(''), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
     case 'inChat':
@@ -1765,7 +1777,7 @@ router.post("/leaveGroup", upload.none(''), async (req, res, next) => {
 // ------------------------------------------------------------------------------------------------------- //
 //
 // Obtenha membros do grupo
-router.post("/getGroupMembers", upload.none(''), async (req, res, next) => {
+router.post("/getGroupMembers", upload.none(''), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
     case 'inChat':
@@ -1791,7 +1803,7 @@ router.post("/getGroupMembers", upload.none(''), async (req, res, next) => {
 // ------------------------------------------------------------------------------------------------//
 //
 // Obter IDs de membros do grupo 
-router.post("/getGroupMembersIds", upload.none(''), async (req, res, next) => {
+router.post("/getGroupMembersIds", upload.none(''), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
     case 'inChat':
@@ -1817,7 +1829,7 @@ router.post("/getGroupMembersIds", upload.none(''), async (req, res, next) => {
 // ------------------------------------------------------------------------------------------------//
 //
 // Gerar link de url de convite de grupo
-router.post("/getGroupInviteLink", upload.none(''), async (req, res, next) => {
+router.post("/getGroupInviteLink", upload.none(''), verifyToken.verify, async (req, res, next) => {
   //
   // Gerar link de url de convite de grupo
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
@@ -1844,7 +1856,7 @@ router.post("/getGroupInviteLink", upload.none(''), async (req, res, next) => {
 //
 // ------------------------------------------------------------------------------------------------//
 //
-router.post("/createGroup", upload.single('participants'), async (req, res, next) => {
+router.post("/createGroup", upload.single('participants'), verifyToken.verify, async (req, res, next) => {
   //
   // Criar grupo (título, participantes a adicionar)
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
@@ -1900,6 +1912,8 @@ router.post("/createGroup", upload.single('participants'), async (req, res, next
         contactlistInvalid
       );
       //
+      await deletaArquivosTemp(filePath);
+      //
       res.status(200).json({
         createGroup
       });
@@ -1914,7 +1928,7 @@ router.post("/createGroup", upload.single('participants'), async (req, res, next
 // ------------------------------------------------------------------------------------------------//
 //
 // Criar grupo (título, participantes a adicionar)
-router.post("/createGroupSetAdminMembers", upload.single('participants'), async (req, res, next) => {
+router.post("/createGroupSetAdminMembers", upload.single('participants'), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
     case 'inChat':
@@ -1991,6 +2005,9 @@ router.post("/createGroupSetAdminMembers", upload.single('participants'), async 
       } else {
         var createGroupSetAdminMembers = createGroup;
       }
+      //
+      await deletaArquivosTemp(filePath);
+      //
       res.status(200).json({
         createGroupSetAdminMembers
       });
@@ -2005,7 +2022,7 @@ router.post("/createGroupSetAdminMembers", upload.single('participants'), async 
 // ------------------------------------------------------------------------------------------------//
 //
 // Criar grupo (título, participantes a adicionar)
-router.post("/createCountGroupSetAdminMembers", upload.single('participants'), async (req, res, next) => {
+router.post("/createCountGroupSetAdminMembers", upload.single('participants'), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
     case 'inChat':
@@ -2090,6 +2107,9 @@ router.post("/createCountGroupSetAdminMembers", upload.single('participants'), a
         });
         //
       }
+      //
+      await deletaArquivosTemp(filePath);
+      //
       res.status(200).json({
         "createCountGroupSetAdminMembers": createGroup
       });
@@ -2103,7 +2123,7 @@ router.post("/createCountGroupSetAdminMembers", upload.single('participants'), a
 //
 // ------------------------------------------------------------------------------------------------//
 //
-router.post("/removeParticipant", upload.none(''), async (req, res, next) => {
+router.post("/removeParticipant", upload.none(''), verifyToken.verify, async (req, res, next) => {
   //
   // Remove participante
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
@@ -2122,7 +2142,7 @@ router.post("/removeParticipant", upload.none(''), async (req, res, next) => {
         //
         var removeParticipant = await Sessions.removeParticipant(
           req.body.SessionName.trim(),
-          req.body.group + '@g.us',
+          req.body.groupId + '@g.us',
           soNumeros(checkNumberStatus.number) + '@c.us'
         );
         //
@@ -2143,7 +2163,7 @@ router.post("/removeParticipant", upload.none(''), async (req, res, next) => {
 //
 // ------------------------------------------------------------------------------------------------//
 //
-router.post("/addParticipant", upload.none(''), async (req, res, next) => {
+router.post("/addParticipant", upload.none(''), verifyToken.verify, async (req, res, next) => {
   //
   // Adicionar participante
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
@@ -2183,7 +2203,7 @@ router.post("/addParticipant", upload.none(''), async (req, res, next) => {
 //
 // ------------------------------------------------------------------------------------------------//
 //
-router.post("/promoteParticipant", upload.none(''), async (req, res, next) => {
+router.post("/promoteParticipant", upload.none(''), verifyToken.verify, async (req, res, next) => {
   //
   // Promote participant (Give admin privileges)
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
@@ -2224,7 +2244,7 @@ router.post("/promoteParticipant", upload.none(''), async (req, res, next) => {
 // ------------------------------------------------------------------------------------------------//
 //
 // Depromote participant (Give admin privileges)
-router.post("/demoteParticipant", upload.none(''), async (req, res, next) => {
+router.post("/demoteParticipant", upload.none(''), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
     case 'inChat':
@@ -2263,7 +2283,7 @@ router.post("/demoteParticipant", upload.none(''), async (req, res, next) => {
 // ------------------------------------------------------------------------------------------------//
 //
 // Retorna o status do grupo, jid, descrição do link de convite
-router.post("/getGroupInfoFromInviteLink", upload.none(''), async (req, res, next) => {
+router.post("/getGroupInfoFromInviteLink", upload.none(''), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
     case 'inChat':
@@ -2288,7 +2308,7 @@ router.post("/getGroupInfoFromInviteLink", upload.none(''), async (req, res, nex
 //
 // ------------------------------------------------------------------------------------------------//
 //
-router.post("/joinGroup", upload.none(''), async (req, res, next) => {
+router.post("/joinGroup", upload.none(''), verifyToken.verify, async (req, res, next) => {
   //
   // Junte-se a um grupo usando o código de convite do grupo
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
@@ -2321,7 +2341,7 @@ router.post("/joinGroup", upload.none(''), async (req, res, next) => {
 ╩  ┴└─└─┘└  ┴┴─┘└─┘  ╚  └─┘┘└┘└─┘ ┴ ┴└─┘┘└┘└─┘           
 */
 //
-router.post("/setProfileStatus", upload.none(''), async (req, res, next) => {
+router.post("/setProfileStatus", upload.none(''), verifyToken.verify, async (req, res, next) => {
   //
   // Set client status
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
@@ -2348,7 +2368,7 @@ router.post("/setProfileStatus", upload.none(''), async (req, res, next) => {
 //
 // ------------------------------------------------------------------------------------------------//
 //
-router.post("/setProfileName", upload.none(''), async (req, res, next) => {
+router.post("/setProfileName", upload.none(''), verifyToken.verify, async (req, res, next) => {
   //
   // Set client profile name
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
@@ -2375,7 +2395,7 @@ router.post("/setProfileName", upload.none(''), async (req, res, next) => {
 //
 // ------------------------------------------------------------------------------------------------//
 //
-router.post("/setProfilePic", upload.single('fileimg'), async (req, res, next) => {
+router.post("/setProfilePic", upload.single('fileimg'), verifyToken.verify, async (req, res, next) => {
   //
 
   //
@@ -2417,7 +2437,7 @@ router.post("/setProfilePic", upload.single('fileimg'), async (req, res, next) =
 */
 //
 // Delete the Service Worker
-router.post("/killServiceWorker", upload.none(''), async (req, res, next) => {
+router.post("/killServiceWorker", upload.none(''), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
     case 'inChat':
@@ -2429,6 +2449,7 @@ router.post("/killServiceWorker", upload.none(''), async (req, res, next) => {
       res.status(200).json({
         killServiceWorker
       });
+      //
       break;
     default:
       res.status(400).json({
@@ -2440,7 +2461,7 @@ router.post("/killServiceWorker", upload.none(''), async (req, res, next) => {
 // ------------------------------------------------------------------------------------------------//
 //
 // Load the service again
-router.post("/restartService", upload.none(''), async (req, res, next) => {
+router.post("/restartService", upload.none(''), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
     case 'inChat':
@@ -2452,6 +2473,7 @@ router.post("/restartService", upload.none(''), async (req, res, next) => {
       res.status(200).json({
         restartService
       });
+      //
       break;
     default:
       res.status(400).json({
@@ -2462,8 +2484,82 @@ router.post("/restartService", upload.none(''), async (req, res, next) => {
 //
 // ------------------------------------------------------------------------------------------------//
 //
+// Reload do whatsapp web
+router.post("/reloadService", upload.none(''), verifyToken.verify, async (req, res, next) => {
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+    case 'notLogged':
+    case 'deviceNotConnected':
+    case 'desconnectedMobile':
+    case 'qrReadFail':
+    case 'deleteToken':
+    case 'DISCONNECTED':
+      //
+      try {
+        var killServiceWorker = await Sessions.killServiceWorker(req.body.SessionName.trim());
+        //
+        if (killServiceWorker.erro === false && killServiceWorker.status === 200) {
+          //
+          var restartService = await Sessions.restartService(req.body.SessionName.trim());
+          //
+          if (restartService.erro === false && restartService.status === 200) {
+            //
+            var reload = restartService;
+            //
+            //await deletaToken(session.tokenPatch + "/" + req.body.SessionName + ".data.json");
+            //
+            res.status(200).json({
+              "reloadService": reload
+            });
+            //
+          } else {
+            //
+            var reload = restartService;
+            //
+            res.status(400).json({
+              "reloadService": reload
+            });
+            //
+          }
+          //
+        } else {
+          //
+          var reload = killServiceWorker;
+          //
+          res.status(400).json({
+            "reloadService": reload
+          });
+          //
+        }
+      } catch (error) {
+        //
+        res.status(404).json({
+          "reloadService": {
+            "erro": true,
+            "status": 404,
+            "message": "Sessão não iniciada.",
+            "restartService": false
+          }
+        });
+        //
+      }
+      //
+      break;
+    default:
+      res.status(400).json({
+        "reloadService": sessionStatus
+      });
+  }
+}); //reloadService
+//
+// ------------------------------------------------------------------------------------------------//
+//
 // Get device info
-router.post("/getHostDevice", upload.none(''), async (req, res, next) => {
+router.post("/getHostDevice", upload.none(''), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
     case 'inChat':
@@ -2488,7 +2584,7 @@ router.post("/getHostDevice", upload.none(''), async (req, res, next) => {
 // ------------------------------------------------------------------------------------------------//
 //
 // Get connection state
-router.post("/getConnectionState", upload.none(''), async (req, res, next) => {
+router.post("/getConnectionState", upload.none(''), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
     case 'inChat':
@@ -2511,7 +2607,7 @@ router.post("/getConnectionState", upload.none(''), async (req, res, next) => {
 // ------------------------------------------------------------------------------------------------//
 //
 // Get battery level
-router.post("/getBatteryLevel", upload.none(''), async (req, res, next) => {
+router.post("/getBatteryLevel", upload.none(''), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
     case 'inChat':
@@ -2535,7 +2631,7 @@ router.post("/getBatteryLevel", upload.none(''), async (req, res, next) => {
 // ------------------------------------------------------------------------------------------------//
 //
 // Is Connected
-router.post("/isConnected", upload.none(''), async (req, res, next) => {
+router.post("/isConnected", upload.none(''), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
     case 'inChat':
@@ -2558,7 +2654,7 @@ router.post("/isConnected", upload.none(''), async (req, res, next) => {
 // ------------------------------------------------------------------------------------------------//
 //
 // Obter versão da web do Whatsapp
-router.post("/getWAVersion", upload.none(''), async (req, res, next) => {
+router.post("/getWAVersion", upload.none(''), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
     case 'inChat':
@@ -2588,9 +2684,13 @@ router.post("/getWAVersion", upload.none(''), async (req, res, next) => {
 //
 // ------------------------------------------------------------------------------------------------//
 //
-router.post("/RotaTeste", upload.single('file'), async (req, res, next) => {
+router.post("/RotaTeste", verifyToken.verify, upload.single('file'), verifyToken.verify, async (req, res, next) => {
   //
-
+  res.status(200).json({
+    auth: true,
+    token: req.userToken,
+    message: 'Token validate'
+  });
   //
 });
 //
