@@ -548,7 +548,7 @@ module.exports = class Sessions {
     //
     const client = await wppconnect.create({
       session: session.name,
-      catchQR: (base64Qrimg, asciiQR, attempts, urlCode) => {
+      catchQR: async (base64Qrimg, asciiQR, attempts, urlCode) => {
         //
         console.log("- Saudação:", await saudacao());
         //
@@ -604,7 +604,7 @@ module.exports = class Sessions {
         */
       },
       // statusFind
-      statusFind: (statusSession, session_wppconnect) => {
+      statusFind: async (statusSession, session_wppconnect) => {
         console.log('- Status da sessão:', statusSession);
         //return isLogged || notLogged || browserClose || qrReadSuccess || qrReadFail || autocloseCalled || desconnectedMobile || deleteToken
         //Create session wss return "serverClose" case server for close
