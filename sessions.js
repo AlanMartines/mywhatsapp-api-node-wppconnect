@@ -771,6 +771,9 @@ module.exports = class Sessions {
           session.state = state;
           session.status = 'notLogged';
           session.qrcode = null;
+          //
+          await deletaToken(session.tokenPatch + "/" + SessionName + ".data.json");
+          //
         } else if (state == "UNPAIRED") {
           session.state = state;
           session.status = 'notLogged';
