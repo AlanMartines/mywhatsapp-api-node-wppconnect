@@ -26,6 +26,17 @@ async function deletaToken(filePath) {
   }
 }
 //
+
+async function deletaArquivosTemp(filePath) {
+  //
+  const cacheExists = await fs.pathExists(filePath);
+  console.log('- O arquivo é: ' + cacheExists);
+  if (cacheExists) {
+    fs.remove(filePath);
+    console.log('- O arquivo removido: ' + cacheExists);
+  }
+}
+//
 function sleep(ms) {
   console.log("- Sleep:", ms + " ms");
   return new Promise((resolve) => {
