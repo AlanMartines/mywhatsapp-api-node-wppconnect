@@ -26,7 +26,6 @@ async function deletaToken(filePath) {
   }
 }
 //
-
 async function deletaArquivosTemp(filePath) {
   //
   const cacheExists = await fs.pathExists(filePath);

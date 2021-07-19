@@ -767,7 +767,12 @@ module.exports = class Sessions {
         session.state = state;
         console.log('- Connection status: ', state);
         clearTimeout(time);
-        if (state == "OPENING") {
+        if (state == "CONNECTED") {
+          session.state = state;
+          session.status = 'isLogged';
+          session.qrcode = null;
+          //
+        } else if (state == "OPENING") {
           session.state = state;
           session.status = 'notLogged';
           session.qrcode = null;
@@ -783,6 +788,7 @@ module.exports = class Sessions {
           //
         } else if (state === 'DISCONNECTED' || state === 'SYNCING') {
           session.state = state;
+          session.status = 'notLogged';
           session.qrcode = null;
           //
           await deletaToken(session.tokenPatch + "/" + SessionName + ".data.json");
