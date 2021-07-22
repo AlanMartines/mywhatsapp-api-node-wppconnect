@@ -2686,6 +2686,55 @@ router.post("/getWAVersion", upload.none(''), verifyToken.verify, async (req, re
 //
 // ------------------------------------------------------------------------------------------------//
 //
+// Inicia a verificação de conexão do telefone
+router.post("/startPhoneWatchdog", upload.none(''), verifyToken.verify, async (req, res, next) => {
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var startPhoneWatchdog = await Sessions.startPhoneWatchdog(
+        req.body.SessionName.trim(),
+        req.body.interval.trim(),
+      );
+      res.status(200).json({
+        startPhoneWatchdog
+      });
+      break;
+    default:
+      res.status(400).json({
+        "getWAVersion": sessionStatus
+      });
+  }
+}); //startPhoneWatchdog
+//
+// ------------------------------------------------------------------------------------------------//
+//
+// Para a verificação de conexão do telefone
+router.post("/stopPhoneWatchdog", upload.none(''), verifyToken.verify, async (req, res, next) => {
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var stopPhoneWatchdog = await Sessions.stopPhoneWatchdog(req.body.SessionName.trim());
+      res.status(200).json({
+        stopPhoneWatchdog
+      });
+      break;
+    default:
+      res.status(400).json({
+        "stopPhoneWatchdog": sessionStatus
+      });
+  }
+}); //stopPhoneWatchdog
+//
+// ------------------------------------------------------------------------------------------------//
+//
 /*
 ╔╦╗┌─┐┌─┐┌┬┐┌─┐┌─┐  ┌┬┐┌─┐  ╦═╗┌─┐┌┬┐┌─┐┌─┐
  ║ ├┤ └─┐ │ ├┤ └─┐   ││├┤   ╠╦╝│ │ │ ├─┤└─┐

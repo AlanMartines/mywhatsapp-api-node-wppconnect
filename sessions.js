@@ -2667,6 +2667,68 @@ module.exports = class Sessions {
   //
   // ------------------------------------------------------------------------------------------------//
   //
+  // Inicia a verificação de conexão do telefone
+  static async startPhoneWatchdog(SessionName, interval) {
+    console.log("- startPhoneWatchdog");
+    var session = Sessions.getSession(SessionName);
+    var resultgetWAVersion = await session.client.then(async client => {
+      return await client.startPhoneWatchdog(interval).then((result) => {
+        //console.log('Result: ', result); //return object success
+        //
+        return {
+          "erro": false,
+          "status": 200,
+          "message": "Verificação de conexão do telefone iniciada com sucesso",
+          "PhoneWatchdog": result
+        };
+        //
+      }).catch((erro) => {
+        //console.error('Error when sending: ', erro); //return object error
+        //
+        return {
+          "erro": true,
+          "status": 404,
+          "message": "Erro ao inicia a verificação de conexão do telefone"
+        };
+        //
+      });
+    });
+    return resultgetWAVersion;
+  } //startPhoneWatchdog
+  //
+  // ------------------------------------------------------------------------------------------------//
+  //
+  // Para a verificação de conexão do telefone
+  static async stopPhoneWatchdog(SessionName) {
+    console.log("- stopPhoneWatchdog");
+    var session = Sessions.getSession(SessionName);
+    var resultgetWAVersion = await session.client.then(async client => {
+      return await client.stopPhoneWatchdog().then((result) => {
+        //console.log('Result: ', result); //return object success
+        //
+        return {
+          "erro": false,
+          "status": 200,
+          "message": "Verificação de conexão do parada iniciada com sucesso",
+          "PhoneWatchdog": result
+        };
+        //
+      }).catch((erro) => {
+        //console.error('Error when sending: ', erro); //return object error
+        //
+        return {
+          "erro": true,
+          "status": 404,
+          "message": "Erro ao parar a verificação de conexão do telefone"
+        };
+        //
+      });
+    });
+    return resultgetWAVersion;
+  } //getWAVersion
+  //
+  // ------------------------------------------------------------------------------------------------//
+  //
   /*
   ╔╦╗┌─┐┌─┐┌┬┐┌─┐┌─┐  ┌┬┐┌─┐  ╦═╗┌─┐┌┬┐┌─┐┌─┐
    ║ ├┤ └─┐ │ ├┤ └─┐   ││├┤   ╠╦╝│ │ │ ├─┤└─┐
