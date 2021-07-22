@@ -50,6 +50,7 @@
     "express-fileupload": "^1.2.1",
     "ffmpeg": "0.0.4",
     "fs": "0.0.1-security",
+    "fs-extra": "^10.0.0",
     "futoin-hkdf": "^1.4.2",
     "http": "0.0.1-security",
     "http-errors": "~1.8.0",
