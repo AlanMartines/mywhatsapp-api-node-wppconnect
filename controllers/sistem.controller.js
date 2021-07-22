@@ -2697,7 +2697,7 @@ router.post("/startPhoneWatchdog", upload.none(''), verifyToken.verify, async (r
       //
       var startPhoneWatchdog = await Sessions.startPhoneWatchdog(
         req.body.SessionName.trim(),
-        req.body.interval.trim()
+        req.body.interval
       );
       res.status(200).json({
         startPhoneWatchdog
