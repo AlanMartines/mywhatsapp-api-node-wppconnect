@@ -1054,7 +1054,7 @@ module.exports = class Sessions {
             "number": number,
             "canReceiveMessage": true,
             "text": "success",
-            "message": "Contato envido com sucesso."
+            "message": "Contato enviado com sucesso."
           };
           //
         })
@@ -1103,7 +1103,7 @@ module.exports = class Sessions {
             "contactlistValid": contactlistValid,
             "contactlistInvalid": contactlistInvalid,
             "text": "success",
-            "message": "Lista de contatos validos envida com sucesso."
+            "message": "Lista de contatos validos enviada com sucesso."
           };
           //
         })
@@ -1148,7 +1148,7 @@ module.exports = class Sessions {
           "status": 200,
           "number": number,
           "canReceiveMessage": true,
-          "message": "Menssagem envida com sucesso."
+          "message": "Menssagem enviada com sucesso."
         };
         //
       }).catch((erro) => {
@@ -1199,7 +1199,7 @@ module.exports = class Sessions {
           "number": number,
           "canReceiveMessage": true,
           "text": "success",
-          "message": "Localização envida com sucesso."
+          "message": "Localização enviada com sucesso."
         };
         //
       }).catch((erro) => {
@@ -1249,7 +1249,7 @@ module.exports = class Sessions {
           "number": number,
           "canReceiveMessage": true,
           "text": "success",
-          "message": "Link envida com sucesso."
+          "message": "Link enviada com sucesso."
         };
         //
       }).catch((erro) => {
@@ -1299,7 +1299,7 @@ module.exports = class Sessions {
           "number": number,
           "canReceiveMessage": true,
           "text": "success",
-          "message": "Menssagem envida com sucesso."
+          "message": "Menssagem enviada com sucesso."
         };
         //
       }).catch((erro) => {
@@ -1348,7 +1348,7 @@ module.exports = class Sessions {
           "number": number,
           "canReceiveMessage": true,
           "text": "success",
-          "message": "Arquivo envido com sucesso."
+          "message": "Arquivo enviado com sucesso."
         };
         //
       }).catch((erro) => {
@@ -1398,7 +1398,7 @@ module.exports = class Sessions {
           "number": number,
           "canReceiveMessage": true,
           "text": "success",
-          "message": "Arquivo envida com sucesso."
+          "message": "Arquivo enviada com sucesso."
         };
         //
       }).catch((erro) => {
@@ -1444,7 +1444,7 @@ module.exports = class Sessions {
           "number": number,
           "canReceiveMessage": true,
           "text": "success",
-          "message": "Gif envida com sucesso."
+          "message": "Gif enviada com sucesso."
         };
         //
       }).catch((erro) => {
@@ -1489,7 +1489,7 @@ module.exports = class Sessions {
           "number": number,
           "canReceiveMessage": true,
           "text": "success",
-          "message": "Figura envida com sucesso."
+          "message": "Figura enviada com sucesso."
         };
         //
       }).catch((erro) => {
@@ -1527,7 +1527,7 @@ module.exports = class Sessions {
     var session = Sessions.getSession(SessionName);
     var resultgetAllContacts = await session.client.then(async client => {
       return await client.getAllContacts().then(async (result) => {
-        //console.log('Result: ', result); //return object success
+        console.log('Result: ', result); //return object success
         //
         var getChatGroupNewMsg = [];
         //

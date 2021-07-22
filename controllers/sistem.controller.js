@@ -496,7 +496,7 @@ router.post("/sendTextMassa", upload.single('phonefull'), verifyToken.verify, as
       //
       var sendTextMassa = [];
       //
-      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName + '-'));
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + req.body.SessionName + '-'));
       var filePath = path.join(folderName, req.file.originalname);
       fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
       console.log("- File:", filePath);
@@ -700,7 +700,7 @@ router.post("/sendImage", upload.single('fileimg'), verifyToken.verify, async (r
     case 'isLogged':
     case 'chatsAvailable':
       //
-      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName + '-'));
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + req.body.SessionName + '-'));
       var filePath = path.join(folderName, req.file.originalname);
       fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
       console.log("- File", filePath);
@@ -759,13 +759,13 @@ router.post("/sendImageMassa", sendImageMassa, verifyToken.verify, async (req, r
     case 'chatsAvailable':
       //
       //
-      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName + '-'));
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + req.body.SessionName + '-'));
       var filePathContato = path.join(folderName, req.files['phonefull'][0].originalname);
       fs.writeFileSync(filePathContato, req.files['phonefull'][0].buffer.toString('base64'), 'base64');
       console.log("- File:", filePathContato);
       //
       //
-      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName + '-'));
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + req.body.SessionName + '-'));
       var filePathImagem = path.join(folderName, req.files['fileimg'][0].originalname);
       fs.writeFileSync(filePathImagem, req.files['fileimg'][0].buffer.toString('base64'), 'base64');
       console.log("- File:", filePathImagem);
@@ -847,7 +847,7 @@ router.post("/sendMultImage", upload.array('fileimgs', 50), verifyToken.verify, 
         //
         await forEach(resultsFiles, async (resultfile) => {
           //
-          var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName + '-'));
+          var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + req.body.SessionName + '-'));
           var filePathImagem = path.join(folderName, resultfile.originalname);
           fs.writeFileSync(filePathImagem, resultfile.buffer.toString('base64'), 'base64');
           console.log("- File:", filePathImagem);
@@ -862,7 +862,7 @@ router.post("/sendMultImage", upload.array('fileimgs', 50), verifyToken.verify, 
           //
           sendMultImage.push(sendMultImageRes);
           //
-          await sleep(1000);
+          await sleep(3000);
           //
           await deletaArquivosTemp(filePathImagem);
           //
@@ -905,7 +905,7 @@ router.post("/sendMultImageMassa", sendMultImageMassa, verifyToken.verify, async
       //
       var resultsFilesImg = req.files.fileimgs;
       //
-      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName + '-'));
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + req.body.SessionName + '-'));
       var filePathContato = path.join(folderName, req.files['phonefull'][0].originalname);
       fs.writeFileSync(filePathContato, req.files['phonefull'][0].buffer.toString('base64'), 'base64');
       console.log("- File Contato:", filePathContato);
@@ -928,7 +928,7 @@ router.post("/sendMultImageMassa", sendMultImageMassa, verifyToken.verify, async
             //
             await forEach(resultsFilesImg, async (resultfile) => {
               //
-              var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName + '-'));
+              var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + req.body.SessionName + '-'));
               var filePathImagem = path.join(folderName, resultfile.originalname);
               fs.writeFileSync(filePathImagem, resultfile.buffer.toString('base64'), 'base64');
               console.log("- File Imagem:", filePathImagem);
@@ -982,7 +982,7 @@ router.post("/sendImageGrupo", upload.single('fileimg'), verifyToken.verify, asy
     case 'isLogged':
     case 'chatsAvailable':
       //
-      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName + '-'));
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + req.body.SessionName + '-'));
       var filePath = path.join(folderName, req.file.originalname);
       fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
       console.log("- File", filePath);
@@ -1021,7 +1021,7 @@ router.post("/sendFile", upload.single('file'), verifyToken.verify, async (req, 
     case 'isLogged':
     case 'chatsAvailable':
       //
-      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName + '-'));
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + req.body.SessionName + '-'));
       var filePath = path.join(folderName, req.file.originalname);
       fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
       console.log("- File", filePath);
@@ -1071,7 +1071,7 @@ router.post("/sendFileBase64", upload.none(''), verifyToken.verify, async (req, 
     case 'isLogged':
     case 'chatsAvailable':
       //
-      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName + '-'));
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + req.body.SessionName + '-'));
       var filePath = path.join(folderName, req.body.originalname);
       fs.writeFileSync(filePath, req.body.base64, 'base64');
       console.log("- File", filePath);
@@ -1211,7 +1211,7 @@ router.post("/sendImageAsStickerGif", upload.single('file'), verifyToken.verify,
     case 'isLogged':
     case 'chatsAvailable':
       //
-      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName + '-'));
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + req.body.SessionName + '-'));
       var filePath = path.join(folderName, req.file.originalname);
       fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
       console.log("- File", filePath);
@@ -1304,7 +1304,7 @@ router.post("/sendImageAsSticker", upload.single('file'), verifyToken.verify, as
     case 'chatsAvailable':
       //
       //
-      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName + '-'));
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + req.body.SessionName + '-'));
       var filePath = path.join(folderName, req.file.originalname);
       fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
       console.log("- File", filePath);
@@ -2290,7 +2290,7 @@ router.post("/setProfilePic", upload.single('fileimg'), verifyToken.verify, asyn
     case 'chatsAvailable':
       //
       //
-      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName + '-'));
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + req.body.SessionName + '-'));
       var filePath = path.join(folderName, req.file.originalname);
       fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
       console.log("- File", filePath);
