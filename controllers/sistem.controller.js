@@ -331,135 +331,6 @@ router.post("/Logout", upload.none(''), verifyToken.verify, async (req, res, nex
 ╚═╝┴ ┴└─┘┴└─┘  ╚  └─┘┘└┘└─┘ ┴ ┴└─┘┘└┘└─┘  └─┘└─┘┴ ┴└─┘└─┘
 */
 //
-//Eviar menssagem de voz
-router.post("/sendVoice", upload.single('audio_data'), verifyToken.verify, async (req, res, next) => {
-  //
-  //Eviar menssagem de voz
-  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
-  switch (sessionStatus.status) {
-    case 'inChat':
-    case 'qrReadSuccess':
-    case 'isLogged':
-    case 'chatsAvailable':
-      //
-      //
-      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName + '-'));
-      var filePath = path.join(folderName, req.file.originalname);
-      fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
-      console.log("- File", filePath);
-      //
-      var checkNumberStatus = await Sessions.checkNumberStatus(
-        req.body.SessionName.trim(),
-        soNumeros(req.body.phonefull) + '@c.us'
-      );
-      //
-      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
-        //
-        var sendVoice = await Sessions.sendVoice(
-          req.body.SessionName.trim(),
-          soNumeros(checkNumberStatus.number) + '@c.us',
-          filePath
-        );
-        //
-      } else {
-        var sendVoice = checkNumberStatus;
-      }
-      //
-      await deletaArquivosTemp(filePath);
-      //
-      res.status(200).json({
-        sendVoice
-      });
-      break;
-    default:
-      res.status(400).json({
-        "sendVoice": sessionStatus
-      });
-  }
-}); //sendVoice
-//
-// ------------------------------------------------------------------------------------------------//
-//
-//Eviar menssagem de voz
-router.post("/sendVoiceBase64", upload.single('audio_data'), verifyToken.verify, async (req, res, next) => {
-  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
-  switch (sessionStatus.status) {
-    case 'inChat':
-    case 'qrReadSuccess':
-    case 'isLogged':
-    case 'chatsAvailable':
-      //
-      var checkNumberStatus = await Sessions.checkNumberStatus(
-        req.body.SessionName.trim(),
-        soNumeros(req.body.phonefull) + '@c.us'
-      );
-      //
-      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
-        //
-        var sendVoiceBase64 = await Sessions.sendVoiceBase64(
-          req.body.SessionName.trim(),
-          soNumeros(checkNumberStatus.number) + '@c.us',
-          req.body.base64MP3,
-          req.body.mimetype
-        );
-        //
-      } else {
-        var sendVoiceBase64 = checkNumberStatus;
-      }
-      //
-      res.status(200).json({
-        sendVoiceBase64
-      });
-      break;
-    default:
-      res.status(400).json({
-        "sendVoiceBase64": sessionStatus
-      });
-  }
-}); //sendVoice
-//
-// ------------------------------------------------------------------------------------------------//
-//
-//Eviar menssagem de voz
-router.post("/sendVoiceFileBase64", upload.single('audio_data'), verifyToken.verify, async (req, res, next) => {
-  //
-  //Eviar menssagem de voz
-  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
-  switch (sessionStatus.status) {
-    case 'inChat':
-    case 'qrReadSuccess':
-    case 'isLogged':
-    case 'chatsAvailable':
-      //
-      var checkNumberStatus = await Sessions.checkNumberStatus(
-        req.body.SessionName.trim(),
-        soNumeros(req.body.phonefull) + '@c.us'
-      );
-      //
-      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
-        //
-        var sendVoiceBase64 = await Sessions.sendVoiceBase64(
-          req.body.SessionName.trim(),
-          soNumeros(checkNumberStatus.number) + '@c.us',
-          req.file.buffer.toString('base64'),
-          req.file.mimetype
-        );
-        //
-      } else {
-        var sendVoiceBase64 = checkNumberStatus;
-      }
-      //
-      //console.log(result);
-      res.status(200).json({
-        sendVoiceBase64
-      });
-      break;
-    default:
-      res.status(400).json({
-        "sendVoiceBase64": sessionStatus
-      });
-  }
-}); //sendVoice
 //
 // ------------------------------------------------------------------------------------------------//
 //
@@ -556,6 +427,8 @@ router.post("/sendContactVcardList", upload.single('contactlist'), verifyToken.v
       } else {
         var sendContactVcardList = sessionStatus;
       }
+      //
+      await deletaArquivosTemp(filePath);
       //
       //console.log(result);
       res.status(200).json({

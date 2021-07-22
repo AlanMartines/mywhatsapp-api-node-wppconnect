@@ -1027,100 +1027,6 @@ module.exports = class Sessions {
   ╚═╝┴ ┴└─┘┴└─┘  ╚  └─┘┘└┘└─┘ ┴ ┴└─┘┘└┘└─┘  └─┘└─┘┴ ┴└─┘└─┘
   */
   //
-  //Eviar menssagem de voz
-  static async sendVoice(
-    SessionName,
-    number,
-    filePath
-  ) {
-    console.log("- Enviando menssagem de voz.");
-    var session = Sessions.getSession(SessionName);
-    var sendResult = await session.client.then(async client => {
-      // Send basic text
-      return await client.sendVoice(
-        number,
-        filePath
-      ).then((result) => {
-        //console.log("Result: ", result); //return object success
-        //return { result: "success", state: session.state, message: "Sucesso ao enviar menssagem" };
-        //return (result);
-        //
-        return {
-          "erro": false,
-          "status": 200,
-          "number": number,
-          "canReceiveMessage": true,
-          "text": "success",
-          "message": "Menssagem envida com sucesso."
-        };
-        //
-      }).catch((erro) => {
-        //console.error("Error when sending: ", erro); //return object error
-        //return { result: 'error', state: session.state, message: "Erro ao enviar menssagem" };
-        //return (erro);
-        //
-        return {
-          "erro": true,
-          "status": 404,
-          "number": number,
-          "canReceiveMessage": false,
-          "text": erro.text,
-          "message": "Erro ao enviar menssagem"
-        };
-        //
-      });
-    });
-    return sendResult;
-  } //sendVoice
-  //
-  // ------------------------------------------------------------------------------------------------//
-  //
-  //Eviar menssagem de voz
-  static async sendVoiceBase64(
-    SessionName,
-    number,
-    base64MP3,
-    mimetype
-  ) {
-    console.log("- Enviando menssagem de voz.");
-    var session = Sessions.getSession(SessionName);
-    var sendResult = await session.client.then(async client => {
-      return await client.sendVoiceBase64(
-        number,
-        "data:" + mimetype + ";base64," + base64MP3
-      ).then((result) => {
-        //console.log("Result: ", result); //return object success
-        //return { result: "success", state: session.state, message: "Sucesso ao enviar menssagem" };
-        //return (result);
-        //
-        return {
-          "erro": false,
-          "status": 200,
-          "number": number,
-          "canReceiveMessage": true,
-          "text": "success",
-          "message": "Menssagem envida com sucesso."
-        };
-        //
-      }).catch((erro) => {
-        //console.error("Error when sending: ", erro); //return object error
-        //return { result: 'error', state: session.state, message: "Erro ao enviar menssagem" };
-        //return (erro);
-        //
-        return {
-          "erro": true,
-          "status": 404,
-          "number": number,
-          "canReceiveMessage": false,
-          "text": erro.text,
-          "message": "Erro ao enviar menssagem"
-        };
-        //
-      });
-    });
-    return sendResult;
-  } //sendVoiceBase64
-  //
   // ------------------------------------------------------------------------------------------------//
   //
   // Enviar Contato
@@ -2709,7 +2615,7 @@ module.exports = class Sessions {
         return {
           "erro": false,
           "status": 200,
-          "message": "Verificação de conexão do parada iniciada com sucesso",
+          "message": "Verificação de conexão parada iniciada com sucesso",
           "PhoneWatchdog": result
         };
         //
