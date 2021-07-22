@@ -1533,7 +1533,7 @@ module.exports = class Sessions {
         //
         await forEach(result, async (resultAllContacts) => {
           //
-          if (resultAllContacts.isMyContact === true || resultAllContacts.isMyContact === false && resultAllContacts.isUser === false) {
+          if (resultAllContacts.isMyContact === true || resultAllContacts.isMyContact === false && resultAllContacts.isUser === true) {
             //
             getChatGroupNewMsg.push({
               "user": resultAllContacts.id.user,
@@ -1542,7 +1542,64 @@ module.exports = class Sessions {
               "pushname": resultAllContacts.pushname,
               "formattedName": resultAllContacts.formattedName,
               "isMyContact": resultAllContacts.isMyContact,
-              "isWAContact": resultAllContacts.isWAContact
+              "isWAContact": resultAllContacts.isWAContact,
+              "isBusiness": resultAllContacts.isBusiness,
+            });
+          }
+          //
+        });
+        //
+        return getChatGroupNewMsg;
+        //
+      }).catch((erro) => {
+        //console.error('Error when sending: ', erro); //return object error
+        //
+        return {
+          "erro": true,
+          "status": 404,
+          "canReceiveMessage": false,
+          "text": "Error",
+          "message": "Erro ao recuperar contatos"
+        };
+        //
+      });
+      //
+    });
+    //
+    return resultgetAllContacts;
+  } //getAllContacts
+  //
+  // ------------------------------------------------------------------------------------------------//
+  //
+  // Recuperar grupos
+  static async getAllGroups(
+    SessionName
+  ) {
+    console.log("- Obtendo todos os contatos!");
+    //
+    var session = Sessions.getSession(SessionName);
+    var resultgetAllContacts = await session.client.then(async client => {
+      return await client.getAllContacts().then(async (result) => {
+        //console.log('Result: ', result); //return object success
+        //
+        var getChatGroupNewMsg = [];
+        //
+        await forEach(result, async (resultAllContacts) => {
+          //
+          if (resultAllContacts.isMyContact === false && resultAllContacts.isUser === false) {
+            //
+            getChatGroupNewMsg.push({
+              "user": resultAllContacts.id.user,
+              "name": resultAllContacts.name,
+              "formattedName": resultAllContacts.formattedName,
+              "isMyContact": resultAllContacts.isMyContact,
+              "isWAContact": resultAllContacts.isWAContact,
+              "isBusiness": resultAllContacts.isBusiness,
+              "profilePicThumbObj": {
+                "eurl": resultAllContacts.profilePicThumbObj.eurl,
+                "img": resultAllContacts.profilePicThumbObj.img,
+                "imgFull": resultAllContacts.profilePicThumbObj.imgFull
+              }
             });
           }
           //

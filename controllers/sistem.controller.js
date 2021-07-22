@@ -1377,6 +1377,32 @@ router.post("/getAllContacts", upload.none(''), verifyToken.verify, async (req, 
 //
 // ------------------------------------------------------------------------------------------------------- //
 //
+// Recuperar grupos
+router.post("/getAllGroups", upload.none(''), verifyToken.verify, async (req, res, next) => {
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var getAllContacts = await Sessions.getAllGroups(
+        req.body.SessionName
+      );
+      //
+      res.json({
+        getAllContacts
+      });
+      break;
+    default:
+      res.status(400).json({
+        "getAllGroups": sessionStatus
+      });
+  }
+}); //getAllContacts
+//
+// ------------------------------------------------------------------------------------------------------- //
+//
 // Returns browser session token
 router.post("/getSessionTokenBrowser", upload.none(''), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
