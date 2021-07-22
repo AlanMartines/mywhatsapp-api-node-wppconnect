@@ -1533,7 +1533,7 @@ module.exports = class Sessions {
         //
         await forEach(result, async (resultAllContacts) => {
           //
-          if (resultAllContacts.isMyContact === true || resultAllContacts.isMyContact === false) {
+          if (resultAllContacts.isMyContact === true || resultAllContacts.isMyContact === false && resultAllContacts.isUser === false) {
             //
             getChatGroupNewMsg.push({
               "user": resultAllContacts.id.user,
