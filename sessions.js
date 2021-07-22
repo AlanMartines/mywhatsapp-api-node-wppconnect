@@ -1527,7 +1527,7 @@ module.exports = class Sessions {
     var session = Sessions.getSession(SessionName);
     var resultgetAllContacts = await session.client.then(async client => {
       return await client.getAllContacts().then(async (result) => {
-        console.log('Result: ', result); //return object success
+        //console.log('Result: ', result); //return object success
         //
         var getChatGroupNewMsg = [];
         //
