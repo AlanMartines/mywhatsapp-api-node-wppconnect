@@ -247,19 +247,31 @@ docker container run --name mywhatsapp-api-node-wppconnect -p 9000:9000 -d alanm
 
 ## Para instalar o certbot e criar o certificado SSL para domínios https
 
-```bash
-sudo apt update
+```barsh
+sudo apt-get update && sudo apt-get install -y software-properties-common
+```
 
-sudo apt install -y software-properties-common
+```barsh
+sudo add-apt-repository universe && sudo add-apt-repository ppa:certbot/certbot
+```
 
-sudo add-apt-repository universe
+```barsh
+sudo apt-get update && sudo apt-get install -y certbot
+```
 
-sudo add-apt-repository ppa:certbot/certbot
+```barsh
+sudo apt-get update && sudo apt-get install -y software-properties-common
+```
 
-sudo apt update
+```barsh
+sudo add-apt-repository universe && sudo add-apt-repository ppa:certbot/certbot
+```
 
-sudo apt install -y certbot
+```barsh
+sudo apt-get update && sudo apt-get install -y certbot
+```
 
+```barsh
 sudo certbot certonly --manual --force-renewal -d *.yourdomain.net -d yourdomain.net --agree-tos --no-bootstrap --manual-public-ip-logging-ok --preferred-challenges dns-01 --server https://acme-v02.api.letsencrypt.org/directory
 ```
 
