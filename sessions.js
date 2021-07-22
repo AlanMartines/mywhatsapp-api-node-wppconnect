@@ -1575,7 +1575,7 @@ module.exports = class Sessions {
   static async getAllGroups(
     SessionName
   ) {
-    console.log("- Obtendo todos os contatos!");
+    console.log("- Obtendo todos os grupos!");
     //
     var session = Sessions.getSession(SessionName);
     var resultgetAllContacts = await session.client.then(async client => {
@@ -1615,7 +1615,7 @@ module.exports = class Sessions {
           "status": 404,
           "canReceiveMessage": false,
           "text": "Error",
-          "message": "Erro ao recuperar contatos"
+          "message": "Erro ao recuperar grupos"
         };
         //
       });

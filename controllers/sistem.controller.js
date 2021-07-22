@@ -1399,7 +1399,7 @@ router.post("/getAllGroups", upload.none(''), verifyToken.verify, async (req, re
         "getAllGroups": sessionStatus
       });
   }
-}); //getAllContacts
+}); //getAllGroups
 //
 // ------------------------------------------------------------------------------------------------------- //
 //
