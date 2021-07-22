@@ -40,6 +40,7 @@ fs.access("./config/server.config.json", fs.constants.F_OK, (err) => {
       //
       const customExpress = require('./config/custom-express');
       const http = customExpress();
+      const conn = require('./config/dbConnection').promise();
       const serverConfig = require("./config/server.config.json");
       const Sessions = require("./sessions.js");
       //
