@@ -1,3 +1,4 @@
+//
 // Configuração dos módulos
 const os = require("os");
 const fs = require('fs-extra');
