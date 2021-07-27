@@ -759,6 +759,11 @@ module.exports = class Sessions {
     console.log("- Token WPPConnect:\n", JSON.parse(JSON.stringify(browserSessionToken)));
     session.state = "CONNECTED";
     session.browserSessionToken = browserSessionToken;
+    //
+    var pid = await client.browser.process().pid;
+    console.log("- Browser PID:", pid);
+    session.process = pid;
+    //
     return client;
   } //initSession
   //
