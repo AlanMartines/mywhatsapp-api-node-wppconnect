@@ -744,7 +744,7 @@ module.exports = class Sessions {
         //createPathFileToken: true, //creates a folder when inserting an object in the client's browser, to work it is necessary to pass the parameters in the function create browserSessionToken
       },
       // BrowserInstance
-      (browser, waPage) => {
+      async (browser, waPage) => {
         var pid = await browser.process().pid;
         console.log("- Browser PID:", pid);
         session.process = pid;
