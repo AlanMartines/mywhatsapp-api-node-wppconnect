@@ -745,7 +745,7 @@ module.exports = class Sessions {
     });
     wppconnect.defaultLogger.level = 'silly';
     var browserSessionToken = await client.getSessionTokenBrowser();
-    var pid = await client.page.browser.process().pid;
+    var pid = await client.browser.process().pid;
     console.log("- Browser PID:", pid);
     console.log("- Token WPPConnect:\n", JSON.parse(JSON.stringify(browserSessionToken)));
     session.state = "CONNECTED";
