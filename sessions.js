@@ -119,6 +119,7 @@ async function deletaToken(filePath) {
   //
   const cacheExists = await fs.pathExists(filePath);
   console.log('- O arquivo é: ' + cacheExists);
+  console.log('- Path: ' + filePath);
   if (cacheExists) {
     fs.remove(filePath);
     console.log('- O arquivo removido: ' + cacheExists);
@@ -744,9 +745,12 @@ module.exports = class Sessions {
     });
     wppconnect.defaultLogger.level = 'silly';
     var browserSessionToken = await client.getSessionTokenBrowser();
+    var pid = await client.page.browser.process().pid;
+    console.log("- Browser PID:", pid);
     console.log("- Token WPPConnect:\n", JSON.parse(JSON.stringify(browserSessionToken)));
     session.state = "CONNECTED";
     session.browserSessionToken = browserSessionToken;
+    session.process = '';
     return client;
   } //initSession
   //
