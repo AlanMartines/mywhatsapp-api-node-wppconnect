@@ -745,7 +745,6 @@ module.exports = class Sessions {
       folderNameToken: session.tokenPatch, //folder name when saving tokens
       //createPathFileToken: true, //creates a folder when inserting an object in the client's browser, to work it is necessary to pass the parameters in the function create browserSessionToken
     });
-    wppconnect.defaultLogger.level = 'silly';
     var browserSessionToken = await client.getSessionTokenBrowser();
     console.log("- Token WPPConnect:\n", JSON.parse(JSON.stringify(browserSessionToken)));
     session.state = "CONNECTED";
