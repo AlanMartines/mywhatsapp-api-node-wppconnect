@@ -749,7 +749,8 @@ module.exports = class Sessions {
     session.state = "CONNECTED";
     session.browserSessionToken = browserSessionToken;
     // BrowserInstance
-    var pid = await client.browser.process().pid;
+    //var pid = await client.browser.process().pid;
+    var pid = await client.page.browser.process().pid
     console.log("- Browser PID:", pid);
     session.process = pid;
     return client;
