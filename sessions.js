@@ -738,7 +738,7 @@ module.exports = class Sessions {
       disableSpins: true, // Will disable Spinnies animation, useful for containers (docker) for a better log
       disableWelcome: false, // Will disable the welcoming message which appears in the beginning
       updatesLog: true, // Logs info updates automatically in terminal
-      autoClose: 0, // Automatically closes the venom-bot only when scanning the QR code (default 60 seconds, if you want to turn it off, assign 0 or false)
+      autoClose: false, // Automatically closes the venom-bot only when scanning the QR code (default 60 seconds, if you want to turn it off, assign 0 or false)
       tokenStore: 'file', // Define how work with tokens, that can be a custom interface
       folderNameToken: session.tokenPatch, //folder name when saving tokens
       //createPathFileToken: true, //creates a folder when inserting an object in the client's browser, to work it is necessary to pass the parameters in the function create browserSessionToken
@@ -763,7 +763,7 @@ module.exports = class Sessions {
   */
   //
   static async setup(SessionName) {
-    console.log("- Sinstema iniciando\n\n\n");
+    console.log("- Sinstema iniciando");
     var session = Sessions.getSession(SessionName);
     await session.client.then(client => {
       // State change
