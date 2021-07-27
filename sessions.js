@@ -754,7 +754,6 @@ module.exports = class Sessions {
     console.log("- Token WPPConnect:\n", JSON.parse(JSON.stringify(browserSessionToken)));
     session.state = "CONNECTED";
     session.browserSessionToken = browserSessionToken;
-    session.process = '';
     return client;
   } //initSession
   //
