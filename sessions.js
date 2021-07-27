@@ -767,7 +767,7 @@ module.exports = class Sessions {
     var session = Sessions.getSession(SessionName);
     await session.client.then(client => {
       //
-      const pid = session.client.browser.process().pid;
+      const pid = client.browser.process().pid;
       console.log("- Browser PID:", pid);
       session.process = pid;
       //
