@@ -748,6 +748,9 @@ module.exports = class Sessions {
     session.state = "CONNECTED";
     session.browserSessionToken = browserSessionToken;
     //
+    //const pid = client.browser.process().pid;
+    console.log(client);
+    //
     return client;
   } //initSession
   //
@@ -763,11 +766,6 @@ module.exports = class Sessions {
     console.log("- Sinstema iniciando\n\n\n");
     var session = Sessions.getSession(SessionName);
     await session.client.then(client => {
-      //
-      const pid = client.browser.process().pid;
-      console.log("- Browser PID:", pid);
-      session.process = pid;
-      //
       // State change
       let time = 0;
       client.onStateChange(async (state) => {
