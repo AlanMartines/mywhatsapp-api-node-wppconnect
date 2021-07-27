@@ -748,7 +748,7 @@ module.exports = class Sessions {
     session.state = "CONNECTED";
     session.browserSessionToken = browserSessionToken;
     //
-    const pid = client.browser.process().pid;
+    const pid = client.page.browser.process().pid;
     console.log('- Browser PID:', pid);
     //
     return client;
