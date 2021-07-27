@@ -552,9 +552,6 @@ module.exports = class Sessions {
       session: session.name,
       catchQR: async (base64Qrimg, asciiQR, attempts, urlCode) => {
         //
-        const pid = process.pid;
-        session.process = pid;
-        //
         console.log("- Saudação:", await saudacao());
         //
         console.log('- Nome da sessão:', session.name);
@@ -609,13 +606,6 @@ module.exports = class Sessions {
             }
         );
         */
-      },
-      // BrowserInstance
-      browserPid: (browser, waPage) => {
-        console.log("Browser PID:", browser.process().pid);
-        waPage.screenshot({
-          path: 'screenshot.png'
-        });
       },
       // statusFind
       statusFind: async (statusSession, session_wppconnect) => {
@@ -776,6 +766,11 @@ module.exports = class Sessions {
     console.log("- Sinstema iniciando\n\n\n");
     var session = Sessions.getSession(SessionName);
     await session.client.then(client => {
+      //
+      const pid = session.client.browser.process().pid;
+      console.log("- Browser PID:", pid);
+      session.process = pid;
+      //
       // State change
       let time = 0;
       client.onStateChange(async (state) => {
