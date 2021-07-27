@@ -556,6 +556,8 @@ module.exports = class Sessions {
         //
         console.log('- Nome da sessão:', session.name);
         //
+        console.log(`- This process is pid: ${process.pid}`);
+        //
         session.state = "QRCODE";
         session.status = "qrRead";
         session.message = 'Sistema iniciando e indisponivel para uso';
