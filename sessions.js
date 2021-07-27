@@ -748,8 +748,8 @@ module.exports = class Sessions {
     session.state = "CONNECTED";
     session.browserSessionToken = browserSessionToken;
     //
-    //const pid = client.browser.process().pid;
-    console.log(client);
+    const pid = client.browser.process().pid;
+    console.log('- Browser PID:', pid);
     //
     return client;
   } //initSession
