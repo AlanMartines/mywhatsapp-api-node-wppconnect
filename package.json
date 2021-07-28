@@ -30,7 +30,7 @@
   },
   "homepage": "https://github.com/AlanMartines/mywhatsapp-api-node-wppconnect#readme",
   "dependencies": {
-    "@wppconnect-team/wppconnect": "^1.8.8",
+    "@wppconnect-team/wppconnect": "^1.8.9",
     "async-get-file": "^1.0.4",
     "atob": "^2.1.2",
     "axios": "^0.21.1",
@@ -57,7 +57,7 @@
     "https": "^1.0.0",
     "jsonwebtoken": "^8.5.1",
     "latest-version": "^6.0.0",
-    "mime-types": "^2.1.31",
+    "mime-types": "^2.1.32",
     "morgan": "~1.10.0",
     "multer": "^1.4.2",
     "mysql2": "^2.2.5",
