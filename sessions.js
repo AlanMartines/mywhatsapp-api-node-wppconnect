@@ -18,7 +18,7 @@ const con = require("./config/dbConnection");
 //
 // ------------------------------------------------------------------------------------------------------- //
 //
-async function DataHora() {
+async function DataHora(dateFormat) {
   //
   let date_ob = new Date();
 
@@ -56,7 +56,24 @@ async function DataHora() {
   // Imprime a hora no formato HH:MM:SS
   console.log(hours + ":" + minutes + ":" + seconds);
   //
-  return date + "/" + month + "/" + year + " " + hours + ":" + minutes + ":" + seconds;
+  if (dateFormat === 1) {
+    // Imprime a data no formato AAAA-MM-DD
+    return year + "-" + month + "-" + date;
+  } else if (dateFormat === 2) {
+    // Imprime a data no formato DD/MM/YYYY
+    return date + "/" + month + "/" + year;
+  } else if (dateFormat === 3) {
+    // Imprime data e hora no formato AAAA-MM-DD HH:MM:SS
+    return year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds;
+  } else if (dateFormat === 4) {
+    // Imprime data e hora no formato DD/MM/YYYY HH:MM:SS
+    return date + "/" + month + "/" + year + " " + hours + ":" + minutes + ":" + seconds;
+  } else if (dateFormat === 5) {
+    // Imprime a hora no formato HH:MM:SS
+    return hours + ":" + minutes + ":" + seconds;
+  } else {
+    return '---';
+  }
 }
 //
 async function saudacao() {
@@ -102,8 +119,10 @@ async function osplatform() {
 //
 async function updateStateDb(state, status, session_venom) {
   //
-  const sql = "UPDATE tokens SET state=?, status=? WHERE token=?";
-  const values = [state, status, session_venom];
+  const varDate = await DataHora(3);
+  //
+  const sql = "UPDATE tokens SET state=?, status=? , lastactivit=? WHERE token=?";
+  const values = [state, status, session_venom, varDate];
   const resUpdate = await conn.execute(sql, values);
   if (resUpdate) {
     console.log('- Status atualizado');
