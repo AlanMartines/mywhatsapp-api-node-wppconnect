@@ -40,7 +40,7 @@ async function DataHora(dateFormat) {
 
   // Segundo atual
   let seconds = date_ob.getSeconds();
-
+  /*
   // Imprime a data no formato AAAA-MM-DD
   console.log(year + "-" + month + "-" + date);
 
@@ -55,6 +55,7 @@ async function DataHora(dateFormat) {
 
   // Imprime a hora no formato HH:MM:SS
   console.log(hours + ":" + minutes + ":" + seconds);
+	*/
   //
   // Imprime data e hora no formato AAAA-MM-DD HH:MM:SS
   return year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds;
