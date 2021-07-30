@@ -79,7 +79,7 @@ exports.verify = async (req, res, next) => {
                 "result": "info",
                 "state": "FAILURE",
                 "status": "notValid",
-                "message": "Token vencido, contate o administrador do sistema"
+                "message": "Token vencido, efetue a renovação"
               }
             });
           }
