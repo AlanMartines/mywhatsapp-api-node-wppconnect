@@ -281,7 +281,7 @@ router.post("/getHardWare", upload.none(''), verifyToken.verify, async (req, res
 // ------------------------------------------------------------------------------------------------//
 //
 // Fecha a sessão
-router.post("/Close", upload.none(''), verifyToken.verify, async (req, res, next) => {
+router.post("/Close", upload.none(''), async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
     case 'inChat':
@@ -305,7 +305,7 @@ router.post("/Close", upload.none(''), verifyToken.verify, async (req, res, next
 // ------------------------------------------------------------------------------------------------//
 //
 // Desconecta do whatsapp web
-router.post("/Logout", upload.none(''), verifyToken.verify, async (req, res, next) => {
+router.post("/Logout", upload.none(''), async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
     case 'inChat':
