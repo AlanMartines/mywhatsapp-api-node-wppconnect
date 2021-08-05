@@ -2644,6 +2644,8 @@ router.post("/stopPhoneWatchdog", upload.none(''), verifyToken.verify, async (re
 //
 router.post("/RotaTeste", upload.none(''), async (req, res, next) => {
   //
+  console.log(req.body);
+  //
   res.status(200).json({
     "STATUS": "OK",
     "MENSAGEM": "Cliente gravado com sucesso!"
