@@ -2642,13 +2642,26 @@ router.post("/stopPhoneWatchdog", upload.none(''), verifyToken.verify, async (re
 //
 // ------------------------------------------------------------------------------------------------//
 //
-router.post("/RotaTeste", upload.none(''), async (req, res, next) => {
+router.post("/RotaTeste1", upload.none(''), async (req, res, next) => {
   //
   console.log(req.body);
   //
   res.status(200).json({
     "STATUS": "OK",
     "MENSAGEM": "Cliente gravado com sucesso!"
+  });
+  //
+});
+//
+// ------------------------------------------------------------------------------------------------//
+//
+router.post("/RotaTeste2", upload.none(''), async (req, res, next) => {
+  //
+  console.log(req.body);
+  //
+  res.status(200).json({
+    "STATUS": "ERRO",
+    "MENSAGEM": "Cliente já cadastrado."
   });
   //
 });
