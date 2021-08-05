@@ -2644,7 +2644,9 @@ router.post("/stopPhoneWatchdog", upload.none(''), verifyToken.verify, async (re
 //
 router.post("/RotaTeste", upload.none(''), async (req, res, next) => {
   //
-  console.log(req);
+  res.status(200).json({
+    "Result": req
+  });
   //
 });
 //
