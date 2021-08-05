@@ -2642,13 +2642,9 @@ router.post("/stopPhoneWatchdog", upload.none(''), verifyToken.verify, async (re
 //
 // ------------------------------------------------------------------------------------------------//
 //
-router.post("/RotaTeste", verifyToken.verify, upload.single('file'), verifyToken.verify, async (req, res, next) => {
+router.post("/RotaTeste", upload.none(''), async (req, res, next) => {
   //
-  res.status(200).json({
-    auth: true,
-    token: req.userToken,
-    message: 'Token validate'
-  });
+  console.log(req);
   //
 });
 //
