@@ -2647,8 +2647,8 @@ router.post("/RotaTeste1", upload.none(''), async (req, res, next) => {
   console.log(req.body);
   //
   res.status(200).json({
-    "STATUS": "OK",
-    "MENSAGEM": "Cliente gravado com sucesso!"
+    "STATUS": "success",
+    "MENSAGEM": "Cadastro gravado com sucesso."
   });
   //
 });
@@ -2660,8 +2660,34 @@ router.post("/RotaTeste2", upload.none(''), async (req, res, next) => {
   console.log(req.body);
   //
   res.status(200).json({
-    "STATUS": "ERRO",
+    "STATUS": "error",
+    "MENSAGEM": "Erro ao efetuar cadastro."
+  });
+  //
+});
+//
+// ------------------------------------------------------------------------------------------------//
+//
+router.post("/RotaTeste3", upload.none(''), async (req, res, next) => {
+  //
+  console.log(req.body);
+  //
+  res.status(200).json({
+    "STATUS": "info",
     "MENSAGEM": "Cliente já cadastrado."
+  });
+  //
+});
+//
+// ------------------------------------------------------------------------------------------------//
+//
+router.post("/RotaTeste4", upload.none(''), async (req, res, next) => {
+  //
+  console.log(req.body);
+  //
+  res.status(200).json({
+    "STATUS": "warning",
+    "MENSAGEM": "Serviço indisponível no momento."
   });
   //
 });
