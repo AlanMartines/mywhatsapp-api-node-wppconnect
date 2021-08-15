@@ -26,7 +26,7 @@ fs.access("./config/server.config.json", fs.constants.F_OK, (err) => {
         "tokenspatch_linux": "/usr/local/tokens",
         "tokenspatch_win": "c:/tokens",
         "_comment_mysql": "Conexão com bando de dados",
-        "validate_mysql": true,
+        "validate_mysql": false,
         "host_mysql": "localhost",
         "user_mysql": "user",
         "password_mysql": "password",
