@@ -7,6 +7,7 @@ const {
 } = require('p-iteration');
 const axios = require('axios');
 const wppconnect = require('@wppconnect-team/wppconnect');
+const conn = require('./config/dbConnection').promise();
 const serverConfig = require("./config/server.config.json");
 const io = require("socket.io-client"),
   ioClient = io.connect("http://" + serverConfig.host + ":" + serverConfig.port);
@@ -105,18 +106,15 @@ async function updateStateDb(state, status, session_venom) {
   //
   const varDate = await DataHora();
   //
-  if (serverConfig.validate_mysql === true) {
-    const conn = require('./config/dbConnection').promise();
-    const sql = "UPDATE tokens SET state=?, status=? , lastactivit=? WHERE token=?";
-    const values = [state, status, varDate, session_venom];
-    const resUpdate = await conn.execute(sql, values);
-    if (resUpdate) {
-      console.log('- Status atualizado');
-    } else {
-      console.log('- Status não atualizado');
-    }
-    //
+  const sql = "UPDATE tokens SET state=?, status=? , lastactivit=? WHERE token=?";
+  const values = [state, status, varDate, session_venom];
+  const resUpdate = await conn.execute(sql, values);
+  if (resUpdate) {
+    console.log('- Status atualizado');
+  } else {
+    console.log('- Status não atualizado');
   }
+  //
 }
 //
 // ------------------------------------------------------------------------------------------------------- //
