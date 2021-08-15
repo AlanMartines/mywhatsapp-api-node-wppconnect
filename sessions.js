@@ -6,7 +6,7 @@ const {
   forEach
 } = require('p-iteration');
 const axios = require('axios');
-const wppconnect = require('@wppconnect-team/wppconnect');
+const wppconnect = require('./wppconnect/dist/');
 const conn = require('./config/dbConnection').promise();
 const serverConfig = require("./config/server.config.json");
 const io = require("socket.io-client"),
