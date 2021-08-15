@@ -30,7 +30,7 @@
   },
   "homepage": "https://github.com/AlanMartines/mywhatsapp-api-node-wppconnect#readme",
   "dependencies": {
-    "@wppconnect-team/wppconnect": "^1.8.8",
+    "@wppconnect-team/wppconnect": "^1.8.12",
     "async-get-file": "^1.0.4",
     "atob": "^2.1.2",
     "axios": "^0.21.1",
@@ -64,7 +64,7 @@
     "ora": "^5.4.1",
     "p-iteration": "^1.1.8",
     "path": "^0.12.7",
-    "puppeteer": "^10.1.0",
+    "puppeteer": "^10.2.0",
     "puppeteer-extra": "^3.1.18",
     "puppeteer-extra-plugin-stealth": "^2.7.8",
     "qrcode": "^1.4.4",
