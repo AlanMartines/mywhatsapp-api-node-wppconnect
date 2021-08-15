@@ -106,15 +106,17 @@ async function updateStateDb(state, status, session_venom) {
   //
   const varDate = await DataHora();
   //
-  const sql = "UPDATE tokens SET state=?, status=? , lastactivit=? WHERE token=?";
-  const values = [state, status, varDate, session_venom];
-  const resUpdate = await conn.execute(sql, values);
-  if (resUpdate) {
-    console.log('- Status atualizado');
-  } else {
-    console.log('- Status não atualizado');
+  if (serverConfig.validate_mysql === true) {
+    const sql = "UPDATE tokens SET state=?, status=? , lastactivit=? WHERE token=?";
+    const values = [state, status, varDate, session_venom];
+    const resUpdate = await conn.execute(sql, values);
+    if (resUpdate) {
+      console.log('- Status atualizado');
+    } else {
+      console.log('- Status não atualizado');
+    }
+    //
   }
-  //
 }
 //
 // ------------------------------------------------------------------------------------------------------- //
