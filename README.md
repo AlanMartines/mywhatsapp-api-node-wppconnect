@@ -44,10 +44,10 @@ sudo apt autoremove -y
 cd ~
 
 # Clone este repositório
-git clone https://github.com/AlanMartines/mywhatsapp-api-node-wppconnect.git
+git clone https://github.com/AlanMartines/mywhatsapp-api-node-wppconnect.git ApiWPPConnect
 
 # Acesse a pasta do projeto no terminal/cmd
-cd mywhatsapp-api-node-wppconnect
+cd ApiWPPConnect
 
 # Instale as dependências
 npm install
