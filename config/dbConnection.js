@@ -26,12 +26,12 @@ const dbConnectionInfo = {
 }); 
 //
 */
-//Create mysql connection pool
-var dbconnection = mysql.createPool(
-  dbConnectionInfo
-);
-//
 if (serverConfig.validate_mysql === true) {
+  //Create mysql connection pool
+  var dbconnection = mysql.createPool(
+    dbConnectionInfo
+  );
+  //
   // Attempt to catch disconnects 
   dbconnection.on('connection', function(connection) {
     console.log('- DB Connection established');
