@@ -60,6 +60,21 @@ cd ApiWPPConnect
 # Instale as dependências
 npm install
 
+# Clone este repositório
+git clone https://github.com/wppconnect-team/wppconnect.git
+
+# Acesse a pasta do projeto no terminal/cmd
+cd wppconnect
+
+# Instale as dependências
+npm install
+
+# Building WPPConnect
+npm run build
+
+# Ir para seu diretório anterior
+cd ..
+
 # Execute a aplicação
 node server.js
 
