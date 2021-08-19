@@ -933,7 +933,7 @@ module.exports = class Sessions {
             state: session.state,
             status: session.status,
             qrcode: session.qrcode,
-            message: "Erro ao fechar sessão"
+            message: "Sessão fechada com sucesso"
           };
           //
         } else {
