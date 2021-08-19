@@ -19,7 +19,7 @@ fs.access("./config/server.config.json", fs.constants.F_OK, (err) => {
         "_comment_host": "Configuração do host",
         "host": "0.0.0.0",
         "port": "9001",
-        "view_qrcode_terminal": true,
+        "view_qrcode_terminal": false,
         "_comment_jwt": "Configuração do jwt",
         "jwt_secret": "09f26e402586e2faa8da4c98a35f1b20d6b033c60",
         "_comment_token": "Pasta de tokens",
