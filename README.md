@@ -91,10 +91,7 @@ echo "http://dl-cdn.alpinelinux.org/alpine/v3.9/community" >> /etc/apk/repositor
 apk update &&
 apk upgrade &&
 # Add the packages
-apk add --update --no-cache dumb-init curl make gcc g++ linux-headers binutils-gold gnupg libstdc++ nss chromium chromium-chromedriver git vim curl yarn nodejs nodejs-npm npm python python3 dpkg wget &&
-dpkg --add-architecture amd64 &&
-wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb &&
-dpkg -i google-chrome-stable_current_amd64.deb
+apk add --update --no-cache dumb-init curl make gcc g++ linux-headers binutils-gold gnupg libstdc++ nss chromium chromium-chromedriver git vim curl yarn nodejs nodejs-npm npm python python3 dpkg wget
 ```
 
 #### Instale o Google Chrome Debian (e.g. Ubuntu) 64bits
@@ -111,6 +108,12 @@ sudo apt install ./google-chrome-stable_current_amd64.deb
 wget https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm
 
 sudo yum install ./google-chrome-stable_current_*.rpm
+```
+
+#### Instale o Google Chrome Alpine 64bits
+
+```bash
+apk add chromium chromium-chromedriver
 ```
 
 #### Instale o NodeJs Debian (e.g. Ubuntu)
