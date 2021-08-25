@@ -166,12 +166,6 @@ sudo yum autoremove -y
 # Ir para seu diretório home
 cd ~
 
-# Recuperar o script de instalação para sua versão de preferência
-curl -sL https://rpm.nodesource.com/setup_14.x | sudo bash -
-
-# Execute o script
-sudo yum install nodejs
-
 # Instalar o pacote Node.js
 apk add --update nodejs nodejs-npm
 ```
