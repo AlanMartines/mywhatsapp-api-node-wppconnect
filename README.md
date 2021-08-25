@@ -49,6 +49,7 @@ libxrender1 \
 libxss1 \
 libxtst6 \
 lsb-release \
+libu2f-udev \
 wget \
 xdg-utils
 ```
@@ -170,6 +171,21 @@ cd ~
 apk add --update nodejs nodejs-npm
 ```
 
+#### Instale o MySQL Debian (e.g. Ubuntu)
+
+###### Instalar
+
+```bash
+#Atualize o índice de pacotes em seu servidor se ainda não tiver feito isso
+sudo apt update
+
+#Instale o pacote mysql-server
+sudo apt install mysql-server -y
+
+#Execute o script de segurança
+sudo mysql_secure_installation
+```
+
 ## Rodando a aplicação
 
 ```bash
@@ -222,98 +238,6 @@ pm2 unstartup systemd
 # Pronto, escaneie o código QR-Code do Whatsapp e aproveite!
 ```
 
-#### Json (POST)
-
-```json
-{
-  "AuthorizationToken": "a56ad842-c707-4446-871c-e570240cd730",
-  "SessionName": "teste"
-	...
-}
-```
-
-#### Iniciar sessão whatsapp (POST method)
-
-```node
-router.post("/Start", (req, res, next) => {
-  const response = await fetch("http://localhost:9001/sistema/Start", {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      AuthorizationToken: req.body.AuthorizationToken,
-      sessionName: req.body.SessionName,
-    }),
-  });
-  const content = await response.json();
-  return content;
-});
-```
-
-#### Exibir QR-Code no navegador (POST method)
-
-```node
-router.post("/QRCode", (req, res, next) => {
-  const response = await fetch("http://localhost:9001/sistema/QRCode", {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      AuthorizationToken: req.body.AuthorizationToken,
-      sessionName: req.body.SessionName,
-      View: "true",
-    }),
-  });
-  const content = await response.json();
-  return content;
-});
-```
-
-#### Retorna json com (base64) do QR-Code (POST method)
-
-```node
-router.post("/QRCode", (req, res, next) => {
-  const response = await fetch("http://localhost:9001/sistema/QRCode", {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      AuthorizationToken: req.body.AuthorizationToken,
-      sessionName: req.body.SessionName,
-      View: "false",
-    }),
-  });
-  const content = await response.json();
-  return content;
-});
-```
-
-#### Fecha sessão whatsapp (POST method)
-
-```node
-router.post("/Close", (req, res, next) => {
-  const response = await fetch("http://localhost:9001/sistema/Close", {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      AuthorizationToken: req.body.AuthorizationToken,
-      sessionName: req.body.SessionName,
-    }),
-  });
-  const content = await response.json();
-  return content;
-});
-```
-
 ## Gerar TOKEN_SECRET para uso no jwt
 
 ```bash
@@ -323,9 +247,9 @@ node -e "console.log(require('crypto').randomBytes(256).toString('base64'));"
 ## Criar pasta tokens (Linux)
 
 ```bash
-mkdir /usr/local/tokens
+sudo mkdir /usr/local/tokens
 
-chmod -R 755 /usr/local/tokens
+sudo chmod -R 755 /usr/local/tokens
 ```
 
 ## Criar pasta tokens (Windows)
@@ -373,6 +297,98 @@ CREATE TABLE IF NOT EXISTS `tokens` (
   `lastactivit` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb3;
+```
+
+#### Json (POST)
+
+```json
+{
+  "AuthorizationToken": "a56ad842-c707-4446-871c-e570240cd730",
+  "SessionName": "teste"
+	...
+}
+```
+
+#### Iniciar sessão whatsapp (POST method)
+
+```js
+router.post("/Start", (req, res, next) => {
+  const response = await fetch("http://localhost:9001/sistema/Start", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      AuthorizationToken: req.body.AuthorizationToken,
+      sessionName: req.body.SessionName,
+    }),
+  });
+  const content = await response.json();
+  return content;
+});
+```
+
+#### Exibir QR-Code no navegador (POST method)
+
+```js
+router.post("/QRCode", (req, res, next) => {
+  const response = await fetch("http://localhost:9001/sistema/QRCode", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      AuthorizationToken: req.body.AuthorizationToken,
+      sessionName: req.body.SessionName,
+      View: "true",
+    }),
+  });
+  const content = await response.json();
+  return content;
+});
+```
+
+#### Retorna json com (base64) do QR-Code (POST method)
+
+```js
+router.post("/QRCode", (req, res, next) => {
+  const response = await fetch("http://localhost:9001/sistema/QRCode", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      AuthorizationToken: req.body.AuthorizationToken,
+      sessionName: req.body.SessionName,
+      View: "false",
+    }),
+  });
+  const content = await response.json();
+  return content;
+});
+```
+
+#### Fecha sessão whatsapp (POST method)
+
+```js
+router.post("/Close", (req, res, next) => {
+  const response = await fetch("http://localhost:9001/sistema/Close", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      AuthorizationToken: req.body.AuthorizationToken,
+      sessionName: req.body.SessionName,
+    }),
+  });
+  const content = await response.json();
+  return content;
+});
 ```
 
 ## Dockerfile
