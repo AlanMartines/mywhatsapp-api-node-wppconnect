@@ -17,7 +17,7 @@ const con = require("./config/dbConnection");
 //
 // ------------------------------------------------------------------------------------------------------- //
 //
-async function DataHora(dateFormat) {
+async function DataHora() {
   //
   let date_ob = new Date();
 
@@ -103,11 +103,11 @@ async function osplatform() {
 //
 async function updateStateDb(state, status, session_venom) {
   //
+  const sql = "UPDATE tokens SET state=?, status=? WHERE token=?";
+  const values = [state, status, session_venom];
+  //
   if (serverConfig.validate_mysql == true) {
-    //
     const conn = require('./config/dbConnection').promise();
-    const sql = "UPDATE tokens SET state=?, status=? WHERE token=?";
-    const values = [state, status, session_venom];
     const resUpdate = await conn.execute(sql, values);
     if (resUpdate) {
       console.log('- Status atualizado');
