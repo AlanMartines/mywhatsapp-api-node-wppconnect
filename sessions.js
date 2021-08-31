@@ -57,6 +57,8 @@ async function DataHora() {
 	*/
   //
   // Imprime data e hora no formato AAAA-MM-DD HH:MM:SS
+  console.log("Date:", year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds);
+  //
   return year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds;
 }
 //
