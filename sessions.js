@@ -57,8 +57,6 @@ async function DataHora() {
 	*/
   //
   // Imprime data e hora no formato AAAA-MM-DD HH:MM:SS
-  console.log("Date:", year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds);
-  //
   return year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds;
 }
 //
@@ -106,9 +104,11 @@ async function osplatform() {
 async function updateStateDb(state, status, session_venom) {
   //
   const date_now = DataHora();
+  console.log("Date:", date_now);
   //
-  const sql = "UPDATE tokens SET state=?, status=? WHERE token=?";
-  const values = [state, status, session_venom];
+  //
+  const sql = "UPDATE tokens SET state=?, status=?, lastactivit=? WHERE token=?";
+  const values = [state, status, date_now, session_venom];
   //
   if (serverConfig.validate_mysql == true) {
     const conn = require('./config/dbConnection').promise();
