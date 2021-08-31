@@ -105,6 +105,8 @@ async function osplatform() {
 //
 async function updateStateDb(state, status, session_venom) {
   //
+  const date_now = DataHora();
+  //
   const sql = "UPDATE tokens SET state=?, status=? WHERE token=?";
   const values = [state, status, session_venom];
   //
