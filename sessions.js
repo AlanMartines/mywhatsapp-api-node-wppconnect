@@ -103,7 +103,7 @@ async function osplatform() {
 //
 async function updateStateDb(state, status, session_venom) {
   //
-  const date_now = DataHora();
+  const date_now = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
   console.log("Date:", date_now);
   //
   //
