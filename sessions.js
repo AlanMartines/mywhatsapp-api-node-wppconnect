@@ -2188,9 +2188,9 @@ module.exports = class Sessions {
     var session = Sessions.getSession(SessionName);
     var resultdemoteParticipant = await session.client.then(async client => {
       return await client.demoteParticipant(groupId, phonefull).then((result) => {
-        console.log('Result: ', demoteParticipant); //return object success
+        console.log('Result: ', result); //return object success
         //
-        if (demoteParticipant === true) {
+        if (result === true) {
           return {
             "erro": false,
             "status": 200,
