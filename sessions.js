@@ -1595,7 +1595,7 @@ module.exports = class Sessions {
     var session = Sessions.getSession(SessionName);
     var resultgetAllGroups = await session.client.then(async client => {
       return await client.getAllGroups().then(async (result) => {
-        console.log('Result: ', result); //return object success
+        //console.log('Result: ', result); //return object success
         //
         var getAllGroups = [];
         //
