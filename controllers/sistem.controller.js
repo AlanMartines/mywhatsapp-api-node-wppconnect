@@ -1190,6 +1190,38 @@ router.post("/sendFileToBase64", upload.single('file'), verifyToken.verify, asyn
   }
 }); //sendFileBase64
 //
+// ------------------------------------------------------------------------------------------------//
+//
+// Enviar arquivo/documento
+router.post("/sendFileToBase64Group", upload.single('file'), verifyToken.verify, async (req, res, next) => {
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var sendFileToBase64 = await Sessions.sendFileFromBase64(
+        req.body.SessionName.trim(),
+        req.body.GroupId.trim() + '@c-g.us',
+        req.file.buffer.toString('base64'),
+        req.file.mimetype,
+        req.file.originalname,
+        req.body.msg
+      );
+      //
+      //console.log(result);
+      res.status(200).json({
+        sendFileToBase64
+      });
+      break;
+    default:
+      res.status(400).json({
+        "sendFileToBase64": sessionStatus
+      });
+  }
+}); //sendFileToBase64Group
+//
 // ------------------------------------------------------------------------------------------------------- //
 //
 // Enviar arquivo/documento
