@@ -1601,7 +1601,7 @@ module.exports = class Sessions {
         //
         await forEach(result, async (resultAllContacts) => {
           //
-          if (resultAllContacts.isGroup === true && resultAllContacts.isUser === false) {
+          if (resultAllContacts.isGroup === true) {
             //
             getAllGroups.push({
               "user": resultAllContacts.id.user,
