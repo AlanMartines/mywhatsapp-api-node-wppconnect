@@ -104,7 +104,7 @@ async function osplatform() {
 async function updateStateDb(state, status, session_venom) {
   //
   const date_now = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
-  console.log("Date:", date_now);
+  console.log("- Date:", date_now);
   //
   //
   const sql = "UPDATE tokens SET state=?, status=?, lastactivit=? WHERE token=?";
@@ -1450,7 +1450,7 @@ module.exports = class Sessions {
         number,
         filePath
       ).then((result) => {
-        console.log('Result: ', result); //return object success
+        //console.log('Result: ', result); //return object success
         //return (result);
         //
         return {
@@ -1463,7 +1463,7 @@ module.exports = class Sessions {
         };
         //
       }).catch((erro) => {
-        console.error('Error when sending: ', erro); //return object error
+        //console.error('Error when sending: ', erro); //return object error
         //return (erro);
         //
         return {
