@@ -1610,11 +1610,6 @@ module.exports = class Sessions {
               "isMyContact": resultAllContacts.isMyContact,
               "isWAContact": resultAllContacts.isWAContact,
               "isBusiness": resultAllContacts.isBusiness,
-              "profilePicThumbObj": {
-                "eurl": resultAllContacts.profilePicThumbObj.eurl,
-                "img": resultAllContacts.profilePicThumbObj.img,
-                "imgFull": resultAllContacts.profilePicThumbObj.imgFull
-              }
             });
           }
           //
