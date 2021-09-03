@@ -1112,6 +1112,44 @@ router.post("/sendFileBase64", upload.none(''), verifyToken.verify, async (req, 
 // ------------------------------------------------------------------------------------------------//
 //
 // Enviar arquivo/documento
+router.post("/sendFileBase64Group", upload.none(''), verifyToken.verify, async (req, res, next) => {
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + req.body.SessionName.trim() + '-'));
+      var filePath = path.join(folderName, req.body.originalname);
+      fs.writeFileSync(filePath, req.body.base64, 'base64');
+      console.log("- File", filePath);
+      //
+      var sendFileBase64 = await Sessions.sendFile(
+        req.body.SessionName.trim(),
+        req.body.GroupId + '@g.us',
+        filePath,
+        req.body.originalname,
+        req.body.caption
+      );
+      //
+      await deletaArquivosTemp(filePath);
+      //
+      //console.log(result);
+      res.status(200).json({
+        sendFileBase64
+      });
+      break;
+    default:
+      res.status(400).json({
+        "sendFileBase64": sessionStatus
+      });
+  }
+}); //sendFileBase64Group
+//
+// ------------------------------------------------------------------------------------------------//
+//
+// Enviar arquivo/documento
 router.post("/sendFileToBase64", upload.single('file'), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
