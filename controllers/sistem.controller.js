@@ -1062,9 +1062,6 @@ router.post("/sendFile", upload.single('file'), verifyToken.verify, async (req, 
 //
 // ------------------------------------------------------------------------------------------------//
 //
-//
-// ------------------------------------------------------------------------------------------------//
-//
 // Enviar arquivo/documento
 router.post("/sendFileGroup", upload.single('file'), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
@@ -1307,9 +1304,6 @@ router.post("/sendFileFromBase64", upload.none(''), verifyToken.verify, async (r
 }); //sendFileFromBase64
 //
 // ------------------------------------------------------------------------------------------------//
-//
-//
-// ------------------------------------------------------------------------------------------------------- //
 //
 // Enviar arquivo/documento
 router.post("/sendFileFromBase64Group", upload.none(''), verifyToken.verify, async (req, res, next) => {
