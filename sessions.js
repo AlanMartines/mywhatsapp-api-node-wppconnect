@@ -1450,7 +1450,7 @@ module.exports = class Sessions {
         number,
         filePath
       ).then((result) => {
-        //console.log('Result: ', result); //return object success
+        console.log('Result: ', result); //return object success
         //return (result);
         //
         return {
@@ -1463,7 +1463,7 @@ module.exports = class Sessions {
         };
         //
       }).catch((erro) => {
-        //console.error('Error when sending: ', erro); //return object error
+        console.error('Error when sending: ', erro); //return object error
         //return (erro);
         //
         return {
