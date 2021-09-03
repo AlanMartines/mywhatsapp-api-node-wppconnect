@@ -2162,7 +2162,7 @@ module.exports = class Sessions {
         }
         //
       }).catch((erro) => {
-        console.error('Error when sending: ', erro); //return object error
+        //console.error('Error when sending: ', erro); //return object error
         //
         return {
           "erro": true,
@@ -2188,7 +2188,7 @@ module.exports = class Sessions {
     var session = Sessions.getSession(SessionName);
     var resultdemoteParticipant = await session.client.then(async client => {
       return await client.demoteParticipant(groupId, phonefull).then((result) => {
-        console.log('Result: ', result); //return object success
+        //console.log('Result: ', result); //return object success
         //
         if (result === true) {
           return {
