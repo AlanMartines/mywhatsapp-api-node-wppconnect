@@ -1323,14 +1323,14 @@ router.post("/sendImageAsStickerGif", upload.single('file'), verifyToken.verify,
       //
       var checkNumberStatus = await Sessions.checkNumberStatus(
         req.body.SessionName.trim(),
-        soNumeros(req.body.phonefull) + '@c.us'
+        soNumeros(req.body.phonefull).trim() + '@c.us'
       );
       //
       if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
         //
         var sendImageAsStickerGif = await Sessions.sendImageAsStickerGif(
           req.body.SessionName.trim(),
-          soNumeros(checkNumberStatus.number) + '@c.us',
+          soNumeros(checkNumberStatus.number).trim() + '@c.us',
           filePath
         );
         //
