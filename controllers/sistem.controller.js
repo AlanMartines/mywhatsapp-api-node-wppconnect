@@ -559,7 +559,7 @@ router.post("/sendTextGrupo", upload.none(''), verifyToken.verify, async (req, r
       //
       var sendTextGrupo = await Sessions.sendText(
         req.body.SessionName.trim(),
-        req.body.GroupId + '@g.us',
+        req.body.groupId + '@g.us',
         req.body.msg
       );
       //
@@ -630,7 +630,7 @@ router.post("/sendLocationGroup", upload.none(''), verifyToken.verify, async (re
       //
       var sendLocationGroup = await Sessions.sendLocation(
         req.body.SessionName.trim(),
-        req.body.GroupId + '@g.us',
+        req.body.groupId + '@g.us',
         req.body.lat,
         req.body.long,
         req.body.local
@@ -989,7 +989,7 @@ router.post("/sendImageGrupo", upload.single('fileimg'), verifyToken.verify, asy
       //
       var sendImageGrupo = await Sessions.sendImage(
         req.body.SessionName.trim(),
-        req.body.GroupId + '@g.us',
+        req.body.groupId + '@g.us',
         filePath,
         req.file.originalname,
         req.body.caption
@@ -1081,7 +1081,7 @@ router.post("/sendFileGroup", upload.single('file'), verifyToken.verify, async (
       //
       var sendFile = await Sessions.sendFile(
         req.body.SessionName.trim(),
-        req.body.GroupId.trim() + '@g.us',
+        req.body.groupId.trim() + '@g.us',
         filePath,
         req.file.originalname,
         req.body.caption
@@ -1168,7 +1168,7 @@ router.post("/sendFileBase64Group", upload.none(''), verifyToken.verify, async (
       //
       var sendFileBase64 = await Sessions.sendFile(
         req.body.SessionName.trim(),
-        req.body.GroupId + '@g.us',
+        req.body.groupId + '@g.us',
         filePath,
         req.body.originalname,
         req.body.caption
@@ -1244,7 +1244,7 @@ router.post("/sendFileToBase64Group", upload.single('file'), verifyToken.verify,
       //
       var sendFileToBase64 = await Sessions.sendFileFromBase64(
         req.body.SessionName.trim(),
-        req.body.GroupId.trim() + '@g.us',
+        req.body.groupId.trim() + '@g.us',
         req.file.buffer.toString('base64'),
         req.file.mimetype,
         req.file.originalname,
@@ -1322,7 +1322,7 @@ router.post("/sendFileFromBase64Group", upload.none(''), verifyToken.verify, asy
       //
       var sendFileFromBase64 = await Sessions.sendFileFromBase64(
         req.body.SessionName.trim(),
-        req.body.GroupId.trim() + '@g.us',
+        req.body.groupId.trim() + '@g.us',
         req.body.base64Data,
         req.body.mimetype,
         req.body.originalname,
