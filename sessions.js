@@ -1606,10 +1606,7 @@ module.exports = class Sessions {
             getAllGroups.push({
               "user": resultAllContacts.id.user,
               "name": resultAllContacts.name,
-              "formattedName": resultAllContacts.formattedName,
-              "isMyContact": resultAllContacts.isMyContact,
-              "isWAContact": resultAllContacts.isWAContact,
-              "isBusiness": resultAllContacts.isBusiness,
+              "formattedName": resultAllContacts.contact.formattedName
             });
           }
           //
