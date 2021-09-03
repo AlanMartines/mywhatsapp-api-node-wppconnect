@@ -1161,6 +1161,7 @@ module.exports = class Sessions {
         return {
           "erro": false,
           "status": 200,
+          "number": number,
           "canReceiveMessage": true,
           "message": "Menssagem enviada com sucesso."
         };
@@ -1173,6 +1174,7 @@ module.exports = class Sessions {
         return {
           "erro": true,
           "status": 404,
+          "number": number,
           "canReceiveMessage": false,
           "message": "Erro ao enviar menssagem"
         };
