@@ -1601,8 +1601,6 @@ module.exports = class Sessions {
         //
         await forEach(result, async (resultAllContacts) => {
           //
-          console.log(resultAllContacts);
-          //
           if (resultAllContacts.isGroup === true && resultAllContacts.isUser === false) {
             //
             getAllGroups.push({
