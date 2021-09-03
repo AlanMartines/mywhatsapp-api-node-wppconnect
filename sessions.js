@@ -1599,7 +1599,9 @@ module.exports = class Sessions {
         //
         var getAllGroups = [];
         //
-        await forEach(result[0], async (resultAllContacts) => {
+        await forEach(result, async (resultAllContacts) => {
+          //
+          console.log(resultAllContacts);
           //
           if (resultAllContacts.isMyContact === false && resultAllContacts.isUser === false) {
             //
