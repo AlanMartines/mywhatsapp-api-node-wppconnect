@@ -1623,7 +1623,7 @@ module.exports = class Sessions {
         return getAllGroups;
         //
       }).catch((erro) => {
-        //console.error('Error when sending: ', erro); //return object error
+        console.error('Error when sending: ', erro); //return object error
         //
         return {
           "erro": true,
