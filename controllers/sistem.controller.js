@@ -1386,12 +1386,12 @@ router.post("/getAllGroups", upload.none(''), verifyToken.verify, async (req, re
     case 'isLogged':
     case 'chatsAvailable':
       //
-      var getAllContacts = await Sessions.getAllGroups(
+      var getAllGroups = await Sessions.getAllGroups(
         req.body.SessionName
       );
       //
       res.json({
-        getAllContacts
+        getAllGroups
       });
       break;
     default:

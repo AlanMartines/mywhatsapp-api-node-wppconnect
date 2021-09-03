@@ -1593,17 +1593,17 @@ module.exports = class Sessions {
     console.log("- Obtendo todos os grupos!");
     //
     var session = Sessions.getSession(SessionName);
-    var resultgetAllContacts = await session.client.then(async client => {
+    var resultgetAllGroups = await session.client.then(async client => {
       return await client.getAllGroups().then(async (result) => {
         console.log('Result: ', result); //return object success
         //
-        var getChatGroupNewMsg = [];
+        var getAllGroups = [];
         //
-        await forEach(result, async (resultAllContacts) => {
+        await forEach(result[0], async (resultAllContacts) => {
           //
           if (resultAllContacts.isMyContact === false && resultAllContacts.isUser === false) {
             //
-            getChatGroupNewMsg.push({
+            getAllGroups.push({
               "user": resultAllContacts.id.user,
               "name": resultAllContacts.name,
               "formattedName": resultAllContacts.formattedName,
@@ -1620,7 +1620,7 @@ module.exports = class Sessions {
           //
         });
         //
-        return getChatGroupNewMsg;
+        return getAllGroups;
         //
       }).catch((erro) => {
         //console.error('Error when sending: ', erro); //return object error
@@ -1637,8 +1637,8 @@ module.exports = class Sessions {
       //
     });
     //
-    return resultgetAllContacts;
-  } //getAllContacts
+    return resultgetAllGroups;
+  } //getAllGroups
   //
   // ------------------------------------------------------------------------------------------------//
   //
