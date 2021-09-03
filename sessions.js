@@ -1603,7 +1603,7 @@ module.exports = class Sessions {
           //
           console.log(resultAllContacts);
           //
-          if (resultAllContacts.isMyContact === false && resultAllContacts.isUser === false) {
+          if (resultAllContacts.isGroup === true && resultAllContacts.isUser === false) {
             //
             getAllGroups.push({
               "user": resultAllContacts.id.user,
