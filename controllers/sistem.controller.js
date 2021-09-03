@@ -1267,6 +1267,41 @@ router.post("/sendFileFromBase64", upload.none(''), verifyToken.verify, async (r
 //
 // ------------------------------------------------------------------------------------------------//
 //
+//
+// ------------------------------------------------------------------------------------------------------- //
+//
+// Enviar arquivo/documento
+router.post("/sendFileFromBase64Group", upload.none(''), verifyToken.verify, async (req, res, next) => {
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var sendFileFromBase64 = await Sessions.sendFileFromBase64(
+        req.body.SessionName.trim(),
+        req.body.GroupId.trim() + '@g.us',
+        req.body.base64Data,
+        req.body.mimetype,
+        req.body.originalname,
+        req.body.msg
+      );
+      //
+      //console.log(result);
+      res.status(200).json({
+        sendFileFromBase64
+      });
+      break;
+    default:
+      res.status(400).json({
+        "sendFileFromBase64": sessionStatus
+      });
+  }
+}); //sendFileFromBase64Group
+//
+// ------------------------------------------------------------------------------------------------//
+//
 //Enviar imagem em gif
 router.post("/sendImageAsStickerGif", upload.single('file'), verifyToken.verify, async (req, res, next) => {
   //
