@@ -1203,7 +1203,7 @@ router.post("/sendFileToBase64Group", upload.single('file'), verifyToken.verify,
       //
       var sendFileToBase64 = await Sessions.sendFileFromBase64(
         req.body.SessionName.trim(),
-        req.body.GroupId.trim() + '@c-g.us',
+        req.body.GroupId.trim() + '@g.us',
         req.file.buffer.toString('base64'),
         req.file.mimetype,
         req.file.originalname,
