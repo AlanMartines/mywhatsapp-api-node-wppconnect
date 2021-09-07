@@ -1595,8 +1595,9 @@ module.exports = class Sessions {
     var session = Sessions.getSession(SessionName);
     var resultgetAllGroups = await session.client.then(async client => {
       return await client.getAllGroups().then(async (result) => {
-        //console.log('Result: ', result); //return object success
+        console.log('Result: ', result); //return object success
         //
+        /*
         var getAllGroups = [];
         //
         await forEach(result, async (resultAllContacts) => {
@@ -1612,7 +1613,8 @@ module.exports = class Sessions {
           //
         });
         //
-        return getAllGroups;
+				*/
+        return result;
         //
       }).catch((erro) => {
         console.error('Error when sending: ', erro); //return object error
