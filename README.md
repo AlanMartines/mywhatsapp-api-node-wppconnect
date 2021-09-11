@@ -153,7 +153,7 @@ curl -sL https://rpm.nodesource.com/setup_14.x | sudo bash -
 sudo yum install nodejs
 
 # Instalar o pacote Node.js
-sudo yum install -y git nodejs yarn gcc g++ make
+sudo yum install -y git nodejs yarn gcc g++ make gcc-c++ tar
 
 # Remover pacotes que não são mais necessários
 sudo yum autoremove -y
