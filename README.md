@@ -222,7 +222,7 @@ node server.js
 # Manter os processos ativos a cada reinicialização do servidor
 sudo npm install pm2 -g
 
-pm2 start server.js --name ApiWPPConnect
+pm2 start server.js --name ApiWPPConnect --watch
 
 pm2 save
 
