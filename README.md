@@ -10,6 +10,56 @@ Este projeto usa como base o [WPPConnect](https://github.com/wppconnect-team/wpp
 
 Esta Api, segue os mesmos termos de serviço do WhatsApp. É importante que você leia atentamente a estes termos. Você é responsável pelo uso da ferramenta e pelas conseqüências do mau uso. Reforçamos que a API não é destinada para prática de SPAM e que o envio de mensagens indesejadas, viola os termos de serviço do WhatsApp. A violação dos termos pode acarretar no bloqueio e banimento definitivo de sua conta no WhatsApp.
 
+## Legenda
+
+| Status | Descrição                                          |
+| ------ | -------------------------------------------------- |
+| ✔️     | Testado, funcionado normalmente                    |
+| ❌     | Com erro no código                                 |
+| ⚠️     | Funcionado de forma anormal                        |
+| ✔️⚠️   | Testado, funcionado de forma anormal(TIMEOUT/LOOP) |
+| ❌⚠️   | Testado, erro desconhecido(lib)                    |
+
+## Rotas
+
+| Router Started    |     | Router Profile   |     | Router Device      |     |
+| ----------------- | --- | ---------------- | --- | ------------------ | --- |
+| Start             | ✔️  | setProfileStatus | ✔️  | killServiceWorker  | ✔️  |
+| Status            | ✔️  | setProfileName   | ✔️  | restartService     | ✔️  |
+| Close             | ✔️  | setProfilePic    | ✔️  | getHostDevice      | ✔️  |
+| Logout            | ✔️  |                  |     | getConnectionState | ✔️  |
+| getHardware       | ✔️  |                  |     | getBatteryLevel    | ✔️  |
+| QRCode            | ✔️  |                  |     | isConnected        | ✔️  |
+| getSessions       | ✔️  |                  |     | getWAVersion       | ✔️  |
+| getBase64Encoding | ✔️  |                  |     |                    |     |
+| getBase64Decoding | ✔️  |                  |     |                    |     |
+
+| Router Basic             |     | Router Retrieving      |     | Router Group                    |     |
+| ------------------------ | --- | ---------------------- | --- | ------------------------------- | --- |
+| sendVoice                | ✔️  | getAllContacts         | ✔️  | leaveGroup                      | ✔️  |
+| sendVoiceBase64          | ✔️  | getSessionTokenBrowser | ✔️  | getGroupMembers                 | ✔️  |
+| sendVoiceFileBase64      | ✔️  | getBlockList           | ✔️  | getGroupMembersIds              | ✔️  |
+| sendContactVcard         | ✔️  | getStatus              | ✔️  | getGroupInviteLink              | ✔️  |
+| sendContactVcardList     | ✔️  | getNumberProfile       | ✔️  | createGroup                     | ✔️  |
+| sendText                 | ✔️  | checkNumberStatus      | ✔️  | createGroupSetAdminMembers      | ✔️  |
+| sendTextMassa            | ✔️  | checkNumberStatusMassa | ✔️  | createCountGroupSetAdminMembers | ✔️  |
+| sendTextGrupo            | ✔️  |                        |     | removeParticipant               | ✔️  |
+| sendLocation             | ✔️  |                        |     | addParticipant                  | ✔️  |
+| sendLocationGroup        | ✔️  |                        |     | promoteParticipant              | ✔️  |
+| sendLinkPreview          | ✔️  |                        |     | demoteParticipant               | ✔️  |
+| sendImage                | ✔️  |                        |     | getGroupInfoFromInviteLink      | ✔️  |
+| sendImageMassa           | ✔️  |                        |     | joinGroup                       | ✔️  |
+| sendMultImage            | ✔️  |                        |     |                                 |     |
+| sendMultImageMassa       | ✔️  |                        |     |                                 |     |
+| sendImageGrupo           | ✔️  |                        |     |                                 |     |
+| sendFile                 | ✔️  |                        |     |                                 |     |
+| sendFileBase64           | ✔️  |                        |     |                                 |     |
+| sendFileToBase64         | ✔️  |                        |     |                                 |     |
+| sendFileFromBase64       | ✔️  |                        |     |                                 |     |
+| sendImageAsStickerGif    | ✔️  |                        |     |                                 |     |
+| sendImageAsStickerGifUrl | ✔️  |                        |     |                                 |     |
+| sendImageAsSticker       | ✔️  |                        |     |                                 |     |
+
 #### Dependências Debian (e.g. Ubuntu) 64bits
 
 ```bash
