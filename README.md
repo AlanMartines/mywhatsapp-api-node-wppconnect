@@ -18,7 +18,6 @@ Esta Api, segue os mesmos termos de serviço do WhatsApp. É importante que voc�
 	&& apt-get install -y \
 	git \
 	curl \
-	nodejs \
 	yarn \
 	gcc \
 	g++ \
@@ -37,7 +36,6 @@ Esta Api, segue os mesmos termos de serviço do WhatsApp. É importante que voc�
 	libdbus-1-3 \
 	libexpat1 \
 	libfontconfig1 \
-	libgcc1 \
 	libgconf-2-4 \
 	libgdk-pixbuf2.0-0 \
 	libglib2.0-0 \
@@ -61,13 +59,11 @@ Esta Api, segue os mesmos termos de serviço do WhatsApp. É importante que voc�
 	libxtst6 \
 	ca-certificates \
 	fonts-liberation \
-	libappindicator1 \
 	libnss3 \
 	lsb-release \
 	xdg-utils \
 	ca-certificates \
 	fonts-liberation \
-	libappindicator3-1 \
 	libasound2 \
 	libatk-bridge2.0-0 \
 	libatk1.0-0 \
