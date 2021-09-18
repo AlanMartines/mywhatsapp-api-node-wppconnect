@@ -12,27 +12,33 @@ yo('My-WhatsApp', {
 //
 // ------------------------------------------------------------------------------------------------//
 //
-fs.access("./config/server.config.json", fs.constants.F_OK, (err) => {
+fs.access(".env", fs.constants.F_OK, (err) => {
   if (err) {
     if (err.code === 'ENOENT') {
-      console.error('- Arquivo "./config/server.config.json" não existe');
-      var modelo = {
-        "_comment_host": "Configuração do host",
-        "host": "0.0.0.0",
-        "port": "9001",
-        "view_qrcode_terminal": false,
-        "_comment_jwt": "Configuração do jwt",
-        "jwt_secret": "09f26e402586e2faa8da4c98a35f1b20d6b033c60",
-        "_comment_token": "Pasta de tokens",
-        "tokenspatch_linux": "/usr/local/tokens",
-        "tokenspatch_win": "c:/tokens",
-        "_comment_mysql": "Conexão com bando de dados",
-        "validate_mysql": false,
-        "host_mysql": "localhost",
-        "user_mysql": "user",
-        "password_mysql": "password",
-        "database_mysql": "database"
-      };
+      console.error('- Arquivo ".env');
+      var modelo = `
+				host = 0.0.0.0
+				#
+				port = 9000
+				#
+				view_qrcode_terminal = false
+				#
+				jwt_secret = 09f26e402586e2faa8da4c98a35f1b20d6b033c60
+				#
+				tokenspatch_linux = /usr/local/tokens
+				#
+				tokenspatch_win = c:/tokens
+				#
+				validate_mysql = false
+				#
+				host_mysql = localhost
+				#
+				user_mysql = user
+				#
+				password_mysql = password
+				#
+				database_mysql = database
+      `;
       console.log("- Modelo do arquivo de configuração:\n", modelo);
       process.exit(1);
     } else {
