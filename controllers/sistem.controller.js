@@ -11,8 +11,8 @@ const multer = require('multer');
 const upload = multer({})
 const router = express.Router();
 const Sessions = require("../sessions.js");
-const serverConfig = require("../config/server.config.json");
 const verifyToken = require("../middleware/verifyToken");
+require('dotenv/config');
 //
 // ------------------------------------------------------------------------------------------------//
 //

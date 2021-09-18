@@ -2,6 +2,7 @@ const fs = require('fs-extra');
 const {
   yo
 } = require('yoo-hoo');
+require('dotenv/config');
 //
 //
 yo('My-WhatsApp', {
@@ -41,12 +42,11 @@ fs.access("./config/server.config.json", fs.constants.F_OK, (err) => {
       const customExpress = require('./config/custom-express');
       const http = customExpress();
       const conn = require('./config/dbConnection').promise();
-      const serverConfig = require("./config/server.config.json");
       const Sessions = require("./sessions.js");
       //
       // ------------------------------------------------------------------------------------------------//
       //
-      http.listen(serverConfig.port, serverConfig.host, function(err) {
+      http.listen(process.env.port, process.env.host, function(err) {
         if (err) {
           console.log(err);
         } else {
@@ -65,12 +65,11 @@ fs.access("./config/server.config.json", fs.constants.F_OK, (err) => {
     //
     const customExpress = require('./config/custom-express');
     const http = customExpress();
-    const serverConfig = require("./config/server.config.json");
     const Sessions = require("./sessions.js");
     //
     // ------------------------------------------------------------------------------------------------//
     //
-    http.listen(serverConfig.port, serverConfig.host, function(err) {
+    http.listen(process.env.port, process.env.host, function(err) {
       if (err) {
         console.log(err);
       } else {

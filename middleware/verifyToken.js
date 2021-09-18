@@ -1,4 +1,4 @@
-const serverConfig = require("../config/server.config.json");
+require('dotenv/config');
 //
 var todayDate = new Date().toISOString().slice(0, 10);
 //
@@ -6,10 +6,10 @@ exports.verify = async (req, res, next) => {
   //
   //console.log(req.body);
   //
-  if (serverConfig.validate_mysql == true) {
+  if (process.env.validate_mysql == true) {
     const conn = require('../config/dbConnection').promise();
     try {
-      if (serverConfig.validate_mysql === true) {
+      if (process.env.validate_mysql === true) {
         if (!req.body.SessionName) {
           res.status(422).json({
             "Status": {

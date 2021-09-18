@@ -7,13 +7,13 @@ const {
 } = require('p-iteration');
 const axios = require('axios');
 const wppconnect = require('./wppconnect/dist/index');
-const serverConfig = require("./config/server.config.json");
 const io = require("socket.io-client"),
-  ioClient = io.connect("http://" + serverConfig.host + ":" + serverConfig.port);
+  ioClient = io.connect("http://" + process.env.host + ":" + process.env.port);
 const {
   cache
 } = require('sharp');
 const con = require("./config/dbConnection");
+require('dotenv/config');
 //
 // ------------------------------------------------------------------------------------------------------- //
 //
@@ -110,7 +110,7 @@ async function updateStateDb(state, status, session_venom) {
   const sql = "UPDATE tokens SET state=?, status=?, lastactivit=? WHERE token=?";
   const values = [state, status, date_now, session_venom];
   //
-  if (serverConfig.validate_mysql == true) {
+  if (process.env.validate_mysql == true) {
     const conn = require('./config/dbConnection').promise();
     const resUpdate = await conn.execute(sql, values);
     if (resUpdate) {
@@ -546,11 +546,11 @@ module.exports = class Sessions {
     //
     if (osnow == 'linux' || osnow == 'Linux') {
       console.log("- Sistema operacional:", osnow);
-      var folderToken = serverConfig.tokenspatch_linux;
+      var folderToken = process.env.tokenspatch_linux;
       session.tokenPatch = folderToken;
     } else if (osnow == 'win32' || osnow == 'win64' || osnow == 'Windows') {
       console.log("- Sistema operacional:", osnow);
-      var folderToken = serverConfig.tokenspatch_win;
+      var folderToken = process.env.tokenspatch_win;
       session.tokenPatch = folderToken;
     } else {
       var folderToken = './tokens';
@@ -685,7 +685,7 @@ module.exports = class Sessions {
       devtools: false, // Open devtools by default
       useChrome: true, // If false will use Chromium instance
       debug: false, // Opens a debug session
-      logQR: serverConfig.view_qrcode_terminal, // Logs QR automatically in terminal
+      logQR: process.env.view_qrcode_terminal, // Logs QR automatically in terminal
       browserWS: '', // If u want to use browserWSEndpoint
       browserArgs: [
         '--log-level=3',
