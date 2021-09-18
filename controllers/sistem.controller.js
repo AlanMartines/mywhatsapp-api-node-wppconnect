@@ -1772,7 +1772,7 @@ router.post("/getProfilePicFromServer", upload.none(''), verifyToken.verify, asy
         //
         var getProfilePicFromServer = await Sessions.getProfilePicFromServer(
           req.body.SessionName.trim(),
-          soNumeros(req.body.phonefull).trim() + '@c.us'
+          soNumeros(numero) + '@c.us'
         );
         //
       } else {
