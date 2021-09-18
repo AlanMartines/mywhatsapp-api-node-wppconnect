@@ -1450,7 +1450,7 @@ module.exports = class Sessions {
         number,
         filePath
       ).then((result) => {
-        //console.log('Result: ', result); //return object success
+        console.log('Result: ', result); //return object success
         //return (result);
         //
         return {
