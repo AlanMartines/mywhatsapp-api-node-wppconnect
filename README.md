@@ -314,7 +314,7 @@ npm run build
 cd ..
 
 # Configuração inicial
-cp config/server.config-example.json config/server.config.json
+cp .env-example .env
 
 # Execute a aplicação
 node server.js
@@ -358,26 +358,30 @@ sudo chmod -R 755 /usr/local/tokens
 mkdir c:\tokens
 ```
 
-## Configuração inicial do arquivo "config/server.config.json"
+## Configuração inicial do arquivo ".env-example"
 
-```json
-{
-  "_comment_host": "Configuração do host",
-  "host": "0.0.0.0",
-  "port": "9001",
-  "view_qrcode_terminal": false,
-  "_comment_jwt": "Configuração do jwt",
-  "jwt_secret": "09f26e402586e2faa8da4c98a35f1b20d6b033c60",
-  "_comment_token": "Pasta de tokens",
-  "tokenspatch_linux": "/usr/local/tokens",
-  "tokenspatch_win": "c:/tokens",
-  "_comment_mysql": "Conexão com bando de dados",
-  "validate_mysql": false,
-  "host_mysql": "localhost",
-  "user_mysql": "user",
-  "password_mysql": "password",
-  "database_mysql": "database"
-}
+```
+host = 0.0.0.0
+#
+port = 9000
+#
+view_qrcode_terminal = false
+#
+jwt_secret = 09f26e402586e2faa8da4c98a35f1b20d6b033c60
+#
+tokenspatch_linux = /usr/local/tokens
+#
+tokenspatch_win = c:/tokens
+#
+validate_mysql = false
+#
+host_mysql = localhost
+#
+user_mysql = user
+#
+password_mysql = password
+#
+database_mysql = database
 ```
 
 ## Create MySQL DATABASE/TABLE
