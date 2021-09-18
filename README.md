@@ -313,6 +313,9 @@ npm run build
 # Ir para seu diretório anterior
 cd ..
 
+# Configuração inicial
+cp config/server.config-example.json config/server.config.json
+
 # Execute a aplicação
 node server.js
 
