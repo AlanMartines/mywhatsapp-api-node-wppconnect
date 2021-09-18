@@ -19,7 +19,7 @@ fs.access(".env", fs.constants.F_OK, (err) => {
       var modelo = `
 host = 0.0.0.0
 #
-port = 9000
+port = 9001
 #
 view_qrcode_terminal = false
 #
@@ -38,7 +38,7 @@ user_mysql = user
 password_mysql = password
 #
 database_mysql = database
-      `;
+`;
       console.log("- Modelo do arquivo de configuração:\n", modelo);
       process.exit(1);
     } else {
