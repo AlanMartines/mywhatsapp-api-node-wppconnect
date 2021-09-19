@@ -361,19 +361,24 @@ mkdir c:\tokens
 ## Configuração inicial do arquivo ".env-example"
 
 ```
+# Set host
 host = 0.0.0.0
 #
+# Set port
 port = 9001
 #
-view_qrcode_terminal = false
+# QRCode in terminal 0 or 1
+view_qrcode_terminal = 0
 #
+# Secret key
 jwt_secret = 09f26e402586e2faa8da4c98a35f1b20d6b033c60
 #
 tokenspatch_linux = /usr/local/tokens
 #
 tokenspatch_win = c:/tokens
 #
-validate_mysql = false
+# Validate in terminal 0 or 1
+validate_mysql = 0
 #
 host_mysql = localhost
 #
