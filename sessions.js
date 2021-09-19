@@ -128,7 +128,6 @@ async function deletaToken(filePath) {
   //
   const cacheExists = await fs.pathExists(filePath);
   console.log('- O arquivo é: ' + cacheExists);
-  console.log('- Path: ' + filePath);
   if (cacheExists) {
     fs.remove(filePath);
     console.log('- O arquivo removido: ' + cacheExists);
@@ -757,7 +756,7 @@ module.exports = class Sessions {
     wppconnect.defaultLogger.level = 'silly';
     //
     var browserSessionToken = await client.getSessionTokenBrowser();
-    console.log("- Token WPPConnect:\n", JSON.parse(JSON.stringify(browserSessionToken)));
+    console.log("- Token venom:\n", JSON.parse(JSON.stringify(browserSessionToken)));
     session.state = "CONNECTED";
     session.browserSessionToken = browserSessionToken;
     //
@@ -803,7 +802,6 @@ module.exports = class Sessions {
           //
         } else if (state === 'DISCONNECTED' || state === 'SYNCING') {
           session.state = state;
-          session.status = 'notLogged';
           session.qrcode = null;
           //
           await deletaToken(session.tokenPatch + "/" + SessionName + ".data.json");
@@ -925,10 +923,13 @@ module.exports = class Sessions {
     var closeSession = await session.client.then(async client => {
       try {
         const strClosed = await client.close();
+        //
+        console.log("- Close:", strClosed);
+        //
         if (strClosed) {
           //
           session.state = "CLOSED";
-          session.status = 'CLOSED';
+          session.status = "CLOSED";
           session.client = false;
           session.qrcode = null;
           console.log("- Sessão fechada");
@@ -941,6 +942,8 @@ module.exports = class Sessions {
             message: "Sessão fechada com sucesso"
           };
           //
+          await updateStateDb(session.state, session.status, SessionName);
+          //
         } else {
           //
           var returnClosed = {
@@ -952,10 +955,11 @@ module.exports = class Sessions {
           };
           //
         }
+        //
         return returnClosed;
         //
       } catch (error) {
-        console.log("- Erro ao fechar sessão:", error.message);
+        console.log("- Erro ao fechar sessão");
         //
         return {
           result: "error",
@@ -967,8 +971,6 @@ module.exports = class Sessions {
         //
       }
     });
-    //
-    await updateStateDb(session.state, session.status, SessionName);
     //
     return closeSession;
   } //closeSession
@@ -1042,6 +1044,100 @@ module.exports = class Sessions {
   ╚═╝┴ ┴└─┘┴└─┘  ╚  └─┘┘└┘└─┘ ┴ ┴└─┘┘└┘└─┘  └─┘└─┘┴ ┴└─┘└─┘
   */
   //
+  //Eviar menssagem de voz
+  static async sendVoice(
+    SessionName,
+    number,
+    filePath
+  ) {
+    console.log("- Enviando menssagem de voz.");
+    var session = Sessions.getSession(SessionName);
+    var sendResult = await session.client.then(async client => {
+      // Send basic text
+      return await client.sendVoice(
+        number,
+        filePath
+      ).then((result) => {
+        //console.log("Result: ", result); //return object success
+        //return { result: "success", state: session.state, message: "Sucesso ao enviar menssagem" };
+        //return (result);
+        //
+        return {
+          "erro": false,
+          "status": 200,
+          "number": number,
+          "canReceiveMessage": true,
+          "text": "success",
+          "message": "Menssagem envida com sucesso."
+        };
+        //
+      }).catch((erro) => {
+        //console.error("Error when sending: ", erro); //return object error
+        //return { result: 'error', state: session.state, message: "Erro ao enviar menssagem" };
+        //return (erro);
+        //
+        return {
+          "erro": true,
+          "status": 404,
+          "number": number,
+          "canReceiveMessage": false,
+          "text": erro.text,
+          "message": "Erro ao enviar menssagem"
+        };
+        //
+      });
+    });
+    return sendResult;
+  } //sendVoice
+  //
+  // ------------------------------------------------------------------------------------------------//
+  //
+  //Eviar menssagem de voz
+  static async sendVoiceBase64(
+    SessionName,
+    number,
+    base64MP3,
+    mimetype
+  ) {
+    console.log("- Enviando menssagem de voz.");
+    var session = Sessions.getSession(SessionName);
+    var sendResult = await session.client.then(async client => {
+      return await client.sendVoiceBase64(
+        number,
+        "data:" + mimetype + ";base64," + base64MP3
+      ).then((result) => {
+        //console.log("Result: ", result); //return object success
+        //return { result: "success", state: session.state, message: "Sucesso ao enviar menssagem" };
+        //return (result);
+        //
+        return {
+          "erro": false,
+          "status": 200,
+          "number": number,
+          "canReceiveMessage": true,
+          "text": "success",
+          "message": "Menssagem envida com sucesso."
+        };
+        //
+      }).catch((erro) => {
+        //console.error("Error when sending: ", erro); //return object error
+        //return { result: 'error', state: session.state, message: "Erro ao enviar menssagem" };
+        //return (erro);
+        //
+        return {
+          "erro": true,
+          "status": 404,
+          "number": number,
+          "canReceiveMessage": false,
+          "text": erro.text,
+          "message": "Erro ao enviar menssagem"
+        };
+        //
+      });
+    });
+    return sendResult;
+  } //sendVoiceBase64
+  //
   // ------------------------------------------------------------------------------------------------//
   //
   // Enviar Contato
@@ -1069,7 +1165,7 @@ module.exports = class Sessions {
             "number": number,
             "canReceiveMessage": true,
             "text": "success",
-            "message": "Contato enviado com sucesso."
+            "message": "Contato envido com sucesso."
           };
           //
         })
@@ -1118,7 +1214,7 @@ module.exports = class Sessions {
             "contactlistValid": contactlistValid,
             "contactlistInvalid": contactlistInvalid,
             "text": "success",
-            "message": "Lista de contatos validos enviada com sucesso."
+            "message": "Lista de contatos validos envida com sucesso."
           };
           //
         })
@@ -1163,7 +1259,7 @@ module.exports = class Sessions {
           "status": 200,
           "number": number,
           "canReceiveMessage": true,
-          "message": "Menssagem enviada com sucesso."
+          "message": "Menssagem envida com sucesso."
         };
         //
       }).catch((erro) => {
@@ -1214,7 +1310,7 @@ module.exports = class Sessions {
           "number": number,
           "canReceiveMessage": true,
           "text": "success",
-          "message": "Localização enviada com sucesso."
+          "message": "Localização envida com sucesso."
         };
         //
       }).catch((erro) => {
@@ -1264,7 +1360,7 @@ module.exports = class Sessions {
           "number": number,
           "canReceiveMessage": true,
           "text": "success",
-          "message": "Link enviada com sucesso."
+          "message": "Link envida com sucesso."
         };
         //
       }).catch((erro) => {
@@ -1314,7 +1410,7 @@ module.exports = class Sessions {
           "number": number,
           "canReceiveMessage": true,
           "text": "success",
-          "message": "Menssagem enviada com sucesso."
+          "message": "Menssagem envida com sucesso."
         };
         //
       }).catch((erro) => {
@@ -1363,7 +1459,7 @@ module.exports = class Sessions {
           "number": number,
           "canReceiveMessage": true,
           "text": "success",
-          "message": "Arquivo enviado com sucesso."
+          "message": "Arquivo envido com sucesso."
         };
         //
       }).catch((erro) => {
@@ -1413,7 +1509,7 @@ module.exports = class Sessions {
           "number": number,
           "canReceiveMessage": true,
           "text": "success",
-          "message": "Arquivo enviada com sucesso."
+          "message": "Arquivo envida com sucesso."
         };
         //
       }).catch((erro) => {
@@ -1450,7 +1546,7 @@ module.exports = class Sessions {
         number,
         filePath
       ).then((result) => {
-        console.log('Result: ', result); //return object success
+        //console.log('Result: ', result); //return object success
         //return (result);
         //
         return {
@@ -1459,11 +1555,11 @@ module.exports = class Sessions {
           "number": number,
           "canReceiveMessage": true,
           "text": "success",
-          "message": "Gif enviada com sucesso."
+          "message": "Gif envida com sucesso."
         };
         //
       }).catch((erro) => {
-        console.error('Error when sending: ', erro); //return object error
+        //console.error('Error when sending: ', erro); //return object error
         //return (erro);
         //
         return {
@@ -1504,7 +1600,7 @@ module.exports = class Sessions {
           "number": number,
           "canReceiveMessage": true,
           "text": "success",
-          "message": "Figura enviada com sucesso."
+          "message": "Figura envida com sucesso."
         };
         //
       }).catch((erro) => {
@@ -1548,7 +1644,7 @@ module.exports = class Sessions {
         //
         await forEach(result, async (resultAllContacts) => {
           //
-          if (resultAllContacts.isMyContact === true || resultAllContacts.isMyContact === false && resultAllContacts.isUser === true) {
+          if (resultAllContacts.isMyContact === true || resultAllContacts.isMyContact === false) {
             //
             getChatGroupNewMsg.push({
               "user": resultAllContacts.id.user,
@@ -1557,8 +1653,7 @@ module.exports = class Sessions {
               "pushname": resultAllContacts.pushname,
               "formattedName": resultAllContacts.formattedName,
               "isMyContact": resultAllContacts.isMyContact,
-              "isWAContact": resultAllContacts.isWAContact,
-              "isBusiness": resultAllContacts.isBusiness,
+              "isWAContact": resultAllContacts.isWAContact
             });
           }
           //
@@ -1594,7 +1689,7 @@ module.exports = class Sessions {
     //
     var session = Sessions.getSession(SessionName);
     var resultgetAllGroups = await session.client.then(async client => {
-      return await client.getAllGroups().then(async (result) => {
+      return await client.getAllChatsGroups().then(async (result) => {
         //console.log('Result: ', result); //return object success
         //
         var getAllGroups = [];
@@ -1615,13 +1710,12 @@ module.exports = class Sessions {
         return getAllGroups;
         //
       }).catch((erro) => {
-        console.error('Error when sending: ', erro); //return object error
+        //console.error('Error when sending: ', erro); //return object error
         //
         return {
           "erro": true,
           "status": 404,
           "canReceiveMessage": false,
-          "text": "Error",
           "message": "Erro ao recuperar grupos"
         };
         //
@@ -2162,7 +2256,7 @@ module.exports = class Sessions {
         }
         //
       }).catch((erro) => {
-        //console.error('Error when sending: ', erro); //return object error
+        console.error('Error when sending: ', erro); //return object error
         //
         return {
           "erro": true,
@@ -2188,9 +2282,9 @@ module.exports = class Sessions {
     var session = Sessions.getSession(SessionName);
     var resultdemoteParticipant = await session.client.then(async client => {
       return await client.demoteParticipant(groupId, phonefull).then((result) => {
-        //console.log('Result: ', result); //return object success
+        //console.log('Result: ', demoteParticipant); //return object success
         //
-        if (result === true) {
+        if (demoteParticipant === true) {
           return {
             "erro": false,
             "status": 200,
@@ -2637,11 +2731,42 @@ module.exports = class Sessions {
   //
   // ------------------------------------------------------------------------------------------------//
   //
+  // Obter versão do WhatsappWeb
+  static async getWAVersion(SessionName) {
+    console.log("- getWAVersion");
+    var session = Sessions.getSession(SessionName);
+    var resultgetWAVersion = await session.client.then(async client => {
+      return await client.getWAVersion().then((result) => {
+        //console.log('Result: ', result); //return object success
+        //
+        return {
+          "erro": false,
+          "status": 200,
+          "message": "Versão do WhatsappWeb obtido com sucesso",
+          "WAVersion": result
+        };
+        //
+      }).catch((erro) => {
+        //console.error('Error when sending: ', erro); //return object error
+        //
+        return {
+          "erro": true,
+          "status": 404,
+          "message": "Erro ao obter versão do WhatsappWeb"
+        };
+        //
+      });
+    });
+    return resultgetWAVersion;
+  } //getWAVersion
+  //
+  // ------------------------------------------------------------------------------------------------//
+  //
   // Inicia a verificação de conexão do telefone
   static async startPhoneWatchdog(SessionName, interval) {
     console.log("- startPhoneWatchdog");
     var session = Sessions.getSession(SessionName);
-    var resultgetWAVersion = await session.client.then(async client => {
+    var resultstartPhoneWatchdog = await session.client.then(async client => {
       return await client.startPhoneWatchdog(interval).then((result) => {
         //console.log('Result: ', result); //return object success
         //
@@ -2663,7 +2788,7 @@ module.exports = class Sessions {
         //
       });
     });
-    return resultgetWAVersion;
+    return resultstartPhoneWatchdog;
   } //startPhoneWatchdog
   //
   // ------------------------------------------------------------------------------------------------//
@@ -2672,7 +2797,7 @@ module.exports = class Sessions {
   static async stopPhoneWatchdog(SessionName) {
     console.log("- stopPhoneWatchdog");
     var session = Sessions.getSession(SessionName);
-    var resultgetWAVersion = await session.client.then(async client => {
+    var resultstopPhoneWatchdog = await session.client.then(async client => {
       return await client.stopPhoneWatchdog().then((result) => {
         //console.log('Result: ', result); //return object success
         //
@@ -2694,8 +2819,8 @@ module.exports = class Sessions {
         //
       });
     });
-    return resultgetWAVersion;
-  } //getWAVersion
+    return resultstopPhoneWatchdog;
+  } //stopPhoneWatchdog
   //
   // ------------------------------------------------------------------------------------------------//
   //

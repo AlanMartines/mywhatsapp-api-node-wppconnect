@@ -292,12 +292,13 @@ router.post("/Close", upload.none(''), async (req, res, next) => {
       //
       var closeSession = await Sessions.closeSession(req.body.SessionName.trim());
       res.status(200).json({
-        closeSession
+        "Status": closeSession
       });
+      //
       break;
     default:
       res.status(400).json({
-        "closeSession": sessionStatus
+        "Status": sessionStatus
       });
   }
 }); //Close
@@ -325,12 +326,170 @@ router.post("/Logout", upload.none(''), async (req, res, next) => {
   }
 }); //Close
 //
+// ------------------------------------------------------------------------------------------------//
+//
+// Reload do whatsapp web
+router.post("/reloadSession", upload.none(''), verifyToken.verify, async (req, res, next) => {
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+    case 'notLogged':
+    case 'deviceNotConnected':
+    case 'desconnectedMobile':
+    case 'qrReadFail':
+    case 'deleteToken':
+    case 'DISCONNECTED':
+      //
+
+      //
+      break;
+    default:
+      res.status(400).json({
+        "reloadSession": sessionStatus
+      });
+  }
+}); //reloadService
+//
+// ------------------------------------------------------------------------------------------------//
+//
 /*
 ╔╗ ┌─┐┌─┐┬┌─┐  ╔═╗┬ ┬┌┐┌┌─┐┌┬┐┬┌─┐┌┐┌┌─┐  ┬ ┬┌─┐┌─┐┌─┐┌─┐
 ╠╩╗├─┤└─┐││    ╠╣ │ │││││   │ ││ ││││└─┐  │ │└─┐├─┤│ ┬├┤ 
 ╚═╝┴ ┴└─┘┴└─┘  ╚  └─┘┘└┘└─┘ ┴ ┴└─┘┘└┘└─┘  └─┘└─┘┴ ┴└─┘└─┘
 */
 //
+//Eviar menssagem de voz
+router.post("/sendVoice", upload.single('audio_data'), verifyToken.verify, async (req, res, next) => {
+  //
+  //Eviar menssagem de voz
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      //
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName.trim() + '-'));
+      var filePath = path.join(folderName, req.file.originalname);
+      fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
+      console.log("- File", filePath);
+      //
+      var checkNumberStatus = await Sessions.checkNumberStatus(
+        req.body.SessionName.trim(),
+        soNumeros(req.body.phonefull).trim() + '@c.us'
+      );
+      //
+      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+        //
+        var sendVoice = await Sessions.sendVoice(
+          req.body.SessionName.trim(),
+          soNumeros(checkNumberStatus.number).trim() + '@c.us',
+          filePath
+        );
+        //
+      } else {
+        var sendVoice = checkNumberStatus;
+      }
+      //
+      await deletaArquivosTemp(filePath);
+      //
+      res.status(200).json({
+        sendVoice
+      });
+      break;
+    default:
+      res.status(400).json({
+        "sendVoice": sessionStatus
+      });
+  }
+}); //sendVoice
+//
+// ------------------------------------------------------------------------------------------------//
+//
+//Eviar menssagem de voz
+router.post("/sendVoiceBase64", upload.single('audio_data'), verifyToken.verify, async (req, res, next) => {
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var checkNumberStatus = await Sessions.checkNumberStatus(
+        req.body.SessionName.trim(),
+        soNumeros(req.body.phonefull).trim() + '@c.us'
+      );
+      //
+      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+        //
+        var sendVoiceBase64 = await Sessions.sendVoiceBase64(
+          req.body.SessionName.trim(),
+          soNumeros(checkNumberStatus.number).trim() + '@c.us',
+          req.body.base64MP3,
+          req.body.mimetype
+        );
+        //
+      } else {
+        var sendVoiceBase64 = checkNumberStatus;
+      }
+      //
+      res.status(200).json({
+        sendVoiceBase64
+      });
+      break;
+    default:
+      res.status(400).json({
+        "sendVoiceBase64": sessionStatus
+      });
+  }
+}); //sendVoice
+//
+// ------------------------------------------------------------------------------------------------//
+//
+//Eviar menssagem de voz
+router.post("/sendVoiceFileBase64", upload.single('audio_data'), verifyToken.verify, async (req, res, next) => {
+  //
+  //Eviar menssagem de voz
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var checkNumberStatus = await Sessions.checkNumberStatus(
+        req.body.SessionName.trim(),
+        soNumeros(req.body.phonefull).trim() + '@c.us'
+      );
+      //
+      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+        //
+        var sendVoiceBase64 = await Sessions.sendVoiceBase64(
+          req.body.SessionName.trim(),
+          soNumeros(checkNumberStatus.number).trim() + '@c.us',
+          req.file.buffer.toString('base64'),
+          req.file.mimetype
+        );
+        //
+      } else {
+        var sendVoiceBase64 = checkNumberStatus;
+      }
+      //
+      //console.log(result);
+      res.status(200).json({
+        sendVoiceBase64
+      });
+      break;
+    default:
+      res.status(400).json({
+        "sendVoiceBase64": sessionStatus
+      });
+  }
+}); //sendVoice
 //
 // ------------------------------------------------------------------------------------------------//
 //
@@ -391,7 +550,7 @@ router.post("/sendContactVcardList", upload.single('contactlist'), verifyToken.v
       //
       if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
         //
-        var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + req.body.SessionName.trim() + '-'));
+        var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName.trim() + '-'));
         var filePath = path.join(folderName, req.file.originalname);
         fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
         console.log("- File:", filePath);
@@ -427,8 +586,6 @@ router.post("/sendContactVcardList", upload.single('contactlist'), verifyToken.v
       } else {
         var sendContactVcardList = sessionStatus;
       }
-      //
-      await deletaArquivosTemp(filePath);
       //
       //console.log(result);
       res.status(200).json({
@@ -496,7 +653,7 @@ router.post("/sendTextMassa", upload.single('phonefull'), verifyToken.verify, as
       //
       var sendTextMassa = [];
       //
-      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + req.body.SessionName.trim() + '-'));
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName.trim() + '-'));
       var filePath = path.join(folderName, req.file.originalname);
       fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
       console.log("- File:", filePath);
@@ -559,7 +716,7 @@ router.post("/sendTextGrupo", upload.none(''), verifyToken.verify, async (req, r
       //
       var sendTextGrupo = await Sessions.sendText(
         req.body.SessionName.trim(),
-        req.body.groupId + '@g.us',
+        req.body.groupId.trim() + '@g.us',
         req.body.msg
       );
       //
@@ -630,7 +787,7 @@ router.post("/sendLocationGroup", upload.none(''), verifyToken.verify, async (re
       //
       var sendLocationGroup = await Sessions.sendLocation(
         req.body.SessionName.trim(),
-        req.body.groupId + '@g.us',
+        req.body.groupId.trim() + '@g.us',
         req.body.lat,
         req.body.long,
         req.body.local
@@ -700,7 +857,7 @@ router.post("/sendImage", upload.single('fileimg'), verifyToken.verify, async (r
     case 'isLogged':
     case 'chatsAvailable':
       //
-      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + req.body.SessionName.trim() + '-'));
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName.trim() + '-'));
       var filePath = path.join(folderName, req.file.originalname);
       fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
       console.log("- File", filePath);
@@ -759,13 +916,13 @@ router.post("/sendImageMassa", sendImageMassa, verifyToken.verify, async (req, r
     case 'chatsAvailable':
       //
       //
-      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + req.body.SessionName.trim() + '-'));
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName.trim() + '-'));
       var filePathContato = path.join(folderName, req.files['phonefull'][0].originalname);
       fs.writeFileSync(filePathContato, req.files['phonefull'][0].buffer.toString('base64'), 'base64');
       console.log("- File:", filePathContato);
       //
       //
-      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + req.body.SessionName.trim() + '-'));
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName.trim() + '-'));
       var filePathImagem = path.join(folderName, req.files['fileimg'][0].originalname);
       fs.writeFileSync(filePathImagem, req.files['fileimg'][0].buffer.toString('base64'), 'base64');
       console.log("- File:", filePathImagem);
@@ -847,7 +1004,7 @@ router.post("/sendMultImage", upload.array('fileimgs', 50), verifyToken.verify, 
         //
         await forEach(resultsFiles, async (resultfile) => {
           //
-          var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + req.body.SessionName.trim() + '-'));
+          var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName.trim() + '-'));
           var filePathImagem = path.join(folderName, resultfile.originalname);
           fs.writeFileSync(filePathImagem, resultfile.buffer.toString('base64'), 'base64');
           console.log("- File:", filePathImagem);
@@ -862,7 +1019,7 @@ router.post("/sendMultImage", upload.array('fileimgs', 50), verifyToken.verify, 
           //
           sendMultImage.push(sendMultImageRes);
           //
-          await sleep(3000);
+          await sleep(1000);
           //
           await deletaArquivosTemp(filePathImagem);
           //
@@ -905,7 +1062,7 @@ router.post("/sendMultImageMassa", sendMultImageMassa, verifyToken.verify, async
       //
       var resultsFilesImg = req.files.fileimgs;
       //
-      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + req.body.SessionName.trim() + '-'));
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName.trim() + '-'));
       var filePathContato = path.join(folderName, req.files['phonefull'][0].originalname);
       fs.writeFileSync(filePathContato, req.files['phonefull'][0].buffer.toString('base64'), 'base64');
       console.log("- File Contato:", filePathContato);
@@ -928,7 +1085,7 @@ router.post("/sendMultImageMassa", sendMultImageMassa, verifyToken.verify, async
             //
             await forEach(resultsFilesImg, async (resultfile) => {
               //
-              var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + req.body.SessionName.trim() + '-'));
+              var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName.trim() + '-'));
               var filePathImagem = path.join(folderName, resultfile.originalname);
               fs.writeFileSync(filePathImagem, resultfile.buffer.toString('base64'), 'base64');
               console.log("- File Imagem:", filePathImagem);
@@ -982,14 +1139,14 @@ router.post("/sendImageGrupo", upload.single('fileimg'), verifyToken.verify, asy
     case 'isLogged':
     case 'chatsAvailable':
       //
-      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + req.body.SessionName.trim() + '-'));
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName.trim() + '-'));
       var filePath = path.join(folderName, req.file.originalname);
       fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
       console.log("- File", filePath);
       //
       var sendImageGrupo = await Sessions.sendImage(
         req.body.SessionName.trim(),
-        req.body.groupId + '@g.us',
+        req.body.groupId.trim() + '@g.us',
         filePath,
         req.file.originalname,
         req.body.caption
@@ -1021,7 +1178,7 @@ router.post("/sendFile", upload.single('file'), verifyToken.verify, async (req, 
     case 'isLogged':
     case 'chatsAvailable':
       //
-      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + req.body.SessionName.trim() + '-'));
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName.trim() + '-'));
       var filePath = path.join(folderName, req.file.originalname);
       fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
       console.log("- File", filePath);
@@ -1109,7 +1266,7 @@ router.post("/sendFileBase64", upload.none(''), verifyToken.verify, async (req, 
     case 'isLogged':
     case 'chatsAvailable':
       //
-      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + req.body.SessionName.trim() + '-'));
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName.trim() + '-'));
       var filePath = path.join(folderName, req.body.originalname);
       fs.writeFileSync(filePath, req.body.base64, 'base64');
       console.log("- File", filePath);
@@ -1351,7 +1508,7 @@ router.post("/sendImageAsStickerGif", upload.single('file'), verifyToken.verify,
     case 'isLogged':
     case 'chatsAvailable':
       //
-      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + req.body.SessionName.trim() + '-'));
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName.trim() + '-'));
       var filePath = path.join(folderName, req.file.originalname);
       fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
       console.log("- File", filePath);
@@ -1444,7 +1601,7 @@ router.post("/sendImageAsSticker", upload.single('file'), verifyToken.verify, as
     case 'chatsAvailable':
       //
       //
-      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + req.body.SessionName.trim() + '-'));
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName.trim() + '-'));
       var filePath = path.join(folderName, req.file.originalname);
       fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
       console.log("- File", filePath);
@@ -1611,7 +1768,7 @@ router.post("/getStatus", upload.none(''), verifyToken.verify, async (req, res, 
         //
         var getStatus = await Sessions.getStatus(
           req.body.SessionName.trim(),
-          soNumeros(checkNumberStatus.number).trim() + '@c.us'
+          soNumeros(req.body.phonefull).trim() + '@c.us'
         );
         //
       } else {
@@ -1708,7 +1865,7 @@ router.post("/checkNumberStatusMassa", upload.single('contatos'), verifyToken.ve
     case 'isLogged':
     case 'chatsAvailable':
       //
-      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + req.body.SessionName.trim() + '-'));
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName.trim() + '-'));
       var filePath = path.join(folderName, req.file.originalname);
       fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
       console.log("- File:", filePath);
@@ -1772,7 +1929,7 @@ router.post("/getProfilePicFromServer", upload.none(''), verifyToken.verify, asy
         //
         var getProfilePicFromServer = await Sessions.getProfilePicFromServer(
           req.body.SessionName.trim(),
-          soNumeros(checkNumberStatus.number).trim() + '@c.us'
+          soNumeros(req.body.phonefull).trim() + '@c.us'
         );
         //
       } else {
@@ -1916,7 +2073,7 @@ router.post("/createGroup", upload.single('participants'), verifyToken.verify, a
     case 'chatsAvailable':
       //
       //
-      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + req.body.SessionName.trim() + '-'));
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName.trim() + '-'));
       var filePath = path.join(folderName, req.file.originalname);
       fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
       console.log("- File:", filePath);
@@ -1941,7 +2098,7 @@ router.post("/createGroup", upload.single('participants'), verifyToken.verify, a
             //
             if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
               //
-              contactlistValid.push(soNumeros(checkNumberStatus.number).trim() + '@c.us');
+              contactlistValid.push(soNumeros(checkNumberStatus.number) + '@c.us');
             } else {
               contactlistInvalid.push(numero + '@c.us');
             }
@@ -1987,7 +2144,7 @@ router.post("/createGroupSetAdminMembers", upload.single('participants'), verify
       //
       var createGroupSetAdminMembers = [];
       //
-      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + req.body.SessionName.trim() + '-'));
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName.trim() + '-'));
       var filePath = path.join(folderName, req.file.originalname);
       fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
       console.log("- File:", filePath);
@@ -2082,7 +2239,7 @@ router.post("/createCountGroupSetAdminMembers", upload.single('participants'), v
       var createCountGroupSetAdminMembers = [];
       var createGroup = [];
       //
-      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + req.body.SessionName.trim() + '-'));
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName.trim() + '-'));
       var filePath = path.join(folderName, req.file.originalname);
       fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
       console.log("- File:", filePath);
@@ -2191,8 +2348,8 @@ router.post("/removeParticipant", upload.none(''), verifyToken.verify, async (re
         //
         var removeParticipant = await Sessions.removeParticipant(
           req.body.SessionName.trim(),
-          req.body.groupId + '@g.us',
-          soNumeros(checkNumberStatus.number).trim() + '@c.us'
+          req.body.groupId.trim() + '@g.us',
+          soNumeros(checkNumberStatus.number) + '@c.us'
         );
         //
       } else {
@@ -2231,8 +2388,8 @@ router.post("/addParticipant", upload.none(''), verifyToken.verify, async (req, 
         //
         var addParticipant = await Sessions.addParticipant(
           req.body.SessionName.trim(),
-          req.body.groupId + '@g.us',
-          soNumeros(checkNumberStatus.number).trim() + '@c.us'
+          req.body.groupId.trim() + '@g.us',
+          soNumeros(checkNumberStatus.number) + '@c.us'
         );
         //
       } else {
@@ -2271,8 +2428,8 @@ router.post("/promoteParticipant", upload.none(''), verifyToken.verify, async (r
         //
         var promoteParticipant = await Sessions.promoteParticipant(
           req.body.SessionName.trim(),
-          req.body.groupId + '@g.us',
-          soNumeros(checkNumberStatus.number).trim() + '@c.us'
+          req.body.groupId.trim() + '@g.us',
+          soNumeros(checkNumberStatus.number) + '@c.us'
         );
         //
       } else {
@@ -2310,7 +2467,7 @@ router.post("/demoteParticipant", upload.none(''), verifyToken.verify, async (re
         //
         var demoteParticipant = await Sessions.demoteParticipant(
           req.body.SessionName.trim(),
-          req.body.groupId + '@g.us',
+          req.body.groupId.trim() + '@g.us',
           soNumeros(req.body.phonefull).trim() + '@c.us'
         );
         //
@@ -2456,7 +2613,7 @@ router.post("/setProfilePic", upload.single('fileimg'), verifyToken.verify, asyn
     case 'chatsAvailable':
       //
       //
-      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + req.body.SessionName.trim() + '-'));
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'venom-' + req.body.SessionName.trim() + '-'));
       var filePath = path.join(folderName, req.file.originalname);
       fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
       console.log("- File", filePath);
@@ -2725,6 +2882,29 @@ router.post("/getWAVersion", upload.none(''), verifyToken.verify, async (req, re
 //
 // ------------------------------------------------------------------------------------------------//
 //
+// Obter versão da web do Whatsapp
+router.post("/getWAVersion", upload.none(''), verifyToken.verify, async (req, res, next) => {
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var getWAVersion = await Sessions.getWAVersion(req.body.SessionName.trim());
+      res.status(200).json({
+        getWAVersion
+      });
+      break;
+    default:
+      res.status(400).json({
+        "getWAVersion": sessionStatus
+      });
+  }
+}); //getWAVersion
+//
+// ------------------------------------------------------------------------------------------------//
+//
 // Inicia a verificação de conexão do telefone
 router.post("/startPhoneWatchdog", upload.none(''), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
@@ -2782,52 +2962,12 @@ router.post("/stopPhoneWatchdog", upload.none(''), verifyToken.verify, async (re
 //
 // ------------------------------------------------------------------------------------------------//
 //
-router.post("/RotaTeste1", upload.none(''), async (req, res, next) => {
-  //
-  console.log(req.body);
+router.post("/RotaTeste", verifyToken.verify, upload.single('file'), verifyToken.verify, async (req, res, next) => {
   //
   res.status(200).json({
-    "STATUS": "success",
-    "MENSAGEM": "Cadastro gravado com sucesso."
-  });
-  //
-});
-//
-// ------------------------------------------------------------------------------------------------//
-//
-router.post("/RotaTeste2", upload.none(''), async (req, res, next) => {
-  //
-  console.log(req.body);
-  //
-  res.status(200).json({
-    "STATUS": "error",
-    "MENSAGEM": "Erro ao efetuar cadastro."
-  });
-  //
-});
-//
-// ------------------------------------------------------------------------------------------------//
-//
-router.post("/RotaTeste3", upload.none(''), async (req, res, next) => {
-  //
-  console.log(req.body);
-  //
-  res.status(200).json({
-    "STATUS": "info",
-    "MENSAGEM": "Cliente já cadastrado."
-  });
-  //
-});
-//
-// ------------------------------------------------------------------------------------------------//
-//
-router.post("/RotaTeste4", upload.none(''), async (req, res, next) => {
-  //
-  console.log(req.body);
-  //
-  res.status(200).json({
-    "STATUS": "warning",
-    "MENSAGEM": "Serviço indisponível no momento."
+    auth: true,
+    token: req.userToken,
+    message: 'Token validate'
   });
   //
 });
