@@ -746,7 +746,7 @@ module.exports = class Sessions {
       disableSpins: true, // Will disable Spinnies animation, useful for containers (docker) for a better log
       disableWelcome: false, // Will disable the welcoming message which appears in the beginning
       updatesLog: true, // Logs info updates automatically in terminal
-      autoClose: false, // Automatically closes the venom-bot only when scanning the QR code (default 60 seconds, if you want to turn it off, assign 0 or false)
+      autoClose: false, // Automatically closes the WPPConnect only when scanning the QR code (default 60 seconds, if you want to turn it off, assign 0 or false)
       tokenStore: 'file', // Define how work with tokens, that can be a custom interface
       folderNameToken: session.tokenPatch, //folder name when saving tokens
       //createPathFileToken: true, //creates a folder when inserting an object in the client's browser, to work it is necessary to pass the parameters in the function create browserSessionToken
@@ -756,7 +756,7 @@ module.exports = class Sessions {
     wppconnect.defaultLogger.level = 'silly';
     //
     var browserSessionToken = await client.getSessionTokenBrowser();
-    console.log("- Token venom:\n", JSON.parse(JSON.stringify(browserSessionToken)));
+    console.log("- Token WPPConnect:\n", JSON.parse(JSON.stringify(browserSessionToken)));
     session.state = "CONNECTED";
     session.browserSessionToken = browserSessionToken;
     //
