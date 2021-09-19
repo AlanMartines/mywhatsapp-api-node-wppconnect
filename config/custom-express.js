@@ -8,7 +8,13 @@ const cors = require('cors');
 const path = require('path');
 //
 const http = require('http').createServer({}, app);
-const io = require('socket.io')(http);
+const io = require('socket.io')(http, {
+  cors: {
+    origin: 'http://75.119.153.134:9001',
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
+});
 require('dotenv/config');
 app.use(cors());
 //
