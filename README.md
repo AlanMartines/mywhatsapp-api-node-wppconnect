@@ -363,7 +363,7 @@ mkdir c:\tokens
 ```
 host = 0.0.0.0
 #
-port = 9000
+port = 9001
 #
 view_qrcode_terminal = false
 #
