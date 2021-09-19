@@ -1689,7 +1689,7 @@ module.exports = class Sessions {
     //
     var session = Sessions.getSession(SessionName);
     var resultgetAllGroups = await session.client.then(async client => {
-      return await client.getAllChatsGroups().then(async (result) => {
+      return await client.getAllGroups().then(async (result) => {
         //console.log('Result: ', result); //return object success
         //
         var getAllGroups = [];
@@ -1710,12 +1710,13 @@ module.exports = class Sessions {
         return getAllGroups;
         //
       }).catch((erro) => {
-        //console.error('Error when sending: ', erro); //return object error
+        console.error('Error when sending: ', erro); //return object error
         //
         return {
           "erro": true,
           "status": 404,
           "canReceiveMessage": false,
+          "text": "Error",
           "message": "Erro ao recuperar grupos"
         };
         //
