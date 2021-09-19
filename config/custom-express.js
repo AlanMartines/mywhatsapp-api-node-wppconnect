@@ -7,7 +7,8 @@ const consign = require('consign');
 const cors = require('cors');
 const path = require('path');
 //
-const http = require('http').Server(app);
+const http = require('http').createServer(app);
+// https://www.scaleway.com/en/docs/tutorials/socket-io/
 const io = require('socket.io')(http, {
   cors: {
     origin: '*',
