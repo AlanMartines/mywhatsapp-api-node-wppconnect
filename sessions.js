@@ -684,7 +684,7 @@ module.exports = class Sessions {
       devtools: false, // Open devtools by default
       useChrome: true, // If false will use Chromium instance
       debug: false, // Opens a debug session
-      logQR: process.env.view_qrcode_terminal || false, // Logs QR automatically in terminal
+      logQR: false, // Logs QR automatically in terminal
       browserWS: '', // If u want to use browserWSEndpoint
       browserArgs: [
         '--log-level=3',
