@@ -361,6 +361,8 @@ mkdir c:\tokens
 ## Configuração inicial do arquivo ".env-example"
 
 ```
+NODE_ENV = "production"
+#
 # Set host
 HOST = "0.0.0.0"
 #

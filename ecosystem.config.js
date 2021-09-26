@@ -4,6 +4,7 @@ const path = require('path');
 const os = require('os');
 require('dotenv/config');
 //
+const HOST = process.env.NODE_ENV;
 const HOST = process.env.HOST || localhost;
 const PORT = process.env.PORT;
 const VIEW_QRCODE_TERMINAL = process.env.VIEW_QRCODE_TERMINAL;
@@ -19,13 +20,13 @@ const DATABASE_MYSQL = process.env.DATABASE_MYSQL;
 //
 module.exports = {
   apps: [{
-    name: "ApiBaileys",
+    name: "ApiWPPConnect",
     script: "./server.js",
     instances: 1,
     exec_mode: "cluster",
     watch: true,
     env: {
-      NODE_ENV: "production",
+      NODE_ENV,
       HOST,
       PORT,
       VIEW_QRCODE_TERMINAL,

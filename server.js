@@ -17,6 +17,8 @@ fs.access(".env", fs.constants.F_OK, (err) => {
     if (err.code === 'ENOENT') {
       console.error('- Arquivo ".env');
       var modelo = `
+NODE_ENV = "production"
+#
 # Set host
 HOST = "0.0.0.0"
 #
