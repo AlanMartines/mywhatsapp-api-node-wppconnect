@@ -38,6 +38,8 @@ VALIDATE_MYSQL = 0
 #
 HOST_MYSQL = "localhost"
 #
+PORT_MYSQL = "3306"
+#
 USER_MYSQL = "user"
 #
 PASSWORD_MYSQL = "password"
