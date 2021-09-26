@@ -362,31 +362,33 @@ mkdir c:\tokens
 
 ```
 # Set host
-host = 0.0.0.0
+HOST = "0.0.0.0"
 #
 # Set port
-port = 9001
+PORT = "9001"
 #
 # QRCode in terminal 0 or 1
-view_qrcode_terminal = 0
+VIEW_QRCODE_TERMINAL = 0
 #
 # Secret key
-jwt_secret = 09f26e402586e2faa8da4c98a35f1b20d6b033c60
+JWT_SECRET = "09f26e402586e2faa8da4c98a35f1b20d6b033c60"
 #
-tokenspatch_linux = /usr/local/tokens
+TOKENSPATCH_LINUX = "/usr/local/tokens"
 #
-tokenspatch_win = c:/tokens
+TOKENSPATCH_WIN = "c:/tokens"
 #
 # Validate in terminal 0 or 1
-validate_mysql = 0
+VALIDATE_MYSQL = 0
 #
-host_mysql = localhost
+HOST_MYSQL = "localhost"
 #
-user_mysql = user
+PORT_MYSQL = "3306"
 #
-password_mysql = password
+USER_MYSQL = "user"
 #
-database_mysql = database
+PASSWORD_MYSQL = "password"
+#
+DATABASE_MYSQL = "database"
 ```
 
 ## Create MySQL DATABASE/TABLE
