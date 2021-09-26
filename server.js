@@ -18,31 +18,31 @@ fs.access(".env", fs.constants.F_OK, (err) => {
       console.error('- Arquivo ".env');
       var modelo = `
 # Set host
-host = 0.0.0.0
+HOST = "0.0.0.0"
 #
 # Set port
-port = 9001
+PORT = "9001"
 #
 # QRCode in terminal 0 or 1
-view_qrcode_terminal = 0
+VIEW_QRCODE_TERMINAL = 0
 #
 # Secret key
-jwt_secret = 09f26e402586e2faa8da4c98a35f1b20d6b033c60
+JWT_SECRET = "09f26e402586e2faa8da4c98a35f1b20d6b033c60"
 #
-tokenspatch_linux = /usr/local/tokens
+TOKENSPATCH_LINUX = "/usr/local/tokens"
 #
-tokenspatch_win = c:/tokens
+TOKENSPATCH_WIN = "c:/tokens"
 #
 # Validate in terminal 0 or 1
-validate_mysql = 0
+VALIDATE_MYSQL = 0
 #
-host_mysql = localhost
+HOST_MYSQL = "localhost"
 #
-user_mysql = user
+USER_MYSQL = "user"
 #
-password_mysql = password
+PASSWORD_MYSQL = "password"
 #
-database_mysql = database
+DATABASE_MYSQL = "database"
 `;
       console.log("- Modelo do arquivo de configuração:\n", modelo);
       process.exit(1);
@@ -57,7 +57,7 @@ database_mysql = database
       //
       // ------------------------------------------------------------------------------------------------//
       //
-      http.listen(process.env.port, process.env.host, function(err) {
+      http.listen(process.env.PORT, process.env.HOST, function(err) {
         if (err) {
           console.log(err);
         } else {
@@ -80,7 +80,7 @@ database_mysql = database
     //
     // ------------------------------------------------------------------------------------------------//
     //
-    http.listen(process.env.port, process.env.host, function(err) {
+    http.listen(process.env.PORT, process.env.HOST, function(err) {
       if (err) {
         console.log(err);
       } else {

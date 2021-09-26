@@ -8,7 +8,7 @@ const {
 const axios = require('axios');
 const wppconnect = require('./wppconnect/dist/index');
 const io = require("socket.io-client"),
-  ioClient = io.connect("http://" + process.env.host + ":" + process.env.port);
+  ioClient = io.connect("http://localhost:" + process.env.PORT);
 const {
   cache
 } = require('sharp');
@@ -110,7 +110,7 @@ async function updateStateDb(state, status, session_venom) {
   const sql = "UPDATE tokens SET state=?, status=?, lastactivit=? WHERE token=?";
   const values = [state, status, date_now, session_venom];
   //
-  if (process.env.validate_mysql == true) {
+  if (process.env.VALIDATE_MYSQL == true) {
     const conn = require('./config/dbConnection').promise();
     const resUpdate = await conn.execute(sql, values);
     if (resUpdate) {
@@ -545,11 +545,11 @@ module.exports = class Sessions {
     //
     if (osnow == 'linux' || osnow == 'Linux') {
       console.log("- Sistema operacional:", osnow);
-      var folderToken = process.env.tokenspatch_linux;
+      var folderToken = process.env.TOKENSPATCH_LINUX;
       session.tokenPatch = folderToken;
     } else if (osnow == 'win32' || osnow == 'win64' || osnow == 'Windows') {
       console.log("- Sistema operacional:", osnow);
-      var folderToken = process.env.tokenspatch_win;
+      var folderToken = process.env.TOKENSPATCH_WIN;
       session.tokenPatch = folderToken;
     } else {
       var folderToken = './tokens';
@@ -684,7 +684,7 @@ module.exports = class Sessions {
       devtools: false, // Open devtools by default
       useChrome: true, // If false will use Chromium instance
       debug: false, // Opens a debug session
-      logQR: process.env.view_qrcode_terminal || false, // Logs QR automatically in terminal
+      logQR: process.env.VIEW_QRCODE_TERMINAL || false, // Logs QR automatically in terminal
       browserWS: '', // If u want to use browserWSEndpoint
       browserArgs: [
         '--log-level=3',

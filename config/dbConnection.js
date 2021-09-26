@@ -3,10 +3,10 @@ require('dotenv/config');
 //
 // connect to the db
 const dbConnectionInfo = {
-  host: process.env.host_mysql, // O host do banco. Ex: localhost
-  user: process.env.user_mysql, // Um usuário do banco. Ex: user 
-  password: process.env.password_mysql, // A senha do usuário. Ex: user123
-  database: process.env.database_mysql, // A base de dados a qual a aplicação irá se conectar, deve ser a mesma onde foi executado o Código 1. Ex: node_mysql
+  host: process.env.HOST_MYSQL, // O host do banco. Ex: localhost
+  user: process.env.USER_MYSQL, // Um usuário do banco. Ex: user 
+  password: process.env.PASSWORD_MYSQL, // A senha do usuário. Ex: user123
+  database: process.env.DATABASE_MYSQL, // A base de dados a qual a aplicação irá se conectar, deve ser a mesma onde foi executado o Código 1. Ex: node_mysql
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
