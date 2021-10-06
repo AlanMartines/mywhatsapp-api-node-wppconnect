@@ -387,7 +387,7 @@ router.post("/sendVoice", upload.single('audio_data'), verifyToken.verify, async
         //
         var sendVoice = await Sessions.sendVoice(
           req.body.SessionName.trim(),
-          checkNumberStatus.number.trim() + '@c.us',
+          soNumeros(checkNumberStatus.number).trim() + '@c.us',
           filePath
         );
         //
@@ -428,7 +428,7 @@ router.post("/sendVoiceBase64", upload.single('audio_data'), verifyToken.verify,
         //
         var sendVoiceBase64 = await Sessions.sendVoiceBase64(
           req.body.SessionName.trim(),
-          checkNumberStatus.number.trim() + '@c.us',
+          soNumeros(checkNumberStatus.number).trim() + '@c.us',
           req.body.base64MP3,
           req.body.mimetype
         );
@@ -470,7 +470,7 @@ router.post("/sendVoiceFileBase64", upload.single('audio_data'), verifyToken.ver
         //
         var sendVoiceBase64 = await Sessions.sendVoiceBase64(
           req.body.SessionName.trim(),
-          checkNumberStatus.number.trim() + '@c.us',
+          soNumeros(checkNumberStatus.number).trim() + '@c.us',
           req.file.buffer.toString('base64'),
           req.file.mimetype
         );
@@ -511,7 +511,7 @@ router.post("/sendContactVcard", upload.none(''), verifyToken.verify, async (req
         //
         var sendContactVcard = await Sessions.sendContactVcard(
           req.body.SessionName.trim(),
-          checkNumberStatus.number.trim() + '@c.us',
+          soNumeros(checkNumberStatus.number).trim() + '@c.us',
           soNumeros(req.body.contact) + '@c.us',
           req.body.namecontact
         );
@@ -578,7 +578,7 @@ router.post("/sendContactVcardList", upload.single('contactlist'), verifyToken.v
         //
         var sendContactVcardList = await Sessions.sendContactVcardList(
           req.body.SessionName.trim(),
-          checkNumberStatus.number.trim() + '@c.us',
+          soNumeros(checkNumberStatus.number).trim() + '@c.us',
           contactlistValid,
           contactlistInvalid
         );
@@ -619,7 +619,7 @@ router.post("/sendText", upload.none(''), verifyToken.verify, async (req, res, n
         //
         var sendText = await Sessions.sendText(
           req.body.SessionName.trim(),
-          checkNumberStatus.number.trim() + '@c.us',
+          soNumeros(checkNumberStatus.number).trim() + '@c.us',
           req.body.msg
         );
 
@@ -674,7 +674,7 @@ router.post("/sendTextMassa", upload.single('phonefull'), verifyToken.verify, as
             //
             var sendTextMassaRes = await Sessions.sendText(
               req.body.SessionName.trim(),
-              checkNumberStatus.number.trim() + '@c.us',
+              soNumeros(checkNumberStatus.number).trim() + '@c.us',
               req.body.msg
             );
             //
@@ -752,7 +752,7 @@ router.post("/sendLocation", upload.none(''), verifyToken.verify, async (req, re
         //
         var sendLocation = await Sessions.sendLocation(
           req.body.SessionName.trim(),
-          checkNumberStatus.number.trim() + '@c.us',
+          soNumeros(checkNumberStatus.number).trim() + '@c.us',
           req.body.lat,
           req.body.long,
           req.body.local
@@ -825,7 +825,7 @@ router.post("/sendLinkPreview", upload.none(''), verifyToken.verify, async (req,
         //
         var sendLinkPreview = await Sessions.sendLinkPreview(
           req.body.SessionName.trim(),
-          checkNumberStatus.number.trim() + '@c.us',
+          soNumeros(checkNumberStatus.number).trim() + '@c.us',
           req.body.link,
           req.body.detail
         );
@@ -871,7 +871,7 @@ router.post("/sendImage", upload.single('fileimg'), verifyToken.verify, async (r
         //
         var sendImage = await Sessions.sendImage(
           req.body.SessionName.trim(),
-          checkNumberStatus.number.trim() + '@c.us',
+          soNumeros(checkNumberStatus.number).trim() + '@c.us',
           filePath,
           req.file.originalname,
           req.body.caption
@@ -945,7 +945,7 @@ router.post("/sendImageMassa", sendImageMassa, verifyToken.verify, async (req, r
             //
             var sendImageMassaRes = await Sessions.sendImage(
               req.body.SessionName.trim(),
-              checkNumberStatus.number.trim() + '@c.us',
+              soNumeros(checkNumberStatus.number).trim() + '@c.us',
               filePathImagem,
               req.files['fileimg'][0].originalname,
               req.body.caption
@@ -1011,7 +1011,7 @@ router.post("/sendMultImage", upload.array('fileimgs', 50), verifyToken.verify, 
           //
           var sendMultImageRes = await Sessions.sendImage(
             req.body.SessionName.trim(),
-            checkNumberStatus.number.trim() + '@c.us',
+            soNumeros(checkNumberStatus.number).trim() + '@c.us',
             filePathImagem,
             resultfile.originalname,
             req.body.caption
@@ -1092,7 +1092,7 @@ router.post("/sendMultImageMassa", sendMultImageMassa, verifyToken.verify, async
               //
               var sendMultImageMassaRes = await Sessions.sendImage(
                 req.body.SessionName.trim(),
-                checkNumberStatus.number.trim() + '@c.us',
+                soNumeros(checkNumberStatus.number).trim() + '@c.us',
                 filePathImagem,
                 resultfile.originalname,
                 req.body.caption
@@ -1192,7 +1192,7 @@ router.post("/sendFile", upload.single('file'), verifyToken.verify, async (req, 
         //
         var sendFile = await Sessions.sendFile(
           req.body.SessionName.trim(),
-          checkNumberStatus.number.trim() + '@c.us',
+          soNumeros(checkNumberStatus.number).trim() + '@c.us',
           filePath,
           req.file.originalname,
           req.body.caption
@@ -1280,7 +1280,7 @@ router.post("/sendFileBase64", upload.none(''), verifyToken.verify, async (req, 
         //
         var sendFileBase64 = await Sessions.sendFile(
           req.body.SessionName.trim(),
-          checkNumberStatus.number.trim() + '@c.us',
+          soNumeros(checkNumberStatus.number).trim() + '@c.us',
           filePath,
           req.body.originalname,
           req.body.caption
@@ -1362,7 +1362,7 @@ router.post("/sendFileToBase64", upload.single('file'), verifyToken.verify, asyn
         //
         var sendFileFromBase64 = await Sessions.sendFileFromBase64(
           req.body.SessionName.trim(),
-          checkNumberStatus.number.trim() + '@c.us',
+          soNumeros(checkNumberStatus.number).trim() + '@c.us',
           req.file.buffer.toString('base64'),
           req.file.mimetype,
           req.file.originalname,
@@ -1437,7 +1437,7 @@ router.post("/sendFileFromBase64", upload.none(''), verifyToken.verify, async (r
         //
         var sendFileFromBase64 = await Sessions.sendFileFromBase64(
           req.body.SessionName.trim(),
-          checkNumberStatus.number.trim() + '@c.us',
+          soNumeros(checkNumberStatus.number).trim() + '@c.us',
           req.body.base64Data,
           req.body.mimetype,
           req.body.originalname,
@@ -1522,7 +1522,7 @@ router.post("/sendImageAsStickerGif", upload.single('file'), verifyToken.verify,
         //
         var sendImageAsStickerGif = await Sessions.sendImageAsStickerGif(
           req.body.SessionName.trim(),
-          checkNumberStatus.number.trim() + '@c.us',
+          soNumeros(checkNumberStatus.number).trim() + '@c.us',
           filePath
         );
         //
@@ -1569,7 +1569,7 @@ router.post("/sendImageAsStickerGifUrl", upload.single('file'), verifyToken.veri
         //
         var sendImageAsStickerGifUrl = await Sessions.sendImageAsStickerGif(
           req.body.SessionName.trim(),
-          checkNumberStatus.number.trim() + '@c.us',
+          soNumeros(checkNumberStatus.number).trim() + '@c.us',
           req.body.urlLink,
         );
         //
@@ -1618,7 +1618,7 @@ router.post("/sendImageAsSticker", upload.single('file'), verifyToken.verify, as
         //
         var sendImageAsSticker = await Sessions.sendImageAsSticker(
           req.body.SessionName.trim(),
-          checkNumberStatus.number.trim() + '@c.us',
+          soNumeros(checkNumberStatus.number).trim() + '@c.us',
           filePath
         );
         //
@@ -2098,7 +2098,7 @@ router.post("/createGroup", upload.single('participants'), verifyToken.verify, a
             //
             if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
               //
-              contactlistValid.push(checkNumberStatus.number + '@c.us');
+              contactlistValid.push(soNumeros(checkNumberStatus.number) + '@c.us');
             } else {
               contactlistInvalid.push(numero + '@c.us');
             }
@@ -2169,7 +2169,7 @@ router.post("/createGroupSetAdminMembers", upload.single('participants'), verify
             //
             if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
               //
-              contactlistValid.push(checkNumberStatus.number + "@c.us");
+              contactlistValid.push(soNumeros(checkNumberStatus.number) + "@c.us");
             } else {
               contactlistInvalid.push(numero + "@c.us");
             }
@@ -2264,7 +2264,7 @@ router.post("/createCountGroupSetAdminMembers", upload.single('participants'), v
             //
             if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
               //
-              contactlistValid.push(checkNumberStatus.number + "@c.us");
+              contactlistValid.push(soNumeros(checkNumberStatus.number) + "@c.us");
             } else {
               contactlistInvalid.push(numero + "@c.us");
             }
@@ -2349,7 +2349,7 @@ router.post("/removeParticipant", upload.none(''), verifyToken.verify, async (re
         var removeParticipant = await Sessions.removeParticipant(
           req.body.SessionName.trim(),
           req.body.groupId.trim() + '@g.us',
-          checkNumberStatus.number + '@c.us'
+          soNumeros(checkNumberStatus.number) + '@c.us'
         );
         //
       } else {
@@ -2389,7 +2389,7 @@ router.post("/addParticipant", upload.none(''), verifyToken.verify, async (req, 
         var addParticipant = await Sessions.addParticipant(
           req.body.SessionName.trim(),
           req.body.groupId.trim() + '@g.us',
-          checkNumberStatus.number + '@c.us'
+          soNumeros(checkNumberStatus.number) + '@c.us'
         );
         //
       } else {
@@ -2429,7 +2429,7 @@ router.post("/promoteParticipant", upload.none(''), verifyToken.verify, async (r
         var promoteParticipant = await Sessions.promoteParticipant(
           req.body.SessionName.trim(),
           req.body.groupId.trim() + '@g.us',
-          checkNumberStatus.number + '@c.us'
+          soNumeros(checkNumberStatus.number) + '@c.us'
         );
         //
       } else {
