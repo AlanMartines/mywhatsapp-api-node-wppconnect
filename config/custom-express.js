@@ -16,7 +16,10 @@ const io = require('socket.io')(http, {
     credentials: true
   },
 });
-require('dotenv/config');
+//require('dotenv/config');
+require("dotenv").config({
+  path: "../.env"
+});
 app.use(cors());
 //
 const sistem = require("../controllers/sistem.controller");
