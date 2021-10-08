@@ -1,5 +1,6 @@
 //
 // Configuração dos módulos
+const config = require('./config.global');
 const os = require("os");
 const fs = require('fs-extra');
 const {
@@ -19,7 +20,6 @@ require("dotenv").config({
   path: "./.env"
 });
 */
-const config = require('./config.global');
 //
 // ------------------------------------------------------------------------------------------------------- //
 //
