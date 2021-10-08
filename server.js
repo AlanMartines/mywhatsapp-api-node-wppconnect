@@ -7,7 +7,7 @@ require("dotenv").config({
   path: "./.env"
 });
 */
-require('dotenv').config();
+const config = require('./config.global');
 //
 //
 yo('My-WhatsApp', {
@@ -66,7 +66,7 @@ DATABASE_MYSQL = "database"
       //
       // ------------------------------------------------------------------------------------------------//
       //
-      http.listen(process.env.PORT, process.env.HOST, function(err) {
+      http.listen(config.PORT, config.HOST, function(err) {
         if (err) {
           console.log(err);
         } else {
@@ -89,7 +89,7 @@ DATABASE_MYSQL = "database"
     //
     // ------------------------------------------------------------------------------------------------//
     //
-    http.listen(process.env.PORT, process.env.HOST, function(err) {
+    http.listen(config.HOST, config.HOST, function(err) {
       if (err) {
         console.log(err);
       } else {

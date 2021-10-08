@@ -22,7 +22,7 @@ require("dotenv").config({
   path: "./.env"
 });
 */
-require('dotenv').config();
+const config = require('../config.global');
 app.use(cors());
 //
 const sistem = require("../controllers/sistem.controller");

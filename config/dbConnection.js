@@ -5,15 +5,15 @@ require("dotenv").config({
   path: "./.env"
 });
 */
-require('dotenv').config();
+const config = require('../config.global');
 //
 // connect to the db
 const dbConnectionInfo = {
-  host: process.env.HOST_MYSQL, // O host do banco. Ex: localhost
-  port: process.env.PORT_MYSQL, // Port do banco. Ex: 3306
-  user: process.env.USER_MYSQL, // Um usuário do banco. Ex: user 
-  password: process.env.PASSWORD_MYSQL, // A senha do usuário. Ex: user123
-  database: process.env.DATABASE_MYSQL, // A base de dados a qual a aplicação irá se conectar, deve ser a mesma onde foi executado o Código 1. Ex: node_mysql
+  host: config.HOST_MYSQL, // O host do banco. Ex: localhost
+  port: config.PORT_MYSQL, // Port do banco. Ex: 3306
+  user: config.USER_MYSQL, // Um usuário do banco. Ex: user 
+  password: config.PASSWORD_MYSQL, // A senha do usuário. Ex: user123
+  database: config.DATABASE_MYSQL, // A base de dados a qual a aplicação irá se conectar, deve ser a mesma onde foi executado o Código 1. Ex: node_mysql
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0

@@ -4,7 +4,7 @@ require("dotenv").config({
   path: "./.env"
 });
 */
-require('dotenv').config();
+const config = require('../config.global');
 //
 var todayDate = new Date().toISOString().slice(0, 10);
 //
@@ -12,7 +12,7 @@ exports.verify = async (req, res, next) => {
   //
   //console.log(req.body);
   //
-  if (process.env.VALIDATE_MYSQL == true) {
+  if (config.VALIDATE_MYSQL == true) {
     const conn = require('../config/dbConnection').promise();
     try {
       if (!req.body.SessionName) {

@@ -8,7 +8,7 @@ const {
 const axios = require('axios');
 const wppconnect = require('./wppconnect/dist/index');
 const io = require("socket.io-client"),
-  ioClient = io.connect("http://localhost:" + process.env.PORT);
+  ioClient = io.connect("http://localhost:" + config.PORT);
 const {
   cache
 } = require('sharp');
@@ -19,7 +19,7 @@ require("dotenv").config({
   path: "./.env"
 });
 */
-require('dotenv').config();
+const config = require('./config.global');
 //
 // ------------------------------------------------------------------------------------------------------- //
 //
@@ -116,7 +116,7 @@ async function updateStateDb(state, status, SessionName) {
   const sql = "UPDATE tokens SET state=?, status=?, lastactivit=? WHERE token=?";
   const values = [state, status, date_now, SessionName];
   //
-  if (process.env.VALIDATE_MYSQL == true) {
+  if (config.VALIDATE_MYSQL == true) {
     console.log('- Atualizando status');
     const conn = require('./config/dbConnection').promise();
     const resUpdate = await conn.execute(sql, values);
@@ -552,11 +552,11 @@ module.exports = class Sessions {
     //
     if (osnow == 'linux' || osnow == 'Linux') {
       console.log("- Sistema operacional:", osnow);
-      var folderToken = process.env.TOKENSPATCH_LINUX;
+      var folderToken = config.TOKENSPATCH_LINUX;
       session.tokenPatch = folderToken;
     } else if (osnow == 'win32' || osnow == 'win64' || osnow == 'Windows') {
       console.log("- Sistema operacional:", osnow);
-      var folderToken = process.env.TOKENSPATCH_WIN;
+      var folderToken = config.TOKENSPATCH_WIN;
       session.tokenPatch = folderToken;
     } else {
       var folderToken = './tokens';
@@ -691,7 +691,7 @@ module.exports = class Sessions {
       devtools: false, // Open devtools by default
       useChrome: true, // If false will use Chromium instance
       debug: false, // Opens a debug session
-      logQR: process.env.VIEW_QRCODE_TERMINAL, // Logs QR automatically in terminal
+      logQR: config.VIEW_QRCODE_TERMINAL, // Logs QR automatically in terminal
       browserWS: '', // If u want to use browserWSEndpoint
       browserArgs: [
         '--log-level=3',
