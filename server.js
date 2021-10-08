@@ -17,7 +17,7 @@ yo('My-WhatsApp', {
 //
 // ------------------------------------------------------------------------------------------------//
 //
-fs.access(".env", fs.constants.F_OK, (err) => {
+fs.access("./config.global.js", fs.constants.F_OK, (err) => {
   if (err) {
     if (err.code === 'ENOENT') {
       console.error('- Arquivo ".env');
@@ -89,7 +89,7 @@ DATABASE_MYSQL = "database"
     //
     // ------------------------------------------------------------------------------------------------//
     //
-    http.listen(config.HOST, config.HOST, function(err) {
+    http.listen(config.PORT, config.HOST, function(err) {
       if (err) {
         console.log(err);
       } else {
