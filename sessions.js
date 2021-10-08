@@ -101,16 +101,17 @@ async function osplatform() {
 //
 // ------------------------------------------------------------------------------------------------------- //
 //
-async function updateStateDb(state, status, session_venom) {
+async function updateStateDb(state, status, SessionName) {
   //
   const date_now = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
   console.log("- Date:", date_now);
   //
   //
   const sql = "UPDATE tokens SET state=?, status=?, lastactivit=? WHERE token=?";
-  const values = [state, status, date_now, session_venom];
+  const values = [state, status, date_now, SessionName];
   //
   if (process.env.VALIDATE_MYSQL == true) {
+    console.log('- Atualizando status');
     const conn = require('./config/dbConnection').promise();
     const resUpdate = await conn.execute(sql, values);
     if (resUpdate) {
