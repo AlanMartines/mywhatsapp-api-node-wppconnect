@@ -116,7 +116,7 @@ async function updateStateDb(state, status, SessionName) {
   const sql = "UPDATE tokens SET state=?, status=?, lastactivit=? WHERE token=?";
   const values = [state, status, date_now, SessionName];
   //
-  if (config.VALIDATE_MYSQL == 1) {
+  if (config.VALIDATE_MYSQL == 'true') {
     console.log('- Atualizando status');
     const conn = require('./config/dbConnection').promise();
     const resUpdate = await conn.execute(sql, values);
