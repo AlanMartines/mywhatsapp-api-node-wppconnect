@@ -15,3 +15,4 @@ config.USER_MYSQL = process.env.USER_MYSQL || 'root';
 config.PASSWORD_MYSQL = process.env.PASSWORD_MYSQL || '';
 config.DATABASE_MYSQL = process.env.DATABASE_MYSQL || '';
 //
+console.log("- Configs:", config);
