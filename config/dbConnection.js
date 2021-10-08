@@ -1,8 +1,11 @@
 const mysql = require("mysql2");
 //require('dotenv/config');
+/*
 require("dotenv").config({
-  path: "../.env"
+  path: "./.env"
 });
+*/
+require('dotenv').config();
 //
 // connect to the db
 const dbConnectionInfo = {

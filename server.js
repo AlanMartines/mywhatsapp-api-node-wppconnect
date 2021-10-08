@@ -2,7 +2,12 @@ const fs = require('fs-extra');
 const {
   yo
 } = require('yoo-hoo');
-require('dotenv/config');
+/*
+require("dotenv").config({
+  path: "./.env"
+});
+*/
+require('dotenv').config();
 //
 //
 yo('My-WhatsApp', {

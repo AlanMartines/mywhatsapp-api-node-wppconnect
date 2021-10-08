@@ -14,9 +14,12 @@ const {
 } = require('sharp');
 const con = require("./config/dbConnection");
 //require('dotenv/config');
+/*
 require("dotenv").config({
   path: "./.env"
 });
+*/
+require('dotenv').config();
 //
 // ------------------------------------------------------------------------------------------------------- //
 //

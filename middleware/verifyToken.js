@@ -1,7 +1,10 @@
 //require('dotenv/config');
+/*
 require("dotenv").config({
-  path: "../.env"
+  path: "./.env"
 });
+*/
+require('dotenv').config();
 //
 var todayDate = new Date().toISOString().slice(0, 10);
 //
