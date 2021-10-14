@@ -367,7 +367,7 @@ NODE_EN=production
 HOST=0.0.0.0
 #
 # Set port
-PORT=3000
+PORT=9001
 #
 # QRCode in terminal false or true
 VIEW_QRCODE_TERMINAL=false
