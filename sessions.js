@@ -116,7 +116,7 @@ async function updateStateDb(state, status, SessionName) {
   const sql = "UPDATE tokens SET state=?, status=?, lastactivit=? WHERE token=?";
   const values = [state, status, date_now, SessionName];
   //
-  if (Boolean(config.VALIDATE_MYSQL) == true) {
+  if (parseInt(config.VALIDATE_MYSQL) == true) {
     console.log('- Atualizando status');
     const conn = require('./config/dbConnection').promise();
     const resUpdate = await conn.execute(sql, values);
@@ -692,7 +692,7 @@ module.exports = class Sessions {
       devtools: false, // Open devtools by default
       useChrome: true, // If false will use Chromium instance
       debug: false, // Opens a debug session
-      logQR: Boolean(config.VIEW_QRCODE_TERMINAL.trim()), // Logs QR automatically in terminal
+      logQR: parseInt(config.VIEW_QRCODE_TERMINAL), // Logs QR automatically in terminal
       browserWS: '', // If u want to use browserWSEndpoint
       browserArgs: [
         '--log-level=3',
