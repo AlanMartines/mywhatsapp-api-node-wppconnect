@@ -7,8 +7,8 @@ require("dotenv").config({
   path: "./.env"
 });
 */
-const config = require('./config.global');
 //
+const config = require('./config.global');
 //
 yo('My-WhatsApp', {
   color: 'rainbow',
