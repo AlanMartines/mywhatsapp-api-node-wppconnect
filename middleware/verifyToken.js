@@ -12,7 +12,7 @@ exports.verify = async (req, res, next) => {
   //
   //console.log(req.body);
   //
-  if (Boolean(config.VALIDATE_MYSQL) == true) {
+  if (Boolean(config.VALIDATE_MYSQL.trim()) == true) {
     const conn = require('../config/dbConnection').promise();
     try {
       if (!req.body.SessionName) {
