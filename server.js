@@ -31,7 +31,7 @@ HOST=0.0.0.0
 PORT=9001
 #
 # QRCode in terminal false or true
-VIEW_QRCODE_TERMINAL=false
+VIEW_QRCODE_TERMINAL=0
 #
 # Secret key
 JWT_SECRET=09f26e402586e2faa8da4c98a35f1b20d6b033c60
@@ -41,7 +41,7 @@ TOKENSPATCH_LINUX=/usr/local/tokens
 TOKENSPATCH_WIN=c:/tokens
 #
 # Validate in terminal false or true
-VALIDATE_MYSQL=true
+VALIDATE_MYSQL=1
 #
 HOST_MYSQL=localhost
 #
