@@ -687,7 +687,7 @@ module.exports = class Sessions {
         }
       },
       // options
-      deviceName: "My Whatsapps",
+      deviceName: "My Whatsapp",
       headless: true, // Headless chrome
       devtools: false, // Open devtools by default
       useChrome: true, // If false will use Chromium instance
