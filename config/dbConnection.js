@@ -40,7 +40,7 @@ var dbconnection = mysql.createPool(
 //
 // Attempt to catch disconnects 
 dbconnection.on('connection', function(connection) {
-  console.log('- DB Connection established');
+  console.log('- MySQL Connection established');
   //
   connection.on('error', function(err) {
     console.error(new Date(), '- MySQL error', err.code);
@@ -51,7 +51,7 @@ dbconnection.on('connection', function(connection) {
   });
   //
   connection.on('enqueue', function() {
-    console.log('- Waiting for available connection slot');
+    console.log('- MySQL Waiting for available connection slot');
   });
   //
   /*
