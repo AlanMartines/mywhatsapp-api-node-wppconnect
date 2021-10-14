@@ -22,36 +22,36 @@ fs.access("./config.global.js", fs.constants.F_OK, (err) => {
     if (err.code === 'ENOENT') {
       console.error('- Arquivo ".env');
       var modelo = `
-NODE_ENV = "production"
+NODE_EN=production
 #
 # Set host
-HOST = "0.0.0.0"
+HOST=0.0.0.0
 #
 # Set port
-PORT = "9001"
+PORT=3000
 #
-# QRCode in terminal 0 or 1
-VIEW_QRCODE_TERMINAL = 0
+# QRCode in terminal false or true
+VIEW_QRCODE_TERMINAL=false
 #
 # Secret key
-JWT_SECRET = "09f26e402586e2faa8da4c98a35f1b20d6b033c60"
+JWT_SECRET=09f26e402586e2faa8da4c98a35f1b20d6b033c60
 #
-TOKENSPATCH_LINUX = "/usr/local/tokens"
+TOKENSPATCH_LINUX=/usr/local/tokens
 #
-TOKENSPATCH_WIN = "c:/tokens"
+TOKENSPATCH_WIN=c:/tokens
 #
-# Validate in terminal 0 or 1
-VALIDATE_MYSQL = 0
+# Validate in terminal false or true
+VALIDATE_MYSQL=true
 #
-HOST_MYSQL = "localhost"
+HOST_MYSQL=localhost
 #
-PORT_MYSQL = "3306"
+PORT_MYSQL=3306
 #
-USER_MYSQL = "user"
+USER_MYSQL=mywhatsappapi
 #
-PASSWORD_MYSQL = "password"
+PASSWORD_MYSQL=TuUep8KkjCtAA@
 #
-DATABASE_MYSQL = "database"
+DATABASE_MYSQL=mywhatsapp-api
 `;
       console.log("- Modelo do arquivo de configuração:\n", modelo);
       process.exit(1);
