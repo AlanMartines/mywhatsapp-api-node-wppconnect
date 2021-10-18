@@ -9,7 +9,7 @@ const {
 const axios = require('axios');
 const wppconnect = require('./wppconnect/dist/index');
 const io = require("socket.io-client"),
-  ioClient = io.connect("http://localhost:" + config.PORT);
+  ioClient = io.connect("http://" + config.HOST + ":" + config.PORT);
 const {
   cache
 } = require('sharp');
