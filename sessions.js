@@ -2149,7 +2149,7 @@ module.exports = class Sessions {
     console.log("- removeParticipant");
     var session = Sessions.getSession(SessionName);
     var resultremoveParticipant = await session.client.then(async client => {
-      return await await client.removeParticipant(groupId, phonefull).then((result) => {
+      return await client.removeParticipant(groupId, phonefull).then((result) => {
         //console.log('Result: ', result); //return object success
         //
         if (result === true) {
