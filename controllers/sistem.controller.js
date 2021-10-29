@@ -12,12 +12,7 @@ const upload = multer({})
 const router = express.Router();
 const Sessions = require("../sessions.js");
 const verifyToken = require("../middleware/verifyToken");
-//require('dotenv/config');
-/*
-require("dotenv").config({
-  path: "./.env"
-});
-*/
+//
 const config = require('../config.global');
 //
 // ------------------------------------------------------------------------------------------------//
