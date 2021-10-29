@@ -22,16 +22,6 @@ const config = require('../config.global');
 //
 // ------------------------------------------------------------------------------------------------//
 //
-async function deletaToken(filePath) {
-  //
-  const cacheExists = await fs.pathExists(filePath);
-  console.log('- O arquivo é: ' + cacheExists);
-  if (cacheExists) {
-    fs.remove(filePath);
-    console.log('- O arquivo removido: ' + cacheExists);
-  }
-}
-//
 async function deletaArquivosTemp(filePath) {
   //
   const cacheExists = await fs.pathExists(filePath);
