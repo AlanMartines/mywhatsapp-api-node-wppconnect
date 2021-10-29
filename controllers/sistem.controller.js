@@ -11,7 +11,7 @@ const multer = require('multer');
 // Configuração de armazenamento
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
-    cb(null, 'uploads/')
+    cb(null, '/tmp/')
   },
   filename: function(req, file, cb) {
     // Extração da extensão do arquivo original:
@@ -23,7 +23,7 @@ const storage = multer.diskStorage({
       .toString('hex');
 
     // Indica o novo nome do arquivo:
-    cb(null, `${novoNomeArquivo}.${extensaoArquivo}`)
+    cb(null, `wppconnect-${novoNomeArquivo}.${extensaoArquivo}`);
   }
 });
 const upload = multer({})
