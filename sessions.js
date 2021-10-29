@@ -97,6 +97,7 @@ async function osplatform() {
   } else if (opsys == "linux") {
     opsys = "Linux";
   }
+  //
   console.log("- Sistema operacional", opsys) // I don't know what linux is.
   //console.log("-", os.type());
   //console.log("-", os.release());
