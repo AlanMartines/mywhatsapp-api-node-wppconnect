@@ -1514,7 +1514,7 @@ router.post("/sendImageAsStickerGif", upload.single('file'), verifyToken.verify,
         var sendImageAsStickerGif = await Sessions.sendImageAsStickerGif(
           req.body.SessionName.trim(),
           checkNumberStatus.number + '@c.us',
-          req.file.buffer.toString('base64')
+          filePath
         );
         //
       } else {
