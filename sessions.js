@@ -160,28 +160,22 @@ module.exports = class Sessions {
       if (session.state == "CONNECTED") {
         return {
           result: "info",
-          SessionName: SessionName,
           state: session.state,
           status: session.status,
-          qrcode: session.qrcode,
           message: "Sistema iniciado e disponivel para uso"
         };
       } else if (session.state == "STARTING") {
         return {
           result: "info",
-          SessionName: SessionName,
           state: session.state,
           status: session.status,
-          qrcode: session.qrcode,
           message: "Sistema iniciando e indisponivel para uso"
         };
       } else if (session.state == "QRCODE") {
         return {
           result: "warning",
-          SessionName: SessionName,
           state: session.state,
           status: session.status,
-          qrcode: session.qrcode,
           message: "Sistema aguardando leitura do QR-Code"
         };
       } else {
@@ -189,20 +183,16 @@ module.exports = class Sessions {
           case 'isLogged':
             return {
               result: "success",
-                SessionName: SessionName,
                 state: session.state,
                 status: session.status,
-                qrcode: session.qrcode,
                 message: "Sistema iniciado e disponivel para uso"
             };
             break;
           case 'notLogged':
             return {
               result: "error",
-                SessionName: SessionName,
                 state: session.state,
                 status: session.status,
-                qrcode: session.qrcode,
                 message: "Sistema indisponivel para uso"
             };
             break;
@@ -210,9 +200,7 @@ module.exports = class Sessions {
             return {
               result: "info",
                 state: session.state,
-                SessionName: SessionName,
                 status: session.status,
-                qrcode: session.qrcode,
                 message: "Navegador interno fechado"
             };
             break;
@@ -220,129 +208,103 @@ module.exports = class Sessions {
             return {
               result: "success",
                 state: session.state,
-                SessionName: SessionName,
                 status: session.status,
-                qrcode: session.qrcode,
                 message: "Verificação do QR-Code feita com sucesso"
             };
             break;
           case 'qrReadFail':
             return {
               result: "warning",
-                SessionName: SessionName,
                 state: session.state,
                 status: session.status,
-                qrcode: session.qrcode,
                 message: "Falha na verificação do QR-Code"
             };
             break;
           case 'qrRead':
             return {
               result: "warning",
-                SessionName: SessionName,
                 state: session.state,
                 status: session.status,
-                qrcode: session.qrcode,
                 message: "Sistema aguardando leitura do QR-Code"
             };
             break;
           case 'autocloseCalled':
             return {
               result: "info",
-                SessionName: SessionName,
                 state: session.state,
                 status: session.status,
-                qrcode: session.qrcode,
                 message: "Navegador interno fechado"
             };
             break;
           case 'desconnectedMobile':
             return {
               result: "info",
-                SessionName: SessionName,
                 state: session.state,
                 status: session.status,
-                qrcode: session.qrcode,
                 message: "Dispositivo desconectado"
             };
             break;
           case 'deleteToken':
             return {
               result: "info",
-                SessionName: SessionName,
                 state: session.state,
                 status: session.status,
-                qrcode: session.qrcode,
                 message: "Token de sessão removido"
             };
             break;
           case 'chatsAvailable':
             return {
               result: "success",
-                SessionName: SessionName,
                 state: session.state,
                 status: session.status,
-                qrcode: session.qrcode,
                 message: "Sistema iniciado e disponivel para uso"
             };
             break;
           case 'deviceNotConnected':
             return {
               result: "info",
-                SessionName: SessionName,
                 state: session.state,
                 status: session.status,
-                qrcode: session.qrcode,
                 message: "Dispositivo desconectado"
             };
             break;
           case 'serverWssNotConnected':
             return {
               result: "info",
-                SessionName: SessionName,
                 state: session.state,
                 status: session.status,
-                qrcode: session.qrcode,
                 message: "O endereço wss não foi encontrado"
             };
             break;
           case 'noOpenBrowser':
             return {
               result: "error",
-                SessionName: SessionName,
                 state: session.state,
                 status: session.status,
-                qrcode: session.qrcode,
                 message: "Não foi encontrado o navegador ou falta algum comando no args"
             };
             break;
           case 'serverClose':
             return {
               result: "info",
-                SessionName: SessionName,
                 state: session.state,
                 status: session.status,
-                qrcode: session.qrcode,
                 message: "O cliente se desconectou do wss"
             };
             break;
           case 'OPENING':
             return {
               result: "warning",
-                SessionName: SessionName,
                 state: session.state,
                 status: session.status,
-                qrcode: session.qrcode,
                 message: "'Sistema iniciando e indisponivel para uso'"
             };
             break;
           case 'CONFLICT':
             return {
               result: "info",
-                SessionName: SessionName,
                 state: session.state,
                 status: session.status,
-                qrcode: session.qrcode,
                 message: "Dispositivo conectado em outra sessão, reconectando"
             };
             break;
@@ -351,40 +313,32 @@ module.exports = class Sessions {
           case 'UNPAIRED_IDLE':
             return {
               result: "warning",
-                SessionName: SessionName,
                 state: session.state,
                 status: session.status,
-                qrcode: session.qrcode,
                 message: "Dispositivo desconectado"
             };
             break;
           case 'DISCONNECTED':
             return {
               result: "info",
-                SessionName: SessionName,
                 state: session.state,
                 status: session.status,
-                qrcode: session.qrcode,
                 message: "Dispositivo desconectado"
             };
             break;
           case 'SYNCING':
             return {
               result: "warning",
-                SessionName: SessionName,
                 state: session.state,
                 status: session.status,
-                qrcode: session.qrcode,
                 message: "Dispositivo sincronizando"
             };
             break;
           case 'CLOSED':
             return {
               result: "info",
-                SessionName: SessionName,
                 state: session.state,
                 status: session.status,
-                qrcode: session.qrcode,
                 message: "O cliente fechou a sessão ativa"
             };
             break;
@@ -392,10 +346,8 @@ module.exports = class Sessions {
             //
             return {
               result: 'error',
-                SessionName: SessionName,
                 state: 'NOTFOUND',
                 status: 'notLogged',
-                qrcode: null,
                 message: 'Sistema Off-line'
             };
             //
@@ -404,10 +356,8 @@ module.exports = class Sessions {
     } else {
       return {
         result: 'error',
-        SessionName: SessionName,
         state: 'NOTFOUND',
         status: 'notLogged',
-        qrcode: null,
         message: 'Sistema Off-line'
       };
     }
