@@ -881,7 +881,7 @@ module.exports = class Sessions {
     var session = Sessions.getSession(SessionName);
     var closeSession = await session.client.then(async client => {
       try {
-        const strClosed = await client.close();
+        const strClosed = client.close();
         //
         console.log("- Close:", strClosed);
         //
