@@ -124,6 +124,7 @@ router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next
     case 'qrReadSuccess':
     case 'isLogged':
     case 'chatsAvailable':
+    case 'qrRead':
       //
       res.status(200).json({
         "Status": sessionStatus
@@ -136,7 +137,6 @@ router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next
     case 'deleteToken':
     case 'CLOSED':
     case 'DISCONNECTED':
-    case 'qrRead':
       //
       var session = await Sessions.Start(req.body.SessionName.trim());
       session.state = 'STARTING';
