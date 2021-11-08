@@ -1861,6 +1861,33 @@ router.post("/checkNumberStatus", upload.none(''), verifyToken.verify, async (re
 //
 // ------------------------------------------------------------------------------------------------------- //
 //
+// Verificar o status do número
+router.post("/phoneValidate", upload.none(''), verifyToken.verify, async (req, res, next) => {
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var phone = soNumeros(req.body.phonefull);
+      var validPhone = await validPhone(phone);
+      //
+      res.setHeader('Content-Type', 'application/json');
+      res.status(200).json({
+        validPhone
+      });
+      break;
+    default:
+      res.setHeader('Content-Type', 'application/json');
+      res.status(400).json({
+        "phoneValidate": sessionStatus
+      });
+  }
+}); //checkNumberStatus
+//
+// ------------------------------------------------------------------------------------------------------- //
+//
 // Verificar o status do número em massa
 router.post("/checkNumberStatusMassa", upload.single('contatos'), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
