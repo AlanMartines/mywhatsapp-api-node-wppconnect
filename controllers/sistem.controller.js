@@ -392,7 +392,7 @@ router.post("/sendVoice", upload.single('audio_data'), verifyToken.verify, async
         soNumeros(req.body.phonefull).trim() + '@c.us'
       );
       //
-      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+      if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
         //
         var sendVoice = await Sessions.sendVoice(
           req.body.SessionName.trim(),
@@ -433,7 +433,7 @@ router.post("/sendVoiceBase64", upload.single('audio_data'), verifyToken.verify,
         soNumeros(req.body.phonefull).trim() + '@c.us'
       );
       //
-      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+      if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
         //
         var sendVoiceBase64 = await Sessions.sendVoiceBase64(
           req.body.SessionName.trim(),
@@ -475,7 +475,7 @@ router.post("/sendVoiceFileBase64", upload.single('audio_data'), verifyToken.ver
         soNumeros(req.body.phonefull).trim() + '@c.us'
       );
       //
-      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+      if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
         //
         var sendVoiceBase64 = await Sessions.sendVoiceBase64(
           req.body.SessionName.trim(),
@@ -516,7 +516,7 @@ router.post("/sendContactVcard", upload.none(''), verifyToken.verify, async (req
         soNumeros(req.body.phonefull).trim() + '@c.us'
       );
       //
-      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+      if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
         //
         var sendContactVcard = await Sessions.sendContactVcard(
           req.body.SessionName.trim(),
@@ -557,7 +557,7 @@ router.post("/sendContactVcardList", upload.single('contactlist'), verifyToken.v
         soNumeros(req.body.phonefull).trim() + '@c.us'
       );
       //
-      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+      if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
         //
         var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + req.body.SessionName.trim() + '-'));
         var filePath = path.join(folderName, req.file.originalname);
@@ -624,7 +624,7 @@ router.post("/sendText", upload.none(''), verifyToken.verify, async (req, res, n
         soNumeros(req.body.phonefull).trim() + '@c.us'
       );
       //
-      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+      if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
         //
         var sendText = await Sessions.sendText(
           req.body.SessionName.trim(),
@@ -679,7 +679,7 @@ router.post("/sendTextMassa", upload.single('phonefull'), verifyToken.verify, as
             soNumeros(numero) + '@c.us'
           );
           //
-          if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+          if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
             //
             var sendTextMassaRes = await Sessions.sendText(
               req.body.SessionName.trim(),
@@ -757,7 +757,7 @@ router.post("/sendLocation", upload.none(''), verifyToken.verify, async (req, re
         soNumeros(req.body.phonefull).trim() + '@c.us'
       );
       //
-      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+      if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
         //
         var sendLocation = await Sessions.sendLocation(
           req.body.SessionName.trim(),
@@ -830,7 +830,7 @@ router.post("/sendLinkPreview", upload.none(''), verifyToken.verify, async (req,
         soNumeros(req.body.phonefull).trim() + '@c.us'
       );
       //
-      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+      if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
         //
         var sendLinkPreview = await Sessions.sendLinkPreview(
           req.body.SessionName.trim(),
@@ -876,7 +876,7 @@ router.post("/sendImage", upload.single('fileimg'), verifyToken.verify, async (r
         soNumeros(req.body.phonefull).trim() + '@c.us'
       );
       //
-      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+      if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
         //
         var sendImage = await Sessions.sendImage(
           req.body.SessionName.trim(),
@@ -950,7 +950,7 @@ router.post("/sendImageMassa", sendImageMassa, verifyToken.verify, async (req, r
             soNumeros(numero) + '@c.us'
           );
           //
-          if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+          if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
             //
             var sendImageMassaRes = await Sessions.sendImage(
               req.body.SessionName.trim(),
@@ -1009,7 +1009,7 @@ router.post("/sendMultImage", upload.array('fileimgs', 50), verifyToken.verify, 
         soNumeros(req.body.phonefull).trim() + '@c.us'
       );
       //
-      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+      if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
         //
         await forEach(resultsFiles, async (resultfile) => {
           //
@@ -1090,7 +1090,7 @@ router.post("/sendMultImageMassa", sendMultImageMassa, verifyToken.verify, async
             soNumeros(numero) + '@c.us'
           );
           //
-          if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+          if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
             //
             await forEach(resultsFilesImg, async (resultfile) => {
               //
@@ -1197,7 +1197,7 @@ router.post("/sendFile", upload.single('file'), verifyToken.verify, async (req, 
         soNumeros(req.body.phonefull).trim() + '@c.us'
       );
       //
-      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+      if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
         //
         var sendFile = await Sessions.sendFile(
           req.body.SessionName.trim(),
@@ -1285,7 +1285,7 @@ router.post("/sendFileBase64", upload.none(''), verifyToken.verify, async (req, 
         soNumeros(req.body.phonefull).trim() + '@c.us'
       );
       //
-      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+      if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
         //
         var sendFileBase64 = await Sessions.sendFile(
           req.body.SessionName.trim(),
@@ -1367,7 +1367,7 @@ router.post("/sendFileToBase64", upload.single('file'), verifyToken.verify, asyn
         soNumeros(req.body.phonefull).trim() + '@c.us'
       );
       //
-      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+      if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
         //
         var sendFileFromBase64 = await Sessions.sendFileFromBase64(
           req.body.SessionName.trim(),
@@ -1442,7 +1442,7 @@ router.post("/sendFileFromBase64", upload.none(''), verifyToken.verify, async (r
         soNumeros(req.body.phonefull).trim() + '@c.us'
       );
       //
-      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+      if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
         //
         var sendFileFromBase64 = await Sessions.sendFileFromBase64(
           req.body.SessionName.trim(),
@@ -1527,7 +1527,7 @@ router.post("/sendImageAsStickerGif", upload.single('file'), verifyToken.verify,
         soNumeros(req.body.phonefull).trim() + '@c.us'
       );
       //
-      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+      if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
         //
         var sendImageAsStickerGif = await Sessions.sendImageAsStickerGif(
           req.body.SessionName.trim(),
@@ -1574,7 +1574,7 @@ router.post("/sendImageAsStickerGifUrl", upload.single('file'), verifyToken.veri
         soNumeros(req.body.phonefull).trim() + '@c.us'
       );
       //
-      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+      if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
         //
         var sendImageAsStickerGifUrl = await Sessions.sendImageAsStickerGif(
           req.body.SessionName.trim(),
@@ -1623,7 +1623,7 @@ router.post("/sendImageAsSticker", upload.single('file'), verifyToken.verify, as
         soNumeros(req.body.phonefull).trim() + '@c.us'
       );
       //
-      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+      if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
         //
         var sendImageAsSticker = await Sessions.sendImageAsSticker(
           req.body.SessionName.trim(),
@@ -1773,7 +1773,7 @@ router.post("/getStatus", upload.none(''), verifyToken.verify, async (req, res, 
         soNumeros(req.body.phonefull).trim() + '@c.us'
       );
       //
-      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+      if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
         //
         var getStatus = await Sessions.getStatus(
           req.body.SessionName.trim(),
@@ -1812,7 +1812,7 @@ router.post("/getNumberProfile", upload.none(''), verifyToken.verify, async (req
         soNumeros(req.body.phonefull).trim() + '@c.us'
       );
       //
-      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+      if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
         //
         var getNumberProfile = await Sessions.getNumberProfile(
           req.body.SessionName.trim(),
@@ -1893,7 +1893,7 @@ router.post("/checkNumberStatusMassa", upload.single('contatos'), verifyToken.ve
             soNumeros(numero) + '@c.us'
           );
           //
-          if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+          if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
             //
             checkNumberStatusMassa.push(checkNumberStatus);
             //
@@ -1934,7 +1934,7 @@ router.post("/getProfilePicFromServer", upload.none(''), verifyToken.verify, asy
         soNumeros(req.body.phonefull).trim() + '@c.us'
       );
       //
-      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+      if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
         //
         var getProfilePicFromServer = await Sessions.getProfilePicFromServer(
           req.body.SessionName.trim(),
@@ -2105,7 +2105,7 @@ router.post("/createGroup", upload.single('participants'), verifyToken.verify, a
               soNumeros(numero) + '@c.us'
             );
             //
-            if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+            if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
               //
               contactlistValid.push(checkNumberStatus.number + '@c.us');
             } else {
@@ -2176,7 +2176,7 @@ router.post("/createGroupSetAdminMembers", upload.single('participants'), verify
               soNumeros(numero) + '@c.us'
             );
             //
-            if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+            if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
               //
               contactlistValid.push(checkNumberStatus.number + "@c.us");
             } else {
@@ -2271,7 +2271,7 @@ router.post("/createCountGroupSetAdminMembers", upload.single('participants'), v
               soNumeros(numero) + '@c.us'
             );
             //
-            if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+            if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
               //
               contactlistValid.push(checkNumberStatus.number + "@c.us");
             } else {
@@ -2353,7 +2353,7 @@ router.post("/removeParticipant", upload.none(''), verifyToken.verify, async (re
         soNumeros(req.body.phonefull).trim() + '@c.us'
       );
       //
-      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+      if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
         //
         var removeParticipant = await Sessions.removeParticipant(
           req.body.SessionName.trim(),
@@ -2393,7 +2393,7 @@ router.post("/addParticipant", upload.none(''), verifyToken.verify, async (req, 
         soNumeros(req.body.phonefull).trim() + '@c.us'
       );
       //
-      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+      if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
         //
         var addParticipant = await Sessions.addParticipant(
           req.body.SessionName.trim(),
@@ -2433,7 +2433,7 @@ router.post("/promoteParticipant", upload.none(''), verifyToken.verify, async (r
         soNumeros(req.body.phonefull).trim() + '@c.us'
       );
       //
-      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+      if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
         //
         var promoteParticipant = await Sessions.promoteParticipant(
           req.body.SessionName.trim(),
@@ -2472,7 +2472,7 @@ router.post("/demoteParticipant", upload.none(''), verifyToken.verify, async (re
         soNumeros(req.body.phonefull).trim() + '@c.us'
       );
       //
-      if (checkNumberStatus.status === 200 && checkNumberStatus.canReceiveMessage === true) {
+      if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
         //
         var demoteParticipant = await Sessions.demoteParticipant(
           req.body.SessionName.trim(),
