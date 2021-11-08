@@ -1025,8 +1025,6 @@ module.exports = class Sessions {
           "erro": false,
           "status": 200,
           "number": number,
-          "canReceiveMessage": true,
-          "text": "success",
           "message": "Menssagem envida com sucesso."
         };
         //
@@ -1039,8 +1037,6 @@ module.exports = class Sessions {
           "erro": true,
           "status": 404,
           "number": number,
-          "canReceiveMessage": false,
-          "text": erro.text,
           "message": "Erro ao enviar menssagem"
         };
         //
@@ -1073,8 +1069,6 @@ module.exports = class Sessions {
           "erro": false,
           "status": 200,
           "number": number,
-          "canReceiveMessage": true,
-          "text": "success",
           "message": "Menssagem envida com sucesso."
         };
         //
@@ -1087,8 +1081,6 @@ module.exports = class Sessions {
           "erro": true,
           "status": 404,
           "number": number,
-          "canReceiveMessage": false,
-          "text": erro.text,
           "message": "Erro ao enviar menssagem"
         };
         //
@@ -1122,8 +1114,6 @@ module.exports = class Sessions {
             "erro": false,
             "status": 200,
             "number": number,
-            "canReceiveMessage": true,
-            "text": "success",
             "message": "Contato envido com sucesso."
           };
           //
@@ -1135,8 +1125,6 @@ module.exports = class Sessions {
             "erro": true,
             "status": 404,
             "number": number,
-            "canReceiveMessage": false,
-            "text": erro.text,
             "message": "Erro ao enviar contato"
           };
           //
@@ -1172,7 +1160,6 @@ module.exports = class Sessions {
             "canReceiveMessage": true,
             "contactlistValid": contactlistValid,
             "contactlistInvalid": contactlistInvalid,
-            "text": "success",
             "message": "Lista de contatos validos envida com sucesso."
           };
           //
@@ -1186,7 +1173,6 @@ module.exports = class Sessions {
             "canReceiveMessage": false,
             "contactlistValid": contactlistValid,
             "contactlistInvalid": contactlistInvalid,
-            "text": erro.text,
             "message": "Erro ao enviar lista de contatos validos"
           };
           //
@@ -1217,7 +1203,6 @@ module.exports = class Sessions {
           "erro": false,
           "status": 200,
           "number": number,
-          "canReceiveMessage": true,
           "message": "Menssagem envida com sucesso."
         };
         //
@@ -1230,7 +1215,6 @@ module.exports = class Sessions {
           "erro": true,
           "status": 404,
           "number": number,
-          "canReceiveMessage": false,
           "message": "Erro ao enviar menssagem"
         };
         //
@@ -1267,8 +1251,6 @@ module.exports = class Sessions {
           "erro": false,
           "status": 200,
           "number": number,
-          "canReceiveMessage": true,
-          "text": "success",
           "message": "Localização envida com sucesso."
         };
         //
@@ -1281,8 +1263,6 @@ module.exports = class Sessions {
           "erro": true,
           "status": 404,
           "number": number,
-          "canReceiveMessage": false,
-          "text": erro.text,
           "message": "Erro ao enviar localização."
         };
         //
@@ -1317,8 +1297,6 @@ module.exports = class Sessions {
           "erro": false,
           "status": 200,
           "number": number,
-          "canReceiveMessage": true,
-          "text": "success",
           "message": "Link envida com sucesso."
         };
         //
@@ -1331,8 +1309,6 @@ module.exports = class Sessions {
           "erro": true,
           "status": 404,
           "number": number,
-          "canReceiveMessage": false,
-          "text": erro.text,
           "message": "Erro ao enviar link."
         };
         //
@@ -1367,8 +1343,6 @@ module.exports = class Sessions {
           "erro": false,
           "status": 200,
           "number": number,
-          "canReceiveMessage": true,
-          "text": "success",
           "message": "Menssagem envida com sucesso."
         };
         //
@@ -1380,8 +1354,6 @@ module.exports = class Sessions {
           "erro": true,
           "status": 404,
           "number": number,
-          "canReceiveMessage": false,
-          "text": erro.text,
           "message": "Erro ao enviar menssagem"
         };
         //
@@ -1416,8 +1388,6 @@ module.exports = class Sessions {
           "erro": false,
           "status": 200,
           "number": number,
-          "canReceiveMessage": true,
-          "text": "success",
           "message": "Arquivo envido com sucesso."
         };
         //
@@ -1429,8 +1399,6 @@ module.exports = class Sessions {
           "erro": true,
           "status": 404,
           "number": number,
-          "canReceiveMessage": false,
-          "text": erro.text,
           "message": "Erro ao enviar arquivo"
         };
         //
@@ -1466,8 +1434,6 @@ module.exports = class Sessions {
           "erro": false,
           "status": 200,
           "number": number,
-          "canReceiveMessage": true,
-          "text": "success",
           "message": "Arquivo envida com sucesso."
         };
         //
@@ -1479,8 +1445,6 @@ module.exports = class Sessions {
           "erro": true,
           "status": 404,
           "number": number,
-          "canReceiveMessage": false,
-          "text": erro.text,
           "message": "Erro ao enviar arquivo"
         };
         //
@@ -1512,8 +1476,6 @@ module.exports = class Sessions {
           "erro": false,
           "status": 200,
           "number": number,
-          "canReceiveMessage": true,
-          "text": "success",
           "message": "Gif envida com sucesso."
         };
         //
@@ -1525,8 +1487,6 @@ module.exports = class Sessions {
           "erro": true,
           "status": 404,
           "number": number,
-          "canReceiveMessage": false,
-          "text": erro.text,
           "message": "Erro ao enviar gif"
         };
         //
@@ -1557,8 +1517,6 @@ module.exports = class Sessions {
           "erro": false,
           "status": 200,
           "number": number,
-          "canReceiveMessage": true,
-          "text": "success",
           "message": "Figura envida com sucesso."
         };
         //
@@ -1570,8 +1528,6 @@ module.exports = class Sessions {
           "erro": true,
           "status": 404,
           "number": number,
-          "canReceiveMessage": false,
-          "text": erro.text,
           "message": "Erro ao enviar figura"
         };
         //
@@ -1626,8 +1582,6 @@ module.exports = class Sessions {
         return {
           "erro": true,
           "status": 404,
-          "canReceiveMessage": false,
-          "text": "Error",
           "message": "Erro ao recuperar contatos"
         };
         //
@@ -1674,8 +1628,6 @@ module.exports = class Sessions {
         return {
           "erro": true,
           "status": 404,
-          "canReceiveMessage": false,
-          "text": "Error",
           "message": "Erro ao recuperar grupos"
         };
         //
@@ -1702,8 +1654,6 @@ module.exports = class Sessions {
         return {
           "erro": true,
           "status": 404,
-          "canReceiveMessage": false,
-          "text": "Error",
           "message": "Erro ao recuperar token browser"
         };
         //
@@ -1728,8 +1678,6 @@ module.exports = class Sessions {
         return {
           "erro": true,
           "status": 404,
-          "canReceiveMessage": false,
-          "text": "Error",
           "message": "Erro ao recuperar lista de contatos bloqueados"
         };
         //
@@ -1757,8 +1705,6 @@ module.exports = class Sessions {
         return {
           "erro": true,
           "status": 404,
-          "canReceiveMessage": false,
-          "text": "Error",
           "message": "Erro ao recuperar status de contato"
         };
         //
@@ -1786,8 +1732,6 @@ module.exports = class Sessions {
         return {
           "erro": true,
           "status": 404,
-          "canReceiveMessage": false,
-          "text": "Error",
           "message": "Erro ao recuperar profile"
         };
         //
@@ -1814,7 +1758,6 @@ module.exports = class Sessions {
           return {
             "erro": false,
             "status": result.status,
-            "canReceiveMessage": result.canReceiveMessage,
             "number": result.id.user,
             "message": "O número informado pode receber mensagens via whatsapp"
           };
@@ -1824,7 +1767,6 @@ module.exports = class Sessions {
           return {
             "erro": true,
             "status": result.status,
-            "canReceiveMessage": result.canReceiveMessage,
             "number": result.id.user,
             "message": "O número informado não pode receber mensagens via whatsapp"
           };
@@ -1834,7 +1776,6 @@ module.exports = class Sessions {
           return {
             "erro": true,
             "status": 404,
-            "canReceiveMessage": null,
             "number": number,
             "message": "Erro ao verificar número informado"
           };
@@ -1846,7 +1787,6 @@ module.exports = class Sessions {
         return {
           "erro": true,
           "status": 404,
-          "canReceiveMessage": null,
           "number": number,
           "message": "Erro ao verificar número informado"
         };
@@ -1876,8 +1816,6 @@ module.exports = class Sessions {
         return {
           "erro": true,
           "status": 404,
-          "canReceiveMessage": false,
-          "text": "Error",
           "message": "Erro ao obtendo a foto do perfil no servidor"
         };
         //
@@ -1908,7 +1846,6 @@ module.exports = class Sessions {
         return {
           "erro": false,
           "status": 200,
-          "canReceiveMessage": true,
           "groupId": groupId,
           "message": "Grupo deixado com sucesso"
         };
@@ -1919,7 +1856,6 @@ module.exports = class Sessions {
         return {
           "erro": true,
           "status": 404,
-          "canReceiveMessage": false,
           "groupId": groupId,
           "message": "Erro ao deixar o grupo"
         };
@@ -1967,7 +1903,6 @@ module.exports = class Sessions {
         return {
           "erro": true,
           "status": 404,
-          "canReceiveMessage": false,
           "groupId": groupId,
           "message": "Erro ao obter membros do grupo"
         };
@@ -1996,7 +1931,6 @@ module.exports = class Sessions {
         return {
           "erro": true,
           "status": 404,
-          "canReceiveMessage": false,
           "groupId": groupId,
           "message": "Erro ao obter membros do grupo"
         };
@@ -2025,7 +1959,6 @@ module.exports = class Sessions {
         return {
           "erro": true,
           "status": 404,
-          "canReceiveMessage": false,
           "groupId": groupId,
           "message": "Erro ao obter link de convite de grupo"
         };
