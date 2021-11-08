@@ -135,8 +135,13 @@ router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next
     case 'desconnectedMobile':
     case 'qrReadFail':
     case 'deleteToken':
+    case 'browserClose':
+    case 'autocloseCalled':
+    case 'serverClose':
+    case 'deleteToken':
     case 'CLOSED':
     case 'DISCONNECTED':
+    case 'qrRead':
       //
       var session = await Sessions.Start(req.body.SessionName.trim());
       session.state = 'STARTING';
