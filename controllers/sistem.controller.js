@@ -575,11 +575,7 @@ router.post("/sendContactVcardList", upload.single('contactlist'), verifyToken.v
           //
           if (numero.length !== 0) {
             //
-            if (validPhone(numero) === true) {
-              contactlistValid.push(numero + '@c.us');
-            } else {
-              contactlistInvalid.push(numero + '@c.us');
-            }
+            contactlistValid.push(numero + '@c.us');
             //
           }
           await sleep(1000);
@@ -2098,19 +2094,14 @@ router.post("/createGroup", upload.single('participants'), verifyToken.verify, a
         //
         if (numero.length !== 0) {
           //
-          if (validPhone(numero) === true) {
+          var checkNumberStatus = await Sessions.checkNumberStatus(
+            req.body.SessionName.trim(),
+            soNumeros(numero) + '@c.us'
+          );
+          //
+          if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
             //
-            var checkNumberStatus = await Sessions.checkNumberStatus(
-              req.body.SessionName.trim(),
-              soNumeros(numero) + '@c.us'
-            );
-            //
-            if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
-              //
-              contactlistValid.push(checkNumberStatus.number + '@c.us');
-            } else {
-              contactlistInvalid.push(numero + '@c.us');
-            }
+            contactlistValid.push(checkNumberStatus.number + '@c.us');
           } else {
             contactlistInvalid.push(numero + '@c.us');
           }
@@ -2169,19 +2160,14 @@ router.post("/createGroupSetAdminMembers", upload.single('participants'), verify
         //
         if (numero.length !== 0) {
           //
-          if (validPhone(numero) === true) {
+          var checkNumberStatus = await Sessions.checkNumberStatus(
+            req.body.SessionName.trim(),
+            soNumeros(numero) + '@c.us'
+          );
+          //
+          if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
             //
-            var checkNumberStatus = await Sessions.checkNumberStatus(
-              req.body.SessionName.trim(),
-              soNumeros(numero) + '@c.us'
-            );
-            //
-            if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
-              //
-              contactlistValid.push(checkNumberStatus.number + "@c.us");
-            } else {
-              contactlistInvalid.push(numero + "@c.us");
-            }
+            contactlistValid.push(checkNumberStatus.number + "@c.us");
           } else {
             contactlistInvalid.push(numero + "@c.us");
           }
@@ -2264,19 +2250,14 @@ router.post("/createCountGroupSetAdminMembers", upload.single('participants'), v
         //
         if (numero.length !== 0) {
           //
-          if (validPhone(numero) === true) {
+          var checkNumberStatus = await Sessions.checkNumberStatus(
+            req.body.SessionName.trim(),
+            soNumeros(numero) + '@c.us'
+          );
+          //
+          if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
             //
-            var checkNumberStatus = await Sessions.checkNumberStatus(
-              req.body.SessionName.trim(),
-              soNumeros(numero) + '@c.us'
-            );
-            //
-            if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
-              //
-              contactlistValid.push(checkNumberStatus.number + "@c.us");
-            } else {
-              contactlistInvalid.push(numero + "@c.us");
-            }
+            contactlistValid.push(checkNumberStatus.number + "@c.us");
           } else {
             contactlistInvalid.push(numero + "@c.us");
           }
