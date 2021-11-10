@@ -1,10 +1,8 @@
 //ecosystem.config.js
 //
-const path = require('path');
-const os = require('os');
 require('dotenv/config');
 //
-const HOST = process.env.NODE_ENV;
+const NODE_ENV = process.env.NODE_ENV;
 const HOST = process.env.HOST || localhost;
 const PORT = process.env.PORT;
 const VIEW_QRCODE_TERMINAL = process.env.VIEW_QRCODE_TERMINAL;
