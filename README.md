@@ -341,7 +341,7 @@ pm2 unstartup systemd
 ## Gerar TOKEN_SECRET para uso no jwt
 
 ```bash
-node -e "console.log(require('crypto').randomBytes(256).toString('base64'));"
+node -e "console.log(require('crypto').randomBytes(64).toString('base64').replace(/[^a-zA-Z0-9]/g, ''));"
 ```
 
 ## Criar pasta tokens (Linux)
