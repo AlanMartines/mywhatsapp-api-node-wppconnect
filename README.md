@@ -305,7 +305,7 @@ git clone https://github.com/wppconnect-team/wppconnect.git
 cd wppconnect
 
 # Instale as dependências
-npm install --allow-root --unsafe-perm=true
+npm install
 
 # Building WPPConnect
 npm run build
@@ -320,7 +320,7 @@ cp .env-example .env
 node server.js
 
 # Manter os processos ativos a cada reinicialização do servidor
-npm install --allow-root --unsafe-perm=true pm2 -g
+npm install pm2 -g
 
 pm2 start server.js --name ApiWPPConnect --watch
 
