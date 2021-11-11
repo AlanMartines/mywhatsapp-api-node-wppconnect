@@ -305,7 +305,7 @@ git clone https://github.com/wppconnect-team/wppconnect.git
 cd wppconnect
 
 # Instale as dependências
-npm install
+npm install --allow-root --unsafe-perm=true
 
 # Building WPPConnect
 npm run build
