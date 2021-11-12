@@ -63,7 +63,7 @@ Esta Api, segue os mesmos termos de serviço do WhatsApp. É importante que voc�
 #### Dependências Debian (e.g. Ubuntu) 64bits
 
 ```bash
-  sudo apt-get update \
+  sudo apt-get update; \
 	&& apt-get upgrade -y \
 	&& apt-get install -y \
 	git \
@@ -181,12 +181,12 @@ xorg-x11-utils
 
 ```bash
 # replacing default repositories with edge ones
-echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" > /etc/apk/repositories \
-echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories \
-echo "http://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories \
-echo "http://dl-cdn.alpinelinux.org/alpine/v3.9/main" >> /etc/apk/repositories \
+echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" > /etc/apk/repositories && \
+echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
+echo "http://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
+echo "http://dl-cdn.alpinelinux.org/alpine/v3.9/main" >> /etc/apk/repositories && \
 echo "http://dl-cdn.alpinelinux.org/alpine/v3.9/community" >> /etc/apk/repositories \
-apk update \
+apk update && \
 apk upgrade \
 # Add the packages
 apk add --update --no-cache dumb-init curl make gcc g++ linux-headers binutils-gold gnupg libstdc++ nss chromium chromium-chromedriver git vim curl yarn nodejs nodejs-npm npm python python3 dpkg wget
@@ -229,7 +229,7 @@ curl -sL https://deb.nodesource.com/setup_14.x -o nodesource_setup.sh
 sudo bash nodesource_setup.sh
 
 # Instalar o pacote Node.js
-sudo apt install -y git nodejs yarn gcc g++ make python3
+sudo apt install -y git nodejs yarn gcc g++ make vim curl npm python python3
 
 # Remover pacotes que não são mais necessários
 sudo apt autoremove -y
@@ -250,7 +250,7 @@ curl -sL https://rpm.nodesource.com/setup_14.x | sudo bash -
 sudo yum install nodejs
 
 # Instalar o pacote Node.js
-sudo yum install -y git nodejs yarn gcc g++ make gcc-c++ tar
+sudo yum install -y git nodejs yarn gcc g++ gcc-c++ tar make vim curl npm python python3
 
 # Remover pacotes que não são mais necessários
 sudo yum autoremove -y
