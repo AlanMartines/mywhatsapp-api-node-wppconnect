@@ -63,9 +63,9 @@ Esta Api, segue os mesmos termos de serviço do WhatsApp. É importante que voc�
 #### Dependências Debian (e.g. Ubuntu) 64bits
 
 ```bash
-  sudo apt-get update; \
-	&& apt-get upgrade -y \
-	&& apt-get install -y \
+  sudo apt-get update && \
+	apt-get upgrade -y && \
+	apt-get install -y \
 	git \
 	curl \
 	yarn \
@@ -154,7 +154,7 @@ Esta Api, segue os mesmos termos de serviço do WhatsApp. É importante que voc�
 #### Dependências CentOS 7/8 64bits (Validar)
 
 ```bash
-yum install -y \
+sudo yum install -y \
 alsa-lib.x86_64 \
 atk.x86_64 \
 cups-libs.x86_64 \
@@ -185,10 +185,9 @@ echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" > /etc/apk/repositories
 echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
 echo "http://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
 echo "http://dl-cdn.alpinelinux.org/alpine/v3.9/main" >> /etc/apk/repositories && \
-echo "http://dl-cdn.alpinelinux.org/alpine/v3.9/community" >> /etc/apk/repositories \
+echo "http://dl-cdn.alpinelinux.org/alpine/v3.9/community" >> /etc/apk/repositories && \
 apk update && \
-apk upgrade \
-# Add the packages
+apk upgrade && \
 apk add --update --no-cache dumb-init curl make gcc g++ linux-headers binutils-gold gnupg libstdc++ nss chromium chromium-chromedriver git vim curl yarn nodejs nodejs-npm npm python python3 dpkg wget
 ```
 
