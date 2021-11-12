@@ -229,7 +229,7 @@ curl -sL https://deb.nodesource.com/setup_14.x -o nodesource_setup.sh
 sudo bash nodesource_setup.sh
 
 # Instalar o pacote Node.js
-sudo apt install -y git nodejs yarn gcc g++ make
+sudo apt install -y git nodejs yarn gcc g++ make python3
 
 # Remover pacotes que não são mais necessários
 sudo apt autoremove -y
