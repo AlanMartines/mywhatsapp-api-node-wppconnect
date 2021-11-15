@@ -8,30 +8,10 @@ const fs = require('fs-extra');
 const path = require('path');
 const express = require("express");
 const multer = require('multer');
-// Configuração de armazenamento
-const storage = multer.diskStorage({
-  destination: function(req, file, cb) {
-    cb(null, '/tmp/')
-  },
-  filename: function(req, file, cb) {
-    // Extração da extensão do arquivo original:
-    const extensaoArquivo = file.originalname.split('.')[1];
-
-    // Cria um código randômico que será o nome do arquivo
-    const novoNomeArquivo = require('crypto')
-      .randomBytes(64)
-      .toString('hex');
-
-    // Indica o novo nome do arquivo:
-    cb(null, `wppconnect-${novoNomeArquivo}.${extensaoArquivo}`);
-  }
-});
 const upload = multer({})
 const router = express.Router();
 const Sessions = require("../sessions.js");
 const verifyToken = require("../middleware/verifyToken");
-//
-const config = require('../config.global');
 //
 // ------------------------------------------------------------------------------------------------//
 //
@@ -143,7 +123,8 @@ router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next
     case 'DISCONNECTED':
     case 'qrRead':
       //
-      var session = await Sessions.Start(req.body.SessionName.trim());
+      var getStart = await Sessions.Start(req.body.SessionName.trim(), req.body.AuthorizationToken.trim());
+      console.log("- AuthorizationToken:", req.body.AuthorizationToken.trim());
       session.state = 'STARTING';
       session.status = 'notLogged';
       var Start = {

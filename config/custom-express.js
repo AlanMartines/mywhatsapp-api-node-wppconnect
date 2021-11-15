@@ -1,9 +1,7 @@
 //
 // Configuração dos módulos
-const fs = require('fs');
 const express = require('express');
 const app = express();
-const consign = require('consign');
 const cors = require('cors');
 const path = require('path');
 //
@@ -16,17 +14,9 @@ const io = require('socket.io')(http, {
     credentials: true
   },
 });
-//require('dotenv/config');
-/*
-require("dotenv").config({
-  path: "./.env"
-});
-*/
-const config = require('../config.global');
 app.use(cors());
 //
 const sistem = require("../controllers/sistem.controller");
-const verifyToken = require("../middleware/verifyToken");
 //
 module.exports = () => {
   //

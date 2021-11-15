@@ -108,14 +108,14 @@ async function osplatform() {
 //
 // ------------------------------------------------------------------------------------------------------- //
 //
-async function updateStateDb(state, status, SessionName) {
+async function updateStateDb(state, status, AuthorizationToken) {
   //
   const date_now = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
   console.log("- Date:", date_now);
   //
   //
   const sql = "UPDATE tokens SET state=?, status=?, lastactivit=? WHERE token=?";
-  const values = [state, status, date_now, SessionName];
+  const values = [state, status, date_now, AuthorizationToken];
   //
   if (parseInt(config.VALIDATE_MYSQL) == true) {
     console.log('- Atualizando status');
@@ -143,14 +143,6 @@ async function deletaToken(filePath) {
 }
 //
 module.exports = class Sessions {
-  //
-  static async getStatusApi(sessionName, options = []) {
-    Sessions.options = Sessions.options || options;
-    Sessions.sessions = Sessions.sessions || [];
-
-    var session = Sessions.getSession(sessionName);
-    return session;
-  } //getStatus
   //
   static async ApiStatus(SessionName) {
     console.log("- Status");
@@ -365,8 +357,7 @@ module.exports = class Sessions {
   //
   // ------------------------------------------------------------------------------------------------------- //
   //
-  static async Start(SessionName, options = []) {
-    Sessions.options = Sessions.options || options; //start object
+  static async Start(SessionName, AuthorizationToken) {
     Sessions.sessions = Sessions.sessions || []; //start array
 
     var session = Sessions.getSession(SessionName);
@@ -378,7 +369,7 @@ module.exports = class Sessions {
       console.log('- State do sistema:', session.state);
       console.log('- Status da sessão:', session.status);
       //
-      session = await Sessions.addSesssion(SessionName);
+      session = await Sessions.addSesssion(SessionName, AuthorizationToken);
     } else if (["CLOSED"].includes(session.state)) {
       //restart session
       console.log("- State: CLOSED");
@@ -431,16 +422,17 @@ module.exports = class Sessions {
       console.log('- Status da sessão:', session.status);
     }
     //
-    await updateStateDb(session.state, session.status, SessionName);
+    await updateStateDb(session.state, session.status, AuthorizationToken);
     //
     return session;
   } //start
   //
   // ------------------------------------------------------------------------------------------------------- //
   //
-  static async addSesssion(SessionName) {
+  static async addSesssion(SessionName, AuthorizationToken) {
     console.log("- Adicionando sessão");
     var newSession = {
+      AuthorizationToken: AuthorizationToken,
       name: SessionName,
       process: null,
       qrcode: null,
@@ -543,6 +535,10 @@ module.exports = class Sessions {
         //console.log(urlCode);
         session.CodeurlCode = urlCode;
         //
+        if (attempts <= 2) {
+          await updateStateDb(session.state, session.status, session.AuthorizationToken);
+        }
+        //
         var qrCode = base64Qrimg.replace('data:image/png;base64,', '');
         const imageBuffer = Buffer.from(qrCode, 'base64');
         //
@@ -592,7 +588,7 @@ module.exports = class Sessions {
             session.CodeurlCode = null;
             session.message = "Sistema iniciado e disponivel para uso";
             //
-            await updateStateDb(session.state, session.status, SessionName);
+            await updateStateDb(session.state, session.status, session.AuthorizationToken);
             //
             break;
           case 'autocloseCalled':
@@ -607,7 +603,7 @@ module.exports = class Sessions {
             session.CodeurlCode = null;
             session.message = "Sistema fechado";
             //
-            await updateStateDb(session.state, session.status, SessionName);
+            await updateStateDb(session.state, session.status, session.AuthorizationToken);
             //
             break;
           case 'qrReadFail':
@@ -622,7 +618,7 @@ module.exports = class Sessions {
             session.qrcode = null;
             session.message = "Dispositivo desconetado";
             //
-            await updateStateDb(session.state, session.status, SessionName);
+            await updateStateDb(session.state, session.status, session.AuthorizationToken);
             //
             break;
           default:
@@ -633,7 +629,7 @@ module.exports = class Sessions {
             session.qrcode = null;
             session.message = "Dispositivo desconetado";
             //
-            await updateStateDb(session.state, session.status, SessionName);
+            await updateStateDb(session.state, session.status, session.AuthorizationToken);
             //
         }
       },
@@ -901,7 +897,7 @@ module.exports = class Sessions {
             message: "Sessão fechada com sucesso"
           };
           //
-          await updateStateDb(session.state, session.status, SessionName);
+          await updateStateDb(session.state, session.status, session.AuthorizationToken);
           //
         } else {
           //
@@ -973,7 +969,7 @@ module.exports = class Sessions {
         //
         await deletaToken(session.tokenPatch + "/" + SessionName + ".data.json");
         //
-        await updateStateDb(session.state, session.status, SessionName);
+        await updateStateDb(session.state, session.status, session.AuthorizationToken);
         //
         return returnLogout;
         //
@@ -990,7 +986,7 @@ module.exports = class Sessions {
       }
     });
     //
-    await updateStateDb(session.state, session.status, SessionName);
+    await updateStateDb(session.state, session.status, session.AuthorizationToken);
     //
     return LogoutSession;
   } //LogoutSession
