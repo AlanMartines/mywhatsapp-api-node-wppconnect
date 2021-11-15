@@ -5,14 +5,16 @@ const app = express();
 const cors = require('cors');
 const path = require('path');
 //
-const http = require('http').createServer({}, app);
+const http = require('http').Server(app);
 // https://www.scaleway.com/en/docs/tutorials/socket-io/
 const io = require('socket.io')(http, {
   cors: {
-    origin: '*',
+    origins: ["*"],
     methods: ["GET", "POST"],
+    transports: ['websocket', 'polling'],
     credentials: true
   },
+  allowEIO3: true
 });
 app.use(cors());
 //
