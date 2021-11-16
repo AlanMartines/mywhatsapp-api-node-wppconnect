@@ -450,7 +450,7 @@ module.exports = class Sessions {
 
     //setup session
     newSession.client = Sessions.initSession(SessionName, AuthorizationToken);
-    Sessions.setup(SessionName, AuthorizationToken);
+    Sessions.setup(SessionName);
 
     return newSession;
   } //addSession
@@ -480,10 +480,11 @@ module.exports = class Sessions {
   //
   // ------------------------------------------------------------------------------------------------------- //
   //
-  static async initSession(SessionName) {
+  static async initSession(SessionName, AuthorizationToken) {
     console.log("- Iniciando sessão");
     var session = Sessions.getSession(SessionName);
     session.browserSessionToken = null;
+    session.AuthorizationToken = AuthorizationToken;
     //
     /*
       ╔═╗┌─┐┌┬┐┬┌─┐┌┐┌┌─┐┬    ╔═╗┬─┐┌─┐┌─┐┌┬┐┌─┐  ╔═╗┌─┐┬─┐┌─┐┌┬┐┌─┐┌┬┐┌─┐┬─┐┌─┐
