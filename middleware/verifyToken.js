@@ -15,7 +15,8 @@ exports.verify = async (req, res, next) => {
       }
     });
   } else {
-    if (!req.body.AuthorizationToken) {
+    //if (!req.body.AuthorizationToken) {
+    if (!req.body.SessionName) {
       res.setHeader('Content-Type', 'application/json');
       res.status(422).json({
         "Status": {
@@ -30,7 +31,8 @@ exports.verify = async (req, res, next) => {
       if (parseInt(config.VALIDATE_MYSQL) == true) {
         const conn = require('../config/dbConnection').promise();
         try {
-          const theTokenAuth = req.body.AuthorizationToken.trim();
+          //const theTokenAuth = req.body.AuthorizationToken.trim();
+          const theTokenAuth = req.body.SessionName.trim();
           //
           if (theTokenAuth) {
             console.log("- AuthorizationToken:", theTokenAuth);
