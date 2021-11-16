@@ -98,7 +98,7 @@ const convertBytes = function(bytes) {
 //
 router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next) => {
   //
-  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.replace(/\s+/g, ''));
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName);
   switch (sessionStatus.status) {
     case 'inChat':
     case 'qrReadSuccess':
@@ -123,9 +123,9 @@ router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next
     case 'DISCONNECTED':
     case 'qrRead':
       //
-      var getStart = await Sessions.Start(req.body.SessionName.replace(/\s+/g, ''), req.body.AuthorizationToken.replace(/\s+/g, ''));
-      var session = Sessions.getSession(req.body.SessionName.replace(/\s+/g, ''));
-      console.log("- AuthorizationToken:", req.body.AuthorizationToken.replace(/\s+/g, ''));
+      var getStart = await Sessions.Start(req.body.SessionName, req.body.AuthorizationToken);
+      var session = Sessions.getSession(req.body.SessionName);
+      console.log("- AuthorizationToken:", req.body.AuthorizationToken);
       session.state = 'STARTING';
       session.status = 'notLogged';
       var Start = {
