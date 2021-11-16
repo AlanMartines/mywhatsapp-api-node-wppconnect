@@ -536,7 +536,7 @@ module.exports = class Sessions {
         session.CodeurlCode = urlCode;
         //
         if (attempts <= 2) {
-          await updateStateDb(session.state, session.status, session.name);
+          await updateStateDb(session.state, session.status, session.AuthorizationToken);
         }
         //
         var qrCode = base64Qrimg.replace('data:image/png;base64,', '');
@@ -588,7 +588,7 @@ module.exports = class Sessions {
             session.CodeurlCode = null;
             session.message = "Sistema iniciado e disponivel para uso";
             //
-            await updateStateDb(session.state, session.status, session.name);
+            await updateStateDb(session.state, session.status, session.AuthorizationToken);
             //
             break;
           case 'autocloseCalled':
@@ -603,7 +603,7 @@ module.exports = class Sessions {
             session.CodeurlCode = null;
             session.message = "Sistema fechado";
             //
-            await updateStateDb(session.state, session.status, session.name);
+            await updateStateDb(session.state, session.status, session.AuthorizationToken);
             //
             break;
           case 'qrReadFail':
@@ -618,7 +618,7 @@ module.exports = class Sessions {
             session.qrcode = null;
             session.message = "Dispositivo desconetado";
             //
-            await updateStateDb(session.state, session.status, session.name);
+            await updateStateDb(session.state, session.status, session.AuthorizationToken);
             //
             break;
           default:
@@ -629,7 +629,7 @@ module.exports = class Sessions {
             session.qrcode = null;
             session.message = "Dispositivo desconetado";
             //
-            await updateStateDb(session.state, session.status, session.name);
+            await updateStateDb(session.state, session.status, session.AuthorizationToken);
             //
         }
       },
@@ -897,7 +897,7 @@ module.exports = class Sessions {
             message: "Sessão fechada com sucesso"
           };
           //
-          await updateStateDb(session.state, session.status, session.name);
+          await updateStateDb(session.state, session.status, session.AuthorizationToken);
           //
         } else {
           //
@@ -969,7 +969,7 @@ module.exports = class Sessions {
         //
         await deletaToken(session.tokenPatch + "/" + SessionName + ".data.json");
         //
-        await updateStateDb(session.state, session.status, session.name);
+        await updateStateDb(session.state, session.status, session.AuthorizationToken);
         //
         return returnLogout;
         //
@@ -986,7 +986,7 @@ module.exports = class Sessions {
       }
     });
     //
-    await updateStateDb(session.state, session.status, session.name);
+    await updateStateDb(session.state, session.status, session.AuthorizationToken);
     //
     return LogoutSession;
   } //LogoutSession
