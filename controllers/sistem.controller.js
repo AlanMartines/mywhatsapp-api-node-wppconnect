@@ -124,6 +124,7 @@ router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next
     case 'qrRead':
       //
       var getStart = await Sessions.Start(req.body.SessionName.trim(), req.body.AuthorizationToken.trim());
+      var session = Sessions.getSession(req.body.SessionName.trim());
       console.log("- AuthorizationToken:", req.body.AuthorizationToken.trim());
       session.state = 'STARTING';
       session.status = 'notLogged';
