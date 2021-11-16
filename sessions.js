@@ -384,7 +384,7 @@ module.exports = class Sessions {
       console.log('- State do sistema:', session.state);
       console.log('- Status da sessão:', session.status);
       //
-      session.client = Sessions.initSession(SessionName);
+      session.client = Sessions.initSession(SessionName, AuthorizationToken);
       Sessions.setup(SessionName);
     } else if (["CONFLICT", "UNPAIRED", "UNLAUNCHED", "UNPAIRED_IDLE"].includes(session.state)) {
       session.state = "CLOSED";
@@ -400,7 +400,7 @@ module.exports = class Sessions {
         console.log("- Client UseHere");
         client.useHere();
       });
-      session.client = Sessions.initSession(SessionName);
+      session.client = Sessions.initSession(SessionName, AuthorizationToken);
     } else if (["DISCONNECTED"].includes(session.state)) {
       //restart session
       session.state = "CLOSE";
@@ -414,7 +414,7 @@ module.exports = class Sessions {
       console.log('- State do sistema:', session.state);
       console.log('- Status da sessão:', session.status);
       //
-      session.client = Sessions.initSession(SessionName);
+      session.client = Sessions.initSession(SessionName, AuthorizationToken);
       Sessions.setup(SessionName);
     } else {
       console.log('- Nome da sessão:', session.name);
@@ -449,8 +449,8 @@ module.exports = class Sessions {
     console.log("- Nova sessão: " + newSession.state);
 
     //setup session
-    newSession.client = Sessions.initSession(SessionName);
-    Sessions.setup(SessionName);
+    newSession.client = Sessions.initSession(SessionName, AuthorizationToken);
+    Sessions.setup(SessionName, AuthorizationToken);
 
     return newSession;
   } //addSession
