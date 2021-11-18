@@ -240,7 +240,7 @@ sudo apt autoremove -y
 cd ~
 
 # Recuperar o script de instalação para sua versão de preferência
-curl -sL https://rpm.nodesource.com/setup_16.x | sudo bash -
+curl -sL https://rpm.nodesource.com/setup_16.x | sudo -E bash -
 
 # Instalar o pacote Node.js
 sudo yum install -y git nodejs yarn gcc g++ tar make vim curl npm python python3
