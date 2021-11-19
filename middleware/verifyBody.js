@@ -1,13 +1,8 @@
 const config = require('../config.global');
 const yup = require("./validator");
 //
-exports.Start = async (req, res, next) => {
-  //
-  let schema = yup.object().shape({
-    AuthorizationToken: yup.string(),
-    SessionName: yup.string().required()
-  });
-  //
+//
+async function validateBody(schema, req, res, next) {
   return schema.validate(req.body, {
     abortEarly: false
   }).then(_ => {
@@ -22,5 +17,15 @@ exports.Start = async (req, res, next) => {
     });
     res.send(erro);
   });
+}
+//
+//
+exports.Start = async (req, res, next) => {
   //
+  let schema = yup.object().shape({
+    AuthorizationToken: yup.string(),
+    SessionName: yup.string().required()
+  });
+  //
+  await validateBody(schema, req, res, next);
 }
