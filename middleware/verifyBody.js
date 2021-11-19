@@ -63,7 +63,8 @@ exports.Group = async (req, res, next) => {
   //
   let schema = yup.object().shape({
     AuthorizationToken: yup.string(),
-    SessionName: yup.string().required()
+    SessionName: yup.string().required(),
+    groupId: yup.string().required()
   });
   //
   await validateBody(schema, req, res, next);
