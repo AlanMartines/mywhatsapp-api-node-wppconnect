@@ -15,7 +15,9 @@ async function validateBody(schema, req, res, next) {
         label: item.params.label
       };
     });
-    res.send(erro);
+    res.status(400).json({
+      "Status": erro
+    });
   });
 }
 //
