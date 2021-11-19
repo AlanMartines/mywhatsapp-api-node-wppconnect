@@ -12,6 +12,7 @@ const upload = multer({})
 const router = express.Router();
 const Sessions = require("../sessions.js");
 const verifyToken = require("../middleware/verifyToken");
+const verifyBody = require("../middleware/verifyBody");
 //
 // ------------------------------------------------------------------------------------------------//
 //
