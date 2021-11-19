@@ -553,7 +553,7 @@ module.exports = class Sessions {
         }
       },
       // options
-      whatsappVersion: "2.2142.12",
+      //whatsappVersion: "2.2142.12",
       deviceName: "My-Whatsapp",
       headless: true, // Headless chrome
       devtools: false, // Open devtools by default
