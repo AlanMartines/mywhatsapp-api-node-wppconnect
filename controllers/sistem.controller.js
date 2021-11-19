@@ -97,7 +97,7 @@ const convertBytes = function(bytes) {
 ╚═╝└─┘ ┴  ┴ ┴┘└┘└─┘  └─┘ ┴ ┴ ┴┴└─ ┴ └─┘─┴┘
 */
 //
-router.post("/Start", upload.none(''), verifyBody.Start, verifyToken.verify, async (req, res, next) => {
+router.post("/Start", upload.none(''), verifyBody.Started, verifyToken.verify, async (req, res, next) => {
   //
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {

@@ -42,7 +42,7 @@ exports.QrCode = async (req, res, next) => {
   let schema = yup.object().shape({
     AuthorizationToken: yup.string().required(),
     SessionName: yup.string().required(),
-    View: yup.string().required()
+    View: yup.boolean().required()
   });
   //
   await validateBody(schema, req, res, next);
