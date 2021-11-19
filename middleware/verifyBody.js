@@ -10,14 +10,15 @@ async function validateBody(schema, req, res, next) {
   }).catch((err) => {
     var erro = err.inner.map(item => {
       return {
-        path: item.path,
+        campo: item.path,
         message: item.message
       };
     });
     res.status(400).json({
       "Status": {
         "erro": true,
-        "status": 404
+        "status": 404,
+        "message": "Preencha os campos obrigatório(s)"
       },
       "validate": erro
     });
