@@ -10,9 +10,10 @@ async function validateBody(schema, req, res, next) {
   }).catch(err => {
     var erro = err.inner.map(item => {
       return {
+        "erro": true,
+        "status": 404,
         path: item.path,
-        message: item.message,
-        label: item.params.label
+        message: item.message
       };
     });
     res.status(400).json({
