@@ -8,63 +8,9 @@ const {
 } = require('p-iteration');
 const axios = require('axios');
 const wppconnect = require('./wppconnect/dist/index');
-const io = require("socket.io-client"),
-  ioClient = io.connect("http://" + config.HOST + ":" + config.PORT);
-const {
-  cache
-} = require('sharp');
-const con = require("./config/dbConnection");
-//require('dotenv/config');
-/*
-require("dotenv").config({
-  path: "./.env"
-});
-*/
+const io = require("socket.io-client");
 //
 // ------------------------------------------------------------------------------------------------------- //
-//
-async function DataHora() {
-  //
-  let date_ob = new Date();
-
-  // Data atual
-  // Ajuste 0 antes da data de um dígito
-  let date = ("0" + date_ob.getDate()).slice(-2);
-
-  // Mês atual
-  let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
-
-  // Ano atual
-  let year = date_ob.getFullYear();
-
-  // Hora atual
-  let hours = date_ob.getHours();
-
-  // Minuto atual
-  let minutes = date_ob.getMinutes();
-
-  // Segundo atual
-  let seconds = date_ob.getSeconds();
-  /*
-  // Imprime a data no formato AAAA-MM-DD
-  console.log(year + "-" + month + "-" + date);
-
-  // Imprime a data no formato DD/MM/YYYY
-  console.log(date + "/" + month + "/" + year);
-
-  // Imprime data e hora no formato AAAA-MM-DD HH:MM:SS
-  console.log(year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds);
-
-  // Imprime data e hora no formato DD/MM/YYYY HH:MM:SS
-  console.log(date + "/" + month + "/" + year + " " + hours + ":" + minutes + ":" + seconds);
-
-  // Imprime a hora no formato HH:MM:SS
-  console.log(hours + ":" + minutes + ":" + seconds);
-	*/
-  //
-  // Imprime data e hora no formato AAAA-MM-DD HH:MM:SS
-  return year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds;
-}
 //
 async function saudacao() {
   //
@@ -365,10 +311,6 @@ module.exports = class Sessions {
     if (session == false) {
       //create new session
       //
-      console.log('- Nome da sessão:', session.name);
-      console.log('- State do sistema:', session.state);
-      console.log('- Status da sessão:', session.status);
-      //
       session = await Sessions.addSesssion(SessionName, AuthorizationToken);
     } else if (["CLOSED"].includes(session.state)) {
       //restart session
@@ -543,30 +485,6 @@ module.exports = class Sessions {
         var qrCode = base64Qrimg.replace('data:image/png;base64,', '');
         const imageBuffer = Buffer.from(qrCode, 'base64');
         //
-        /*
-        // Para escrevê-lo em outro lugar em um arquivo
-        //exportQR(base64Qrimg, './public/images/marketing-qr.png');
-        var matches = base64Qrimg.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/),
-            response = {};
-
-        if (matches.length !== 3) {
-            return new Error('- Invalid input string');
-        }
-        response.type = matches[1];
-        response.data = new Buffer.from(matches[2], 'base64');
-        
-        // Gerar o arquivo png
-        var imageBuffer = response;
-        require('fs').writeFile('./public/images/marketing-qr.png',
-            imageBuffer['data'],
-            'binary',
-            function(err) {
-                if (err != null) {
-                    console.log(err);
-                }
-            }
-        );
-        */
       },
       // statusFind
       statusFind: async (statusSession, session_wppconnect) => {
@@ -1027,7 +945,7 @@ module.exports = class Sessions {
         };
         //
       }).catch((erro) => {
-        //console.error("Error when sending: ", erro); //return object error
+        console.error("Error when:", erro); //return object error
         //return { result: 'error', state: session.state, message: "Erro ao enviar menssagem" };
         //return (erro);
         //
@@ -1071,7 +989,7 @@ module.exports = class Sessions {
         };
         //
       }).catch((erro) => {
-        //console.error("Error when sending: ", erro); //return object error
+        console.error("Error when:", erro); //return object error
         //return { result: 'error', state: session.state, message: "Erro ao enviar menssagem" };
         //return (erro);
         //
@@ -1117,7 +1035,7 @@ module.exports = class Sessions {
           //
         })
         .catch((erro) => {
-          //console.error('Error when sending: ', erro); //return object error
+          console.error("Error when:", erro); //return object error
           //
           return {
             "erro": true,
@@ -1163,7 +1081,7 @@ module.exports = class Sessions {
           //
         })
         .catch((erro) => {
-          //console.error('Error when sending: ', erro); //return object error
+          console.error("Error when:", erro); //return object error
           //
           return {
             "erro": true,
@@ -1205,7 +1123,7 @@ module.exports = class Sessions {
         };
         //
       }).catch((erro) => {
-        console.error("Error when sending: ", erro); //return object error
+        console.error("Error when:", erro); //return object error
         //return { result: 'error', state: session.state, message: "Erro ao enviar menssagem" };
         //return (erro);
         //
@@ -1253,7 +1171,7 @@ module.exports = class Sessions {
         };
         //
       }).catch((erro) => {
-        //console.error("Error when sending: ", erro); //return object error
+        console.error("Error when:", erro); //return object error
         //return { result: 'error', state: session.state, message: "Erro ao enviar menssagem" };
         //return (erro);
         //
@@ -1299,7 +1217,7 @@ module.exports = class Sessions {
         };
         //
       }).catch((erro) => {
-        //console.error("Error when sending: ", erro); //return object error
+        console.error("Error when:", erro); //return object error
         //return { result: 'error', state: session.state, message: "Erro ao enviar menssagem" };
         //return (erro);
         //
@@ -1345,7 +1263,7 @@ module.exports = class Sessions {
         };
         //
       }).catch((erro) => {
-        //console.error('Error when sending: ', erro); //return object error
+        console.error("Error when:", erro); //return object error
         //return (erro);
         //
         return {
@@ -1390,7 +1308,7 @@ module.exports = class Sessions {
         };
         //
       }).catch((erro) => {
-        //console.error('Error when sending: ', erro); //return object error
+        console.error("Error when:", erro); //return object error
         //return (erro);
         //
         return {
@@ -1436,7 +1354,7 @@ module.exports = class Sessions {
         };
         //
       }).catch((erro) => {
-        //console.error('Error when sending: ', erro); //return object error
+        console.error("Error when:", erro); //return object error
         //return (erro);
         //
         return {
@@ -1478,7 +1396,7 @@ module.exports = class Sessions {
         };
         //
       }).catch((erro) => {
-        //console.error('Error when sending: ', erro); //return object error
+        console.error("Error when:", erro); //return object error
         //return (erro);
         //
         return {
@@ -1519,7 +1437,7 @@ module.exports = class Sessions {
         };
         //
       }).catch((erro) => {
-        //console.error('Error when sending: ', erro); //return object error
+        console.error("Error when:", erro); //return object error
         //return (erro);
         //
         return {
@@ -1575,7 +1493,7 @@ module.exports = class Sessions {
         return getChatGroupNewMsg;
         //
       }).catch((erro) => {
-        //console.error('Error when sending: ', erro); //return object error
+        console.error("Error when:", erro); //return object error
         //
         return {
           "erro": true,
@@ -1647,7 +1565,7 @@ module.exports = class Sessions {
         //console.log('Result: ', result); //return object success
         return result;
       }).catch((erro) => {
-        //console.error('Error when sending: ', erro); //return object error
+        console.error("Error when:", erro); //return object error
         //
         return {
           "erro": true,
@@ -1671,7 +1589,7 @@ module.exports = class Sessions {
         //console.log('Result: ', result); //return object success
         return result;
       }).catch((erro) => {
-        //console.error('Error when sending: ', erro); //return object error
+        console.error("Error when:", erro); //return object error
         //
         return {
           "erro": true,
@@ -1698,7 +1616,7 @@ module.exports = class Sessions {
         //console.log('Result: ', result); //return object success
         return result;
       }).catch((erro) => {
-        //console.error('Error when sending:\n', erro); //return object error
+        console.error("Error when:", erro); //return object error
         //
         return {
           "erro": true,
@@ -1725,7 +1643,7 @@ module.exports = class Sessions {
         //console.log('Result: ', result); //return object success
         return result;
       }).catch((erro) => {
-        //console.error('Error when sending:\n', erro); //return object error
+        console.error("Error when:", erro); //return object error
         //
         return {
           "erro": true,
@@ -1780,7 +1698,7 @@ module.exports = class Sessions {
           //
         }
       }).catch((erro) => {
-        //console.error('Error when sending:\n', erro); //return object error
+        console.error("Error when:", erro); //return object error
         //
         return {
           "erro": true,
@@ -1809,7 +1727,7 @@ module.exports = class Sessions {
         //console.log('Result: ', result); //return object success
         return url;
       } catch (erro) {
-        //console.error('Error when sending:\n', erro); //return object error
+        console.error("Error when:", erro); //return object error
         //
         return {
           "erro": true,
@@ -1849,7 +1767,7 @@ module.exports = class Sessions {
         };
         //
       }).catch((erro) => {
-        // console.error('Error when sending: ', erro); //return object error
+        console.error("Error when:", erro); //return object error
         //
         return {
           "erro": true,
@@ -1896,7 +1814,7 @@ module.exports = class Sessions {
         return getGroupMembers;
         //
       }).catch((erro) => {
-        //console.error('Error when sending:\n', erro); //return object error
+        console.error("Error when:", erro); //return object error
         //
         return {
           "erro": true,
@@ -1924,7 +1842,7 @@ module.exports = class Sessions {
         //console.log('Result: ', result); //return object success
         return result;
       }).catch((erro) => {
-        console.error('Error when sending:\n', erro); //return object error
+        console.error("Error when:", erro); //return object error
         //
         return {
           "erro": true,
@@ -1952,7 +1870,7 @@ module.exports = class Sessions {
         //console.log('Result: ', result); //return object success
         return result;
       }).catch((erro) => {
-        //console.error('Error when sending: ', erro); //return object error
+        console.error("Error when:", erro); //return object error
         //
         return {
           "erro": true,
@@ -2004,7 +1922,7 @@ module.exports = class Sessions {
         }
         //
       }).catch((erro) => {
-        //console.error('Error when sending: ', erro); //return object error
+        console.error("Error when:", erro); //return object error
         //
         return {
           "erro": true,
@@ -2053,7 +1971,7 @@ module.exports = class Sessions {
         }
         //
       }).catch((erro) => {
-        //console.error('Error when sending: ', erro); //return object error
+        console.error("Error when:", erro); //return object error
         //
         return {
           "erro": true,
@@ -2100,7 +2018,7 @@ module.exports = class Sessions {
         }
         //
       }).catch((erro) => {
-        //console.error('Error when sending: ', erro); //return object error
+        console.error("Error when:", erro); //return object error
         //
         return {
           "erro": true,
@@ -2194,7 +2112,7 @@ module.exports = class Sessions {
         }
         //
       }).catch((erro) => {
-        //console.error('Error when sending: ', erro); //return object error
+        console.error("Error when:", erro); //return object error
         //
         return {
           "erro": true,
@@ -2222,7 +2140,7 @@ module.exports = class Sessions {
         //console.log('Result: ', result); //return object success
         return result;
       }).catch((erro) => {
-        //console.error('Error when sending: ', erro); //return object error
+        console.error("Error when:", erro); //return object error
         return {
           "erro": true,
           "status": 404,
@@ -2264,7 +2182,7 @@ module.exports = class Sessions {
         }
         //
       }).catch((erro) => {
-        //console.error('Error when sending: ', erro); //return object error
+        console.error("Error when:", erro); //return object error
         //
         return {
           "erro": true,
@@ -2303,7 +2221,7 @@ module.exports = class Sessions {
         };
         //
       }).catch((erro) => {
-        //console.error('Error when sending: ', erro); //return object error
+        console.error("Error when:", erro); //return object error
         //return erro;
         return {
           "erro": true,
@@ -2336,7 +2254,7 @@ module.exports = class Sessions {
         };
         //
       }).catch((erro) => {
-        //console.error('Error when sending: ', erro); //return object error
+        console.error("Error when:", erro); //return object error
         //return erro;
         return {
           "erro": true,
@@ -2369,7 +2287,7 @@ module.exports = class Sessions {
         };
         //
       }).catch((erro) => {
-        //console.error('Error when sending: ', erro); //return object error
+        console.error("Error when:", erro); //return object error
         //
         return {
           "erro": true,
@@ -2406,7 +2324,7 @@ module.exports = class Sessions {
         };
         //
       }).catch((erro) => {
-        //console.error('Error when sending: ', erro); //return object error
+        console.error("Error when:", erro); //return object error
         //
         return {
           "erro": true,
@@ -2437,7 +2355,7 @@ module.exports = class Sessions {
         };
         //
       }).catch((erro) => {
-        //console.error('Error when sending: ', erro); //return object error
+        console.error("Error when:", erro); //return object error
         //
         return {
           "erro": true,
@@ -2481,7 +2399,7 @@ module.exports = class Sessions {
         };
         //
       }).catch((erro) => {
-        //console.error('Error when sending: ', erro); //return object error
+        console.error("Error when:", erro); //return object error
         //
         return {
           "erro": true,
@@ -2513,7 +2431,7 @@ module.exports = class Sessions {
         };
         //
       }).catch((erro) => {
-        //console.error('Error when sending: ', erro); //return object error
+        console.error("Error when:", erro); //return object error
         //
         return {
           "erro": true,
@@ -2545,7 +2463,7 @@ module.exports = class Sessions {
         };
         //
       }).catch((erro) => {
-        //console.error('Error when sending: ', erro); //return object error
+        console.error("Error when:", erro); //return object error
         //
         return {
           "erro": true,
@@ -2576,7 +2494,7 @@ module.exports = class Sessions {
         };
         //
       }).catch((erro) => {
-        //console.error('Error when sending: ', erro); //return object error
+        console.error("Error when:", erro); //return object error
         //
         return {
           "erro": true,
@@ -2607,7 +2525,7 @@ module.exports = class Sessions {
         };
         //
       }).catch((erro) => {
-        //console.error('Error when sending: ', erro); //return object error
+        console.error("Error when:", erro); //return object error
         //
         return {
           "erro": true,
@@ -2638,7 +2556,7 @@ module.exports = class Sessions {
         };
         //
       }).catch((erro) => {
-        //console.error('Error when sending: ', erro); //return object error
+        console.error("Error when:", erro); //return object error
         //
         return {
           "erro": true,
@@ -2669,7 +2587,7 @@ module.exports = class Sessions {
         };
         //
       }).catch((erro) => {
-        //console.error('Error when sending: ', erro); //return object error
+        console.error("Error when:", erro); //return object error
         //
         return {
           "erro": true,
@@ -2700,7 +2618,7 @@ module.exports = class Sessions {
         };
         //
       }).catch((erro) => {
-        //console.error('Error when sending: ', erro); //return object error
+        console.error("Error when:", erro); //return object error
         //
         return {
           "erro": true,

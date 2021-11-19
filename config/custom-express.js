@@ -39,7 +39,6 @@ module.exports = () => {
     extended: true
   }));
   // Rotas
-  app.use("/sistema", sistem);
   //
   app.use((req, res, next) => {
     req.io = io;
@@ -50,6 +49,8 @@ module.exports = () => {
     //res.status(200).send('Server WPPConnect is running API. https://github.com/AlanMartines/mywhatsapp-api-node-wppconnect');
     res.sendFile(path.join(__dirname, '/index.html'));
   });
+  //
+  app.use("/sistema", sistem);
   //
   //
   const sockets = {};
