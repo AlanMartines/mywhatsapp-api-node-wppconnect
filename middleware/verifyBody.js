@@ -26,7 +26,7 @@ async function validateBody(schema, req, res, next) {
 exports.Start = async (req, res, next) => {
   //
   let schema = yup.object().shape({
-    AuthorizationToken: yup.string(),
+    AuthorizationToken: yup.string().required(),
     SessionName: yup.string().required()
   });
   //
