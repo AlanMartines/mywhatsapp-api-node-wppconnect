@@ -248,7 +248,7 @@ router.post("/QRCode", upload.none(''), verifyBody.QrCode, verifyToken.verify, a
 //
 // ------------------------------------------------------------------------------------------------//
 //
-router.post("/getSessions", upload.none(''), verifyToken.verify, async (req, res, next) => {
+router.post("/getSessions", upload.none(''), verifyBody.Started, verifyToken.verify, async (req, res, next) => {
   var getSessions = await Sessions.getSessions();
   //
   //console.log(result);
@@ -260,7 +260,7 @@ router.post("/getSessions", upload.none(''), verifyToken.verify, async (req, res
 //
 // ------------------------------------------------------------------------------------------------//
 //
-router.post("/Status", upload.none(''), verifyToken.verify, async (req, res, next) => {
+router.post("/Status", upload.none(''), verifyBody.Started, verifyToken.verify, async (req, res, next) => {
   var Status = await Sessions.ApiStatus(
     req.body.SessionName
   );
@@ -273,7 +273,7 @@ router.post("/Status", upload.none(''), verifyToken.verify, async (req, res, nex
 // ------------------------------------------------------------------------------------------------//
 //
 // Dados de memoria e uptime
-router.post("/getHardWare", upload.none(''), verifyToken.verify, async (req, res, next) => {
+router.post("/getHardWare", upload.none(''), verifyBody.Started, verifyToken.verify, async (req, res, next) => {
   console.log("- getHardWare");
   //
   var getHardWare = {
@@ -304,7 +304,7 @@ router.post("/getHardWare", upload.none(''), verifyToken.verify, async (req, res
 // ------------------------------------------------------------------------------------------------//
 //
 // Fecha a sessão
-router.post("/Close", upload.none(''), async (req, res, next) => {
+router.post("/Close", upload.none(''), verifyBody.Started, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
     case 'inChat':
@@ -331,7 +331,7 @@ router.post("/Close", upload.none(''), async (req, res, next) => {
 // ------------------------------------------------------------------------------------------------//
 //
 // Desconecta do whatsapp web
-router.post("/Logout", upload.none(''), async (req, res, next) => {
+router.post("/Logout", upload.none(''), verifyBody.Started, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   switch (sessionStatus.status) {
     case 'inChat':
