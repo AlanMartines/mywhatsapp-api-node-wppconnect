@@ -156,7 +156,7 @@ router.post("/Start", upload.none(''), verifyBody.Start, verifyToken.verify, asy
 // ------------------------------------------------------------------------------------------------//
 //
 // Gera o QR-Code
-router.post("/QRCode", upload.none(''), verifyToken.verify, async (req, res, next) => {
+router.post("/QRCode", upload.none(''), verifyBody.QrCode, verifyToken.verify, async (req, res, next) => {
   console.log("- getQRCode");
   var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.trim());
   var session = Sessions.getSession(req.body.SessionName.trim());
