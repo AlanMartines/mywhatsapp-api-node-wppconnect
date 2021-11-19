@@ -246,7 +246,7 @@ router.post("/getSessions", upload.none(''), verifyToken.verify, async (req, res
 //
 // ------------------------------------------------------------------------------------------------//
 //
-router.post("/Status", upload.none(''), verifyBody.Body, verifyToken.verify, async (req, res, next) => {
+router.post("/Status", upload.none(''), verifyToken.verify, async (req, res, next) => {
   var Status = await Sessions.ApiStatus(
     req.body.SessionName
   );
