@@ -7,17 +7,19 @@ async function validateBody(schema, req, res, next) {
     abortEarly: false
   }).then(_ => {
     next();
-  }).catch(err => {
+  }).catch((err) => {
     var erro = err.inner.map(item => {
       return {
-        "erro": true,
-        "status": 404,
         path: item.path,
         message: item.message
       };
     });
     res.status(400).json({
-      "Status": erro
+      "Status": {
+        "erro": true,
+        "status": 404
+      },
+      "validate": erro
     });
   });
 }
