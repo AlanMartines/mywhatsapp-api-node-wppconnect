@@ -29,3 +29,13 @@ exports.Start = async (req, res, next) => {
   //
   await validateBody(schema, req, res, next);
 }
+//
+exports.Body = async (req, res, next) => {
+  //
+  let schema = yup.object().shape({
+    AuthorizationToken: yup.string(),
+    SessionName: yup.string().required()
+  });
+  //
+  await validateBody(schema, req, res, next);
+}
