@@ -206,13 +206,27 @@ router.post("/QRCode", upload.none(''), verifyBody.QrCode, verifyToken.verify, a
           });
           //
         }
-      } else {
+      } else if (req.body.View === false) {
         var getQRCode = {
           result: "success",
           state: session.state,
           status: session.status,
           qrcode: session.qrcode,
           message: "Aguardando leitura do QR-Code"
+        };
+        //
+        res.setHeader('Content-Type', 'application/json');
+        res.status(200).json({
+          "Status": getQRCode
+        });
+        //
+      } else if (req.body.View === false) {
+        var getQRCode = {
+          result: 'error',
+          state: session.state,
+          status: session.status,
+          qrcode: session.qrcode,
+          message: 'Sistema iniciao e indisponivel para uso!'
         };
         //
         res.setHeader('Content-Type', 'application/json');
