@@ -31,6 +31,11 @@ var dbconnection = mysql.createConnection(
   dbConnectionInfo
 );
 //
+const connect = promisify(dbconnection.connect.bind(dbconnection));
+conn.execute = promisify(dbconnection.query.bind(dbconnection));
+//
+await connect();
+//
 dbconnection.connect(function(err) {
   if (!err) {
     console.log("- Database is connected");
