@@ -33,9 +33,9 @@ var dbconnection = mysql.createConnection(
 //
 dbconnection.connect(function(err) {
   if (!err) {
-    console.log("- Database is connected ...");
+    console.log("- Database is connected");
   } else {
-    console.log("- Error connecting database ...");
+    console.log("- Error connecting database");
   }
 });
 // Attempt to catch disconnects 
