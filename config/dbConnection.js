@@ -46,10 +46,6 @@ dbconnection.on('connection', function(connection) {
     console.error(new Date(), '- MySQL error', err.code);
   });
   //
-  dbconnection.on('close', function(err) {
-    console.error(new Date(), '- MySQL close', err);
-  });
-  //
   dbconnection.on('enqueue', function() {
     console.log('- MySQL Waiting for available connection slot');
   });
