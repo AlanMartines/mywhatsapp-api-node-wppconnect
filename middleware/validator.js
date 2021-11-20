@@ -17,6 +17,9 @@ yup.setLocale({
     lowercase: "Valor deve estar em maiúsculo",
     uppercase: "Valor deve estar em minúsculo"
   },
+  boolean: {
+    oneOf: "Preencha com um dos seguintes valores: ${values}",
+  },
   number: {
     min: 'Valor inválido (deve ser maior ou igual a ${min})',
     max: 'Valor inválido (deve ser menor ou igual a ${max})',
