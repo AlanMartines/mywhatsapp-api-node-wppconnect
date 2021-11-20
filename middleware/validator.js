@@ -19,7 +19,7 @@ yup.setLocale({
   },
   boolean: {
     required: 'Preencha esse campo para continuar',
-    oneOf: "Preencha com um dos seguintes valores: ${values}",
+    oneOf: "Preencha com um dos seguintes valores: ${values}"
   },
   number: {
     min: 'Valor inválido (deve ser maior ou igual a ${min})',
