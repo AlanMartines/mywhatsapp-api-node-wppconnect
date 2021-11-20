@@ -71,6 +71,7 @@
     "request": "^2.88.2",
     "serve-index": "^1.9.1",
     "sharp": "^0.29.3",
+    "sleep-promise": "^9.1.0",
     "socket.io": "^4.4.0",
     "socket.io-client": "^4.4.0",
     "spinnies": "^0.5.1",

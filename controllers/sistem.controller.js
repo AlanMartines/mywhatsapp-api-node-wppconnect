@@ -8,6 +8,7 @@ const fs = require('fs-extra');
 const path = require('path');
 const express = require("express");
 const multer = require('multer');
+const sleep = require('sleep-promise');
 const upload = multer({})
 const router = express.Router();
 const Sessions = require("../sessions.js");
@@ -26,19 +27,19 @@ async function deletaArquivosTemp(filePath) {
   }
 }
 //
-function sleep(ms) {
-  console.log("- Sleep:", ms + " ms");
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
-}
-//
-// ------------------------------------------------------------------------------------------------//
-//
 function soNumeros(string) {
   var numbers = string.replace(/[^0-9]/g, '');
   return numbers;
 }
+//
+// ------------------------------------------------------------------------------------------------//
+//
+function removeWithspace(string) {
+  var string = string.replace(/\r?\n|\r/g, ""); /* replace all newlines and with a space */
+  return string;
+}
+//
+// ------------------------------------------------------------------------------------------------//
 //
 function validPhone(phone) {
   // A função abaixo demonstra o uso de uma expressão regular que identifica, de forma simples, telefones válidos no Brasil.
@@ -155,6 +156,17 @@ router.post("/Start", upload.none(''), verifyBody.Started, verifyToken.verify, a
 //
 // ------------------------------------------------------------------------------------------------//
 //
+router.post("/Status", upload.none(''), verifyBody.Started, verifyToken.verify, async (req, res, next) => {
+  //
+  var Status = await Sessions.ApiStatus(req.body.SessionName);
+  res.setHeader('Content-Type', 'application/json');
+  res.status(200).json({
+    Status
+  });
+}); //Status
+//
+// ------------------------------------------------------------------------------------------------//
+//
 // Gera o QR-Code
 router.post("/QRCode", upload.none(''), verifyBody.QrCode, verifyToken.verify, async (req, res, next) => {
   console.log("- getQRCode");
@@ -257,18 +269,7 @@ router.post("/getSessions", upload.none(''), verifyBody.Started, verifyToken.ver
     getSessions
   });
 }); //getSessions
-//
-// ------------------------------------------------------------------------------------------------//
-//
-router.post("/Status", upload.none(''), verifyBody.Started, verifyToken.verify, async (req, res, next) => {
-  var Status = await Sessions.ApiStatus(
-    req.body.SessionName
-  );
-  res.setHeader('Content-Type', 'application/json');
-  res.status(200).json({
-    Status
-  });
-}); //Status
+
 //
 // ------------------------------------------------------------------------------------------------//
 //
