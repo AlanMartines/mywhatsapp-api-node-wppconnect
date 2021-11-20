@@ -52,7 +52,7 @@ exports.verify = async (req, res, next) => {
           const sql = "SELECT * FROM tokens WHERE token=? LIMIT 1";
           const values = [theTokenAuth];
           const [row] = await conn.promise().execute(sql, values);
-          conn.end();
+          //conn.end();
           //conn.release();
           //
           if (row.length > 0) {
@@ -111,9 +111,6 @@ exports.verify = async (req, res, next) => {
               "message": "Erro na verificação do token, contate o administrador do sistema"
             }
           });
-        } finally {
-          await conn.end();
-          next();
         }
       } else {
         next();
