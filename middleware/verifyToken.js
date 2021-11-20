@@ -111,6 +111,9 @@ exports.verify = async (req, res, next) => {
               "message": "Erro na verificação do token, contate o administrador do sistema"
             }
           });
+        } finally {
+          await conn.end();
+          next();
         }
       } else {
         next();
