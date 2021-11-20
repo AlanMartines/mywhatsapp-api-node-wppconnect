@@ -21,13 +21,15 @@ const dbConnectionInfo = {
 //
 //For mysql single connection
 /* 
-var dbconnection = mysql.createConnection(
-        dbConnectionInfo
-); 
+
 //
-*/
+//
 //Create mysql connection pool
 var dbconnection = mysql.createPool(
+  dbConnectionInfo
+);
+*/
+var dbconnection = mysql.createConnection(
   dbConnectionInfo
 );
 //
