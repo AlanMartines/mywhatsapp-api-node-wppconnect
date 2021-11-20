@@ -14,6 +14,7 @@ async function validateBody(schema, req, res, next) {
         message: item.message
       };
     });
+    res.setHeader('Content-Type', 'application/json');
     res.status(400).json({
       "Status": {
         "erro": true,
@@ -42,7 +43,7 @@ exports.QrCode = async (req, res, next) => {
   let schema = yup.object().shape({
     AuthorizationToken: yup.string().required(),
     SessionName: yup.string().required(),
-    View: yup.boolean().required()
+    View: yup.boolean().required().oneOf([true, false])
   });
   //
   await validateBody(schema, req, res, next);
