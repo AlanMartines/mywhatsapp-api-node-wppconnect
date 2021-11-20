@@ -53,6 +53,7 @@ exports.verify = async (req, res, next) => {
           const values = [theTokenAuth];
           const [row] = await conn.execute(sql, values);
           //conn.end();
+          //conn.release();
           //
           if (row.length > 0) {
             //

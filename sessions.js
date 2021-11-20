@@ -64,7 +64,8 @@ async function updateStateDb(state, status, AuthorizationToken) {
     console.log('- Atualizando status');
     const conn = require('./config/dbConnection').promise();
     const resUpdate = await conn.execute(sql, values);
-    conn.end();
+    //conn.end();
+    //conn.release();
     if (resUpdate) {
       console.log('- Status atualizado');
     } else {
