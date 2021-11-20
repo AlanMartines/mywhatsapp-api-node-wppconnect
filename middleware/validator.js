@@ -18,6 +18,7 @@ yup.setLocale({
     uppercase: "Valor deve estar em minúsculo"
   },
   boolean: {
+    required: 'Preencha esse campo para continuar',
     oneOf: "Preencha com um dos seguintes valores: ${values}",
   },
   number: {
