@@ -19,21 +19,21 @@ const dbConnectionPool = {
   database: config.DATABASE_MYSQL, // A base de dados a qual a aplicação irá se conectar, deve ser a mesma onde foi executado o Código 1. Ex: node_mysql
   waitForConnections: true, // Determina a ação do pool quando nenhuma conexão está disponível e o limite foi atingido.
   connectionLimit: 10, // O número máximo de conexões a serem criadas de uma vez. (Padrão: 10)
-  //queueLimit: 0, // O número máximo de solicitações de conexão que o pool irá enfileirar antes de retornar um erro
+  queueLimit: 0, // O número máximo de solicitações de conexão que o pool irá enfileirar antes de retornar um erro
   getConnection: 0 //Se definido como 0, não há limite para o número de solicitações de conexão na fila. (Padrão: 0)
 };
 //
 //For mysql single connection
 //Create mysql connection pool
+/*
 var dbconnection = mysql.createPool(
   dbConnectionPool
 );
-/*
+*/
 //Create mysql connection
 var dbconnection = mysql.createConnection(
   dbConnection
 );
-*/
 //
 //
 dbconnection.connect(function(err) {
