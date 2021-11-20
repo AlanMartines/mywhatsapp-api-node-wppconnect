@@ -51,65 +51,56 @@ exports.verify = async (req, res, next) => {
           const conn = require('../config/dbConnection');
           const sql = "SELECT * FROM tokens WHERE token=? LIMIT 1";
           const values = [theTokenAuth];
-          //const [row] = await conn.execute(sql, values);
-          //conn.end();
+          const [row] = await conn.promise().execute(sql, values);
+          conn.end();
           //conn.release();
           //
-          conn.promise().execute((sql, values)).then(([rows, fields]) => {
-            console.log(rows);
-            if (row.length > 0) {
-              //
-              const results = JSON.parse(JSON.stringify(row[0]));
-              //
-              const tokenToken = results.token.trim();
-              const tokenEndDate = results.datafinal;
-              const tokenActive = results.active;
-              //
-              req.userToken = tokenToken;
-              //
-              if (tokenActive !== 'true') {
-                res.setHeader('Content-Type', 'application/json');
-                return res.status(401).json({
-                  "Status": {
-                    "result": "info",
-                    "state": "FAILURE",
-                    "status": "notUsage",
-                    "message": "Token não habilitado para uso, contate o administrador do sistema"
-                  }
-                });
-              }
-              //
-              if (todayDate > tokenEndDate) {
-                res.setHeader('Content-Type', 'application/json');
-                return res.status(408).json({
-                  "Status": {
-                    "result": "info",
-                    "state": "FAILURE",
-                    "status": "notValid",
-                    "message": "Token vencido, contate o administrador do sistema"
-                  }
-                });
-              }
-              //
-              next();
-            } else {
+          if (row.length > 0) {
+            //
+            const results = JSON.parse(JSON.stringify(row[0]));
+            //
+            const tokenToken = results.token.trim();
+            const tokenEndDate = results.datafinal;
+            const tokenActive = results.active;
+            //
+            req.userToken = tokenToken;
+            //
+            if (tokenActive !== 'true') {
               res.setHeader('Content-Type', 'application/json');
-              return res.status(404).json({
+              return res.status(401).json({
                 "Status": {
                   "result": "info",
                   "state": "FAILURE",
-                  "status": "notProvided",
-                  "message": "Token não encontrado, verifique e tente novamente"
+                  "status": "notUsage",
+                  "message": "Token não habilitado para uso, contate o administrador do sistema"
                 }
               });
             }
-          }).catch((erro) => {
-            console.log(erro);
-          }).then(() => {
-            conn.end();
+            //
+            if (todayDate > tokenEndDate) {
+              res.setHeader('Content-Type', 'application/json');
+              return res.status(408).json({
+                "Status": {
+                  "result": "info",
+                  "state": "FAILURE",
+                  "status": "notValid",
+                  "message": "Token vencido, contate o administrador do sistema"
+                }
+              });
+            }
+            //
             next();
-          });
-          //
+          } else {
+            res.setHeader('Content-Type', 'application/json');
+            return res.status(404).json({
+              "Status": {
+                "result": "info",
+                "state": "FAILURE",
+                "status": "notProvided",
+                "message": "Token não encontrado, verifique e tente novamente"
+              }
+            });
+          }
         } catch (err) {
           res.setHeader('Content-Type', 'application/json');
           return res.status(400).json({
