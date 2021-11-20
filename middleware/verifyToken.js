@@ -4,7 +4,7 @@ var todayDate = new Date().toISOString().slice(0, 10);
 //
 exports.verify = async (req, res, next) => {
   //
-  if (!req.body.SessionName) {
+  if (!req.body.SessionName.replace(/\r?\n|\r|\s+/g, "")) {
     res.setHeader('Content-Type', 'application/json');
     res.status(422).json({
       "Status": {
@@ -16,7 +16,7 @@ exports.verify = async (req, res, next) => {
     });
   } else {
     //if (!req.body.AuthorizationToken) {
-    if (!req.body.SessionName) {
+    if (!req.body.SessionName.replace(/\r?\n|\r|\s+/g, "")) {
       res.setHeader('Content-Type', 'application/json');
       res.status(422).json({
         "Status": {
@@ -32,7 +32,7 @@ exports.verify = async (req, res, next) => {
         const conn = require('../config/dbConnection').promise();
         try {
           //const theTokenAuth = req.body.AuthorizationToken.trim();
-          const theTokenAuth = req.body.SessionName.trim();
+          const theTokenAuth = req.body.SessionName.replace(/\r?\n|\r|\s+/g, "");
           //
           if (theTokenAuth) {
             console.log("- AuthorizationToken:", theTokenAuth);
