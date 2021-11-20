@@ -57,7 +57,7 @@ exports.verify = async (req, res, next) => {
             //
             // If you execute same statement again, it will be picked from a LRU cache
             // which will save query preparation time and give better performance
-            return results
+            return results;
           });
           //conn.end();
           //conn.release();
