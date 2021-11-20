@@ -52,6 +52,7 @@ exports.verify = async (req, res, next) => {
           const sql = "SELECT * FROM tokens WHERE token=? LIMIT 1";
           const values = [theTokenAuth];
           const [row] = await conn.execute(sql, values);
+          connection.end();
           //conn.release();
           //
           if (row.length > 0) {

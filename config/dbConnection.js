@@ -20,17 +20,10 @@ const dbConnectionInfo = {
 };
 //
 //For mysql single connection
-/* var dbconnection = mysql.createConnection(
+/* 
+var dbconnection = mysql.createConnection(
         dbConnectionInfo
 ); 
-//
- dbconnection.connect(function (err) {
-    if (!err) {
-        console.log("Database is connected ...");
-    } else {
-        console.log("Error connecting database ...");
-    }
-}); 
 //
 */
 //Create mysql connection pool
@@ -38,6 +31,13 @@ var dbconnection = mysql.createPool(
   dbConnectionInfo
 );
 //
+dbconnection.connect(function(err) {
+  if (!err) {
+    console.log("- Database is connected ...");
+  } else {
+    console.log("- Error connecting database ...");
+  }
+});
 // Attempt to catch disconnects 
 dbconnection.on('connection', function(connection) {
   console.log('- MySQL Connection established');
