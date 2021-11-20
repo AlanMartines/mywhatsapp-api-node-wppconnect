@@ -1,4 +1,3 @@
-const config = require('../config.global');
 //
 var todayDate = new Date().toISOString().slice(0, 10);
 //
@@ -49,17 +48,11 @@ exports.verify = async (req, res, next) => {
           }
           //
           //const conn = pool.getConnection();
+          const config = require('../config.global');
           const sql = "SELECT * FROM tokens WHERE token=? LIMIT 1";
           const values = [theTokenAuth];
-          const row = await conn.execute(sql, values, function(err, results, fields) {
-            console.log(results); // results contains rows returned by server
-            console.log(fields); // fields contains extra meta data about results, if available
-            //
-            // If you execute same statement again, it will be picked from a LRU cache
-            // which will save query preparation time and give better performance
-            return results;
-          });
-          //conn.end();
+          const [row] = await conn.execute(sql, values);
+          conn.end();
           //conn.release();
           //
           if (row.length > 0) {
