@@ -1,14 +1,11 @@
 //
 // Configuração dos módulos
 const config = require('./config.global');
-const os = require("os");
 const fs = require('fs-extra');
 const {
   forEach
 } = require('p-iteration');
-const axios = require('axios');
 const wppconnect = require('./wppconnect/dist/index');
-const io = require("socket.io-client");
 //
 // ------------------------------------------------------------------------------------------------------- //
 //
@@ -67,6 +64,7 @@ async function updateStateDb(state, status, AuthorizationToken) {
     console.log('- Atualizando status');
     const conn = require('./config/dbConnection').promise();
     const resUpdate = await conn.execute(sql, values);
+    conn.end();
     if (resUpdate) {
       console.log('- Status atualizado');
     } else {
