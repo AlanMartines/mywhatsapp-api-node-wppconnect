@@ -52,6 +52,7 @@ exports.verify = async (req, res, next) => {
           const sql = "SELECT * FROM tokens WHERE token=? LIMIT 1";
           const values = [theTokenAuth];
           const [row] = await conn.execute(sql, values);
+          conn.end();
           //conn.release();
           //
           if (row.length > 0) {
@@ -88,11 +89,8 @@ exports.verify = async (req, res, next) => {
               });
             }
             //
-            connection.end();
-            //
             next();
           } else {
-            connection.end();
             res.setHeader('Content-Type', 'application/json');
             return res.status(404).json({
               "Status": {
