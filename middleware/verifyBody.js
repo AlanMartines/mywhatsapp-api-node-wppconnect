@@ -30,8 +30,8 @@ async function validateBody(schema, req, res, next) {
 exports.Started = async (req, res, next) => {
   //
   let schema = yup.object().shape({
-    AuthorizationToken: yup.string().required(),
-    SessionName: yup.string().required()
+    AuthorizationToken: yup.string().trim(),
+    SessionName: yup.string().required().trim()
   });
   //
   await validateBody(schema, req, res, next);
@@ -41,8 +41,8 @@ exports.Started = async (req, res, next) => {
 exports.QrCode = async (req, res, next) => {
   //
   let schema = yup.object().shape({
-    AuthorizationToken: yup.string().required(),
-    SessionName: yup.string().required(),
+    AuthorizationToken: yup.string().trim(),
+    SessionName: yup.string().required().trim(),
     View: yup.mixed().required().oneOf([true, false])
   });
   //
@@ -63,8 +63,8 @@ exports.Usage = async (req, res, next) => {
 exports.Group = async (req, res, next) => {
   //
   let schema = yup.object().shape({
-    AuthorizationToken: yup.string(),
-    SessionName: yup.string().required(),
+    AuthorizationToken: yup.string().trim(),
+    SessionName: yup.string().required().trim(),
     groupId: yup.string().required()
   });
   //
@@ -74,8 +74,8 @@ exports.Group = async (req, res, next) => {
 exports.Data = async (req, res, next) => {
   //
   let schema = yup.object().shape({
-    AuthorizationToken: yup.string(),
-    SessionName: yup.string().required()
+    AuthorizationToken: yup.string().trim(),
+    SessionName: yup.string().required().trim()
   });
   //
   await validateBody(schema, req, res, next);
@@ -84,8 +84,8 @@ exports.Data = async (req, res, next) => {
 exports.Phone = async (req, res, next) => {
   //
   let schema = yup.object().shape({
-    AuthorizationToken: yup.string(),
-    SessionName: yup.string().required()
+    AuthorizationToken: yup.string().trim(),
+    SessionName: yup.string().required().trim()
   });
   //
   await validateBody(schema, req, res, next);
