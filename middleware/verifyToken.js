@@ -107,6 +107,7 @@ exports.verify = async (req, res, next) => {
             console.log(erro);
           }).then(() => {
             conn.end();
+            next();
           });
           //
         } catch (err) {
