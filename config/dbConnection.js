@@ -42,23 +42,21 @@ dbconnection.connect(function(err) {
 dbconnection.on('connection', function(connection) {
   console.log('- MySQL Connection established');
   //
-  connection.on('error', function(err) {
+  dbconnection.on('error', function(err) {
     console.error(new Date(), '- MySQL error', err.code);
   });
   //
-  connection.on('close', function(err) {
+  dbconnection.on('close', function(err) {
     console.error(new Date(), '- MySQL close', err);
   });
   //
-  connection.on('enqueue', function() {
+  dbconnection.on('enqueue', function() {
     console.log('- MySQL Waiting for available connection slot');
   });
   //
-  /*
-  connection.end(function(err) {
+  dbconnection.end(function(err) {
     console.log('- All connections in the pool have ended');
   });
-	*/
 });
 //
 module.exports = dbconnection;
