@@ -100,7 +100,7 @@ exports.sendVoice = async (req, res, next) => {
     AuthorizationToken: yup.string(),
     SessionName: yup.string().required(),
     phonefull: yup.string().required(),
-    file: Yup.array()
+    file: yup.array()
       .nullable()
       .required('VALIDATION_FIELD_REQUIRED')
       .test('is-correct-file', 'VALIDATION_FIELD_FILE_BIG', checkIfFilesAreTooBig)
