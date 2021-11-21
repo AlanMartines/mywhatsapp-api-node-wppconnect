@@ -320,7 +320,6 @@ router.post("/getSessions", upload.none(''), verifyBody.Started, verifyToken.ver
     getSessions
   });
 }); //getSessions
-
 //
 // ------------------------------------------------------------------------------------------------//
 //
@@ -352,34 +351,6 @@ router.post("/getHardWare", upload.none(''), verifyBody.Started, verifyToken.ver
     getHardWare
   });
 }); //getHardWare
-//
-// ------------------------------------------------------------------------------------------------//
-//
-// Reload do whatsapp web
-router.post("/reloadSession", upload.none(''), verifyToken.verify, async (req, res, next) => {
-  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.replace(/\r?\n|\r|\s+/g, ""));
-  switch (sessionStatus.status) {
-    case 'inChat':
-    case 'qrReadSuccess':
-    case 'isLogged':
-    case 'chatsAvailable':
-    case 'notLogged':
-    case 'deviceNotConnected':
-    case 'desconnectedMobile':
-    case 'qrReadFail':
-    case 'deleteToken':
-    case 'DISCONNECTED':
-      //
-
-      //
-      break;
-    default:
-      res.setHeader('Content-Type', 'application/json');
-      res.status(400).json({
-        "reloadSession": sessionStatus
-      });
-  }
-}); //reloadService
 //
 // ------------------------------------------------------------------------------------------------//
 //
