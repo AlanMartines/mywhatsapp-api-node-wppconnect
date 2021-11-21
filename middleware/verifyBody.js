@@ -109,6 +109,21 @@ exports.sendVoiceBase64 = async (req, res, next) => {
 //
 // ------------------------------------------------------------------------------------------------//
 //
+exports.sendContactVcard = async (req, res, next) => {
+  //
+  let validationSchema = yup.object().shape({
+    AuthorizationToken: yup.string(),
+    SessionName: yup.string().required(),
+    phonefull: yup.string().required(),
+    contact: yup.string().required(),
+    namecontact: yup.string().required().matches(/^[A-Za-z ]*$/, 'Por favor insira um nome válido')
+  });
+  //
+  await validateBody(validationSchema, req, res, next);
+}
+//
+// ------------------------------------------------------------------------------------------------//
+//
 exports.Group = async (req, res, next) => {
   //
   let validationSchema = yup.object().shape({

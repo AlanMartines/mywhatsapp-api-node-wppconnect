@@ -501,7 +501,7 @@ router.post("/sendVoiceFileBase64", upload.single('file'), verifyBody.Usage, ver
 // ------------------------------------------------------------------------------------------------//
 //
 // Enviar Contato
-router.post("/sendContactVcard", upload.none(''), verifyBody.Usage, verifyToken.verify, async (req, res, next) => {
+router.post("/sendContactVcard", upload.none(''), verifyBody.sendContactVcard, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
   switch (sessionStatus.status) {
     case 'inChat':
