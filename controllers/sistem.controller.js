@@ -363,7 +363,7 @@ router.post("/getHardWare", upload.none(''), verifyBody.Started, verifyToken.ver
 */
 //
 //Eviar menssagem de voz
-router.post("/sendVoice", upload.single('file'), verifyBody.sendVoice, verifyToken.verify, async (req, res, next) => {
+router.post("/sendVoice", upload.single('file'), verifyBody.Started, verifyToken.verify, async (req, res, next) => {
   //
   //Eviar menssagem de voz
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
