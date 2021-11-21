@@ -1158,7 +1158,7 @@ router.post("/sendMultImageMassa", sendMultImageMassa, verifyBody.Started, verif
 // ------------------------------------------------------------------------------------------------//
 //
 // Enviar imagen no grupo
-router.post("/sendImageGrupo", upload.single('fileimg'), verifyBody.Started, verifyToken.verify, async (req, res, next) => {
+router.post("/sendImageGrupo", upload.single('file'), verifyBody.Started, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
   switch (sessionStatus.status) {
     case 'inChat':
