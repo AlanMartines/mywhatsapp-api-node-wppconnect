@@ -28,7 +28,7 @@ async function query(sql, params) {
   const connection = await mysql.createConnection(dbConnection);
 
   //
-  dbconnection.connect(function(err) {
+  connection.connect(function(err) {
     if (!err) {
       console.log("- Database is connected");
     } else {
@@ -36,23 +36,22 @@ async function query(sql, params) {
     }
   });
   // Attempt to catch disconnects 
-  dbconnection.on('connection', function(connection) {
+  connection.on('connection', function(connection) {
     console.log('- MySQL Connection established');
     //
-    dbconnection.on('error', function(err) {
+    connection.on('error', function(err) {
       console.error(new Date(), '- MySQL error', err.code);
     });
     //
-    dbconnection.on('enqueue', function() {
+    connection.on('enqueue', function() {
       console.log('- MySQL Waiting for available connection slot');
     });
     //
-    dbconnection.end(function(err) {
+    connection.end(function(err) {
       console.log('- All connections the have ended');
     });
   });
   //
-
   let results = {}
 
   try {
