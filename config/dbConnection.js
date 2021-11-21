@@ -44,7 +44,7 @@ dbconnection.connect(function(err) {
     console.log("- Error connecting database");
   }
 });
-// Attempt to catch disconnects 
+//
 dbconnection.on('connection', function(connection) {
   console.log('- MySQL Connection established');
   //
