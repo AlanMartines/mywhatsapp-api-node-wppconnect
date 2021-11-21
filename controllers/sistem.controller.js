@@ -1158,7 +1158,7 @@ router.post("/sendMultImageMassa", sendMultImageMassa, verifyBody.Started, verif
 // ------------------------------------------------------------------------------------------------//
 //
 // Enviar imagen no grupo
-router.post("/sendImageGrupo", upload.single('file'), verifyBody.Started, verifyToken.verify, async (req, res, next) => {
+router.post("/sendImageGroup", upload.single('file'), verifyBody.sendFileGroup, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
   switch (sessionStatus.status) {
     case 'inChat':
@@ -1171,7 +1171,7 @@ router.post("/sendImageGrupo", upload.single('file'), verifyBody.Started, verify
       fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
       console.log("- File", filePath);
       //
-      var sendImageGrupo = await Sessions.sendImage(
+      var sendImageGroup = await Sessions.sendImage(
         removeWithspace(req.body.SessionName),
         req.body.groupId.trim() + '@g.us',
         filePath,
@@ -1185,16 +1185,16 @@ router.post("/sendImageGrupo", upload.single('file'), verifyBody.Started, verify
       //console.log(result);
       res.setHeader('Content-Type', 'application/json');
       res.status(200).json({
-        sendImageGrupo
+        sendImageGroup
       });
       break;
     default:
       res.setHeader('Content-Type', 'application/json');
       res.status(400).json({
-        "sendImageGrupo": sessionStatus
+        "sendImageGroup": sessionStatus
       });
   }
-}); //sendImageGrupo
+}); //sendImageGroup
 //
 // ------------------------------------------------------------------------------------------------//
 //
@@ -1251,7 +1251,7 @@ router.post("/sendFile", upload.single('file'), verifyBody.Usage, verifyToken.ve
 // ------------------------------------------------------------------------------------------------//
 //
 // Enviar arquivo/documento
-router.post("/sendFileGroup", upload.single('file'), verifyBody.Group, verifyToken.verify, async (req, res, next) => {
+router.post("/sendFileGroup", upload.single('file'), verifyBody.sendFileGroup, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
   switch (sessionStatus.status) {
     case 'inChat':
@@ -1264,7 +1264,7 @@ router.post("/sendFileGroup", upload.single('file'), verifyBody.Group, verifyTok
       fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
       console.log("- File", filePath);
       //
-      var sendFile = await Sessions.sendFile(
+      var sendFileGroup = await Sessions.sendFile(
         removeWithspace(req.body.SessionName),
         req.body.groupId.trim() + '@g.us',
         filePath,
@@ -1277,13 +1277,13 @@ router.post("/sendFileGroup", upload.single('file'), verifyBody.Group, verifyTok
       //console.log(result);
       res.setHeader('Content-Type', 'application/json');
       res.status(200).json({
-        sendFile
+        sendFileGroup
       });
       break;
     default:
       res.setHeader('Content-Type', 'application/json');
       res.status(400).json({
-        "sendFile": sessionStatus
+        "sendFileGroup": sessionStatus
       });
   }
 }); //sendFileGroup
@@ -1342,7 +1342,7 @@ router.post("/sendFileBase64", upload.none(''), verifyBody.sendFileBase64, verif
 // ------------------------------------------------------------------------------------------------//
 //
 // Enviar arquivo/documento
-router.post("/sendFileBase64Group", upload.none(''), verifyBody.Group, verifyToken.verify, async (req, res, next) => {
+router.post("/sendFileBase64Group", upload.none(''), verifyBody.sendFileBase64Group, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
   switch (sessionStatus.status) {
     case 'inChat':
@@ -1479,7 +1479,7 @@ router.post("/sendFileFromBase64", upload.none(''), verifyBody.sendFileFromBase6
         var sendFileFromBase64 = await Sessions.sendFileFromBase64(
           removeWithspace(req.body.SessionName),
           checkNumberStatus.number + '@c.us',
-          req.body.base64Data,
+          req.body.base64,
           req.body.mimetype,
           req.body.originalname,
           req.body.caption
@@ -1506,7 +1506,7 @@ router.post("/sendFileFromBase64", upload.none(''), verifyBody.sendFileFromBase6
 // ------------------------------------------------------------------------------------------------//
 //
 // Enviar arquivo/documento
-router.post("/sendFileFromBase64Group", upload.none(''), verifyBody.Group, verifyToken.verify, async (req, res, next) => {
+router.post("/sendFileFromBase64Group", upload.none(''), verifyBody.sendFileFromBase64Group, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
   switch (sessionStatus.status) {
     case 'inChat':
@@ -1517,7 +1517,7 @@ router.post("/sendFileFromBase64Group", upload.none(''), verifyBody.Group, verif
       var sendFileFromBase64 = await Sessions.sendFileFromBase64(
         removeWithspace(req.body.SessionName),
         req.body.groupId.trim() + '@g.us',
-        req.body.base64Data,
+        req.body.base64,
         req.body.mimetype,
         req.body.originalname,
         req.body.msg
@@ -1536,160 +1536,6 @@ router.post("/sendFileFromBase64Group", upload.none(''), verifyBody.Group, verif
       });
   }
 }); //sendFileFromBase64Group
-//
-// ------------------------------------------------------------------------------------------------//
-//
-//Enviar imagem em gif
-router.post("/sendImageAsStickerGif", upload.single('file'), verifyBody.Usage, verifyToken.verify, async (req, res, next) => {
-  //
-  // Generates sticker from the provided animated gif image and sends it (Send image as animated sticker)
-  // image path imageBase64 A valid gif and webp image is required. 
-  // You can also send via http/https (http://www.website.com/img.gif)
-  //
-  var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-  switch (sessionStatus.status) {
-    case 'inChat':
-    case 'qrReadSuccess':
-    case 'isLogged':
-    case 'chatsAvailable':
-      //
-      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
-      var filePath = path.join(folderName, req.file.originalname);
-      fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
-      console.log("- File", filePath);
-      //
-      var checkNumberStatus = await Sessions.checkNumberStatus(
-        removeWithspace(req.body.SessionName),
-        soNumeros(req.body.phonefull).trim() + '@c.us'
-      );
-      //
-      if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
-        //
-        var sendImageAsStickerGif = await Sessions.sendImageAsStickerGif(
-          removeWithspace(req.body.SessionName),
-          checkNumberStatus.number + '@c.us',
-          filePath
-        );
-        //
-      } else {
-        var sendImageAsStickerGif = checkNumberStatus;
-      }
-      //
-      await deletaArquivosTemp(filePath);
-      //
-      //console.log(result);
-      res.setHeader('Content-Type', 'application/json');
-      res.status(200).json({
-        sendImageAsStickerGif
-      });
-      break;
-    default:
-      res.setHeader('Content-Type', 'application/json');
-      res.status(400).json({
-        "sendImageAsStickerGif": sessionStatus
-      });
-  }
-}); //sendImageAsStickerGif
-//
-// ------------------------------------------------------------------------------------------------//
-//
-//Enviar imagem em gif
-router.post("/sendImageAsStickerGifUrl", upload.single('file'), verifyBody.Usage, verifyToken.verify, async (req, res, next) => {
-  //
-  // Generates sticker from the provided animated gif image and sends it (Send image as animated sticker)
-  // image path imageBase64 A valid gif and webp image is required. 
-  // You can also send via http/https (http://www.website.com/img.gif)
-  //
-  var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-  switch (sessionStatus.status) {
-    case 'inChat':
-    case 'qrReadSuccess':
-    case 'isLogged':
-    case 'chatsAvailable':
-      //
-      var checkNumberStatus = await Sessions.checkNumberStatus(
-        removeWithspace(req.body.SessionName),
-        soNumeros(req.body.phonefull).trim() + '@c.us'
-      );
-      //
-      if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
-        //
-        var sendImageAsStickerGifUrl = await Sessions.sendImageAsStickerGif(
-          removeWithspace(req.body.SessionName),
-          checkNumberStatus.number + '@c.us',
-          req.body.urlLink,
-        );
-        //
-      } else {
-        var sendImageAsStickerGifUrl = checkNumberStatus;
-      }
-      //
-      //console.log(result);
-      res.setHeader('Content-Type', 'application/json');
-      res.status(200).json({
-        sendImageAsStickerGifUrl
-      });
-      break;
-    default:
-      res.setHeader('Content-Type', 'application/json');
-      res.status(400).json({
-        "sendImageAsStickerGifUrl": sessionStatus
-      });
-  }
-}); //sendImageAsStickerGifUrl
-//
-// ------------------------------------------------------------------------------------------------//
-//
-//Enviar figura png ou jpg
-router.post("/sendImageAsSticker", upload.single('file'), verifyBody.Usage, verifyToken.verify, async (req, res, next) => {
-  var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-  switch (sessionStatus.status) {
-    case 'inChat':
-    case 'qrReadSuccess':
-    case 'isLogged':
-    case 'chatsAvailable':
-      //
-      //
-      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
-      var filePath = path.join(folderName, req.file.originalname);
-      fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
-      console.log("- File", filePath);
-      //
-      var jsonStr = '{"sendResult":[]}';
-      var obj = JSON.parse(jsonStr);
-      //
-      var checkNumberStatus = await Sessions.checkNumberStatus(
-        removeWithspace(req.body.SessionName),
-        soNumeros(req.body.phonefull).trim() + '@c.us'
-      );
-      //
-      if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
-        //
-        var sendImageAsSticker = await Sessions.sendImageAsSticker(
-          removeWithspace(req.body.SessionName),
-          checkNumberStatus.number + '@c.us',
-          filePath
-        );
-        //
-      } else {
-        var sendImageAsSticker = checkNumberStatus;
-      }
-      //
-      await deletaArquivosTemp(filePath);
-      //
-      //console.log(result);
-      res.setHeader('Content-Type', 'application/json');
-      res.status(200).json({
-        sendImageAsSticker
-      });
-      break;
-    default:
-      res.setHeader('Content-Type', 'application/json');
-      res.status(400).json({
-        "sendImageAsSticker": sessionStatus
-      });
-  }
-}); //sendImageAsSticker
 //
 // ------------------------------------------------------------------------------------------------//
 //
@@ -1983,7 +1829,7 @@ router.post("/checkNumberStatusMassa", upload.single('file'), verifyBody.Started
 */
 //
 //Deixar o grupo
-router.post("/leaveGroup", upload.none(''), verifyToken.verify, async (req, res, next) => {
+router.post("/leaveGroup", upload.none(''), verifyBody.setGroup, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
   switch (sessionStatus.status) {
     case 'inChat':
@@ -2011,7 +1857,7 @@ router.post("/leaveGroup", upload.none(''), verifyToken.verify, async (req, res,
 // ------------------------------------------------------------------------------------------------------- //
 //
 // Obtenha membros do grupo
-router.post("/getGroupMembers", upload.none(''), verifyToken.verify, async (req, res, next) => {
+router.post("/getGroupMembers", upload.none(''), verifyBody.setGroup, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
   switch (sessionStatus.status) {
     case 'inChat':
@@ -2039,7 +1885,7 @@ router.post("/getGroupMembers", upload.none(''), verifyToken.verify, async (req,
 // ------------------------------------------------------------------------------------------------//
 //
 // Obter IDs de membros do grupo 
-router.post("/getGroupMembersIds", upload.none(''), verifyToken.verify, async (req, res, next) => {
+router.post("/getGroupMembersIds", upload.none(''), verifyBody.setGroup, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
   switch (sessionStatus.status) {
     case 'inChat':
@@ -2067,7 +1913,7 @@ router.post("/getGroupMembersIds", upload.none(''), verifyToken.verify, async (r
 // ------------------------------------------------------------------------------------------------//
 //
 // Gerar link de url de convite de grupo
-router.post("/getGroupInviteLink", upload.none(''), verifyToken.verify, async (req, res, next) => {
+router.post("/getGroupInviteLink", upload.none(''), verifyBody.setGroup, verifyToken.verify, async (req, res, next) => {
   //
   // Gerar link de url de convite de grupo
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
@@ -2096,7 +1942,7 @@ router.post("/getGroupInviteLink", upload.none(''), verifyToken.verify, async (r
 //
 // ------------------------------------------------------------------------------------------------//
 //
-router.post("/createGroup", upload.single('file'), verifyToken.verify, async (req, res, next) => {
+router.post("/createGroup", upload.single('file'), verifyBody.createGroup, verifyToken.verify, async (req, res, next) => {
   //
   // Criar grupo (título, participantes a adicionar)
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
@@ -2165,7 +2011,7 @@ router.post("/createGroup", upload.single('file'), verifyToken.verify, async (re
 // ------------------------------------------------------------------------------------------------//
 //
 // Criar grupo (título, participantes a adicionar)
-router.post("/createGroupSetAdminMembers", upload.single('file'), verifyToken.verify, async (req, res, next) => {
+router.post("/createGroupSetAdminMembers", upload.single('file'), verifyBody.createGroup, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
   switch (sessionStatus.status) {
     case 'inChat':
@@ -2256,7 +2102,7 @@ router.post("/createGroupSetAdminMembers", upload.single('file'), verifyToken.ve
 // ------------------------------------------------------------------------------------------------//
 //
 // Criar grupo (título, participantes a adicionar)
-router.post("/createCountGroupSetAdminMembers", upload.single('file'), verifyToken.verify, async (req, res, next) => {
+router.post("/createCountGroupSetAdminMembers", upload.single('file'), verifyBody.createGroupCount, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
   switch (sessionStatus.status) {
     case 'inChat':
@@ -2354,7 +2200,7 @@ router.post("/createCountGroupSetAdminMembers", upload.single('file'), verifyTok
 //
 // ------------------------------------------------------------------------------------------------//
 //
-router.post("/removeParticipant", upload.none(''), verifyToken.verify, async (req, res, next) => {
+router.post("/removeParticipant", upload.none(''), verifyBody.partGroup, verifyToken.verify, async (req, res, next) => {
   //
   // Remove participante
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
@@ -2396,7 +2242,7 @@ router.post("/removeParticipant", upload.none(''), verifyToken.verify, async (re
 //
 // ------------------------------------------------------------------------------------------------//
 //
-router.post("/addParticipant", upload.none(''), verifyToken.verify, async (req, res, next) => {
+router.post("/addParticipant", upload.none(''), verifyBody.partGroup, verifyToken.verify, async (req, res, next) => {
   //
   // Adicionar participante
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
@@ -2438,7 +2284,7 @@ router.post("/addParticipant", upload.none(''), verifyToken.verify, async (req, 
 //
 // ------------------------------------------------------------------------------------------------//
 //
-router.post("/promoteParticipant", upload.none(''), verifyToken.verify, async (req, res, next) => {
+router.post("/promoteParticipant", upload.none(''), verifyBody.partGroup, verifyToken.verify, async (req, res, next) => {
   //
   // Promote participant (Give admin privileges)
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
@@ -2481,7 +2327,7 @@ router.post("/promoteParticipant", upload.none(''), verifyToken.verify, async (r
 // ------------------------------------------------------------------------------------------------//
 //
 // Depromote participant (Give admin privileges)
-router.post("/demoteParticipant", upload.none(''), verifyToken.verify, async (req, res, next) => {
+router.post("/demoteParticipant", upload.none(''), verifyBody.partGroup, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
   switch (sessionStatus.status) {
     case 'inChat':
@@ -2522,7 +2368,7 @@ router.post("/demoteParticipant", upload.none(''), verifyToken.verify, async (re
 // ------------------------------------------------------------------------------------------------//
 //
 // Retorna o status do grupo, jid, descrição do link de convite
-router.post("/getGroupInfoFromInviteLink", upload.none(''), verifyToken.verify, async (req, res, next) => {
+router.post("/getGroupInfoFromInviteLink", upload.none(''), verifyBody.linkGroup, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
   switch (sessionStatus.status) {
     case 'inChat':
@@ -2549,7 +2395,7 @@ router.post("/getGroupInfoFromInviteLink", upload.none(''), verifyToken.verify, 
 //
 // ------------------------------------------------------------------------------------------------//
 //
-router.post("/joinGroup", upload.none(''), verifyToken.verify, async (req, res, next) => {
+router.post("/joinGroup", upload.none(''), verifyBody.linkGroup, verifyToken.verify, async (req, res, next) => {
   //
   // Junte-se a um grupo usando o código de convite do grupo
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
