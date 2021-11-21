@@ -101,7 +101,7 @@ exports.sendVoice = async (req, res, next) => {
     SessionName: yup.string().required(),
     phonefull: yup.string().required(),
     file: yup.mixed()
-      .test('required', "You need to provide a file", (value) => {
+      .test('fileSize', "You need to provide a file", (value) => {
         return value && value.length
       })
   });
