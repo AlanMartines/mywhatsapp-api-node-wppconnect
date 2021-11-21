@@ -105,8 +105,8 @@ exports.sendVoice = async (req, res, next) => {
     AuthorizationToken: yup.string(),
     SessionName: yup.string().required(),
     phonefull: yup.string().required(),
-    file: mixed().test("fileSize", "The file is too large", (value) => {
-      if (!value.length) return true // attachment is optional
+    file: yup.mixed().test("fileSize", "O arquivo é muito grande", (value) => {
+      if (!value.length) return true
     })
   });
   //
