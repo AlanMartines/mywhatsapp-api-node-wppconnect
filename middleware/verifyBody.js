@@ -85,7 +85,9 @@ exports.sendVoice = async (req, res, next) => {
     AuthorizationToken: yup.string(),
     SessionName: yup.string().required(),
     phonefull: yup.string().required(),
-    audio_data: yup.mixed().required()
+    file: Yup.object().shape({
+      name: Yup.string().required()
+    })
   });
   //
   await validateBody(schema, req, res, next);
