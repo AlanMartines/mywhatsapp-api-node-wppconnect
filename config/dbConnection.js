@@ -24,16 +24,17 @@ const dbConnectionPool = {
 };
 //
 //For mysql single connection
-//Create mysql connection pool
-/*
-var dbconnection = mysql.createPool(
-  dbConnectionPool
-);
-*/
 //Create mysql connection
 var dbconnection = mysql.createConnection(
   dbConnection
 );
+//
+/*
+//Create mysql connection pool
+var dbconnection = mysql.createPool(
+  dbConnectionPool
+);
+*/
 //
 //
 dbconnection.connect(function(err) {
