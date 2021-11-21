@@ -8,6 +8,7 @@ yup.setLocale({
     notOneOf: "Não preencha com um dos seguintes valores: ${values}"
   },
   string: {
+    required: "Preencha esse campo para continuar",
     length: "Valor deve ter exatamente ${length} caracteres",
     min: "Valor muito curto (mínimo ${min} caracteres)",
     max: "Valor muito longo (máximo ${max} caracteres)",
@@ -18,9 +19,11 @@ yup.setLocale({
     uppercase: "Valor deve estar em minúsculo"
   },
   boolean: {
+    required: "Preencha esse campo para continuar",
     oneOf: "Preencha com um dos seguintes valores: ${values}"
   },
   number: {
+    required: "Preencha esse campo para continuar",
     min: "Valor inválido (deve ser maior ou igual a ${min})",
     max: "Valor inválido (deve ser menor ou igual a ${max})",
     lessThan: "Valor deve ser menor que ${less}",
@@ -31,10 +34,12 @@ yup.setLocale({
     integer: "Valor deve ser um número inteiro"
   },
   date: {
+    required: "Preencha esse campo para continuar",
     min: "Data deve ser maior que a data ${min}",
     max: "Data deve ser menor que a data ${max}"
   },
   array: {
+    required: "Preencha esse campo para continuar",
     min: "Valor ter no mínimo ${min} itens",
     max: "Valor ter no máximo ${max} itens"
   }

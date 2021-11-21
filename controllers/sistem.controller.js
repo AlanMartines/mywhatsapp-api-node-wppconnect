@@ -430,7 +430,7 @@ router.post("/sendVoiceBase64", upload.single('audio_data'), verifyBody.Usage, v
         var sendVoiceBase64 = await Sessions.sendVoiceBase64(
           req.body.SessionName.replace(/\r?\n|\r|\s+/g, ""),
           checkNumberStatus.number.trim() + '@c.us',
-          req.body.base64MP3,
+          req.body.base64,
           req.body.mimetype
         );
         //
