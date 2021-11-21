@@ -154,6 +154,21 @@ exports.sendLocation = async (req, res, next) => {
 //
 // ------------------------------------------------------------------------------------------------//
 //
+exports.sendLinkPreview = async (req, res, next) => {
+  //
+  let validationSchema = yup.object().shape({
+    AuthorizationToken: yup.string(),
+    SessionName: yup.string().required(),
+    phonefull: yup.string().required(),
+    link: yup.string().required().url(),
+    descricao: yup.string().required()
+  });
+  //
+  await validateBody(validationSchema, req, res, next);
+}
+//
+// ------------------------------------------------------------------------------------------------//
+//
 exports.Group = async (req, res, next) => {
   //
   let validationSchema = yup.object().shape({

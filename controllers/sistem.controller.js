@@ -825,7 +825,7 @@ router.post("/sendLocationGroup", upload.none(''), verifyBody.Group, verifyToken
 // ------------------------------------------------------------------------------------------------//
 //
 //Enviar links com preview
-router.post("/sendLinkPreview", upload.none(''), verifyBody.Usage, verifyToken.verify, async (req, res, next) => {
+router.post("/sendLinkPreview", upload.none(''), verifyBody.sendLinkPreview, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
   switch (sessionStatus.status) {
     case 'inChat':
@@ -844,7 +844,7 @@ router.post("/sendLinkPreview", upload.none(''), verifyBody.Usage, verifyToken.v
           removeWithspace(req.body.SessionName),
           checkNumberStatus.number + '@c.us',
           req.body.link,
-          req.body.detail
+          req.body.descricao
         );
         //
       } else {
