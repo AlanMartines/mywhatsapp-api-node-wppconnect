@@ -57,7 +57,7 @@ exports.verify = async (req, res, next) => {
           //conn.release();
           //
           const sql_result = database.query(sql, values);
-          console.log(sql_result);
+          console.log(sql_result[0]);
           //
           if (row.length > 0) {
             //
