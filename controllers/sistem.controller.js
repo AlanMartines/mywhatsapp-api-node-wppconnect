@@ -414,7 +414,7 @@ router.post("/sendVoice", upload.single('file'), verifyBody.Started, verifyToken
 // ------------------------------------------------------------------------------------------------//
 //
 //Eviar menssagem de voz
-router.post("/sendVoiceBase64", upload.single('file'), verifyBody.Usage, verifyToken.verify, async (req, res, next) => {
+router.post("/sendVoiceBase64", upload.single('file'), verifyBody.sendVoiceBase64, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
   switch (sessionStatus.status) {
     case 'inChat':

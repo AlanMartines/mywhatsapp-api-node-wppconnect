@@ -94,13 +94,14 @@ exports.Usage = async (req, res, next) => {
 //
 // ------------------------------------------------------------------------------------------------//
 //
-exports.sendVoice = async (req, res, next) => {
+exports.sendVoiceBase64 = async (req, res, next) => {
   //
   let validationSchema = yup.object().shape({
     AuthorizationToken: yup.string(),
     SessionName: yup.string().required(),
     phonefull: yup.string().required(),
-    file: yup.mixed().required().test("fileSize", "Your video is too big", (value) => value && value.size <= 0)
+    base64: yup.string().required(),
+    mimetype: yup.string().required()
   });
   //
   await validateBody(validationSchema, req, res, next);
