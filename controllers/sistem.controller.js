@@ -194,6 +194,31 @@ router.post("/Close", upload.none(''), verifyBody.Started, verifyToken.verify, a
 //
 // ------------------------------------------------------------------------------------------------//
 //
+// Desconecta do whatsapp web
+router.post("/Logout", upload.none(''), verifyBody.Started, verifyToken.verify, async (req, res, next) => {
+  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.replace(/\r?\n|\r|\s+/g, ""));
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var LogoutSession = await Sessions.logoutSession(req.body.SessionName.replace(/\r?\n|\r|\s+/g, ""));
+      res.setHeader('Content-Type', 'application/json');
+      res.status(200).json({
+        LogoutSession
+      });
+      break;
+    default:
+      res.setHeader('Content-Type', 'application/json');
+      res.status(400).json({
+        "LogoutSession": sessionStatus
+      });
+  }
+}); //Logout
+//
+// ------------------------------------------------------------------------------------------------//
+//
 // Gera o QR-Code
 router.post("/QRCode", upload.none(''), verifyBody.QrCode, verifyToken.verify, async (req, res, next) => {
   console.log("- getQRCode");
@@ -228,7 +253,6 @@ router.post("/QRCode", upload.none(''), verifyBody.QrCode, verifyToken.verify, a
             'Content-Length': imageBuffer.length
           });
           //
-          res.setHeader('Content-Type', 'application/json');
           res.status(200).end(imageBuffer);
           //
         } else {
@@ -328,31 +352,6 @@ router.post("/getHardWare", upload.none(''), verifyBody.Started, verifyToken.ver
     getHardWare
   });
 }); //getHardWare
-//
-// ------------------------------------------------------------------------------------------------//
-//
-// Desconecta do whatsapp web
-router.post("/Logout", upload.none(''), verifyBody.Started, verifyToken.verify, async (req, res, next) => {
-  var sessionStatus = await Sessions.ApiStatus(req.body.SessionName.replace(/\r?\n|\r|\s+/g, ""));
-  switch (sessionStatus.status) {
-    case 'inChat':
-    case 'qrReadSuccess':
-    case 'isLogged':
-    case 'chatsAvailable':
-      //
-      var LogoutSession = await Sessions.logoutSession(req.body.SessionName.replace(/\r?\n|\r|\s+/g, ""));
-      res.setHeader('Content-Type', 'application/json');
-      res.status(200).json({
-        LogoutSession
-      });
-      break;
-    default:
-      res.setHeader('Content-Type', 'application/json');
-      res.status(400).json({
-        "LogoutSession": sessionStatus
-      });
-  }
-}); //Close
 //
 // ------------------------------------------------------------------------------------------------//
 //
