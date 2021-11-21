@@ -1427,7 +1427,7 @@ router.post("/sendFileToBase64", upload.single('file'), verifyBody.sendFileToBas
 // ------------------------------------------------------------------------------------------------//
 //
 // Enviar arquivo/documento
-router.post("/sendFileToBase64Group", upload.single('file'), verifyBody.Group, verifyToken.verify, async (req, res, next) => {
+router.post("/sendFileToBase64Group", upload.single('file'), verifyBody.sendFileToBase64, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
   switch (sessionStatus.status) {
     case 'inChat':
