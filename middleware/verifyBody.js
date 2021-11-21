@@ -105,9 +105,13 @@ exports.sendVoice = async (req, res, next) => {
     AuthorizationToken: yup.string(),
     SessionName: yup.string().required(),
     phonefull: yup.string().required(),
-    file: yup.mixed().test("fileSize", "O arquivo é muito grande", (value) => {
-      if (!value.length) return true
-    })
+    file: yup.mixed()
+      .test('required', "You need to provide a file", (value) => {
+        return value && value.length
+      })
+      .test("type", "We only support jpeg", function(value) {
+        return value && value[0] && value[0].type === "audio/mpeg";
+      })
   });
   //
   await validateBody(validationSchema, req, res, next);
