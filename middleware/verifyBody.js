@@ -85,7 +85,15 @@ exports.sendVoice = async (req, res, next) => {
     AuthorizationToken: yup.string(),
     SessionName: yup.string().required(),
     phonefull: yup.string().required(),
-    file: yup.mixed().test("file", "The file must be in the JSON format").required("File is required")
+    file: yup.mixed().test("file", "The file must be in the JSON format", async (file) => {
+      const text = await file.text();
+      try {
+        JSON.parse(text);
+      } catch {
+        return false;
+      }
+      return true;
+    }).required("File is required")
   });
   //
   await validateBody(validationSchema, req, res, next);
