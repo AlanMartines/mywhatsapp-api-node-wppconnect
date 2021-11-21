@@ -116,7 +116,7 @@ exports.sendContactVcard = async (req, res, next) => {
     SessionName: yup.string().required(),
     phonefull: yup.string().required(),
     contact: yup.string().required(),
-    namecontact: yup.string().required().matches(/^[A-Za-z ]*$/, 'Por favor insira um nome válido')
+    namecontact: yup.string().required().matches(/^[A-Za-z0-9 ]*$/, 'Por favor insira um nome válido')
   });
   //
   await validateBody(validationSchema, req, res, next);
