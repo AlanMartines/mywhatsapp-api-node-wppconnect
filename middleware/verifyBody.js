@@ -94,6 +94,19 @@ exports.Usage = async (req, res, next) => {
 //
 // ------------------------------------------------------------------------------------------------//
 //
+exports.sendTextMassa = async (req, res, next) => {
+  //
+  let validationSchema = yup.object().shape({
+    AuthorizationToken: yup.string(),
+    SessionName: yup.string().required(),
+    msg: yup.string().required()
+  });
+  //
+  await validateBody(validationSchema, req, res, next);
+}
+//
+// ------------------------------------------------------------------------------------------------//
+//
 exports.sendVoiceBase64 = async (req, res, next) => {
   //
   let validationSchema = yup.object().shape({
@@ -146,7 +159,7 @@ exports.sendLocation = async (req, res, next) => {
     phonefull: yup.string().required(),
     lat: yup.string().required().matches(/^-?([1-8]?[1-9]|[1-9]0)\.{1}\d{1,15}/g, 'Por favor insira uma lat válido Ex.: -00.00000'),
     long: yup.string().required().matches(/^-?(([-+]?)([\d]{1,3})((\.)(\d+))?)/g, 'Por favor insira uma long válido Ex.: -00.00000'),
-    pais: yup.string().required()
+    local: yup.string().required()
   });
   //
   await validateBody(validationSchema, req, res, next);
@@ -206,7 +219,7 @@ exports.sendFileFromBase64 = async (req, res, next) => {
   let validationSchema = yup.object().shape({
     AuthorizationToken: yup.string(),
     SessionName: yup.string().required(),
-    groupId: yup.string().required(),
+    phonefull: yup.string().required(),
     base64: yup.string().required(),
     mimetype: yup.string().required(),
     originalname: yup.string().required(),

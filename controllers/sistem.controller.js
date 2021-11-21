@@ -652,7 +652,7 @@ router.post("/sendText", upload.none(''), verifyBody.sendText, verifyToken.verif
 // ------------------------------------------------------------------------------------------------//
 //
 //Enviar Texto em Massa
-router.post("/sendTextMassa", upload.single('file'), verifyBody.Usage, verifyToken.verify, async (req, res, next) => {
+router.post("/sendTextMassa", upload.single('file'), verifyBody.sendTextMassa, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
   switch (sessionStatus.status) {
     case 'inChat':
