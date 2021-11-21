@@ -218,12 +218,43 @@ exports.sendFileFromBase64 = async (req, res, next) => {
 //
 // ------------------------------------------------------------------------------------------------//
 //
-exports.Group = async (req, res, next) => {
+exports.sendTextGrupo = async (req, res, next) => {
   //
   let validationSchema = yup.object().shape({
     AuthorizationToken: yup.string(),
     SessionName: yup.string().required(),
-    phonefull: yup.string().required()
+    groupId: yup.string().required(),
+    msg: yup.string().required()
+  });
+  //
+  await validateBody(validationSchema, req, res, next);
+}
+//
+// ------------------------------------------------------------------------------------------------//
+//
+exports.sendLocationGroup = async (req, res, next) => {
+  //
+  let validationSchema = yup.object().shape({
+    AuthorizationToken: yup.string(),
+    SessionName: yup.string().required(),
+    groupId: yup.string().required(),
+    lat: yup.string().required().matches(/^-?([1-8]?[1-9]|[1-9]0)\.{1}\d{1,15}/g, 'Por favor insira uma lat válido Ex.: -00.00000'),
+    long: yup.string().required().matches(/^-?(([-+]?)([\d]{1,3})((\.)(\d+))?)/g, 'Por favor insira uma long válido Ex.: -00.00000'),
+    local: yup.string().required()
+  });
+  //
+  await validateBody(validationSchema, req, res, next);
+}
+//
+// ------------------------------------------------------------------------------------------------//
+//
+exports.sendImageGrupo = async (req, res, next) => {
+  //
+  let validationSchema = yup.object().shape({
+    AuthorizationToken: yup.string(),
+    SessionName: yup.string().required(),
+    groupId: yup.string().required(),
+    caption: yup.string().required()
   });
   //
   await validateBody(validationSchema, req, res, next);
