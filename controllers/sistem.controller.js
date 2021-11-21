@@ -1005,7 +1005,7 @@ router.post("/sendImageMassa", sendImageMassa, verifyBody.Started, verifyToken.v
 // ------------------------------------------------------------------------------------------------//
 //
 // Enviar varia imagens
-router.post("/sendMultImage", upload.array('fileimgs', 50), verifyBody.Started, verifyToken.verify, async (req, res, next) => {
+router.post("/sendMultImage", upload.array('file', 50), verifyBody.Started, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
   switch (sessionStatus.status) {
     case 'inChat':
@@ -1072,7 +1072,7 @@ var sendMultImageMassa = upload.fields([{
   name: 'phonefull',
   maxCount: 1
 }, {
-  name: 'fileimgs',
+  name: 'file',
   maxCount: 30
 }]);
 //
