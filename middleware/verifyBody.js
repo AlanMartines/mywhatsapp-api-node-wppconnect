@@ -96,11 +96,6 @@ exports.Usage = async (req, res, next) => {
 //
 exports.sendVoice = async (req, res, next) => {
   //
-  const FILE_SIZE = 0;
-  const SUPPORTED_FORMATS = [
-    "audio/mpeg"
-  ];
-  //
   let validationSchema = yup.object().shape({
     AuthorizationToken: yup.string(),
     SessionName: yup.string().required(),
@@ -108,9 +103,6 @@ exports.sendVoice = async (req, res, next) => {
     file: yup.mixed()
       .test('required', "You need to provide a file", (value) => {
         return value && value.length
-      })
-      .test("type", "We only support jpeg", function(value) {
-        return value && value[0] && value[0].type === "audio/mpeg";
       })
   });
   //
