@@ -94,7 +94,7 @@ exports.Usage = async (req, res, next) => {
 //
 // ------------------------------------------------------------------------------------------------//
 //
-exports.Voice = async (req, res, next) => {
+exports.sendVoice = async (req, res, next) => {
   //
   let validationSchema = yup.object().shape({
     AuthorizationToken: yup.string(),
