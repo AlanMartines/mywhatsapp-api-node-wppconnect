@@ -1,6 +1,7 @@
 const config = require('../config.global');
 const yup = require("./validator");
 //
+// ------------------------------------------------------------------------------------------------//
 //
 async function validateBody(schema, req, res, next) {
   return schema.validate(req.body, {
@@ -19,13 +20,14 @@ async function validateBody(schema, req, res, next) {
       "Status": {
         "erro": true,
         "status": 404,
-        "message": "Preencha os campos obrigatório(s)"
+        "message": "Preencha o(s) campo(s) obrigatório(s)"
       },
       "validate": erro
     });
   });
 }
 //
+// ------------------------------------------------------------------------------------------------//
 //
 exports.Started = async (req, res, next) => {
   //
@@ -37,6 +39,7 @@ exports.Started = async (req, res, next) => {
   await validateBody(schema, req, res, next);
 }
 //
+// ------------------------------------------------------------------------------------------------//
 //
 exports.QrCode = async (req, res, next) => {
   //
@@ -49,6 +52,8 @@ exports.QrCode = async (req, res, next) => {
   await validateBody(schema, req, res, next);
 }
 //
+// ------------------------------------------------------------------------------------------------//
+//
 exports.Usage = async (req, res, next) => {
   //
   let schema = yup.object().shape({
@@ -59,6 +64,8 @@ exports.Usage = async (req, res, next) => {
   //
   await validateBody(schema, req, res, next);
 }
+//
+// ------------------------------------------------------------------------------------------------//
 //
 exports.Group = async (req, res, next) => {
   //
@@ -71,6 +78,8 @@ exports.Group = async (req, res, next) => {
   await validateBody(schema, req, res, next);
 }
 //
+// ------------------------------------------------------------------------------------------------//
+//
 exports.Data = async (req, res, next) => {
   //
   let schema = yup.object().shape({
@@ -81,6 +90,8 @@ exports.Data = async (req, res, next) => {
   await validateBody(schema, req, res, next);
 }
 //
+// ------------------------------------------------------------------------------------------------//
+//
 exports.Phone = async (req, res, next) => {
   //
   let schema = yup.object().shape({
@@ -90,3 +101,6 @@ exports.Phone = async (req, res, next) => {
   //
   await validateBody(schema, req, res, next);
 }
+//
+// ------------------------------------------------------------------------------------------------//
+//
