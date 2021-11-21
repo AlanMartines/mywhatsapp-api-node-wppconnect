@@ -144,8 +144,8 @@ exports.sendLocation = async (req, res, next) => {
     AuthorizationToken: yup.string(),
     SessionName: yup.string().required(),
     phonefull: yup.string().required(),
-    lat: yup.string().required(),
-    long: yup.string().required(),
+    lat: yup.string().required().matches(/^(\+|-)?((\d((\.)|\.\d{1,6})?)|(0*?[0-8]\d((\.)|\.\d{1,6})?)|(0*?90((\.)|\.0{1,6})?))$/, 'Por favor insira uma lat válido Ex.: -00.00000'),
+    long: yup.string().required().matches(/^(\+|-)?((\d((\.)|\.\d{1,6})?)|(0*?\d\d((\.)|\.\d{1,6})?)|(0*?1[0-7]\d((\.)|\.\d{1,6})?)|(0*?180((\.)|\.0{1,6})?))$/, 'Por favor insira uma long válido Ex.: -00.00000'),
     pais: yup.string().required()
   });
   //
