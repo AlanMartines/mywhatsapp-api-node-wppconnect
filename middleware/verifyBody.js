@@ -108,7 +108,6 @@ exports.sendVoice = async (req, res, next) => {
     file: yup.mixed()
       .test("fileSize", "Selecione um arquivos para continuar", value => value && value.size > FILE_SIZE)
       .test("fileFormat", "Arquivo não suportado", value => value && SUPPORTED_FORMATS.includes(value.type))
-      .required()
   });
   //
   await validateBody(validationSchema, req, res, next);
