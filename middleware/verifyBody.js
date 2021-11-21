@@ -96,23 +96,19 @@ exports.Usage = async (req, res, next) => {
 //
 exports.sendVoice = async (req, res, next) => {
   //
-  const FILE_SIZE = 160 * 1024;
+  const FILE_SIZE = 0;
   const SUPPORTED_FORMATS = [
-    "image/jpg",
-    "image/jpeg",
-    "image/gif",
-    "image/png"
+    "audio/mpeg"
   ];
   //
   let validationSchema = yup.object().shape({
     AuthorizationToken: yup.string(),
     SessionName: yup.string().required(),
     phonefull: yup.string().required(),
-    file: yup
-      .mixed()
-      .required("A file is required")
-      .test("fileSize", "File too large", value => value && value.size <= FILE_SIZE)
-      .test("fileFormat", "Unsupported Format", value => value && SUPPORTED_FORMATS.includes(value.type))
+    file: yup.mixed()
+      .test("fileSize", "Selecione um arquivos para continuar", value => value && value.size <= FILE_SIZE)
+      .test("fileFormat", "Arquivo não suportado", value => value && SUPPORTED_FORMATS.includes(value.type))
+      .required()
   });
   //
   await validateBody(validationSchema, req, res, next);
