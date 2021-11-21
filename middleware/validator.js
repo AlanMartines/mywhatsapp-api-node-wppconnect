@@ -5,7 +5,8 @@ yup.setLocale({
     default: "Valor informado é inválido",
     required: "Preencha esse campo para continuar",
     oneOf: "Preencha com um dos seguintes valores: ${values}",
-    notOneOf: "Não preencha com um dos seguintes valores: ${values}"
+    notOneOf: "Não preencha com um dos seguintes valores: ${values}",
+    notType: 'Selecione um arquivos para continuar',
   },
   string: {
     length: "Valor deve ter exatamente ${length} caracteres",
