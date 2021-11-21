@@ -1,4 +1,4 @@
-const mysql = require('mysql2/promise');
+const mysql = require("mysql2");
 const config = require('../config.global');
 //
 // connect to the db
