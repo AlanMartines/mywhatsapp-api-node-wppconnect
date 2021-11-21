@@ -29,6 +29,12 @@ async function validateBody(schema, req, res, next) {
 //
 // ------------------------------------------------------------------------------------------------//
 //
+/*
+╔═╗┌─┐┌┬┐┌┬┐┬┌┐┌┌─┐  ┌─┐┌┬┐┌─┐┬─┐┌┬┐┌─┐┌┬┐
+║ ╦├┤  │  │ │││││ ┬  └─┐ │ ├─┤├┬┘ │ ├┤  ││
+╚═╝└─┘ ┴  ┴ ┴┘└┘└─┘  └─┘ ┴ ┴ ┴┴└─ ┴ └─┘─┴┘
+*/
+//
 exports.Started = async (req, res, next) => {
   //
   let schema = yup.object().shape({
@@ -54,6 +60,12 @@ exports.QrCode = async (req, res, next) => {
 //
 // ------------------------------------------------------------------------------------------------//
 //
+/*
+╔╗ ┌─┐┌─┐┬┌─┐  ╔═╗┬ ┬┌┐┌┌─┐┌┬┐┬┌─┐┌┐┌┌─┐  ┬ ┬┌─┐┌─┐┌─┐┌─┐
+╠╩╗├─┤└─┐││    ╠╣ │ │││││   │ ││ ││││└─┐  │ │└─┐├─┤│ ┬├┤ 
+╚═╝┴ ┴└─┘┴└─┘  ╚  └─┘┘└┘└─┘ ┴ ┴└─┘┘└┘└─┘  └─┘└─┘┴ ┴└─┘└─┘
+*/
+//
 exports.Usage = async (req, res, next) => {
   //
   let schema = yup.object().shape({
@@ -67,36 +79,13 @@ exports.Usage = async (req, res, next) => {
 //
 // ------------------------------------------------------------------------------------------------//
 //
-exports.Group = async (req, res, next) => {
+exports.sendVoice = async (req, res, next) => {
   //
   let schema = yup.object().shape({
-    AuthorizationToken: yup.string().trim(),
-    SessionName: yup.string().required().trim(),
-    groupId: yup.string().required()
-  });
-  //
-  await validateBody(schema, req, res, next);
-}
-//
-// ------------------------------------------------------------------------------------------------//
-//
-exports.Data = async (req, res, next) => {
-  //
-  let schema = yup.object().shape({
-    AuthorizationToken: yup.string().trim(),
-    SessionName: yup.string().required().trim()
-  });
-  //
-  await validateBody(schema, req, res, next);
-}
-//
-// ------------------------------------------------------------------------------------------------//
-//
-exports.Phone = async (req, res, next) => {
-  //
-  let schema = yup.object().shape({
-    AuthorizationToken: yup.string().trim(),
-    SessionName: yup.string().required().trim()
+    AuthorizationToken: yup.string(),
+    SessionName: yup.string().required(),
+    phonefull: yup.string().required(),
+    audio_data: yup.string().required()
   });
   //
   await validateBody(schema, req, res, next);
