@@ -124,6 +124,36 @@ exports.sendContactVcard = async (req, res, next) => {
 //
 // ------------------------------------------------------------------------------------------------//
 //
+exports.sendText = async (req, res, next) => {
+  //
+  let validationSchema = yup.object().shape({
+    AuthorizationToken: yup.string(),
+    SessionName: yup.string().required(),
+    phonefull: yup.string().required(),
+    msg: yup.string().required()
+  });
+  //
+  await validateBody(validationSchema, req, res, next);
+}
+//
+// ------------------------------------------------------------------------------------------------//
+//
+exports.sendLocation = async (req, res, next) => {
+  //
+  let validationSchema = yup.object().shape({
+    AuthorizationToken: yup.string(),
+    SessionName: yup.string().required(),
+    phonefull: yup.string().required(),
+    lat: yup.string().required(),
+    long: yup.string().required(),
+    pais: yup.string().required()
+  });
+  //
+  await validateBody(validationSchema, req, res, next);
+}
+//
+// ------------------------------------------------------------------------------------------------//
+//
 exports.Group = async (req, res, next) => {
   //
   let validationSchema = yup.object().shape({

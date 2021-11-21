@@ -609,7 +609,7 @@ router.post("/sendContactVcardList", upload.single('file'), verifyBody.Usage, ve
 // ------------------------------------------------------------------------------------------------//
 //
 //Enviar Texto
-router.post("/sendText", upload.none(''), verifyBody.Usage, verifyToken.verify, async (req, res, next) => {
+router.post("/sendText", upload.none(''), verifyBody.sendText, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
   switch (sessionStatus.status) {
     case 'inChat':
@@ -652,7 +652,7 @@ router.post("/sendText", upload.none(''), verifyBody.Usage, verifyToken.verify, 
 // ------------------------------------------------------------------------------------------------//
 //
 //Enviar Texto em Massa
-router.post("/sendTextMassa", upload.single('file'), verifyToken.verify, async (req, res, next) => {
+router.post("/sendTextMassa", upload.single('file'), verifyBody.Usage, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
   switch (sessionStatus.status) {
     case 'inChat':
@@ -748,7 +748,7 @@ router.post("/sendTextGrupo", upload.none(''), verifyBody.Group, verifyToken.ver
 // ------------------------------------------------------------------------------------------------//
 //
 //Enviar localização
-router.post("/sendLocation", upload.none(''), verifyBody.Usage, verifyToken.verify, async (req, res, next) => {
+router.post("/sendLocation", upload.none(''), verifyBody.sendLocation, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
   switch (sessionStatus.status) {
     case 'inChat':
