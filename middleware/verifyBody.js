@@ -160,7 +160,7 @@ exports.sendLinkPreview = async (req, res, next) => {
     AuthorizationToken: yup.string(),
     SessionName: yup.string().required(),
     phonefull: yup.string().required(),
-    link: yup.string().required().matches(/((https?|http):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/, "Informe um endereço válido!"),
+    link: yup.string().required().matches(/^((http|https):\/\/)?(www.)?(?!.*(http|https|www.))[a-zA-Z0-9_-]+(\.[a-zA-Z]+)+(\/)?.([\w\?[a-zA-Z-_%\/@?]+)*([^\/\w\?[a-zA-Z0-9_-]+=\w+(&[a-zA-Z0-9_]+=\w+)*)?$/, "Informe um endereço válido!"),
     descricao: yup.string().required()
 
     // 
