@@ -1,5 +1,6 @@
-//
 const config = require('../config.global');
+const database = require('../config/db');
+//
 var todayDate = new Date().toISOString().slice(0, 10);
 //
 exports.verify = async (req, res, next) => {
@@ -29,6 +30,7 @@ exports.verify = async (req, res, next) => {
     } else {
       //
       if (parseInt(config.VALIDATE_MYSQL) == true) {
+        const conn = require('../config/dbConnection').promise();
         try {
           //const theTokenAuth = req.body.AuthorizationToken.trim();
           const theTokenAuth = req.body.SessionName.replace(/\r?\n|\r|\s+/g, "");
@@ -48,12 +50,14 @@ exports.verify = async (req, res, next) => {
           }
           //
           //const conn = pool.getConnection();
-          const conn = require('../config/dbConnection');
           const sql = "SELECT * FROM tokens WHERE token=? LIMIT 1";
           const values = [theTokenAuth];
-          const [row] = await conn.promise().execute(sql, values);
+          const [row] = await conn.execute(sql, values);
           //conn.end();
           //conn.release();
+          //
+          const sql_result = database.query(sql, values);
+          console.log(sql_result);
           //
           if (row.length > 0) {
             //
