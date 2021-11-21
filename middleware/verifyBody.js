@@ -3,8 +3,8 @@ const yup = require("./validator");
 //
 // ------------------------------------------------------------------------------------------------//
 //
-async function validateBody(schema, req, res, next) {
-  return schema.validate(req.body, {
+async function validateBody(validationSchema, req, res, next) {
+  return validationSchema.validate(req.body, {
     abortEarly: false
   }).then(_ => {
     next();
@@ -37,25 +37,25 @@ async function validateBody(schema, req, res, next) {
 //
 exports.Started = async (req, res, next) => {
   //
-  let schema = yup.object().shape({
+  let validationSchema = yup.object().shape({
     AuthorizationToken: yup.string().trim(),
     SessionName: yup.string().required().trim()
   });
   //
-  await validateBody(schema, req, res, next);
+  await validateBody(validationSchema, req, res, next);
 }
 //
 // ------------------------------------------------------------------------------------------------//
 //
 exports.QrCode = async (req, res, next) => {
   //
-  let schema = yup.object().shape({
+  let validationSchema = yup.object().shape({
     AuthorizationToken: yup.string().trim(),
     SessionName: yup.string().required().trim(),
     View: yup.mixed().required().oneOf([true, false])
   });
   //
-  await validateBody(schema, req, res, next);
+  await validateBody(validationSchema, req, res, next);
 }
 //
 // ------------------------------------------------------------------------------------------------//
@@ -68,41 +68,41 @@ exports.QrCode = async (req, res, next) => {
 //
 exports.Usage = async (req, res, next) => {
   //
-  let schema = yup.object().shape({
+  let validationSchema = yup.object().shape({
     AuthorizationToken: yup.string(),
     SessionName: yup.string().required(),
     phonefull: yup.string().required()
   });
   //
-  await validateBody(schema, req, res, next);
+  await validateBody(validationSchema, req, res, next);
 }
 //
 // ------------------------------------------------------------------------------------------------//
 //
 exports.sendVoice = async (req, res, next) => {
   //
-  let schema = yup.object().shape({
+  let validationSchema = yup.object().shape({
     AuthorizationToken: yup.string(),
     SessionName: yup.string().required(),
     phonefull: yup.string().required(),
-    file: yup.mixed().required('A file is required')
+    file: yup.mixed().test("file", "The file must be in the JSON format").required("File is required")
   });
   //
-  await validateBody(schema, req, res, next);
+  await validateBody(validationSchema, req, res, next);
 }
 //
 // ------------------------------------------------------------------------------------------------//
 //
 exports.Group = async (req, res, next) => {
   //
-  let schema = yup.object().shape({
+  let validationSchema = yup.object().shape({
     AuthorizationToken: yup.string(),
     SessionName: yup.string().required(),
     phonefull: yup.string().required(),
     audio_data: yup.string().required()
   });
   //
-  await validateBody(schema, req, res, next);
+  await validateBody(validationSchema, req, res, next);
 }
 //
 // ------------------------------------------------------------------------------------------------//
