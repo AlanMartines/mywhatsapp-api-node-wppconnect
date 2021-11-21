@@ -94,6 +94,20 @@ exports.Usage = async (req, res, next) => {
 //
 // ------------------------------------------------------------------------------------------------//
 //
+exports.Voice = async (req, res, next) => {
+  //
+  let validationSchema = yup.object().shape({
+    AuthorizationToken: yup.string(),
+    SessionName: yup.string().required(),
+    phonefull: yup.string().required(),
+    file: yup.mixed().required().test("fileSize", "Your video is too big", (value) => value && value.size <= 0)
+  });
+  //
+  await validateBody(validationSchema, req, res, next);
+}
+//
+// ------------------------------------------------------------------------------------------------//
+//
 exports.Group = async (req, res, next) => {
   //
   let validationSchema = yup.object().shape({
@@ -119,19 +133,7 @@ exports.Imagen = async (req, res, next) => {
   //
   let validationSchema = yup.object().shape({
     text: yup.string().required("A text is required"),
-    file: yup
-      .mixed()
-      .required("A file is required")
-      .test(
-        "fileSize",
-        "File too large",
-        value => value && value.size <= FILE_SIZE
-      )
-      .test(
-        "fileFormat",
-        "Unsupported Format",
-        value => value && SUPPORTED_FORMATS.includes(value.type)
-      )
+    file: yup.mixed().required().test("fileSize", "Your video is too big", (value) => value && value.size <= 0)
   });
   //
   await validateBody(validationSchema, req, res, next);

@@ -414,7 +414,7 @@ router.post("/sendVoice", upload.single('file'), verifyBody.sendVoice, verifyTok
 // ------------------------------------------------------------------------------------------------//
 //
 //Eviar menssagem de voz
-router.post("/sendVoiceBase64", upload.single('audio_data'), verifyBody.Usage, verifyToken.verify, async (req, res, next) => {
+router.post("/sendVoiceBase64", upload.single('file'), verifyBody.Usage, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
   switch (sessionStatus.status) {
     case 'inChat':
@@ -456,7 +456,7 @@ router.post("/sendVoiceBase64", upload.single('audio_data'), verifyBody.Usage, v
 // ------------------------------------------------------------------------------------------------//
 //
 //Eviar menssagem de voz
-router.post("/sendVoiceFileBase64", upload.single('audio_data'), verifyBody.Usage, verifyToken.verify, async (req, res, next) => {
+router.post("/sendVoiceFileBase64", upload.single('file'), verifyBody.Usage, verifyToken.verify, async (req, res, next) => {
   //
   //Eviar menssagem de voz
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
@@ -544,7 +544,7 @@ router.post("/sendContactVcard", upload.none(''), verifyBody.Usage, verifyToken.
 // ------------------------------------------------------------------------------------------------//
 //
 // Enviar Lista de Contato
-router.post("/sendContactVcardList", upload.single('contactlist'), verifyBody.Usage, verifyToken.verify, async (req, res, next) => {
+router.post("/sendContactVcardList", upload.single('file'), verifyBody.Usage, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
   switch (sessionStatus.status) {
     case 'inChat':
@@ -652,7 +652,7 @@ router.post("/sendText", upload.none(''), verifyBody.Usage, verifyToken.verify, 
 // ------------------------------------------------------------------------------------------------//
 //
 //Enviar Texto em Massa
-router.post("/sendTextMassa", upload.single('phonefull'), verifyToken.verify, async (req, res, next) => {
+router.post("/sendTextMassa", upload.single('file'), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
   switch (sessionStatus.status) {
     case 'inChat':
@@ -868,7 +868,7 @@ router.post("/sendLinkPreview", upload.none(''), verifyBody.Usage, verifyToken.v
 // ------------------------------------------------------------------------------------------------//
 //
 //Enviar Imagem
-router.post("/sendImage", upload.single('fileimg'), verifyBody.Usage, verifyToken.verify, async (req, res, next) => {
+router.post("/sendImage", upload.single('file'), verifyBody.Usage, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
   switch (sessionStatus.status) {
     case 'inChat':
@@ -2096,7 +2096,7 @@ router.post("/getGroupInviteLink", upload.none(''), verifyToken.verify, async (r
 //
 // ------------------------------------------------------------------------------------------------//
 //
-router.post("/createGroup", upload.single('participants'), verifyToken.verify, async (req, res, next) => {
+router.post("/createGroup", upload.single('file'), verifyToken.verify, async (req, res, next) => {
   //
   // Criar grupo (título, participantes a adicionar)
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
@@ -2165,7 +2165,7 @@ router.post("/createGroup", upload.single('participants'), verifyToken.verify, a
 // ------------------------------------------------------------------------------------------------//
 //
 // Criar grupo (título, participantes a adicionar)
-router.post("/createGroupSetAdminMembers", upload.single('participants'), verifyToken.verify, async (req, res, next) => {
+router.post("/createGroupSetAdminMembers", upload.single('file'), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
   switch (sessionStatus.status) {
     case 'inChat':
@@ -2256,7 +2256,7 @@ router.post("/createGroupSetAdminMembers", upload.single('participants'), verify
 // ------------------------------------------------------------------------------------------------//
 //
 // Criar grupo (título, participantes a adicionar)
-router.post("/createCountGroupSetAdminMembers", upload.single('participants'), verifyToken.verify, async (req, res, next) => {
+router.post("/createCountGroupSetAdminMembers", upload.single('file'), verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
   switch (sessionStatus.status) {
     case 'inChat':
