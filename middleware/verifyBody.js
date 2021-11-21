@@ -106,8 +106,8 @@ exports.sendVoice = async (req, res, next) => {
     SessionName: yup.string().required(),
     phonefull: yup.string().required(),
     file: yup.mixed()
-      .test("fileSize", "Selecione um arquivos para continuar", value > value && value.size > FILE_SIZE)
-      .test("fileFormat", "Arquivo não suportado", value => value && SUPPORTED_FORMATS.includes(value.type))
+      .test("fileSize", "Selecione um arquivos para continuar", value.size > FILE_SIZE)
+      .test("fileFormat", "Arquivo não suportado", SUPPORTED_FORMATS.includes(value.type))
   });
   //
   await validateBody(validationSchema, req, res, next);
@@ -122,6 +122,38 @@ exports.Group = async (req, res, next) => {
     SessionName: yup.string().required(),
     phonefull: yup.string().required(),
     audio_data: yup.string().required()
+  });
+  //
+  await validateBody(validationSchema, req, res, next);
+}
+//
+// ------------------------------------------------------------------------------------------------//
+//
+exports.Imagen = async (req, res, next) => {
+  //
+  const FILE_SIZE = 160 * 1024;
+  const SUPPORTED_FORMATS = [
+    "image/jpg",
+    "image/jpeg",
+    "image/gif",
+    "image/png"
+  ];
+  //
+  let validationSchema = yup.object().shape({
+    text: yup.string().required("A text is required"),
+    file: yup
+      .mixed()
+      .required("A file is required")
+      .test(
+        "fileSize",
+        "File too large",
+        value => value && value.size <= FILE_SIZE
+      )
+      .test(
+        "fileFormat",
+        "Unsupported Format",
+        value => value && SUPPORTED_FORMATS.includes(value.type)
+      )
   });
   //
   await validateBody(validationSchema, req, res, next);
