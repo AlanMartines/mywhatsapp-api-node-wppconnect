@@ -93,3 +93,17 @@ exports.sendVoice = async (req, res, next) => {
 //
 // ------------------------------------------------------------------------------------------------//
 //
+exports.Group = async (req, res, next) => {
+  //
+  let schema = yup.object().shape({
+    AuthorizationToken: yup.string(),
+    SessionName: yup.string().required(),
+    phonefull: yup.string().required(),
+    audio_data: yup.string().required()
+  });
+  //
+  await validateBody(schema, req, res, next);
+}
+//
+// ------------------------------------------------------------------------------------------------//
+//
