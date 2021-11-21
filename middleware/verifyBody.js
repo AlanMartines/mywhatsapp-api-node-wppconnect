@@ -106,7 +106,7 @@ exports.sendVoice = async (req, res, next) => {
     SessionName: yup.string().required(),
     phonefull: yup.string().required(),
     file: yup.mixed()
-      .test("fileSize", "Selecione um arquivos para continuar", value => value && value.size > FILE_SIZE)
+      .test("fileSize", "Selecione um arquivos para continuar", value > value && value.size > FILE_SIZE)
       .test("fileFormat", "Arquivo não suportado", value => value && SUPPORTED_FORMATS.includes(value.type))
   });
   //
