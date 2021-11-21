@@ -102,7 +102,7 @@ exports.sendVoice = async (req, res, next) => {
     phonefull: yup.string().required(),
     file: yup.mixed()
       .test('fileSize', "You need to provide a file", (value) => {
-        return value && value.length
+        return value && value.length > 0
       })
   });
   //
