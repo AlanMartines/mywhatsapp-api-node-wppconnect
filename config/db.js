@@ -53,11 +53,14 @@ async function query(sql, params) {
   });
   //
   let results = {}
-
+  //
   try {
-
-    [results, ] = await connection.execute(sql, params);
-
+    [results, ] = await connection.execute(sql, params,
+      function(err, results, fields) {
+        console.log(results); // results contains rows returned by server
+        console.log(fields); // fields contains extra meta data about results, if available
+      }
+    );
   } catch (error) {
 
     console.log('Database error: ' + error)
