@@ -86,10 +86,6 @@ exports.sendVoice = async (req, res, next) => {
     SessionName: yup.string().required(),
     phonefull: yup.string().required(),
     file: yup.mixed().required('A file is required')
-      .test('fileFormat', 'PDF only', (value) => {
-        console.log(value);
-        return value && ['application/pdf'].includes(value.type);
-      })
   });
   //
   await validateBody(schema, req, res, next);
