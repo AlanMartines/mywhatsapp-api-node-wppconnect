@@ -52,15 +52,15 @@ async function query(sql, params) {
     });
   });
   //
-  let results = {}
-  //
+  let resultsSql = {}
+
   try {
-    [results, ] = await connection.execute(sql, params,
-      function(err, results, fields) {
-        console.log(results); // results contains rows returned by server
-        console.log(fields); // fields contains extra meta data about results, if available
-      }
-    );
+    //
+    [results, ] = await connection.execute(sql, params);
+    resultsSql = JSON.parse(JSON.stringify(results[0]));
+    //
+    console.log(resultsSql);
+    //
   } catch (error) {
 
     console.log('Database error: ' + error)
@@ -69,7 +69,7 @@ async function query(sql, params) {
 
     await connection.end();
   }
-  return results;
+  return resultsSql;
 }
 
 module.exports = {
