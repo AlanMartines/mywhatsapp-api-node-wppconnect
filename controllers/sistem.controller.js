@@ -1085,7 +1085,7 @@ router.post("/sendMultImageMassa", sendMultImageMassa, verifyBody.Started, verif
     case 'chatsAvailable':
       //
       //
-      var resultsFilesImg = req.files.fileimgs;
+      var resultsFilesImg = req.files.file;
       //
       var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
       var filePathContato = path.join(folderName, req.files['phonefull'][0].originalname);
@@ -1291,7 +1291,7 @@ router.post("/sendFileGroup", upload.single('file'), verifyBody.Group, verifyTok
 // ------------------------------------------------------------------------------------------------//
 //
 // Enviar arquivo/documento
-router.post("/sendFileBase64", upload.none(''), verifyBody.Usage, verifyToken.verify, async (req, res, next) => {
+router.post("/sendFileBase64", upload.none(''), verifyBody.sendFileBase64, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
   switch (sessionStatus.status) {
     case 'inChat':
@@ -1382,7 +1382,7 @@ router.post("/sendFileBase64Group", upload.none(''), verifyBody.Group, verifyTok
 // ------------------------------------------------------------------------------------------------//
 //
 // Enviar arquivo/documento
-router.post("/sendFileToBase64", upload.single('file'), verifyBody.Usage, verifyToken.verify, async (req, res, next) => {
+router.post("/sendFileToBase64", upload.single('file'), verifyBody.sendFileToBase64, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
   switch (sessionStatus.status) {
     case 'inChat':
@@ -1461,7 +1461,7 @@ router.post("/sendFileToBase64Group", upload.single('file'), verifyBody.Group, v
 // ------------------------------------------------------------------------------------------------------- //
 //
 // Enviar arquivo/documento
-router.post("/sendFileFromBase64", upload.none(''), verifyBody.Usage, verifyToken.verify, async (req, res, next) => {
+router.post("/sendFileFromBase64", upload.none(''), verifyBody.sendFileFromBase64, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
   switch (sessionStatus.status) {
     case 'inChat':

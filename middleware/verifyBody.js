@@ -171,6 +171,53 @@ exports.sendLinkPreview = async (req, res, next) => {
 //
 // ------------------------------------------------------------------------------------------------//
 //
+exports.sendFileBase64 = async (req, res, next) => {
+  //
+  let validationSchema = yup.object().shape({
+    AuthorizationToken: yup.string(),
+    SessionName: yup.string().required(),
+    phonefull: yup.string().required(),
+    base64: yup.string().required(),
+    originalname: yup.string().required(),
+    caption: yup.string().required()
+  });
+  //
+  await validateBody(validationSchema, req, res, next);
+}
+//
+// ------------------------------------------------------------------------------------------------//
+//
+exports.sendFileToBase64 = async (req, res, next) => {
+  //
+  let validationSchema = yup.object().shape({
+    AuthorizationToken: yup.string(),
+    SessionName: yup.string().required(),
+    phonefull: yup.string().required(),
+    caption: yup.string().required()
+  });
+  //
+  await validateBody(validationSchema, req, res, next);
+}
+//
+// ------------------------------------------------------------------------------------------------//
+//
+exports.sendFileFromBase64 = async (req, res, next) => {
+  //
+  let validationSchema = yup.object().shape({
+    AuthorizationToken: yup.string(),
+    SessionName: yup.string().required(),
+    groupId: yup.string().required(),
+    base64: yup.string().required(),
+    mimetype: yup.string().required(),
+    originalname: yup.string().required(),
+    caption: yup.string().required()
+  });
+  //
+  await validateBody(validationSchema, req, res, next);
+}
+//
+// ------------------------------------------------------------------------------------------------//
+//
 exports.Group = async (req, res, next) => {
   //
   let validationSchema = yup.object().shape({
