@@ -1482,7 +1482,7 @@ router.post("/sendFileFromBase64", upload.none(''), verifyBody.sendFileFromBase6
           req.body.base64Data,
           req.body.mimetype,
           req.body.originalname,
-          req.body.msg
+          req.body.caption
         );
         //
       } else {
