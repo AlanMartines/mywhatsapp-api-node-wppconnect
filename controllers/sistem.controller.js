@@ -1919,37 +1919,8 @@ router.post("/checkNumberStatus", upload.none(''), verifyBody.Usage, verifyToken
 //
 // ------------------------------------------------------------------------------------------------------- //
 //
-// Verificar o status do número
-router.post("/phoneValidate", upload.none(''), verifyBody.Usage, verifyToken.verify, async (req, res, next) => {
-  var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-  switch (sessionStatus.status) {
-    case 'inChat':
-    case 'qrReadSuccess':
-    case 'isLogged':
-    case 'chatsAvailable':
-      //
-      var phone = soNumeros(req.body.phonefull);
-      var validPhone = await validPhone(phone);
-      //
-      res.setHeader('Content-Type', 'application/json');
-      res.setHeader('Content-Type', 'application/json');
-      res.status(200).json({
-        validPhone
-      });
-      break;
-    default:
-      res.setHeader('Content-Type', 'application/json');
-      res.setHeader('Content-Type', 'application/json');
-      res.status(400).json({
-        "phoneValidate": sessionStatus
-      });
-  }
-}); //checkNumberStatus
-//
-// ------------------------------------------------------------------------------------------------------- //
-//
 // Verificar o status do número em massa
-router.post("/checkNumberStatusMassa", upload.single('contatos'), verifyBody.Started, verifyToken.verify, async (req, res, next) => {
+router.post("/checkNumberStatusMassa", upload.single('file'), verifyBody.Started, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
   switch (sessionStatus.status) {
     case 'inChat':
@@ -2002,47 +1973,6 @@ router.post("/checkNumberStatusMassa", upload.single('contatos'), verifyBody.Sta
       });
   }
 }); //checkNumberStatusMassa
-//
-// ------------------------------------------------------------------------------------------------------- //
-//
-// Obter a foto do perfil no servidor
-router.post("/getProfilePicFromServer", upload.none(''), verifyToken.verify, async (req, res, next) => {
-  var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-  switch (sessionStatus.status) {
-    case 'inChat':
-    case 'qrReadSuccess':
-    case 'isLogged':
-    case 'chatsAvailable':
-      //
-      var checkNumberStatus = await Sessions.checkNumberStatus(
-        removeWithspace(req.body.SessionName),
-        soNumeros(req.body.phonefull).trim() + '@c.us'
-      );
-      //
-      if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
-        //
-        var getProfilePicFromServer = await Sessions.getProfilePicFromServer(
-          removeWithspace(req.body.SessionName),
-          soNumeros(req.body.phonefull).trim() + '@c.us'
-        );
-        //
-      } else {
-        var getProfilePicFromServer = checkNumberStatus;
-      }
-      //
-      //console.log(result);
-      res.setHeader('Content-Type', 'application/json');
-      res.status(200).json({
-        getProfilePicFromServer
-      });
-      break;
-    default:
-      res.setHeader('Content-Type', 'application/json');
-      res.status(400).json({
-        "getProfilePicFromServer": sessionStatus
-      });
-  }
-}); //getProfilePicFromServer
 //
 // ------------------------------------------------------------------------------------------------------- //
 //
@@ -2712,7 +2642,7 @@ router.post("/setProfileName", upload.none(''), verifyToken.verify, async (req, 
 //
 // ------------------------------------------------------------------------------------------------//
 //
-router.post("/setProfilePic", upload.single('fileimg'), verifyToken.verify, async (req, res, next) => {
+router.post("/setProfilePic", upload.single('file'), verifyToken.verify, async (req, res, next) => {
   //
 
   //
@@ -2756,7 +2686,7 @@ router.post("/setProfilePic", upload.single('fileimg'), verifyToken.verify, asyn
 */
 //
 // Delete the Service Worker
-router.post("/killServiceWorker", upload.none(''), verifyToken.verify, async (req, res, next) => {
+router.post("/killServiceWorker", upload.none(''), verifyBody.Started, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
   switch (sessionStatus.status) {
     case 'inChat':
@@ -2782,7 +2712,7 @@ router.post("/killServiceWorker", upload.none(''), verifyToken.verify, async (re
 // ------------------------------------------------------------------------------------------------//
 //
 // Load the service again
-router.post("/restartService", upload.none(''), verifyToken.verify, async (req, res, next) => {
+router.post("/restartService", upload.none(''), verifyBody.Started, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
   switch (sessionStatus.status) {
     case 'inChat':
@@ -2808,7 +2738,7 @@ router.post("/restartService", upload.none(''), verifyToken.verify, async (req, 
 // ------------------------------------------------------------------------------------------------//
 //
 // Reload do whatsapp web
-router.post("/reloadService", upload.none(''), verifyToken.verify, async (req, res, next) => {
+router.post("/reloadService", upload.none(''), verifyBody.Started, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
   switch (sessionStatus.status) {
     case 'inChat':
@@ -2887,7 +2817,7 @@ router.post("/reloadService", upload.none(''), verifyToken.verify, async (req, r
 // ------------------------------------------------------------------------------------------------//
 //
 // Get device info
-router.post("/getHostDevice", upload.none(''), verifyToken.verify, async (req, res, next) => {
+router.post("/getHostDevice", upload.none(''), verifyBody.Started, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
   switch (sessionStatus.status) {
     case 'inChat':
@@ -2914,7 +2844,7 @@ router.post("/getHostDevice", upload.none(''), verifyToken.verify, async (req, r
 // ------------------------------------------------------------------------------------------------//
 //
 // Get connection state
-router.post("/getConnectionState", upload.none(''), verifyToken.verify, async (req, res, next) => {
+router.post("/getConnectionState", upload.none(''), verifyBody.Started, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
   switch (sessionStatus.status) {
     case 'inChat':
@@ -2939,7 +2869,7 @@ router.post("/getConnectionState", upload.none(''), verifyToken.verify, async (r
 // ------------------------------------------------------------------------------------------------//
 //
 // Get battery level
-router.post("/getBatteryLevel", upload.none(''), verifyToken.verify, async (req, res, next) => {
+router.post("/getBatteryLevel", upload.none(''), verifyBody.Started, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
   switch (sessionStatus.status) {
     case 'inChat':
@@ -2965,7 +2895,7 @@ router.post("/getBatteryLevel", upload.none(''), verifyToken.verify, async (req,
 // ------------------------------------------------------------------------------------------------//
 //
 // Is Connected
-router.post("/isConnected", upload.none(''), verifyToken.verify, async (req, res, next) => {
+router.post("/isConnected", upload.none(''), verifyBody.Started, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
   switch (sessionStatus.status) {
     case 'inChat':
@@ -2990,7 +2920,7 @@ router.post("/isConnected", upload.none(''), verifyToken.verify, async (req, res
 // ------------------------------------------------------------------------------------------------//
 //
 // Obter versão da web do Whatsapp
-router.post("/getWAVersion", upload.none(''), verifyToken.verify, async (req, res, next) => {
+router.post("/getWAVersion", upload.none(''), verifyBody.Started, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
   switch (sessionStatus.status) {
     case 'inChat':
@@ -3015,7 +2945,7 @@ router.post("/getWAVersion", upload.none(''), verifyToken.verify, async (req, re
 // ------------------------------------------------------------------------------------------------//
 //
 // Obter versão da web do Whatsapp
-router.post("/getWAVersion", upload.none(''), verifyToken.verify, async (req, res, next) => {
+router.post("/getWAVersion", upload.none(''), verifyBody.Started, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
   switch (sessionStatus.status) {
     case 'inChat':
@@ -3068,7 +2998,7 @@ router.post("/startPhoneWatchdog", upload.none(''), verifyToken.verify, async (r
 // ------------------------------------------------------------------------------------------------//
 //
 // Para a verificação de conexão do telefone
-router.post("/stopPhoneWatchdog", upload.none(''), verifyToken.verify, async (req, res, next) => {
+router.post("/stopPhoneWatchdog", upload.none(''), verifyBody.Started, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
   switch (sessionStatus.status) {
     case 'inChat':

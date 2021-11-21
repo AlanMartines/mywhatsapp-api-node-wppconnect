@@ -94,23 +94,6 @@ exports.Usage = async (req, res, next) => {
 //
 // ------------------------------------------------------------------------------------------------//
 //
-exports.sendVoice = async (req, res, next) => {
-  //
-  let validationSchema = yup.object().shape({
-    AuthorizationToken: yup.string(),
-    SessionName: yup.string().required(),
-    phonefull: yup.string().required(),
-    file: yup.mixed()
-      .test('fileSize', "You need to provide a file", (value) => {
-        return value && value.length > 0
-      })
-  });
-  //
-  await validateBody(validationSchema, req, res, next);
-}
-//
-// ------------------------------------------------------------------------------------------------//
-//
 exports.Group = async (req, res, next) => {
   //
   let validationSchema = yup.object().shape({
