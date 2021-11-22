@@ -634,7 +634,7 @@ module.exports = class Sessions {
       disableWelcome: false, // Will disable the welcoming message which appears in the beginning
       updatesLog: true, // Logs info updates automatically in terminal
       refreshQR: 10000, // Will refresh QR every 15 seconds, 0 will load QR once. Default is 30 seconds
-      autoClose: 60000, // Will auto close automatically if not synced, 'false' won't auto close. Default is 60 seconds (#Important!!! Will automatically set 'refreshQR' to 1000#)
+      autoClose: false, // Will auto close automatically if not synced, 'false' won't auto close. Default is 60 seconds (#Important!!! Will automatically set 'refreshQR' to 1000#)
       tokenStore: 'file', // Define how work with tokens, that can be a custom interface
       folderNameToken: session.tokenPatch, //folder name when saving tokens
       //createPathFileToken: true, //creates a folder when inserting an object in the client's browser, to work it is necessary to pass the parameters in the function create browserSessionToken
