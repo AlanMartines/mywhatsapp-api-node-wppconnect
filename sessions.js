@@ -636,7 +636,7 @@ module.exports = class Sessions {
       autoClose: false, // Automatically closes the WPPConnect only when scanning the QR code (default 60 seconds, if you want to turn it off, assign 0 or false)
       tokenStore: 'file', // Define how work with tokens, that can be a custom interface
       folderNameToken: session.tokenPatch, //folder name when saving tokens
-      createPathFileToken: true, //creates a folder when inserting an object in the client's browser, to work it is necessary to pass the parameters in the function create browserSessionToken
+      //createPathFileToken: true, //creates a folder when inserting an object in the client's browser, to work it is necessary to pass the parameters in the function create browserSessionToken
       sessionToken: loadAuthInfo(session.tokenPatch, SessionName)
     });
     // Levels: 'error', 'warn', 'info', 'http', 'verbose', 'debug', 'silly'
