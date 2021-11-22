@@ -629,7 +629,7 @@ module.exports = class Sessions {
         '--safebrowsing-disable-auto-update',
       ],
       puppeteerOptions: {
-        userDataDir: `${session.tokenPatch}/${SessionName}`, // or your custom directory
+        //userDataDir: `${session.tokenPatch}/${SessionName}`, // or your custom directory
       }, // Will be passed to puppeteer.launch
       //executablePath: '/usr/bin/chromium-browser',
       disableSpins: true, // Will disable Spinnies animation, useful for containers (docker) for a better log
