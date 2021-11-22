@@ -389,7 +389,7 @@ exports.Imagen = async (req, res, next) => {
     text: yup.string().required("A text is required"),
     file: yup.mixed().required()
       .test("fileSize", "Your video is too big", (value) => value && value.size <= FILE_SIZE)
-      .test('fileType', "Your Error Message", (value) => SUPPORTED_FORMATS.includes(value.type))
+      .test('fileType', "Your Error Message", (value) => value && SUPPORTED_FORMATS.includes(value.type))
   });
   //
   await validateBody(validationSchema, req, res, next);
