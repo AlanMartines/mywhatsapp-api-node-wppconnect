@@ -90,7 +90,9 @@ async function deletaToken(filePath) {
 async function loadAuthInfo(tokenPatch, SessionName) {
   //
   if (fs.existsSync(`${tokenPatch}/${SessionName}.data.json`)) {
-    return fs.readFileSync(`${tokenPatch}/${SessionName}.data.json`);
+    const loadAuth = fs.readFileSync(`${tokenPatch}/${SessionName}.data.json`);
+    console.log("- loadAuth:", loadAuth);
+    return loadAuth;
   } else {
     return {};
   }
