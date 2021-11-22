@@ -377,7 +377,7 @@ exports.linkGroup = async (req, res, next) => {
 //
 exports.Imagen = async (req, res, next) => {
   //
-  const FILE_SIZE = 160 * 1024;
+  const FILE_SIZE = 1 * 1024;
   const SUPPORTED_FORMATS = [
     "image/jpg",
     "image/jpeg",
@@ -387,7 +387,9 @@ exports.Imagen = async (req, res, next) => {
   //
   let validationSchema = yup.object().shape({
     text: yup.string().required("A text is required"),
-    file: yup.mixed().required().test("fileSize", "Your video is too big", (value) => value && value.size <= 0)
+    file: yup.mixed().required()
+      .test("fileSize", "Your video is too big", (value) => value && value.size <= FILE_SIZE)
+      .test('fileType', "Your Error Message", (value) => SUPPORTED_FORMATS.includes(value.type))
   });
   //
   await validateBody(validationSchema, req, res, next);

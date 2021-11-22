@@ -37,8 +37,6 @@ function soNumeros(string) {
 function removeWithspace(string) {
   var string = string.replace(/\r?\n|\r|\s+/g, ""); /* replace all newlines and with a space */
   return string;
-
-
 }
 //
 // ------------------------------------------------------------------------------------------------//
@@ -716,37 +714,6 @@ router.post("/sendTextMassa", upload.single('file'), verifyBody.sendTextMassa, v
 //
 // ------------------------------------------------------------------------------------------------//
 //
-//Enviar Texto em Grupo
-router.post("/sendTextGrupo", upload.none(''), verifyBody.sendTextGrupo, verifyToken.verify, async (req, res, next) => {
-  var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-  switch (sessionStatus.status) {
-    case 'inChat':
-    case 'qrReadSuccess':
-    case 'isLogged':
-    case 'chatsAvailable':
-      //
-      var sendTextGrupo = await Sessions.sendText(
-        removeWithspace(req.body.SessionName),
-        req.body.groupId.trim() + '@g.us',
-        req.body.msg
-      );
-      //
-      //console.log(result);
-      res.setHeader('Content-Type', 'application/json');
-      res.status(200).json({
-        sendTextGrupo
-      });
-      break;
-    default:
-      res.setHeader('Content-Type', 'application/json');
-      res.status(400).json({
-        "sendTextGrupo": sessionStatus
-      });
-  }
-}); //sendTextGrupo
-//
-// ------------------------------------------------------------------------------------------------//
-//
 //Enviar localização
 router.post("/sendLocation", upload.none(''), verifyBody.sendLocation, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
@@ -788,39 +755,6 @@ router.post("/sendLocation", upload.none(''), verifyBody.sendLocation, verifyTok
       });
   }
 }); //sendLocation
-//
-// ------------------------------------------------------------------------------------------------//
-//
-//Enviar localização no grupo
-router.post("/sendLocationGroup", upload.none(''), verifyBody.sendLocationGroup, verifyToken.verify, async (req, res, next) => {
-  var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-  switch (sessionStatus.status) {
-    case 'inChat':
-    case 'qrReadSuccess':
-    case 'isLogged':
-    case 'chatsAvailable':
-      //
-      var sendLocationGroup = await Sessions.sendLocation(
-        removeWithspace(req.body.SessionName),
-        req.body.groupId.trim() + '@g.us',
-        req.body.lat,
-        req.body.long,
-        req.body.local
-      );
-      //
-      //console.log(result);
-      res.setHeader('Content-Type', 'application/json');
-      res.status(200).json({
-        sendLocationGroup
-      });
-      break;
-    default:
-      res.setHeader('Content-Type', 'application/json');
-      res.status(400).json({
-        "sendLocationGroup": sessionStatus
-      });
-  }
-}); //sendLocationGroup
 //
 // ------------------------------------------------------------------------------------------------//
 //
@@ -1157,47 +1091,6 @@ router.post("/sendMultImageMassa", sendMultImageMassa, verifyBody.Started, verif
 //
 // ------------------------------------------------------------------------------------------------//
 //
-// Enviar imagen no grupo
-router.post("/sendImageGroup", upload.single('file'), verifyBody.sendFileGroup, verifyToken.verify, async (req, res, next) => {
-  var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-  switch (sessionStatus.status) {
-    case 'inChat':
-    case 'qrReadSuccess':
-    case 'isLogged':
-    case 'chatsAvailable':
-      //
-      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
-      var filePath = path.join(folderName, req.file.originalname);
-      fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
-      console.log("- File", filePath);
-      //
-      var sendImageGroup = await Sessions.sendImage(
-        removeWithspace(req.body.SessionName),
-        req.body.groupId.trim() + '@g.us',
-        filePath,
-        req.file.originalname,
-        req.body.caption
-      );
-      //
-      //
-      await deletaArquivosTemp(filePath);
-      //
-      //console.log(result);
-      res.setHeader('Content-Type', 'application/json');
-      res.status(200).json({
-        sendImageGroup
-      });
-      break;
-    default:
-      res.setHeader('Content-Type', 'application/json');
-      res.status(400).json({
-        "sendImageGroup": sessionStatus
-      });
-  }
-}); //sendImageGroup
-//
-// ------------------------------------------------------------------------------------------------//
-//
 // Enviar arquivo/documento
 router.post("/sendFile", upload.single('file'), verifyBody.Usage, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
@@ -1247,46 +1140,6 @@ router.post("/sendFile", upload.single('file'), verifyBody.Usage, verifyToken.ve
       });
   }
 }); //sendFile
-//
-// ------------------------------------------------------------------------------------------------//
-//
-// Enviar arquivo/documento
-router.post("/sendFileGroup", upload.single('file'), verifyBody.sendFileGroup, verifyToken.verify, async (req, res, next) => {
-  var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-  switch (sessionStatus.status) {
-    case 'inChat':
-    case 'qrReadSuccess':
-    case 'isLogged':
-    case 'chatsAvailable':
-      //
-      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
-      var filePath = path.join(folderName, req.file.originalname);
-      fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
-      console.log("- File", filePath);
-      //
-      var sendFileGroup = await Sessions.sendFile(
-        removeWithspace(req.body.SessionName),
-        req.body.groupId.trim() + '@g.us',
-        filePath,
-        req.file.originalname,
-        req.body.caption
-      );
-      //
-      await deletaArquivosTemp(filePath);
-      //
-      //console.log(result);
-      res.setHeader('Content-Type', 'application/json');
-      res.status(200).json({
-        sendFileGroup
-      });
-      break;
-    default:
-      res.setHeader('Content-Type', 'application/json');
-      res.status(400).json({
-        "sendFileGroup": sessionStatus
-      });
-  }
-}); //sendFileGroup
 //
 // ------------------------------------------------------------------------------------------------//
 //
@@ -1342,46 +1195,6 @@ router.post("/sendFileBase64", upload.none(''), verifyBody.sendFileBase64, verif
 // ------------------------------------------------------------------------------------------------//
 //
 // Enviar arquivo/documento
-router.post("/sendFileBase64Group", upload.none(''), verifyBody.sendFileBase64Group, verifyToken.verify, async (req, res, next) => {
-  var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-  switch (sessionStatus.status) {
-    case 'inChat':
-    case 'qrReadSuccess':
-    case 'isLogged':
-    case 'chatsAvailable':
-      //
-      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
-      var filePath = path.join(folderName, req.body.originalname);
-      fs.writeFileSync(filePath, req.body.base64, 'base64');
-      console.log("- File", filePath);
-      //
-      var sendFileBase64 = await Sessions.sendFile(
-        removeWithspace(req.body.SessionName),
-        req.body.groupId + '@g.us',
-        filePath,
-        req.body.originalname,
-        req.body.caption
-      );
-      //
-      await deletaArquivosTemp(filePath);
-      //
-      //console.log(result);
-      res.setHeader('Content-Type', 'application/json');
-      res.status(200).json({
-        sendFileBase64
-      });
-      break;
-    default:
-      res.setHeader('Content-Type', 'application/json');
-      res.status(400).json({
-        "sendFileBase64": sessionStatus
-      });
-  }
-}); //sendFileBase64Group
-//
-// ------------------------------------------------------------------------------------------------//
-//
-// Enviar arquivo/documento
 router.post("/sendFileToBase64", upload.single('file'), verifyBody.sendFileToBase64, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
   switch (sessionStatus.status) {
@@ -1427,40 +1240,6 @@ router.post("/sendFileToBase64", upload.single('file'), verifyBody.sendFileToBas
 // ------------------------------------------------------------------------------------------------//
 //
 // Enviar arquivo/documento
-router.post("/sendFileToBase64Group", upload.single('file'), verifyBody.sendFileToBase64, verifyToken.verify, async (req, res, next) => {
-  var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-  switch (sessionStatus.status) {
-    case 'inChat':
-    case 'qrReadSuccess':
-    case 'isLogged':
-    case 'chatsAvailable':
-      //
-      var sendFileToBase64 = await Sessions.sendFileFromBase64(
-        removeWithspace(req.body.SessionName),
-        req.body.groupId.trim() + '@g.us',
-        req.file.buffer.toString('base64'),
-        req.file.mimetype,
-        req.file.originalname,
-        req.body.msg
-      );
-      //
-      //console.log(result);
-      res.setHeader('Content-Type', 'application/json');
-      res.status(200).json({
-        sendFileToBase64
-      });
-      break;
-    default:
-      res.setHeader('Content-Type', 'application/json');
-      res.status(400).json({
-        "sendFileToBase64": sessionStatus
-      });
-  }
-}); //sendFileToBase64Group
-//
-// ------------------------------------------------------------------------------------------------------- //
-//
-// Enviar arquivo/documento
 router.post("/sendFileFromBase64", upload.none(''), verifyBody.sendFileFromBase64, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
   switch (sessionStatus.status) {
@@ -1502,40 +1281,6 @@ router.post("/sendFileFromBase64", upload.none(''), verifyBody.sendFileFromBase6
       });
   }
 }); //sendFileFromBase64
-//
-// ------------------------------------------------------------------------------------------------//
-//
-// Enviar arquivo/documento
-router.post("/sendFileFromBase64Group", upload.none(''), verifyBody.sendFileFromBase64Group, verifyToken.verify, async (req, res, next) => {
-  var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-  switch (sessionStatus.status) {
-    case 'inChat':
-    case 'qrReadSuccess':
-    case 'isLogged':
-    case 'chatsAvailable':
-      //
-      var sendFileFromBase64 = await Sessions.sendFileFromBase64(
-        removeWithspace(req.body.SessionName),
-        req.body.groupId.trim() + '@g.us',
-        req.body.base64,
-        req.body.mimetype,
-        req.body.originalname,
-        req.body.msg
-      );
-      //
-      //console.log(result);
-      res.setHeader('Content-Type', 'application/json');
-      res.status(200).json({
-        sendFileFromBase64
-      });
-      break;
-    default:
-      res.setHeader('Content-Type', 'application/json');
-      res.status(400).json({
-        "sendFileFromBase64": sessionStatus
-      });
-  }
-}); //sendFileFromBase64Group
 //
 // ------------------------------------------------------------------------------------------------//
 //
@@ -1735,6 +1480,47 @@ router.post("/getNumberProfile", upload.none(''), verifyBody.Usage, verifyToken.
 //
 // ------------------------------------------------------------------------------------------------------- //
 //
+// Obter o perfil do número
+router.post("/getProfilePicFromServer", upload.none(''), verifyBody.Usage, verifyToken.verify, async (req, res, next) => {
+  var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var checkNumberStatus = await Sessions.checkNumberStatus(
+        removeWithspace(req.body.SessionName),
+        soNumeros(req.body.phonefull).trim() + '@c.us'
+      );
+      //
+      if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+        //
+        var getProfilePicFromServer = await Sessions.getProfilePicFromServer(
+          removeWithspace(req.body.SessionName),
+          soNumeros(req.body.phonefull).trim() + '@c.us'
+        );
+        //
+      } else {
+        var getProfilePicFromServer = checkNumberStatus;
+      }
+      //
+      //console.log(result);
+      res.setHeader('Content-Type', 'application/json');
+      res.status(200).json({
+        getProfilePicFromServer
+      });
+      break;
+    default:
+      res.setHeader('Content-Type', 'application/json');
+      res.status(400).json({
+        "getProfilePicFromServer": sessionStatus
+      });
+  }
+}); //getProfilePicFromServer
+//
+// ------------------------------------------------------------------------------------------------------- //
+//
 // Verificar o status do número
 router.post("/checkNumberStatus", upload.none(''), verifyBody.Usage, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
@@ -1828,6 +1614,257 @@ router.post("/checkNumberStatusMassa", upload.single('file'), verifyBody.Started
 ╚═╝┴└─└─┘└─┘┴    ╚  └─┘┘└┘└─┘ ┴ ┴└─┘┘└┘└─┘               
 */
 //
+//Enviar Texto em Grupo
+router.post("/sendTextGrupo", upload.none(''), verifyBody.sendTextGrupo, verifyToken.verify, async (req, res, next) => {
+  var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var sendTextGrupo = await Sessions.sendText(
+        removeWithspace(req.body.SessionName),
+        req.body.groupId.trim() + '@g.us',
+        req.body.msg
+      );
+      //
+      //console.log(result);
+      res.setHeader('Content-Type', 'application/json');
+      res.status(200).json({
+        sendTextGrupo
+      });
+      break;
+    default:
+      res.setHeader('Content-Type', 'application/json');
+      res.status(400).json({
+        "sendTextGrupo": sessionStatus
+      });
+  }
+}); //sendTextGrupo
+
+//
+// ------------------------------------------------------------------------------------------------//
+//
+//Enviar localização no grupo
+router.post("/sendLocationGroup", upload.none(''), verifyBody.sendLocationGroup, verifyToken.verify, async (req, res, next) => {
+  var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var sendLocationGroup = await Sessions.sendLocation(
+        removeWithspace(req.body.SessionName),
+        req.body.groupId.trim() + '@g.us',
+        req.body.lat,
+        req.body.long,
+        req.body.local
+      );
+      //
+      //console.log(result);
+      res.setHeader('Content-Type', 'application/json');
+      res.status(200).json({
+        sendLocationGroup
+      });
+      break;
+    default:
+      res.setHeader('Content-Type', 'application/json');
+      res.status(400).json({
+        "sendLocationGroup": sessionStatus
+      });
+  }
+}); //sendLocationGroup
+//
+// ------------------------------------------------------------------------------------------------//
+//
+// Enviar imagen no grupo
+router.post("/sendImageGroup", upload.single('file'), verifyBody.sendFileGroup, verifyToken.verify, async (req, res, next) => {
+  var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
+      var filePath = path.join(folderName, req.file.originalname);
+      fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
+      console.log("- File", filePath);
+      //
+      var sendImageGroup = await Sessions.sendImage(
+        removeWithspace(req.body.SessionName),
+        req.body.groupId.trim() + '@g.us',
+        filePath,
+        req.file.originalname,
+        req.body.caption
+      );
+      //
+      //
+      await deletaArquivosTemp(filePath);
+      //
+      //console.log(result);
+      res.setHeader('Content-Type', 'application/json');
+      res.status(200).json({
+        sendImageGroup
+      });
+      break;
+    default:
+      res.setHeader('Content-Type', 'application/json');
+      res.status(400).json({
+        "sendImageGroup": sessionStatus
+      });
+  }
+}); //sendImageGroup
+//
+// ------------------------------------------------------------------------------------------------//
+//
+// Enviar arquivo/documento
+router.post("/sendFileGroup", upload.single('file'), verifyBody.sendFileGroup, verifyToken.verify, async (req, res, next) => {
+  var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
+      var filePath = path.join(folderName, req.file.originalname);
+      fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
+      console.log("- File", filePath);
+      //
+      var sendFileGroup = await Sessions.sendFile(
+        removeWithspace(req.body.SessionName),
+        req.body.groupId.trim() + '@g.us',
+        filePath,
+        req.file.originalname,
+        req.body.caption
+      );
+      //
+      await deletaArquivosTemp(filePath);
+      //
+      //console.log(result);
+      res.setHeader('Content-Type', 'application/json');
+      res.status(200).json({
+        sendFileGroup
+      });
+      break;
+    default:
+      res.setHeader('Content-Type', 'application/json');
+      res.status(400).json({
+        "sendFileGroup": sessionStatus
+      });
+  }
+}); //sendFileGroup
+//
+// ------------------------------------------------------------------------------------------------//
+//
+// Enviar arquivo/documento
+router.post("/sendFileBase64Group", upload.none(''), verifyBody.sendFileBase64Group, verifyToken.verify, async (req, res, next) => {
+  var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
+      var filePath = path.join(folderName, req.body.originalname);
+      fs.writeFileSync(filePath, req.body.base64, 'base64');
+      console.log("- File", filePath);
+      //
+      var sendFileBase64 = await Sessions.sendFile(
+        removeWithspace(req.body.SessionName),
+        req.body.groupId + '@g.us',
+        filePath,
+        req.body.originalname,
+        req.body.caption
+      );
+      //
+      await deletaArquivosTemp(filePath);
+      //
+      //console.log(result);
+      res.setHeader('Content-Type', 'application/json');
+      res.status(200).json({
+        sendFileBase64
+      });
+      break;
+    default:
+      res.setHeader('Content-Type', 'application/json');
+      res.status(400).json({
+        "sendFileBase64": sessionStatus
+      });
+  }
+}); //sendFileBase64Group
+//
+// ------------------------------------------------------------------------------------------------//
+//
+// Enviar arquivo/documento
+router.post("/sendFileToBase64Group", upload.single('file'), verifyBody.sendFileToBase64, verifyToken.verify, async (req, res, next) => {
+  var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var sendFileToBase64 = await Sessions.sendFileFromBase64(
+        removeWithspace(req.body.SessionName),
+        req.body.groupId.trim() + '@g.us',
+        req.file.buffer.toString('base64'),
+        req.file.mimetype,
+        req.file.originalname,
+        req.body.msg
+      );
+      //
+      //console.log(result);
+      res.setHeader('Content-Type', 'application/json');
+      res.status(200).json({
+        sendFileToBase64
+      });
+      break;
+    default:
+      res.setHeader('Content-Type', 'application/json');
+      res.status(400).json({
+        "sendFileToBase64": sessionStatus
+      });
+  }
+}); //sendFileToBase64Group
+//
+// ------------------------------------------------------------------------------------------------------- //
+//
+// Enviar arquivo/documento
+router.post("/sendFileFromBase64Group", upload.none(''), verifyBody.sendFileFromBase64Group, verifyToken.verify, async (req, res, next) => {
+  var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var sendFileFromBase64 = await Sessions.sendFileFromBase64(
+        removeWithspace(req.body.SessionName),
+        req.body.groupId.trim() + '@g.us',
+        req.body.base64,
+        req.body.mimetype,
+        req.body.originalname,
+        req.body.msg
+      );
+      //
+      //console.log(result);
+      res.setHeader('Content-Type', 'application/json');
+      res.status(200).json({
+        sendFileFromBase64
+      });
+      break;
+    default:
+      res.setHeader('Content-Type', 'application/json');
+      res.status(400).json({
+        "sendFileFromBase64": sessionStatus
+      });
+  }
+}); //sendFileFromBase64Group
 //Deixar o grupo
 router.post("/leaveGroup", upload.none(''), verifyBody.setGroup, verifyToken.verify, async (req, res, next) => {
   var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
@@ -1855,6 +1892,74 @@ router.post("/leaveGroup", upload.none(''), verifyBody.setGroup, verifyToken.ver
 }); //leaveGroup
 //
 // ------------------------------------------------------------------------------------------------------- //
+//
+router.post("/createGroup", upload.single('file'), verifyBody.createGroup, verifyToken.verify, async (req, res, next) => {
+  //
+  // Criar grupo (título, participantes a adicionar)
+  var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      //
+      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
+      var filePath = path.join(folderName, req.file.originalname);
+      fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
+      console.log("- File:", filePath);
+      //
+      var arrayNumbers = fs.readFileSync(filePath, 'utf-8').toString().split(/\r?\n/);
+      //
+      var contactlistValid = [];
+      var contactlistInvalid = [];
+      //
+      for (var i in arrayNumbers) {
+        //console.log(arrayNumbers[i]);
+        var numero = soNumeros(arrayNumbers[i]);
+        //
+        if (numero.length !== 0) {
+          //
+          var checkNumberStatus = await Sessions.checkNumberStatus(
+            removeWithspace(req.body.SessionName),
+            soNumeros(numero) + '@c.us'
+          );
+          //
+          if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+            //
+            contactlistValid.push(checkNumberStatus.number + '@c.us');
+          } else {
+            contactlistInvalid.push(numero + '@c.us');
+          }
+          //
+        }
+        //
+        await sleep(1000);
+      }
+      //
+      var createGroup = await Sessions.createGroup(
+        removeWithspace(req.body.SessionName),
+        req.body.title,
+        contactlistValid,
+        contactlistInvalid
+      );
+      //
+      await deletaArquivosTemp(filePath);
+      //
+      res.setHeader('Content-Type', 'application/json');
+      res.status(200).json({
+        createGroup
+      });
+      break;
+    default:
+      res.setHeader('Content-Type', 'application/json');
+      res.status(400).json({
+        "createGroup": sessionStatus
+      });
+  }
+}); //createGroup
+//
+// ------------------------------------------------------------------------------------------------//
 //
 // Obtenha membros do grupo
 router.post("/getGroupMembers", upload.none(''), verifyBody.setGroup, verifyToken.verify, async (req, res, next) => {
@@ -1939,74 +2044,6 @@ router.post("/getGroupInviteLink", upload.none(''), verifyBody.setGroup, verifyT
       });
   }
 }); //getGroupInviteLink
-//
-// ------------------------------------------------------------------------------------------------//
-//
-router.post("/createGroup", upload.single('file'), verifyBody.createGroup, verifyToken.verify, async (req, res, next) => {
-  //
-  // Criar grupo (título, participantes a adicionar)
-  var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-  switch (sessionStatus.status) {
-    case 'inChat':
-    case 'qrReadSuccess':
-    case 'isLogged':
-    case 'chatsAvailable':
-      //
-      //
-      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
-      var filePath = path.join(folderName, req.file.originalname);
-      fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
-      console.log("- File:", filePath);
-      //
-      var arrayNumbers = fs.readFileSync(filePath, 'utf-8').toString().split(/\r?\n/);
-      //
-      var contactlistValid = [];
-      var contactlistInvalid = [];
-      //
-      for (var i in arrayNumbers) {
-        //console.log(arrayNumbers[i]);
-        var numero = soNumeros(arrayNumbers[i]);
-        //
-        if (numero.length !== 0) {
-          //
-          var checkNumberStatus = await Sessions.checkNumberStatus(
-            removeWithspace(req.body.SessionName),
-            soNumeros(numero) + '@c.us'
-          );
-          //
-          if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
-            //
-            contactlistValid.push(checkNumberStatus.number + '@c.us');
-          } else {
-            contactlistInvalid.push(numero + '@c.us');
-          }
-          //
-        }
-        //
-        await sleep(1000);
-      }
-      //
-      var createGroup = await Sessions.createGroup(
-        removeWithspace(req.body.SessionName),
-        req.body.title,
-        contactlistValid,
-        contactlistInvalid
-      );
-      //
-      await deletaArquivosTemp(filePath);
-      //
-      res.setHeader('Content-Type', 'application/json');
-      res.status(200).json({
-        createGroup
-      });
-      break;
-    default:
-      res.setHeader('Content-Type', 'application/json');
-      res.status(400).json({
-        "createGroup": sessionStatus
-      });
-  }
-}); //createGroup
 //
 // ------------------------------------------------------------------------------------------------//
 //
@@ -2873,7 +2910,7 @@ router.post("/stopPhoneWatchdog", upload.none(''), verifyBody.Started, verifyTok
 //
 // ------------------------------------------------------------------------------------------------//
 //
-router.post("/RotaTeste", verifyToken.verify, upload.single('file'), verifyToken.verify, async (req, res, next) => {
+router.post("/RotaTeste", verifyBody.Imagen, verifyToken.verify, upload.single('file'), async (req, res, next) => {
   //
   res.setHeader('Content-Type', 'application/json');
   res.status(200).json({
