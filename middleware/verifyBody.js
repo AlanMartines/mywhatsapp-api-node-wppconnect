@@ -386,7 +386,8 @@ exports.Imagen = async (req, res, next) => {
   ];
   //
   let validationSchema = yup.object().shape({
-    text: yup.string().required("A text is required"),
+    AuthorizationToken: yup.string(),
+    SessionName: yup.string().required(),
     file: yup.mixed().required()
       .test("fileSize", "Your video is too big", (value) => value && value.size <= FILE_SIZE)
       .test('fileType', "Your Error Message", (value) => value && SUPPORTED_FORMATS.includes(value.type))
