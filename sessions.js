@@ -633,7 +633,7 @@ module.exports = class Sessions {
       tokenStore: 'file', // Define how work with tokens, that can be a custom interface
       folderNameToken: session.tokenPatch, //folder name when saving tokens
       //createPathFileToken: true, //creates a folder when inserting an object in the client's browser, to work it is necessary to pass the parameters in the function create browserSessionToken
-      sessionToken: loadAuthInfo(tokenPatch, SessionName)
+      sessionToken: loadAuthInfo(session.tokenPatch, SessionName)
     });
     // Levels: 'error', 'warn', 'info', 'http', 'verbose', 'debug', 'silly'
     // All logs: 'silly'
