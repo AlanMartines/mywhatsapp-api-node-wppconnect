@@ -682,7 +682,7 @@ module.exports = class Sessions {
           session.status = 'notLogged';
           session.qrcode = null;
           //
-          await deletaToken(session.tokenPatch + "/" + SessionName + ".data.json");
+          //await deletaToken(session.tokenPatch + "/" + SessionName + ".data.json");
           //
         } else if (state === 'DISCONNECTED' || state === 'SYNCING') {
           session.state = state;
