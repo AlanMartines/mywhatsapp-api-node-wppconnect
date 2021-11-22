@@ -87,6 +87,15 @@ async function deletaToken(filePath) {
   }
 }
 //
+async function loadAuthInfo(tokenPatch, SessionName) {
+  //
+  if (fs.existsSync(`${tokenPatch}/${SessionName}.data.json`)) {
+    return fs.readFileSync(`${tokenPatch}/${SessionName}.data.json`);
+  } else {
+    return {};
+  }
+}
+//
 module.exports = class Sessions {
   //
   static async ApiStatus(SessionName) {
@@ -622,8 +631,9 @@ module.exports = class Sessions {
       updatesLog: true, // Logs info updates automatically in terminal
       autoClose: false, // Automatically closes the WPPConnect only when scanning the QR code (default 60 seconds, if you want to turn it off, assign 0 or false)
       tokenStore: 'file', // Define how work with tokens, that can be a custom interface
-      folderNameToken: session.tokenPatch //folder name when saving tokens
+      folderNameToken: session.tokenPatch, //folder name when saving tokens
       //createPathFileToken: true, //creates a folder when inserting an object in the client's browser, to work it is necessary to pass the parameters in the function create browserSessionToken
+      sessionToken: loadAuthInfo(tokenPatch, SessionName)
     });
     // Levels: 'error', 'warn', 'info', 'http', 'verbose', 'debug', 'silly'
     // All logs: 'silly'
