@@ -389,7 +389,7 @@ exports.Imagen = async (req, res, next) => {
     AuthorizationToken: yup.string(),
     SessionName: yup.string().required(),
     file: yup.mixed().required()
-      .test("fileSize", "Your video is too big", (value) => value && value.size <= FILE_SIZE)
+      .test("fileSize", "Seu arquivo é muito grande", (value) => value && value.size >= 0)
       .test('fileType', "Your Error Message", (value) => value && SUPPORTED_FORMATS.includes(value.type))
   });
   //
