@@ -389,7 +389,11 @@ exports.Imagen = async (req, res, next) => {
     AuthorizationToken: yup.string(),
     SessionName: yup.string().required(),
     file: yup.mixed().required()
-      .test("fileSize", "Seu arquivo é muito grande", (value) => value && value.size >= 0)
+      .test("fileSize", "Seu arquivo é muito grande", (value) => {
+        if (value.size > 0) {
+          return false;
+        }
+      })
       .test('fileType', "Your Error Message", (value) => value && SUPPORTED_FORMATS.includes(value.type))
   });
   //
