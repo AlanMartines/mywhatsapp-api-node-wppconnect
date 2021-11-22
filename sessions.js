@@ -633,7 +633,8 @@ module.exports = class Sessions {
       disableSpins: true, // Will disable Spinnies animation, useful for containers (docker) for a better log
       disableWelcome: false, // Will disable the welcoming message which appears in the beginning
       updatesLog: true, // Logs info updates automatically in terminal
-      autoClose: false, // Automatically closes the WPPConnect only when scanning the QR code (default 60 seconds, if you want to turn it off, assign 0 or false)
+      refreshQR: 10000, // Will refresh QR every 15 seconds, 0 will load QR once. Default is 30 seconds
+      autoClose: 60000, // Will auto close automatically if not synced, 'false' won't auto close. Default is 60 seconds (#Important!!! Will automatically set 'refreshQR' to 1000#)
       tokenStore: 'file', // Define how work with tokens, that can be a custom interface
       folderNameToken: session.tokenPatch, //folder name when saving tokens
       //createPathFileToken: true, //creates a folder when inserting an object in the client's browser, to work it is necessary to pass the parameters in the function create browserSessionToken
@@ -686,7 +687,7 @@ module.exports = class Sessions {
           session.status = 'notLogged';
           session.qrcode = null;
           //
-          //await deletaToken(session.tokenPatch + "/" + SessionName + ".data.json");
+          await deletaToken(session.tokenPatch + "/" + SessionName + ".data.json");
           //
         } else if (state === 'DISCONNECTED' || state === 'SYNCING') {
           session.state = state;
