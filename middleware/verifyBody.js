@@ -18,9 +18,10 @@ async function validateBody(validationSchema, req, res, next) {
     res.setHeader('Content-Type', 'application/json');
     res.status(400).json({
       "Status": {
-        "erro": true,
-        "status": 404,
-        "message": "Preencha o(s) campo(s) obrigatório(s)"
+        result: 'error',
+        state: 'NOTFOUND',
+        status: 'notLogged',
+        message: "Preencha o(s) campo(s) obrigatório(s)"
       },
       "validate": erro
     });
