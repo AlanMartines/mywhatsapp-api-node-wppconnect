@@ -66,10 +66,9 @@ exports.Started = async (req, res, next) => {
 exports.QrCode = async (req, res, next) => {
   //
   let validationSchema = yup.object().shape({
-    AuthorizationToken: yup.string().trim(),
-    SessionName: yup.string().required().trim(),
-    // View: yup.mixed().oneOf([true, false])
-    View: yup.mixed().required()
+    AuthorizationToken: yup.string(),
+    SessionName: yup.string().required(),
+    View: yup.mixed().oneOf([true, false])
   });
   //
   await validateBody(validationSchema, req, res, next);
