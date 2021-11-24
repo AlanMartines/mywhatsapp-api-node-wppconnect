@@ -102,6 +102,7 @@ exports.verify = async (req, res, next) => {
             });
           }
         } catch (err) {
+          console.log("- Error:", err);
           res.setHeader('Content-Type', 'application/json');
           return res.status(400).json({
             "Status": {
