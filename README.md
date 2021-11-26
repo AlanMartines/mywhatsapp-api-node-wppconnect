@@ -356,33 +356,44 @@ mkdir c:\tokens
 ```
 NODE_EN=production
 #
-# Set host
-HOST=0.0.0.0
+# Defina o HOST aqui caso voce utilize uma VPS deve ser colocado o IP da VPS
+# Exemplos:
+# HOST=204.202.54.2 => IP da VPS, caso esteja usando virtualização via hospedagem
+# HOST=10.0.0.10 => IP da VM, caso esteja usando virtualização
+# HOST=localhost => caso esteja usando na sua proprima maquina local
+HOST=localhost
 #
-# Set port
+# Defina o numero da porta a ser usada pela API.
 PORT=9001
 #
-# QRCode in terminal false or true
+# Define se o qrcode vai ser mostrado no terminal
 VIEW_QRCODE_TERMINAL=0
 #
-# Secret key
+# Chave de segurança para validação no JWT
 JWT_SECRET=09f26e402586e2faa8da4c98a35f1b20d6b033c60
 #
+# Diretório da pasta onde irá salvar os tokens gerados no linux
 TOKENSPATCH_LINUX=/usr/local/tokens
 #
+# Diretório da pasta onde irá salvar os tokens gerados nbo windows
 TOKENSPATCH_WIN=c:/tokens
 #
 # Validate in terminal false or true
 VALIDATE_MYSQL=0
 #
+# O host do banco. Ex: localhost
 HOST_MYSQL=localhost
 #
+# Port do banco. Ex: 3306
 PORT_MYSQL=3306
 #
+# Um usuário do banco. Ex: user
 USER_MYSQL=mywhatsappapi
 #
+# A senha do usuário do banco. Ex: user123
 PASSWORD_MYSQL=TuUep8KkjCtAA@
 #
+# A base de dados a qual a aplicação irá se conectar. Ex: node_mysql
 DATABASE_MYSQL=mywhatsapp-api
 ```
 
