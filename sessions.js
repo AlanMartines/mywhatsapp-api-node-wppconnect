@@ -446,21 +446,6 @@ module.exports = class Sessions {
       ╚═╝┴   ┴ ┴└─┘┘└┘┴ ┴┴─┘  ╚═╝┴└─└─┘┴ ┴ ┴ └─┘  ╩  ┴ ┴┴└─┴ ┴┴ ┴└─┘ ┴ └─┘┴└─└─┘
    */
     //
-    const osnow = await osplatform();
-    //
-    if (osnow == 'linux' || osnow == 'Linux') {
-      console.log("- Sistema operacional:", osnow);
-      var folderToken = config.TOKENSPATCH_LINUX;
-      session.tokenPatch = folderToken;
-    } else if (osnow == 'win32' || osnow == 'win64' || osnow == 'Windows') {
-      console.log("- Sistema operacional:", osnow);
-      var folderToken = config.TOKENSPATCH_WIN;
-      session.tokenPatch = folderToken;
-    } else {
-      var folderToken = './tokens';
-      session.tokenPatch = folderToken;
-    }
-    //
     const client = await wppconnect.create({
       session: session.name,
       catchQR: async (base64Qrimg, asciiQR, attempts, urlCode) => {
@@ -569,7 +554,7 @@ module.exports = class Sessions {
       deviceName: "My-Whatsapp",
       headless: true, // Headless chrome
       devtools: false, // Open devtools by default
-      useChrome: true, // If false will use Chromium instance
+      useChrome: false, // If false will use Chromium instance
       debug: false, // Opens a debug session
       logQR: parseInt(config.VIEW_QRCODE_TERMINAL), // Logs QR automatically in terminal
       browserWS: '', // If u want to use browserWSEndpoint
@@ -638,9 +623,9 @@ module.exports = class Sessions {
       //refreshQR: 10000, // Will refresh QR every 15 seconds, 0 will load QR once. Default is 30 seconds
       autoClose: false, // Will auto close automatically if not synced, 'false' won't auto close. Default is 60 seconds (#Important!!! Will automatically set 'refreshQR' to 1000#)
       tokenStore: 'file', // Define how work with tokens, that can be a custom interface
-      folderNameToken: session.tokenPatch, //folder name when saving tokens
+      folderNameToken: config.TOKENSPATCH, //folder name when saving tokens
       //createPathFileToken: true, //creates a folder when inserting an object in the client's browser, to work it is necessary to pass the parameters in the function create browserSessionToken
-      sessionToken: loadAuthInfo(session.tokenPatch, SessionName)
+      sessionToken: loadAuthInfo(config.TOKENSPATCH, SessionName)
     });
     // Levels: 'error', 'warn', 'info', 'http', 'verbose', 'debug', 'silly'
     // All logs: 'silly'
