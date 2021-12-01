@@ -345,12 +345,6 @@ sudo mkdir /usr/local/tokens
 sudo chmod -R 755 /usr/local/tokens
 ```
 
-## Criar pasta tokens (Windows)
-
-```cmd
-mkdir c:\tokens
-```
-
 ## Configuração inicial do arquivo ".env-example"
 
 ```
@@ -398,6 +392,9 @@ MYSQL_DATABASE=mywhatsapp-api
 #
 # Criando volume onde irá salvar os tokens gerados
 VOLUME=/usr/local/tokens
+#
+# Host para uso do Webdriver
+WEBDRIVER_HOST=ws://localhost
 #
 # Porta para uso do Webdriver
 WEBDRIVER_PORT=4000

@@ -1,7 +1,7 @@
 require('dotenv').config();
 const config = module.exports = {};
 //
-config.NODE_ENV = process.env.NODE_ENV || 'development';
+config.NODE_ENV = process.env.NODE_ENV || 'production';
 config.HOST = process.env.HOST || 'localhost';
 config.PORT = process.env.PORT || '9001';
 config.VIEW_QRCODE_TERMINAL = process.env.VIEW_QRCODE_TERMINAL || 1;
@@ -13,5 +13,6 @@ config.MYSQL_PORT = process.env.MYSQL_PORT || '3306';
 config.MYSQL_USER = process.env.MYSQL_USER || 'root';
 config.MYSQL_PASSWORD = process.env.MYSQL_PASSWORD || '';
 config.MYSQL_DATABASE = process.env.MYSQL_DATABASE || '';
-config.WEBDRIVER_PORT = process.env.WEBDRIVER_PORT || '3000';
+config.WEBDRIVER_HOST = process.env.WEBDRIVER_HOST || '';
+config.WEBDRIVER_PORT = process.env.WEBDRIVER_PORT || '';
 //

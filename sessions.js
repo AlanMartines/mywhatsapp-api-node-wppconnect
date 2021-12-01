@@ -557,7 +557,7 @@ module.exports = class Sessions {
       useChrome: false, // If false will use Chromium instance
       debug: false, // Opens a debug session
       logQR: parseInt(config.VIEW_QRCODE_TERMINAL), // Logs QR automatically in terminal
-      browserWS: '', // If u want to use browserWSEndpoint
+      browserWS: config.WEBDRIVER_HOST ? `ws://${config.WEBDRIVER_HOST}:${config.WEBDRIVER_PORT}` : '', // If u want to use browserWSEndpoint
       browserArgs: [
         '--log-level=3',
         '--no-default-browser-check',

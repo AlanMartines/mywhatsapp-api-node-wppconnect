@@ -62,7 +62,10 @@ MYSQL_DATABASE=mywhatsapp-api
 # Criando volume onde irá salvar os tokens gerados
 VOLUME=/usr/local/tokens
 #
-# Porta para uso do Webdriver 
+# Host para uso do Webdriver
+WEBDRIVER_HOST=ws://localhost
+#
+# Porta para uso do Webdriver
 WEBDRIVER_PORT=4000
 `;
       console.log("- Modelo do arquivo de configuração:\n", modelo);
