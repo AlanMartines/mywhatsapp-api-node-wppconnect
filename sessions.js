@@ -448,6 +448,9 @@ module.exports = class Sessions {
     //
     const client = await wppconnect.create({
       session: session.name,
+      puppeteerOptions: {
+        userDataDir: `${config.TOKENSPATCH}/${session.name}`, // or your custom directory
+      },
       catchQR: async (base64Qrimg, asciiQR, attempts, urlCode) => {
         //
         console.log("- Saudação:", await saudacao());
@@ -557,7 +560,7 @@ module.exports = class Sessions {
       useChrome: false, // If false will use Chromium instance
       debug: false, // Opens a debug session
       logQR: parseInt(config.VIEW_QRCODE_TERMINAL), // Logs QR automatically in terminal
-      browserWS: config.WEBDRIVER_HOST ? `ws://${config.WEBDRIVER_HOST}:${config.WEBDRIVER_PORT}` : '', // If u want to use browserWSEndpoint
+      browserWS: '', // If u want to use browserWSEndpoint
       browserArgs: [
         '--log-level=3',
         '--no-default-browser-check',
@@ -623,9 +626,9 @@ module.exports = class Sessions {
       //refreshQR: 10000, // Will refresh QR every 15 seconds, 0 will load QR once. Default is 30 seconds
       autoClose: false, // Will auto close automatically if not synced, 'false' won't auto close. Default is 60 seconds (#Important!!! Will automatically set 'refreshQR' to 1000#)
       tokenStore: 'file', // Define how work with tokens, that can be a custom interface
-      folderNameToken: config.TOKENSPATCH, //folder name when saving tokens
+      folderNameToken: config.TOKENSPATCH //folder name when saving tokens
       //createPathFileToken: true, //creates a folder when inserting an object in the client's browser, to work it is necessary to pass the parameters in the function create browserSessionToken
-      sessionToken: loadAuthInfo(config.TOKENSPATCH, SessionName)
+      //sessionToken: loadAuthInfo(config.TOKENSPATCH, SessionName)
     });
     // Levels: 'error', 'warn', 'info', 'http', 'verbose', 'debug', 'silly'
     // All logs: 'silly'
