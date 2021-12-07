@@ -50,7 +50,7 @@ exports.verify = async (req, res, next) => {
           const conn = require('../config/dbConnection').promise();
           const sql = "SELECT * FROM tokens WHERE token=? LIMIT 1";
           const values = [theTokenAuth];
-          const [row] = await conn.promise().execute(sql, values);
+          const [row] = await conn.execute(sql, values);
           //conn.end();
           //conn.release();
           //
