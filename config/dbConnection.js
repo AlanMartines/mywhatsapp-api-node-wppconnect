@@ -23,18 +23,18 @@ const dbConnectionPool = {
   //getConnection: 0 //Se definido como 0, não há limite para o número de solicitações de conexão na fila. (Padrão: 0)
 };
 //
+/*
 //For mysql single connection
 //Create mysql connection
 var dbconnection = mysql.createConnection(
   dbConnection
 );
+*/
 //
-/*
 //Create mysql connection pool
 var dbconnection = mysql.createPool(
   dbConnectionPool
 );
-*/
 //
 //
 dbconnection.connect(function(err) {
