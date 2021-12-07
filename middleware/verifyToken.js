@@ -1,5 +1,4 @@
 const config = require('../config.global');
-const database = require('../config/db');
 //
 var todayDate = new Date().toISOString().slice(0, 10);
 //
