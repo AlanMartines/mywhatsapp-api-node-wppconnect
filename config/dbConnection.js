@@ -36,15 +36,6 @@ var dbconnection = mysql.createPool(
   dbConnectionPool
 );
 //
-//
-dbconnection.connect(function(err) {
-  if (!err) {
-    console.log("- Database is connected");
-  } else {
-    console.log("- Error connecting database");
-  }
-});
-//
 dbconnection.on('connection', function(connection) {
   console.log('- MySQL Connection established');
   //
