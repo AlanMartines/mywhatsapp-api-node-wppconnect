@@ -47,9 +47,11 @@ dbconnection.on('connection', function(connection) {
     console.log('- MySQL Waiting for available connection slot');
   });
   //
+  /*
   dbconnection.end(function(err) {
     console.log('- All connections the have ended');
   });
+	*/
 });
 //
 module.exports = dbconnection;
