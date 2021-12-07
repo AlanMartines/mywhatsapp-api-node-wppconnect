@@ -16,3 +16,4 @@ config.MYSQL_DATABASE = process.env.MYSQL_DATABASE || '';
 config.WEBDRIVER_HOST = process.env.WEBDRIVER_HOST || '';
 config.WEBDRIVER_PORT = process.env.WEBDRIVER_PORT || '';
 //
+console.log(config);
