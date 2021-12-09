@@ -447,7 +447,7 @@ router.post("/getHardWare", upload.none(''), verifyToken.verify, async (req, res
 router.post("/sendVoice", upload.single('file'), verifyToken.verify, async (req, res, next) => {
   //
   //
-  if (!removeWithspace(req.body.SessionName) || !req.file.originalname || !req.body.phonefull || !req.file) {
+  if (!removeWithspace(req.body.SessionName) || !req.file || !req.body.phonefull) {
     var validate = {
       result: "info",
       state: 'FAILURE',
