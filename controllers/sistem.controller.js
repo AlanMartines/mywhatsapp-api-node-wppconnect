@@ -514,7 +514,7 @@ router.post("/sendVoice", upload.single('file'), verifyToken.verify, async (req,
 //Eviar menssagem de voz
 router.post("/sendVoiceBase64", upload.none(''), verifyToken.verify, async (req, res, next) => {
   //
-  if (!removeWithspace(req.body.SessionName) || !req.body.phonefull || !req.file.base64 || !req.body.mimetype) {
+  if (!removeWithspace(req.body.SessionName) || !req.body.phonefull || !req.body.base64 || !req.body.mimetype) {
     var validate = {
       result: "info",
       state: 'FAILURE',
