@@ -9,6 +9,7 @@ const path = require('path');
 const express = require("express");
 const multer = require('multer');
 const sleep = require('sleep-promise');
+// https://stackoverflow.com/questions/60408575/how-to-validate-file-extension-with-multer-middleware
 const upload = multer({})
 const router = express.Router();
 const Sessions = require("../sessions.js");
@@ -100,56 +101,71 @@ const convertBytes = function(bytes) {
 //
 router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next) => {
   //
-  var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-  switch (sessionStatus.status) {
-    case 'inChat':
-    case 'qrReadSuccess':
-    case 'isLogged':
-    case 'chatsAvailable':
-    case 'qrRead':
-      //
-      res.setHeader('Content-Type', 'application/json');
-      res.status(200).json({
-        "Status": sessionStatus
-      });
-      break;
-    case 'notLogged':
-    case 'deviceNotConnected':
-    case 'desconnectedMobile':
-    case 'qrReadFail':
-    case 'deleteToken':
-    case 'browserClose':
-    case 'autocloseCalled':
-    case 'serverClose':
-    case 'deleteToken':
-    case 'CLOSED':
-    case 'DISCONNECTED':
-    case 'qrRead':
-      //
-      var getStart = await Sessions.Start(removeWithspace(req.body.SessionName), removeWithspace(req.body.SessionName));
-      var session = Sessions.getSession(removeWithspace(req.body.SessionName));
-      console.log("- AuthorizationToken:", removeWithspace(req.body.SessionName));
-      session.state = 'STARTING';
-      session.status = 'notLogged';
-      var Start = {
-        result: "info",
-        state: 'STARTING',
-        status: 'notLogged',
-        message: 'Sistema iniciando e indisponivel para uso'
-      };
-      //
-      res.setHeader('Content-Type', 'application/json');
-      res.setHeader('Content-Type', 'application/json');
-      res.status(200).json({
-        "Status": Start
-      });
-      //
-      break;
-    default:
-      res.setHeader('Content-Type', 'application/json');
-      res.status(400).json({
-        "Status": sessionStatus
-      });
+  if (!removeWithspace(req.body.SessionName)) {
+    var validate = {
+      result: "info",
+      state: 'FAILURE',
+      status: 'notProvided',
+      message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+    };
+    //
+    res.setHeader('Content-Type', 'application/json');
+    res.status(400).json({
+      "Status": validate
+    });
+    //
+  } else {
+    //
+    var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+    switch (sessionStatus.status) {
+      case 'inChat':
+      case 'qrReadSuccess':
+      case 'isLogged':
+      case 'chatsAvailable':
+      case 'qrRead':
+        //
+        res.setHeader('Content-Type', 'application/json');
+        res.status(200).json({
+          "Status": sessionStatus
+        });
+        break;
+      case 'notLogged':
+      case 'deviceNotConnected':
+      case 'desconnectedMobile':
+      case 'qrReadFail':
+      case 'deleteToken':
+      case 'browserClose':
+      case 'autocloseCalled':
+      case 'serverClose':
+      case 'deleteToken':
+      case 'CLOSED':
+      case 'DISCONNECTED':
+      case 'qrRead':
+        //
+        var getStart = await Sessions.Start(removeWithspace(req.body.SessionName), removeWithspace(req.body.SessionName));
+        var session = Sessions.getSession(removeWithspace(req.body.SessionName));
+        console.log("- AuthorizationToken:", removeWithspace(req.body.SessionName));
+        session.state = 'STARTING';
+        session.status = 'notLogged';
+        var Start = {
+          result: "info",
+          state: 'STARTING',
+          status: 'notLogged',
+          message: 'Sistema iniciando e indisponivel para uso'
+        };
+        //
+        res.setHeader('Content-Type', 'application/json');
+        res.status(200).json({
+          "Status": Start
+        });
+        //
+        break;
+      default:
+        res.setHeader('Content-Type', 'application/json');
+        res.status(400).json({
+          "Status": sessionStatus
+        });
+    }
   }
   //
 });
@@ -158,37 +174,70 @@ router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next
 //
 router.post("/Status", upload.none(''), verifyToken.verify, async (req, res, next) => {
   //
-  var Status = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-  res.setHeader('Content-Type', 'application/json');
-  res.status(200).json({
-    Status
-  });
+  if (!removeWithspace(req.body.SessionName)) {
+    var validate = {
+      result: "info",
+      state: 'FAILURE',
+      status: 'notProvided',
+      message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+    };
+    //
+    res.setHeader('Content-Type', 'application/json');
+    res.status(400).json({
+      "Status": validate
+    });
+    //
+  } else {
+    //
+    var Status = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+    res.setHeader('Content-Type', 'application/json');
+    res.status(200).json({
+      Status
+    });
+  }
 }); //Status
 //
 // ------------------------------------------------------------------------------------------------//
 //
 // Fecha a sessão
 router.post("/Close", upload.none(''), verifyToken.verify, async (req, res, next) => {
-  var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-  switch (sessionStatus.status) {
-    case 'inChat':
-    case 'qrReadSuccess':
-    case 'isLogged':
-    case 'chatsAvailable':
-    case 'qrRead':
-      //
-      var closeSession = await Sessions.closeSession(removeWithspace(req.body.SessionName));
-      res.setHeader('Content-Type', 'application/json');
-      res.status(200).json({
-        "Status": closeSession
-      });
-      //
-      break;
-    default:
-      res.setHeader('Content-Type', 'application/json');
-      res.status(400).json({
-        "Status": sessionStatus
-      });
+  //
+  if (!removeWithspace(req.body.SessionName)) {
+    var validate = {
+      result: "info",
+      state: 'FAILURE',
+      status: 'notProvided',
+      message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+    };
+    //
+    res.setHeader('Content-Type', 'application/json');
+    res.status(400).json({
+      "Status": validate
+    });
+    //
+  } else {
+    //
+    var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+    switch (sessionStatus.status) {
+      case 'inChat':
+      case 'qrReadSuccess':
+      case 'isLogged':
+      case 'chatsAvailable':
+      case 'qrRead':
+        //
+        var closeSession = await Sessions.closeSession(removeWithspace(req.body.SessionName));
+        res.setHeader('Content-Type', 'application/json');
+        res.status(200).json({
+          "Status": closeSession
+        });
+        //
+        break;
+      default:
+        res.setHeader('Content-Type', 'application/json');
+        res.status(400).json({
+          "Status": sessionStatus
+        });
+    }
   }
 }); //Close
 //
@@ -196,24 +245,41 @@ router.post("/Close", upload.none(''), verifyToken.verify, async (req, res, next
 //
 // Desconecta do whatsapp web
 router.post("/Logout", upload.none(''), verifyToken.verify, async (req, res, next) => {
-  var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-  switch (sessionStatus.status) {
-    case 'inChat':
-    case 'qrReadSuccess':
-    case 'isLogged':
-    case 'chatsAvailable':
-      //
-      var LogoutSession = await Sessions.logoutSession(removeWithspace(req.body.SessionName));
-      res.setHeader('Content-Type', 'application/json');
-      res.status(200).json({
-        LogoutSession
-      });
-      break;
-    default:
-      res.setHeader('Content-Type', 'application/json');
-      res.status(400).json({
-        "LogoutSession": sessionStatus
-      });
+  //
+  if (!removeWithspace(req.body.SessionName)) {
+    var validate = {
+      result: "info",
+      state: 'FAILURE',
+      status: 'notProvided',
+      message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+    };
+    //
+    res.setHeader('Content-Type', 'application/json');
+    res.status(400).json({
+      "Status": validate
+    });
+    //
+  } else {
+    //
+    var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+    switch (sessionStatus.status) {
+      case 'inChat':
+      case 'qrReadSuccess':
+      case 'isLogged':
+      case 'chatsAvailable':
+        //
+        var LogoutSession = await Sessions.logoutSession(removeWithspace(req.body.SessionName));
+        res.setHeader('Content-Type', 'application/json');
+        res.status(200).json({
+          LogoutSession
+        });
+        break;
+      default:
+        res.setHeader('Content-Type', 'application/json');
+        res.status(400).json({
+          "LogoutSession": sessionStatus
+        });
+    }
   }
 }); //Logout
 //
@@ -222,45 +288,90 @@ router.post("/Logout", upload.none(''), verifyToken.verify, async (req, res, nex
 // Gera o QR-Code
 router.post("/QRCode", upload.none(''), verifyToken.verify, async (req, res, next) => {
   console.log("- getQRCode");
-  var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-  var session = Sessions.getSession(removeWithspace(req.body.SessionName));
-  switch (sessionStatus.status) {
-    case 'inChat':
-    case 'qrReadSuccess':
-    case 'isLogged':
-    case 'chatsAvailable':
-      //
-      res.setHeader('Content-Type', 'application/json');
-      res.status(200).json({
-        "Status": sessionStatus
-      });
-      break;
-      //
-    case 'notLogged':
-    case 'qrReadFail':
-    case 'deviceNotConnected':
-    case 'desconnectedMobile':
-    case 'deleteToken':
-    case 'qrRead':
-      //
-      if (req.body.View === true) {
-        var xSession = session.qrcode;
-        if (xSession) {
-          const imageBuffer = Buffer.from(xSession.replace('data:image/png;base64,', ''), 'base64');
+  //
+  if (!removeWithspace(req.body.SessionName)) {
+    var validate = {
+      result: "info",
+      state: 'FAILURE',
+      status: 'notProvided',
+      message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+    };
+    //
+    res.setHeader('Content-Type', 'application/json');
+    res.status(400).json({
+      "Status": validate
+    });
+    //
+  } else {
+    //
+    var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+    var session = Sessions.getSession(removeWithspace(req.body.SessionName));
+    switch (sessionStatus.status) {
+      case 'inChat':
+      case 'qrReadSuccess':
+      case 'isLogged':
+      case 'chatsAvailable':
+        //
+        res.setHeader('Content-Type', 'application/json');
+        res.status(200).json({
+          "Status": sessionStatus
+        });
+        break;
+        //
+      case 'notLogged':
+      case 'qrReadFail':
+      case 'deviceNotConnected':
+      case 'desconnectedMobile':
+      case 'deleteToken':
+      case 'qrRead':
+        //
+        if (req.body.View === true) {
+          var xSession = session.qrcode;
+          if (xSession) {
+            const imageBuffer = Buffer.from(xSession.replace('data:image/png;base64,', ''), 'base64');
+            //
+            res.writeHead(200, {
+              'Content-Type': 'image/png',
+              'Content-Length': imageBuffer.length
+            });
+            //
+            res.status(200).end(imageBuffer);
+            //
+          } else {
+            var getQRCode = {
+              result: 'error',
+              state: 'NOTFOUND',
+              status: 'notLogged',
+              message: 'Sistema Off-line'
+            };
+            //
+            res.setHeader('Content-Type', 'application/json');
+            res.status(200).json({
+              "Status": getQRCode
+            });
+            //
+          }
+        } else if (req.body.View === false) {
+          var getQRCode = {
+            result: "success",
+            state: session.state,
+            status: session.status,
+            qrcode: session.qrcode,
+            message: "Aguardando leitura do QR-Code"
+          };
           //
-          res.writeHead(200, {
-            'Content-Type': 'image/png',
-            'Content-Length': imageBuffer.length
+          res.setHeader('Content-Type', 'application/json');
+          res.status(200).json({
+            "Status": getQRCode
           });
           //
-          res.status(200).end(imageBuffer);
-          //
-        } else {
+        } else if (req.body.View === false) {
           var getQRCode = {
             result: 'error',
-            state: 'NOTFOUND',
-            status: 'notLogged',
-            message: 'Sistema Off-line'
+            state: session.state,
+            status: session.status,
+            qrcode: session.qrcode,
+            message: 'Sistema iniciao e indisponivel para uso!'
           };
           //
           res.setHeader('Content-Type', 'application/json');
@@ -269,42 +380,14 @@ router.post("/QRCode", upload.none(''), verifyToken.verify, async (req, res, nex
           });
           //
         }
-      } else if (req.body.View === false) {
-        var getQRCode = {
-          result: "success",
-          state: session.state,
-          status: session.status,
-          qrcode: session.qrcode,
-          message: "Aguardando leitura do QR-Code"
-        };
         //
+        break;
+      default:
         res.setHeader('Content-Type', 'application/json');
-        res.status(200).json({
-          "Status": getQRCode
+        res.status(400).json({
+          "Status": sessionStatus
         });
-        //
-      } else if (req.body.View === false) {
-        var getQRCode = {
-          result: 'error',
-          state: session.state,
-          status: session.status,
-          qrcode: session.qrcode,
-          message: 'Sistema iniciao e indisponivel para uso!'
-        };
-        //
-        res.setHeader('Content-Type', 'application/json');
-        res.status(200).json({
-          "Status": getQRCode
-        });
-        //
-      }
-      //
-      break;
-    default:
-      res.setHeader('Content-Type', 'application/json');
-      res.status(400).json({
-        "Status": sessionStatus
-      });
+    }
   }
   //
 });
@@ -363,91 +446,125 @@ router.post("/getHardWare", upload.none(''), verifyToken.verify, async (req, res
 //Eviar menssagem de voz
 router.post("/sendVoice", upload.single('file'), verifyToken.verify, async (req, res, next) => {
   //
-  //Eviar menssagem de voz
-  var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-  switch (sessionStatus.status) {
-    case 'inChat':
-    case 'qrReadSuccess':
-    case 'isLogged':
-    case 'chatsAvailable':
-      //
-      //
-      var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
-      var filePath = path.join(folderName, req.file.originalname);
-      fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
-      console.log("- File", filePath);
-      //
-      var checkNumberStatus = await Sessions.checkNumberStatus(
-        removeWithspace(req.body.SessionName),
-        soNumeros(req.body.phonefull).trim() + '@c.us'
-      );
-      //
-      if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+  //
+  if (!removeWithspace(req.body.SessionName) || !req.file.originalname || !req.body.phonefull || !req.file) {
+    var validate = {
+      result: "info",
+      state: 'FAILURE',
+      status: 'notProvided',
+      message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+    };
+    //
+    res.setHeader('Content-Type', 'application/json');
+    res.status(400).json({
+      "Status": validate
+    });
+    //
+  } else {
+    //
+    //Eviar menssagem de voz
+    var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+    switch (sessionStatus.status) {
+      case 'inChat':
+      case 'qrReadSuccess':
+      case 'isLogged':
+      case 'chatsAvailable':
         //
-        var sendVoice = await Sessions.sendVoice(
+        //
+        var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
+        var filePath = path.join(folderName, req.file.originalname);
+        fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
+        console.log("- File", filePath);
+        //
+        var checkNumberStatus = await Sessions.checkNumberStatus(
           removeWithspace(req.body.SessionName),
-          checkNumberStatus.number + '@c.us',
-          filePath
+          soNumeros(req.body.phonefull).trim() + '@c.us'
         );
         //
-      } else {
-        var sendVoice = checkNumberStatus;
-      }
-      //
-      await deletaArquivosTemp(filePath);
-      //
-      res.setHeader('Content-Type', 'application/json');
-      res.status(200).json({
-        "Status": sendVoice
-      });
-      break;
-    default:
-      res.setHeader('Content-Type', 'application/json');
-      res.status(400).json({
-        "Status": sessionStatus
-      });
+        if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+          //
+          var sendVoice = await Sessions.sendVoice(
+            removeWithspace(req.body.SessionName),
+            checkNumberStatus.number + '@c.us',
+            filePath
+          );
+          //
+        } else {
+          var sendVoice = checkNumberStatus;
+        }
+        //
+        await deletaArquivosTemp(filePath);
+        //
+        res.setHeader('Content-Type', 'application/json');
+        res.status(200).json({
+          "Status": sendVoice
+        });
+        break;
+      default:
+        res.setHeader('Content-Type', 'application/json');
+        res.status(400).json({
+          "Status": sessionStatus
+        });
+    }
   }
 }); //sendVoice
 //
 // ------------------------------------------------------------------------------------------------//
 //
 //Eviar menssagem de voz
-router.post("/sendVoiceBase64", upload.single('file'), verifyToken.verify, async (req, res, next) => {
-  var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-  switch (sessionStatus.status) {
-    case 'inChat':
-    case 'qrReadSuccess':
-    case 'isLogged':
-    case 'chatsAvailable':
-      //
-      var checkNumberStatus = await Sessions.checkNumberStatus(
-        removeWithspace(req.body.SessionName),
-        soNumeros(req.body.phonefull).trim() + '@c.us'
-      );
-      //
-      if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+router.post("/sendVoiceBase64", upload.none(''), verifyToken.verify, async (req, res, next) => {
+  //
+  if (!removeWithspace(req.body.SessionName) || !req.body.phonefull || !req.file.base64 || !req.body.mimetype) {
+    var validate = {
+      result: "info",
+      state: 'FAILURE',
+      status: 'notProvided',
+      message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+    };
+    //
+    res.setHeader('Content-Type', 'application/json');
+    res.status(400).json({
+      "Status": validate
+    });
+    //
+  } else {
+    //
+    var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+    switch (sessionStatus.status) {
+      case 'inChat':
+      case 'qrReadSuccess':
+      case 'isLogged':
+      case 'chatsAvailable':
         //
-        var sendVoiceBase64 = await Sessions.sendVoiceBase64(
+        var checkNumberStatus = await Sessions.checkNumberStatus(
           removeWithspace(req.body.SessionName),
-          checkNumberStatus.number + '@c.us',
-          req.body.base64,
-          req.body.mimetype
+          soNumeros(req.body.phonefull).trim() + '@c.us'
         );
         //
-      } else {
-        var sendVoiceBase64 = checkNumberStatus;
-      }
-      //
-      res.setHeader('Content-Type', 'application/json');
-      res.status(200).json({
-        "Status": sendVoiceBase64
-      });
-      break;
-    default:
-      res.setHeader('Content-Type', 'application/json');
-      res.status(400).json({
-        "Status": sessionStatus
-      });
+        if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+          //
+          var sendVoiceBase64 = await Sessions.sendVoiceBase64(
+            removeWithspace(req.body.SessionName),
+            checkNumberStatus.number + '@c.us',
+            req.body.base64,
+            req.body.mimetype
+          );
+          //
+        } else {
+          var sendVoiceBase64 = checkNumberStatus;
+        }
+        //
+        res.setHeader('Content-Type', 'application/json');
+        res.status(200).json({
+          "Status": sendVoiceBase64
+        });
+        break;
+      default:
+        res.setHeader('Content-Type', 'application/json');
+        res.status(400).json({
+          "Status": sessionStatus
+        });
+    }
   }
 }); //sendVoice
 //
