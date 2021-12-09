@@ -448,9 +448,6 @@ module.exports = class Sessions {
     //
     const client = await wppconnect.create({
       session: session.name,
-      puppeteerOptions: {
-        userDataDir: `${config.TOKENSPATCH}/${session.name}`, // or your custom directory
-      },
       catchQR: async (base64Qrimg, asciiQR, attempts, urlCode) => {
         //
         console.log("- Saudação:", await saudacao());
@@ -616,11 +613,14 @@ module.exports = class Sessions {
         '--no-first-run',
         '--safebrowsing-disable-auto-update',
       ],
+      puppeteerOptions: {
+        userDataDir: `${config.TOKENSPATCH}/${session.name}`, // or your custom directory
+      },
       //executablePath: '/usr/bin/chromium-browser',
       disableSpins: true, // Will disable Spinnies animation, useful for containers (docker) for a better log
       disableWelcome: false, // Will disable the welcoming message which appears in the beginning
       updatesLog: true, // Logs info updates automatically in terminal
-      //refreshQR: 10000, // Will refresh QR every 15 seconds, 0 will load QR once. Default is 30 seconds
+      //refreshQR: 15000, // Will refresh QR every 15 seconds, 0 will load QR once. Default is 30 seconds
       autoClose: false, // Will auto close automatically if not synced, 'false' won't auto close. Default is 60 seconds (#Important!!! Will automatically set 'refreshQR' to 1000#)
       tokenStore: 'file', // Define how work with tokens, that can be a custom interface
       folderNameToken: config.TOKENSPATCH //folder name when saving tokens
