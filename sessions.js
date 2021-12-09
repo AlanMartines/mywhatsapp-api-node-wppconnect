@@ -666,20 +666,20 @@ module.exports = class Sessions {
           session.status = 'notLogged';
           session.qrcode = null;
           //
-          //await deletaToken(session.tokenPatch + "/" + SessionName + ".data.json");
+          //await deletaToken(`${config.TOKENSPATCH}/${session.name}`);
           //
         } else if (state == "UNPAIRED") {
           session.state = state;
           session.status = 'notLogged';
           session.qrcode = null;
           //
-          await deletaToken(session.tokenPatch + "/" + SessionName + ".data.json");
+          await deletaToken(`${config.TOKENSPATCH}/${session.name}`);
           //
         } else if (state === 'DISCONNECTED' || state === 'SYNCING') {
           session.state = state;
           session.qrcode = null;
           //
-          await deletaToken(session.tokenPatch + "/" + SessionName + ".data.json");
+          await deletaToken(`${config.TOKENSPATCH}/${session.name}`);
           //
           time = setTimeout(() => {
             client.close();
@@ -887,7 +887,7 @@ module.exports = class Sessions {
           //
         }
         //
-        await deletaToken(session.tokenPatch + "/" + SessionName + ".data.json");
+        await deletaToken(`${config.TOKENSPATCH}/${session.name}`);
         //
         await updateStateDb(session.state, session.status, session.AuthorizationToken);
         //
