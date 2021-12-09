@@ -2,6 +2,7 @@
 // Configuração dos módulos
 const config = require('./config.global');
 const fs = require('fs-extra');
+const rimraf = require("rimraf");
 const {
   forEach
 } = require('p-iteration');
@@ -77,20 +78,30 @@ async function updateStateDb(state, status, AuthorizationToken) {
 //
 // ------------------------------------------------------------------------------------------------------- //
 //
-async function deletaToken(filePath) {
+async function deletaToken(filePath, filename) {
   //
-  const cacheExists = await fs.pathExists(filePath);
-  console.log('- O arquivo é: ' + cacheExists);
-  if (cacheExists) {
-    fs.remove(filePath);
-    console.log('- O arquivo removido: ' + cacheExists);
-  }
+  fs.unlink(`${filePath}/${filename}`, function(err) {
+    if (err && err.code == 'ENOENT') {
+      // file doens't exist
+      console.log(`- Arquivo "${filePath}" não existe`);
+    } else if (err) {
+      // other errors, e.g. maybe we don't have enough permission
+      console.log(`- erro ao remover arquivo "${filePath}/${filename}"`);
+    } else {
+      console.log(`- Arquivo "${filePath}/${filename}" removido com sucesso`);
+      rimraf(filePath, function() {
+        console.log("done");
+      });
+    }
+  });
 }
+//
+// ------------------------------------------------------------------------------------------------------- //
 //
 async function loadAuthInfo(tokenPatch, SessionName) {
   //
-  if (fs.existsSync(`${tokenPatch}/${SessionName}.data.json`)) {
-    var loadAuth = JSON.parse(fs.readFileSync(`${tokenPatch}/${SessionName}.data.json`));
+  if (fs.existsSync(`${tokenPatch}/WPP-${SessionName}.data.json`)) {
+    var loadAuth = JSON.parse(fs.readFileSync(`${tokenPatch}/WPP-${SessionName}.data.json`));
     console.log("- loadAuth:", loadAuth);
     return loadAuth;
   } else {
@@ -613,7 +624,7 @@ module.exports = class Sessions {
         '--safebrowsing-disable-auto-update',
       ],
       puppeteerOptions: {
-        userDataDir: `${config.TOKENSPATCH}/${session.name}`, // or your custom directory
+        userDataDir: `${config.TOKENSPATCH}/WPP-${SessionName}`, // or your custom directory
       },
       //executablePath: '/usr/bin/chromium-browser',
       disableSpins: true, // Will disable Spinnies animation, useful for containers (docker) for a better log
@@ -666,20 +677,20 @@ module.exports = class Sessions {
           session.status = 'notLogged';
           session.qrcode = null;
           //
-          //await deletaToken(`${config.TOKENSPATCH}/${session.name}`);
+          //await deletaToken(`${config.TOKENSPATCH}`,`WPP-${SessionName}.data.json`);
           //
         } else if (state == "UNPAIRED") {
           session.state = state;
           session.status = 'notLogged';
           session.qrcode = null;
           //
-          await deletaToken(`${config.TOKENSPATCH}/${session.name}`);
+          await deletaToken(`${config.TOKENSPATCH}`, `WPP-${SessionName}.data.json`);
           //
         } else if (state === 'DISCONNECTED' || state === 'SYNCING') {
           session.state = state;
           session.qrcode = null;
           //
-          await deletaToken(`${config.TOKENSPATCH}/${session.name}`);
+          await deletaToken(`${config.TOKENSPATCH}`, `WPP-${SessionName}.data.json`);
           //
           time = setTimeout(() => {
             client.close();
@@ -887,7 +898,7 @@ module.exports = class Sessions {
           //
         }
         //
-        await deletaToken(`${config.TOKENSPATCH}/${session.name}`);
+        await deletaToken(`${config.TOKENSPATCH}`, `WPP-${SessionName}.data.json`);
         //
         await updateStateDb(session.state, session.status, session.AuthorizationToken);
         //
