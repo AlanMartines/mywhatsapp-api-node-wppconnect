@@ -1678,7 +1678,7 @@ module.exports = class Sessions {
     var session = Sessions.getSession(SessionName);
     var resultcheckNumberStatus = await session.client.then(async client => {
       return await client.checkNumberStatus(number).then((result) => {
-        //console.log('Result: ', chat); //return object success
+        console.log('Result: ', chat); //return object success
         //
         if (result.status === 200 && result.canReceiveMessage === true) {
           //
