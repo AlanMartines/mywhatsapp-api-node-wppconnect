@@ -271,13 +271,13 @@ router.post("/Logout", upload.none(''), verifyToken.verify, async (req, res, nex
         var LogoutSession = await Sessions.logoutSession(removeWithspace(req.body.SessionName));
         res.setHeader('Content-Type', 'application/json');
         res.status(200).json({
-          LogoutSession
+          "Status": LogoutSession
         });
         break;
       default:
         res.setHeader('Content-Type', 'application/json');
         res.status(400).json({
-          "LogoutSession": sessionStatus
+          "Status": sessionStatus
         });
     }
   }

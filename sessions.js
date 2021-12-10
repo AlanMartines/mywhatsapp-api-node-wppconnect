@@ -632,7 +632,7 @@ module.exports = class Sessions {
       updatesLog: true, // Logs info updates automatically in terminal
       //refreshQR: 15000, // Will refresh QR every 15 seconds, 0 will load QR once. Default is 30 seconds
       autoClose: false, // Will auto close automatically if not synced, 'false' won't auto close. Default is 60 seconds (#Important!!! Will automatically set 'refreshQR' to 1000#)
-      tokenStore: 'file', // Define how work with tokens, that can be a custom interface
+      tokenStore: config.TOKENSPATCH, // Define how work with tokens, that can be a custom interface
       folderNameToken: config.TOKENSPATCH //folder name when saving tokens
       //createPathFileToken: true, //creates a folder when inserting an object in the client's browser, to work it is necessary to pass the parameters in the function create browserSessionToken
       //sessionToken: loadAuthInfo(config.TOKENSPATCH, SessionName)
@@ -1680,7 +1680,7 @@ module.exports = class Sessions {
       return await client.checkNumberStatus(number).then((result) => {
         console.log('Result: ', chat); //return object success
         //
-        if (result.status === 200 && result.canReceiveMessage === true) {
+        if (result.canReceiveMessage === true) {
           //
           return {
             "erro": false,
