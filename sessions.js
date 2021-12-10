@@ -561,7 +561,7 @@ module.exports = class Sessions {
         }
       },
       // options
-      whatsappVersion: "2.2142.12",
+      whatsappVersion: '', // whatsappVersion: '2.2142.12',
       deviceName: "Connect Zap",
       headless: true, // Headless chrome
       devtools: false, // Open devtools by default
