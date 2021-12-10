@@ -78,19 +78,19 @@ async function updateStateDb(state, status, AuthorizationToken) {
 //
 // ------------------------------------------------------------------------------------------------------- //
 //
-async function deletaToken(filePath, filename) {
+async function deletaToken(userDataDir, filePath, filename) {
   //
   fs.unlink(`${filePath}/${filename}`, function(err) {
     if (err && err.code == 'ENOENT') {
       // file doens't exist
-      console.log(`- Arquivo "${filePath}" não existe`);
+      console.log(`- Arquivo "${filePath}/${filename}" não existe`);
     } else if (err) {
       // other errors, e.g. maybe we don't have enough permission
       console.log(`- Erro ao remover arquivo "${filePath}/${filename}"`);
     } else {
       console.log(`- Arquivo "${filePath}/${filename}" removido com sucesso`);
-      rimraf(filePath, function() {
-        console.log(`- Pasta "${filePath}/${filename}" removida com sucesso`);
+      rimraf(`${filePath}/${userDataDir}`, function() {
+        console.log(`- Pasta "${userDataDir}" removida com sucesso`);
       });
     }
   });
@@ -664,20 +664,20 @@ module.exports = class Sessions {
           session.status = 'notLogged';
           session.qrcode = null;
           //
-          //await deletaToken(`${config.TOKENSPATCH}`,`WPP-${SessionName}.data.json`);
+          //await deletaToken(`WPP-${SessionName}`,`${config.TOKENSPATCH}`,`${SessionName}.data.json`);
           //
         } else if (state == "UNPAIRED") {
           session.state = state;
           session.status = 'notLogged';
           session.qrcode = null;
           //
-          await deletaToken(`${config.TOKENSPATCH}`, `WPP-${SessionName}.data.json`);
+          await deletaToken(`WPP-${SessionName}`, `${config.TOKENSPATCH}`, `${SessionName}.data.json`);
           //
         } else if (state === 'DISCONNECTED' || state === 'SYNCING') {
           session.state = state;
           session.qrcode = null;
           //
-          await deletaToken(`${config.TOKENSPATCH}`, `WPP-${SessionName}.data.json`);
+          await deletaToken(`WPP-${SessionName}`, `${config.TOKENSPATCH}`, `${SessionName}.data.json`);
           //
           time = setTimeout(() => {
             client.close();
@@ -885,7 +885,7 @@ module.exports = class Sessions {
           //
         }
         //
-        await deletaToken(`${config.TOKENSPATCH}`, `WPP-${SessionName}.data.json`);
+        await deletaToken(`WPP-${SessionName}`, `${config.TOKENSPATCH}`, `${SessionName}.data.json`);
         //
         await updateStateDb(session.state, session.status, session.AuthorizationToken);
         //
