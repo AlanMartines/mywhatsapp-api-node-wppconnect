@@ -98,19 +98,6 @@ async function deletaToken(filePath, filename) {
 //
 // ------------------------------------------------------------------------------------------------------- //
 //
-async function loadAuthInfo(tokenPatch, SessionName) {
-  //
-  if (fs.existsSync(`${tokenPatch}/WPP-${SessionName}.data.json`)) {
-    var loadAuth = JSON.parse(fs.readFileSync(`${tokenPatch}/WPP-${SessionName}.data.json`));
-    console.log("- loadAuth:", loadAuth);
-    return loadAuth;
-  } else {
-    var loadAuth = {};
-    console.log("- loadAuth:", loadAuth);
-    return {};
-  }
-}
-//
 module.exports = class Sessions {
   //
   static async ApiStatus(SessionName) {
