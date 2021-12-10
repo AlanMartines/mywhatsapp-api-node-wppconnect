@@ -565,7 +565,7 @@ module.exports = class Sessions {
       deviceName: "Connect Zap",
       headless: true, // Headless chrome
       devtools: false, // Open devtools by default
-      useChrome: true, // If false will use Chromium instance
+      useChrome: false, // If false will use Chromium instance
       debug: false, // Opens a debug session
       logQR: parseInt(config.VIEW_QRCODE_TERMINAL), // Logs QR automatically in terminal
       browserWS: '', // If u want to use browserWSEndpoint
