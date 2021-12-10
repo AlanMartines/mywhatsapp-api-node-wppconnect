@@ -86,7 +86,7 @@ async function deletaToken(filePath, filename) {
       console.log(`- Arquivo "${filePath}" não existe`);
     } else if (err) {
       // other errors, e.g. maybe we don't have enough permission
-      console.log(`- erro ao remover arquivo "${filePath}/${filename}"`);
+      console.log(`- Erro ao remover arquivo "${filePath}/${filename}"`);
     } else {
       console.log(`- Arquivo "${filePath}/${filename}" removido com sucesso`);
       rimraf(filePath, function() {
