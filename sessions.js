@@ -90,7 +90,7 @@ async function deletaToken(filePath, filename) {
     } else {
       console.log(`- Arquivo "${filePath}/${filename}" removido com sucesso`);
       rimraf(filePath, function() {
-        console.log("done");
+        console.log(`- Pasta "${filePath}/${filename}" removida com sucesso`);
       });
     }
   });
