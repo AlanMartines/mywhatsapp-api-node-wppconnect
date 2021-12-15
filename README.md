@@ -6,7 +6,7 @@
 
 Este projeto usa como base o [WPPConnect](https://github.com/wppconnect-team/wppconnect "WPPConnect"), um navegador virtual sem interface gráfica que abre o whatsapp web e executa todos os comandos via código possibilitando assim a automação de todas as funções.
 
-![](https://img.shields.io/github/stars/AlanMartines/mywhatsapp-api-node-wppconnect)![](https://img.shields.io/github/forks/AlanMartines/mywhatsapp-api-node-wppconnect)![](https://img.shields.io/github/tag/AlanMartines/mywhatsapp-api-node-wppconnect)![](https://img.shields.io/github/release/AlanMartines/mywhatsapp-api-node-wppconnect)![](https://img.shields.io/github/issues/AlanMartines/mywhatsapp-api-node-wppconnect)
+![](https://img.shields.io/github/stars/AlanMartines/mywhatsapp-api-node-wppconnect) ![](https://img.shields.io/github/forks/AlanMartines/mywhatsapp-api-node-wppconnect) ![](https://img.shields.io/github/tag/AlanMartines/mywhatsapp-api-node-wppconnect) ![](https://img.shields.io/github/release/AlanMartines/mywhatsapp-api-node-wppconnect) ![](https://img.shields.io/github/issues/AlanMartines/mywhatsapp-api-node-wppconnect)
 
 ## Nota
 
@@ -140,7 +140,9 @@ echo "http://dl-cdn.alpinelinux.org/alpine/v3.9/main" >> /etc/apk/repositories &
 echo "http://dl-cdn.alpinelinux.org/alpine/v3.9/community" >> /etc/apk/repositories && \
 apk update && \
 apk upgrade && \
-apk add --update --no-cache dumb-init curl make gcc g++ linux-headers binutils-gold gnupg libstdc++ nss chromium chromium-chromedriver git vim curl yarn nodejs nodejs-npm npm python python3 dpkg wget
+apk add --update --no-cache dumb-init curl make gcc g++ linux-headers binutils-gold gnupg \
+libstdc++ nss chromium chromium-chromedriver git vim curl yarn nodejs nodejs-npm npm python \
+python3 dpkg wget
 ```
 
 #### Instale o Google Chrome Debian (e.g. Ubuntu) 64bits
