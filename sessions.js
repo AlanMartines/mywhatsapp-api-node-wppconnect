@@ -2420,7 +2420,7 @@ module.exports = class Sessions {
 	//
 	// Get is multi device info
 	static async isMultiDevice(SessionName) {
-		console.log("- getHostDevice");
+		console.log("- isMultiDevice");
 		var session = Sessions.getSession(SessionName);
 		var resultgetHostDevice = await session.client.then(async client => {
 			return await client.isMultiDevice().then((result) => {
