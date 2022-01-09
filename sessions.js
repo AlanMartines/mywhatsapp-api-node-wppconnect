@@ -2379,7 +2379,7 @@ module.exports = class Sessions {
 		console.log("- getHostDevice");
 		var session = Sessions.getSession(SessionName);
 		var resultgetHostDevice = await session.client.then(async client => {
-			return await client.getHostDevice().then((result) => {
+			return await client.HostDevice().then((result) => {
 				//console.log('Result: ', result); //return object success
 				//
 				return {
