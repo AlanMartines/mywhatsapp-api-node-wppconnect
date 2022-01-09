@@ -1,4 +1,4 @@
-//
+F//
 // Configuração dos módulos
 const os = require('os');
 const {
@@ -2837,6 +2837,33 @@ router.post("/getHostDevice", upload.none(''), verifyToken.verify, async (req, r
       });
   }
 }); //getHostDevice
+//
+// ------------------------------------------------------------------------------------------------//
+//
+// Get is multi device info
+router.post("/isMultiDevice", upload.none(''), verifyToken.verify, async (req, res, next) => {
+  var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+  switch (sessionStatus.status) {
+    case 'inChat':
+    case 'qrReadSuccess':
+    case 'isLogged':
+    case 'chatsAvailable':
+      //
+      var isMultiDevice = await Sessions.isMultiDevice(removeWithspace(req.body.SessionName));
+      //
+      //console.log(result);
+      res.setHeader('Content-Type', 'application/json');
+      res.status(200).json({
+        "Status": isMultiDevice
+      });
+      break;
+    default:
+      res.setHeader('Content-Type', 'application/json');
+      res.status(400).json({
+        "Status": sessionStatus
+      });
+  }
+}); //isMultiDevice
 //
 // ------------------------------------------------------------------------------------------------//
 //

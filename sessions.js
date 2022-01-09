@@ -2418,6 +2418,32 @@ module.exports = class Sessions {
 	//
 	// ------------------------------------------------------------------------------------------------//
 	//
+	// Get is multi device info
+	static async isMultiDevice(SessionName) {
+		console.log("- getHostDevice");
+		var session = Sessions.getSession(SessionName);
+		var resultgetHostDevice = await session.client.then(async client => {
+			return await client.isMultiDevice().then((result) => {
+				console.log('Result: ', result); //return object success
+				//
+
+				//
+			}).catch((erro) => {
+				console.error("Error when:", erro); //return object error
+				//
+				return {
+					"erro": true,
+					"status": 404,
+					"message": "Erro ao obter dados do dispositivo"
+				};
+				//
+			});
+		});
+		return resultgetHostDevice;
+	} //isMultiDevice
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
 	// Get connection state
 	static async getConnectionState(SessionName) {
 		console.log("- getConnectionState");
