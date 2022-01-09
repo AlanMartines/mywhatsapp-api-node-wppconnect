@@ -1,4 +1,4 @@
-F//
+//
 // Configuração dos módulos
 const os = require('os');
 const {
