@@ -2424,9 +2424,15 @@ module.exports = class Sessions {
 		var session = Sessions.getSession(SessionName);
 		var resultgetHostDevice = await session.client.then(async client => {
 			return await client.isMultiDevice().then((result) => {
-				console.log('Result: ', result); //return object success
+				//console.log('Result: ', result); //return object success
 				//
+				return {
+					"erro": false,
+					"status": 200,
+					"message": "Estado do MultiDevice obtido com sucesso",
+					"isMultiDevice": result
 
+				};
 				//
 			}).catch((erro) => {
 				console.error("Error when:", erro); //return object error
@@ -2434,7 +2440,7 @@ module.exports = class Sessions {
 				return {
 					"erro": true,
 					"status": 404,
-					"message": "Erro ao obter dados do dispositivo"
+					"message": "Erro ao obter estatus do MultiDevice"
 				};
 				//
 			});
