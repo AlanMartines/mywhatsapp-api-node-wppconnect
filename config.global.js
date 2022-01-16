@@ -13,8 +13,8 @@ config.VALIDATE_MYSQL = process.env.VALIDATE_MYSQL || 0;
 config.MYSQL_HOST = process.env.MYSQL_HOST || 'localhost';
 config.MYSQL_PORT = process.env.MYSQL_PORT || '3306';
 config.MYSQL_USER = process.env.MYSQL_USER || 'root';
+config.MYSQL_DIALECT = process.env.MYSQL_DIALECT || 'mysql';
 config.MYSQL_PASSWORD = process.env.MYSQL_PASSWORD || '';
 config.MYSQL_DATABASE = process.env.MYSQL_DATABASE || '';
-config.WEBDRIVER_HOST = process.env.WEBDRIVER_HOST || '';
-config.WEBDRIVER_PORT = process.env.WEBDRIVER_PORT || '';
+config.MYSQL_TIMEZONE = process.env.MYSQL_TIMEZONE || '-04:00';
 //

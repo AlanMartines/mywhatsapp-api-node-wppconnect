@@ -1,0 +1,9 @@
+import path from 'path';
+
+export default {
+  env: path.resolve('/', 'env'),
+  config: path.resolve('database', 'database.js'),
+  'models-path': path.resolve('database', 'models'),
+  'seeders-path': path.resolve('database', 'seeders'),
+  'migrations-path': path.resolve('database', 'migrations'),
+};

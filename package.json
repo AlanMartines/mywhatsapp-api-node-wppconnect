@@ -76,6 +76,8 @@
     "socket.io": "^4.4.0",
     "socket.io-client": "^4.4.0",
     "spinnies": "^0.5.1",
+    "sequelize": "^6.12.5",
+    "sequelize-cli": "^6.3.0",
     "superagent": "^6.1.0",
     "superagent-queue": "0.0.3",
     "tree-kill": "^1.2.2",
