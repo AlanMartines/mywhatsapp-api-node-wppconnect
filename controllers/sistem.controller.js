@@ -1149,6 +1149,22 @@ var sendImageMassa = upload.fields([{
 }]);
 //
 router.post("/sendImageMassa", sendImageMassa, verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName) || !req.body.phonefull || !req.phonefull[0] || !req.fileimg[0] || !req.body.caption) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -1220,12 +1236,29 @@ router.post("/sendImageMassa", sendImageMassa, verifyToken.verify, async (req, r
 				"Status": sessionStatus
 			});
 	}
+}
 }); //sendImageMassa
 //
 // ------------------------------------------------------------------------------------------------//
 //
 // Enviar varia imagens
 router.post("/sendMultImage", upload.array('file', 50), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName) || !req.body.phonefull || !req.files || !req.body.caption) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -1283,6 +1316,7 @@ router.post("/sendMultImage", upload.array('file', 50), verifyToken.verify, asyn
 				"Status": sessionStatus
 			});
 	}
+}
 }); //sendMultImage
 //
 // ------------------------------------------------------------------------------------------------//
@@ -1293,10 +1327,26 @@ var sendMultImageMassa = upload.fields([{
 	maxCount: 1
 }, {
 	name: 'file',
-	maxCount: 30
+	maxCount: 50
 }]);
 //
 router.post("/sendMultImageMassa", sendMultImageMassa, verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName) || !req.body.phonefull || !req.files['phonefull'][0] || !req.files.file) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -1373,12 +1423,29 @@ router.post("/sendMultImageMassa", sendMultImageMassa, verifyToken.verify, async
 				"Status": sessionStatus
 			});
 	}
+}
 }); //sendMultImageMassa
 //
 // ------------------------------------------------------------------------------------------------//
 //
 // Enviar arquivo/documento
 router.post("/sendFile", upload.single('file'), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName) || !req.body.phonefull || !req.file || !req.body.caption) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -1425,12 +1492,29 @@ router.post("/sendFile", upload.single('file'), verifyToken.verify, async (req, 
 				"Status": sessionStatus
 			});
 	}
+}
 }); //sendFile
 //
 // ------------------------------------------------------------------------------------------------//
 //
 // Enviar arquivo/documento
 router.post("/sendFileBase64", upload.none(''), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName) || !req.body.phonefull || !req.body.base64 || !req.body.originalname || !req.body.caption) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -1476,12 +1560,29 @@ router.post("/sendFileBase64", upload.none(''), verifyToken.verify, async (req, 
 				"Status": sessionStatus
 			});
 	}
+}
 }); //sendFileBase64
 //
 // ------------------------------------------------------------------------------------------------//
 //
 // Enviar arquivo/documento
 router.post("/sendFileToBase64", upload.single('file'), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName) || !req.body.phonefull || !req.file || !req.body.caption ) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -1521,12 +1622,29 @@ router.post("/sendFileToBase64", upload.single('file'), verifyToken.verify, asyn
 				"Status": sessionStatus
 			});
 	}
+}
 }); //sendFileBase64
 //
 // ------------------------------------------------------------------------------------------------//
 //
 // Enviar arquivo/documento
 router.post("/sendFileFromBase64", upload.none(''), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName) || !req.body.phonefull || !req.body.base64 || !req.body.mimetype || !req.body.originalname || !req.body.caption) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -1566,6 +1684,7 @@ router.post("/sendFileFromBase64", upload.none(''), verifyToken.verify, async (r
 				"Status": sessionStatus
 			});
 	}
+}
 }); //sendFileFromBase64
 //
 // ------------------------------------------------------------------------------------------------//
@@ -1578,6 +1697,22 @@ router.post("/sendFileFromBase64", upload.none(''), verifyToken.verify, async (r
 //
 // Recuperar contatos
 router.post("/getAllContacts", upload.none(''), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName)) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -1599,12 +1734,29 @@ router.post("/getAllContacts", upload.none(''), verifyToken.verify, async (req, 
 				"Status": sessionStatus
 			});
 	}
+}
 }); //getAllContacts
 //
 // ------------------------------------------------------------------------------------------------------- //
 //
 // Recuperar grupos
 router.post("/getAllGroups", upload.none(''), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName)) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -1626,12 +1778,29 @@ router.post("/getAllGroups", upload.none(''), verifyToken.verify, async (req, re
 				"Status": sessionStatus
 			});
 	}
+}
 }); //getAllGroups
 //
 // ------------------------------------------------------------------------------------------------------- //
 //
 // Returns browser session token
 router.post("/getSessionTokenBrowser", upload.none(''), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName)) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -1653,12 +1822,29 @@ router.post("/getSessionTokenBrowser", upload.none(''), verifyToken.verify, asyn
 				"Status": sessionStatus
 			});
 	}
+}
 }); //getSessionTokenBrowser
 //
 // ------------------------------------------------------------------------------------------------------- //
 //
 // Chama sua lista de contatos bloqueados
 router.post("/getBlockList", upload.none(''), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName)) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -1680,12 +1866,29 @@ router.post("/getBlockList", upload.none(''), verifyToken.verify, async (req, re
 				"Status": sessionStatus
 			});
 	}
+}
 }); //getBlockList
 //
 // ------------------------------------------------------------------------------------------------//
 //
 // Recuperar status de contato
 router.post("/getStatus", upload.none(''), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName) || !req.body.phonefull) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -1721,12 +1924,29 @@ router.post("/getStatus", upload.none(''), verifyToken.verify, async (req, res, 
 				"Status": sessionStatus
 			});
 	}
+}
 }); //getStatus
 //
 // ------------------------------------------------------------------------------------------------------- //
 //
 // Obter o perfil do número
 router.post("/getNumberProfile", upload.none(''), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName) || !req.body.phonefull) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -1762,12 +1982,29 @@ router.post("/getNumberProfile", upload.none(''), verifyToken.verify, async (req
 				"Status": sessionStatus
 			});
 	}
+}
 }); //getNumberProfile
 //
 // ------------------------------------------------------------------------------------------------------- //
 //
 // Obter o perfil do número
 router.post("/getProfilePicFromServer", upload.none(''), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName) || !req.body.phonefull) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -1803,12 +2040,29 @@ router.post("/getProfilePicFromServer", upload.none(''), verifyToken.verify, asy
 				"Status": sessionStatus
 			});
 	}
+}
 }); //getProfilePicFromServer
 //
 // ------------------------------------------------------------------------------------------------------- //
 //
 // Verificar o status do número
 router.post("/checkNumberStatus", upload.none(''), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName) || !req.body.phonefull) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -1833,12 +2087,29 @@ router.post("/checkNumberStatus", upload.none(''), verifyToken.verify, async (re
 				"Status": sessionStatus
 			});
 	}
+}
 }); //checkNumberStatus
 //
 // ------------------------------------------------------------------------------------------------------- //
 //
 // Verificar o status do número em massa
 router.post("/checkNumberStatusMassa", upload.single('file'), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName) || !req.file) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -1890,6 +2161,7 @@ router.post("/checkNumberStatusMassa", upload.single('file'), verifyToken.verify
 				"Status": sessionStatus
 			});
 	}
+}
 }); //checkNumberStatusMassa
 //
 // ------------------------------------------------------------------------------------------------------- //
@@ -1902,6 +2174,22 @@ router.post("/checkNumberStatusMassa", upload.single('file'), verifyToken.verify
 //
 //Enviar Texto em Grupo
 router.post("/sendTextGrupo", upload.none(''), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName) || !req.body.groupId || !req.body.msg) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -1927,13 +2215,29 @@ router.post("/sendTextGrupo", upload.none(''), verifyToken.verify, async (req, r
 				"Status": sessionStatus
 			});
 	}
+}
 }); //sendTextGrupo
-
 //
 // ------------------------------------------------------------------------------------------------//
 //
 //Enviar localização no grupo
 router.post("/sendLocationGroup", upload.none(''), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName) || !req.body.groupId || !req.body.lat || !req.body.long || !req.body.local) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -1961,12 +2265,29 @@ router.post("/sendLocationGroup", upload.none(''), verifyToken.verify, async (re
 				"Status": sessionStatus
 			});
 	}
+}
 }); //sendLocationGroup
 //
 // ------------------------------------------------------------------------------------------------//
 //
 // Enviar imagen no grupo
 router.post("/sendImageGroup", upload.single('file'), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName) || !req.body.groupId || !req.file || !req.body.caption) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -2002,12 +2323,29 @@ router.post("/sendImageGroup", upload.single('file'), verifyToken.verify, async 
 				"Status": sessionStatus
 			});
 	}
+}
 }); //sendImageGroup
 //
 // ------------------------------------------------------------------------------------------------//
 //
 // Enviar arquivo/documento
 router.post("/sendFileGroup", upload.single('file'), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName) || !req.body.groupId || !req.file || !req.body.caption) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -2042,12 +2380,29 @@ router.post("/sendFileGroup", upload.single('file'), verifyToken.verify, async (
 				"Status": sessionStatus
 			});
 	}
+}
 }); //sendFileGroup
 //
 // ------------------------------------------------------------------------------------------------//
 //
 // Enviar arquivo/documento
 router.post("/sendFileBase64Group", upload.none(''), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName) || !req.body.groupId || !req.body.base64 || !req.body.originalname || !req.body.caption) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -2082,12 +2437,29 @@ router.post("/sendFileBase64Group", upload.none(''), verifyToken.verify, async (
 				"Status": sessionStatus
 			});
 	}
+}
 }); //sendFileBase64Group
 //
 // ------------------------------------------------------------------------------------------------//
 //
 // Enviar arquivo/documento
 router.post("/sendFileToBase64Group", upload.single('file'), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName) || !req.body.groupId || !req.file || !req.body.caption ) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -2116,12 +2488,29 @@ router.post("/sendFileToBase64Group", upload.single('file'), verifyToken.verify,
 				"Status": sessionStatus
 			});
 	}
+}
 }); //sendFileToBase64Group
 //
 // ------------------------------------------------------------------------------------------------------- //
 //
 // Enviar arquivo/documento
 router.post("/sendFileFromBase64Group", upload.none(''), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName) || !req.body.groupId || !req.body.base64 || !req.body.mimetype || !req.body.originalname || !req.body.caption) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -2150,9 +2539,29 @@ router.post("/sendFileFromBase64Group", upload.none(''), verifyToken.verify, asy
 				"Status": sessionStatus
 			});
 	}
+}
 }); //sendFileFromBase64Group
+//
+// ------------------------------------------------------------------------------------------------------- //
+//
 //Deixar o grupo
 router.post("/leaveGroup", upload.none(''), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName) || !req.body.groupId) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -2175,13 +2584,44 @@ router.post("/leaveGroup", upload.none(''), verifyToken.verify, async (req, res,
 				"Status": sessionStatus
 			});
 	}
+}
 }); //leaveGroup
 //
 // ------------------------------------------------------------------------------------------------------- //
 //
+// Criar grupo (título, participantes a adicionar)
 router.post("/createGroup", upload.single('file'), verifyToken.verify, async (req, res, next) => {
 	//
-	// Criar grupo (título, participantes a adicionar)
+	if (!removeWithspace(req.body.SessionName) || !req.body.title || !req.file) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
+		if (req.body.title.length >= 25) {
+			var validate = {
+				result: "info",
+				state: 'FAILURE',
+				status: 'notProvided',
+				message: 'O nome do grupo não pode exceder 25 caracter.'
+			};
+			//
+			res.setHeader('Content-Type', 'application/json');
+			res.status(400).json({
+				"Status": validate
+			});
+			//
+		}
+		//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -2243,12 +2683,29 @@ router.post("/createGroup", upload.single('file'), verifyToken.verify, async (re
 				"Status": sessionStatus
 			});
 	}
+}
 }); //createGroup
 //
 // ------------------------------------------------------------------------------------------------//
 //
 // Obtenha membros do grupo
 router.post("/getGroupMembers", upload.none(''), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName) || !req.body.groupId) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -2271,12 +2728,29 @@ router.post("/getGroupMembers", upload.none(''), verifyToken.verify, async (req,
 				"Status": sessionStatus
 			});
 	}
+}
 }); //getGroupMembers
 //
 // ------------------------------------------------------------------------------------------------//
 //
 // Obter IDs de membros do grupo 
 router.post("/getGroupMembersIds", upload.none(''), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName) || !req.body.groupId) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -2299,6 +2773,7 @@ router.post("/getGroupMembersIds", upload.none(''), verifyToken.verify, async (r
 				"Status": sessionStatus
 			});
 	}
+}
 }); //getGroupMembersIds
 //
 // ------------------------------------------------------------------------------------------------//
@@ -2306,7 +2781,21 @@ router.post("/getGroupMembersIds", upload.none(''), verifyToken.verify, async (r
 // Gerar link de url de convite de grupo
 router.post("/getGroupInviteLink", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
-	// Gerar link de url de convite de grupo
+	if (!removeWithspace(req.body.SessionName) || !req.body.groupId) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -2329,12 +2818,44 @@ router.post("/getGroupInviteLink", upload.none(''), verifyToken.verify, async (r
 				"Status": sessionStatus
 			});
 	}
+}
 }); //getGroupInviteLink
 //
 // ------------------------------------------------------------------------------------------------//
 //
 // Criar grupo (título, participantes a adicionar)
 router.post("/createGroupSetAdminMembers", upload.single('file'), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName) || !req.body.title || !req.file) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
+		if (req.body.title.length >= 25) {
+			var validate = {
+				result: "info",
+				state: 'FAILURE',
+				status: 'notProvided',
+				message: 'O nome do grupo não pode exceder 25 caracter.'
+			};
+			//
+			res.setHeader('Content-Type', 'application/json');
+			res.status(400).json({
+				"Status": validate
+			});
+			//
+		}
+		//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -2420,12 +2941,44 @@ router.post("/createGroupSetAdminMembers", upload.single('file'), verifyToken.ve
 				"Status": sessionStatus
 			});
 	}
+}
 }); //createGroupSetAdminMembers
 //
 // ------------------------------------------------------------------------------------------------//
 //
 // Criar grupo (título, participantes a adicionar)
 router.post("/createCountGroupSetAdminMembers", upload.single('file'), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName) || !req.body.title || !req.file) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
+		if (req.body.title.length >= 22) {
+			var validate = {
+				result: "info",
+				state: 'FAILURE',
+				status: 'notProvided',
+				message: 'O nome do grupo não pode exceder 25 caracter.'
+			};
+			//
+			res.setHeader('Content-Type', 'application/json');
+			res.status(400).json({
+				"Status": validate
+			});
+			//
+		}
+		//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -2519,12 +3072,28 @@ router.post("/createCountGroupSetAdminMembers", upload.single('file'), verifyTok
 				"Status": sessionStatus
 			});
 	}
+}
 }); //createCountGroupSetAdminMembers
 //
 // ------------------------------------------------------------------------------------------------//
 //
 router.post("/removeParticipant", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
+	if (!removeWithspace(req.body.SessionName) || !req.body.groupId || !req.body.phonefull ) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
 	// Remove participante
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
@@ -2561,13 +3130,29 @@ router.post("/removeParticipant", upload.none(''), verifyToken.verify, async (re
 				"Status": sessionStatus
 			});
 	}
+}
 }); //removeParticipant
 //
 // ------------------------------------------------------------------------------------------------//
 //
+// Adicionar participante
 router.post("/addParticipant", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
-	// Adicionar participante
+	if (!removeWithspace(req.body.SessionName) || !req.body.groupId || !req.body.phonefull ) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -2603,13 +3188,29 @@ router.post("/addParticipant", upload.none(''), verifyToken.verify, async (req, 
 				"Status": sessionStatus
 			});
 	}
+}
 }); //addParticipant
 //
 // ------------------------------------------------------------------------------------------------//
 //
+// Promote participant (Give admin privileges)
 router.post("/promoteParticipant", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
-	// Promote participant (Give admin privileges)
+	if (!removeWithspace(req.body.SessionName) || !req.body.groupId || !req.body.phonefull ) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -2645,12 +3246,29 @@ router.post("/promoteParticipant", upload.none(''), verifyToken.verify, async (r
 				"Status": sessionStatus
 			});
 	}
+}
 }); //promoteParticipant
 //
 // ------------------------------------------------------------------------------------------------//
 //
 // Depromote participant (Give admin privileges)
 router.post("/demoteParticipant", upload.none(''), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName) || !req.body.groupId || !req.body.phonefull ) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -2686,12 +3304,44 @@ router.post("/demoteParticipant", upload.none(''), verifyToken.verify, async (re
 				"Status": sessionStatus
 			});
 	}
+}
 }); //demoteParticipant
 //
 // ------------------------------------------------------------------------------------------------//
 //
 // Retorna o status do grupo, jid, descrição do link de convite
 router.post("/getGroupInfoFromInviteLink", upload.none(''), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName) || !req.body.InviteLink ) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
+		if (!validUrl.isUri(req.body.link)){
+			var validate = {
+				result: "error",
+				state: 'FAILURE',
+				status: 'notProvided',
+				message: 'O link informado é invalido, corrija e tente novamente.'
+			};
+			//
+			res.setHeader('Content-Type', 'application/json');
+			res.status(400).json({
+				"Status": validate
+			});
+			//
+		}
+	//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -2714,13 +3364,44 @@ router.post("/getGroupInfoFromInviteLink", upload.none(''), verifyToken.verify, 
 				"Status": sessionStatus
 			});
 	}
+}
 }); //getGroupInfoFromInviteLink
 //
 // ------------------------------------------------------------------------------------------------//
 //
+// Junte-se a um grupo usando o código de convite do grupo
 router.post("/joinGroup", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
-	// Junte-se a um grupo usando o código de convite do grupo
+	if (!removeWithspace(req.body.SessionName) || !req.body.InviteLink ) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
+		if (!validUrl.isUri(req.body.link)){
+			var validate = {
+				result: "error",
+				state: 'FAILURE',
+				status: 'notProvided',
+				message: 'O link informado é invalido, corrija e tente novamente.'
+			};
+			//
+			res.setHeader('Content-Type', 'application/json');
+			res.status(400).json({
+				"Status": validate
+			});
+			//
+		}
+	//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -2743,6 +3424,7 @@ router.post("/joinGroup", upload.none(''), verifyToken.verify, async (req, res, 
 				"Status": sessionStatus
 			});
 	}
+}
 }); //joinGroup
 //
 // ------------------------------------------------------------------------------------------------//
@@ -2752,10 +3434,25 @@ router.post("/joinGroup", upload.none(''), verifyToken.verify, async (req, res, 
 ╠═╝├┬┘│ │├┤ ││  ├┤   ╠╣ │ │││││   │ ││ ││││└─┐           
 ╩  ┴└─└─┘└  ┴┴─┘└─┘  ╚  └─┘┘└┘└─┘ ┴ ┴└─┘┘└┘└─┘           
 */
-//
-router.post("/setProfileStatus", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	// Set client status
+router.post("/setProfileStatus", upload.none(''), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName) || !req.body.ProfileStatus ) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -2778,13 +3475,29 @@ router.post("/setProfileStatus", upload.none(''), verifyToken.verify, async (req
 				"Status": sessionStatus
 			});
 	}
+}
 }); //setProfileStatus
 //
 // ------------------------------------------------------------------------------------------------//
-//
-router.post("/setProfileName", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	// Set client profile name
+router.post("/setProfileName", upload.none(''), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName) || !req.body.ProfileName ) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -2807,11 +3520,28 @@ router.post("/setProfileName", upload.none(''), verifyToken.verify, async (req, 
 				"Status": sessionStatus
 			});
 	}
+}
 }); //setProfileName
 //
 // ------------------------------------------------------------------------------------------------//
 //
 router.post("/setProfilePic", upload.single('file'), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName) || !req.file ) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -2841,6 +3571,7 @@ router.post("/setProfilePic", upload.single('file'), verifyToken.verify, async (
 				"Status": sessionStatus
 			});
 	}
+}
 }); //setProfilePic
 //
 // ------------------------------------------------------------------------------------------------//
@@ -2853,6 +3584,22 @@ router.post("/setProfilePic", upload.single('file'), verifyToken.verify, async (
 //
 // Delete the Service Worker
 router.post("/killServiceWorker", upload.none(''), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName)) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -2873,12 +3620,29 @@ router.post("/killServiceWorker", upload.none(''), verifyToken.verify, async (re
 				"Status": sessionStatus
 			});
 	}
+}
 }); //killServiceWorker
 //
 // ------------------------------------------------------------------------------------------------//
 //
 // Load the service again
 router.post("/restartService", upload.none(''), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName)) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -2899,12 +3663,29 @@ router.post("/restartService", upload.none(''), verifyToken.verify, async (req, 
 				"Status": sessionStatus
 			});
 	}
+}
 }); //restartService
 //
 // ------------------------------------------------------------------------------------------------//
 //
 // Reload do whatsapp web
 router.post("/reloadService", upload.none(''), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName)) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -2978,12 +3759,29 @@ router.post("/reloadService", upload.none(''), verifyToken.verify, async (req, r
 				"Status": sessionStatus
 			});
 	}
+}
 }); //reloadService
 //
 // ------------------------------------------------------------------------------------------------//
 //
 // Get device info
 router.post("/getHostDevice", upload.none(''), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName)) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -3005,12 +3803,29 @@ router.post("/getHostDevice", upload.none(''), verifyToken.verify, async (req, r
 				"Status": sessionStatus
 			});
 	}
+}
 }); //getHostDevice
 //
 // ------------------------------------------------------------------------------------------------//
 //
 // Get is multi device info
 router.post("/isMultiDevice", upload.none(''), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName)) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -3032,12 +3847,29 @@ router.post("/isMultiDevice", upload.none(''), verifyToken.verify, async (req, r
 				"Status": sessionStatus
 			});
 	}
+}
 }); //isMultiDevice
 //
 // ------------------------------------------------------------------------------------------------//
 //
 // Get connection state
 router.post("/getConnectionState", upload.none(''), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName)) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -3057,12 +3889,29 @@ router.post("/getConnectionState", upload.none(''), verifyToken.verify, async (r
 				"Status": sessionStatus
 			});
 	}
+}
 }); //getConnectionState
 //
 // ------------------------------------------------------------------------------------------------//
 //
 // Get battery level
 router.post("/getBatteryLevel", upload.none(''), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName)) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -3083,6 +3932,7 @@ router.post("/getBatteryLevel", upload.none(''), verifyToken.verify, async (req,
 				"Status": sessionStatus
 			});
 	}
+}
 }); //getBatteryLevel
 //
 // ------------------------------------------------------------------------------------------------//
@@ -3114,6 +3964,22 @@ router.post("/isConnected", upload.none(''), verifyToken.verify, async (req, res
 //
 // Obter versão da web do Whatsapp
 router.post("/getWAVersion", upload.none(''), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName)) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -3133,12 +3999,29 @@ router.post("/getWAVersion", upload.none(''), verifyToken.verify, async (req, re
 				"Status": sessionStatus
 			});
 	}
+}
 }); //getWAVersion
 //
 // ------------------------------------------------------------------------------------------------//
 //
 // Obter versão da web do Whatsapp
 router.post("/getWAVersion", upload.none(''), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName)) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -3158,12 +4041,29 @@ router.post("/getWAVersion", upload.none(''), verifyToken.verify, async (req, re
 				"Status": sessionStatus
 			});
 	}
+}
 }); //getWAVersion
 //
 // ------------------------------------------------------------------------------------------------//
 //
 // Inicia a verificação de conexão do telefone
 router.post("/startPhoneWatchdog", upload.none(''), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName) || !req.body.interval) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -3186,12 +4086,29 @@ router.post("/startPhoneWatchdog", upload.none(''), verifyToken.verify, async (r
 				"Status": sessionStatus
 			});
 	}
+}
 }); //startPhoneWatchdog
 //
 // ------------------------------------------------------------------------------------------------//
 //
 // Para a verificação de conexão do telefone
 router.post("/stopPhoneWatchdog", upload.none(''), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName)) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -3211,6 +4128,7 @@ router.post("/stopPhoneWatchdog", upload.none(''), verifyToken.verify, async (re
 				"Status": sessionStatus
 			});
 	}
+}
 }); //stopPhoneWatchdog
 //
 // ------------------------------------------------------------------------------------------------//
