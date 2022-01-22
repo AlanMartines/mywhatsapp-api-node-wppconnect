@@ -6,7 +6,7 @@
 
 Este projeto usa como base o [WPPConnect](https://github.com/wppconnect-team/wppconnect "WPPConnect"), um navegador virtual sem interface gráfica que abre o whatsapp web e executa todos os comandos via código possibilitando assim a automação de todas as funções.
 
-![](https://img.shields.io/github/stars/AlanMartines/mywhatsapp-api-node-wppconnect.svg) ![](https://img.shields.io/github/tag/AlanMartines/mywhatsapp-api-node-wppconnect.svg) ![](https://img.shields.io/github/v/release/AlanMartines/mywhatsapp-api-node-wppconnect.svg) ![](https://img.shields.io/github/issues/AlanMartines/mywhatsapp-api-node-wppconnect.svg) ![](https://img.shields.io/badge/node-v14.0-green) ![](https://img.shields.io/github/license/AlanMartines/mywhatsapp-api-node-wppconnect) ![](https://img.shields.io/github/downloads/AlanMartines/mywhatsapp-api-node-wppconnect/total) ![](https://img.shields.io/github/forks/AlanMartines/mywhatsapp-api-node-wppconnect) ![](https://img.shields.io/badge/all_contributors-54-orange.svg?style=flat-square)
+![](https://img.shields.io/github/stars/AlanMartines/mywhatsapp-api-node-wppconnect.svg) ![](https://img.shields.io/github/tag/AlanMartines/mywhatsapp-api-node-wppconnect.svg) ![](https://img.shields.io/github/v/release/AlanMartines/mywhatsapp-api-node-wppconnect.svg) ![](https://img.shields.io/github/issues/AlanMartines/mywhatsapp-api-node-wppconnect.svg) ![](https://img.shields.io/badge/node-v14.0-green) ![](https://img.shields.io/github/license/AlanMartines/mywhatsapp-api-node-wppconnect) ![](https://img.shields.io/github/downloads/AlanMartines/mywhatsapp-api-node-wppconnect/total) ![](https://img.shields.io/github/forks/AlanMartines/mywhatsapp-api-node-wppconnect)
 
 ## Nota
 
