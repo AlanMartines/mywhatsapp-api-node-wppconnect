@@ -383,7 +383,7 @@ module.exports = class Sessions {
 			//
 			session.client = Sessions.initSession(SessionName, AuthorizationToken);
 			Sessions.setup(SessionName);
-		}  else {
+		} else {
 			console.log('- Nome da sessão:', session.name);
 			console.log('- State do sistema:', session.state);
 			console.log('- Status da sessão:', session.status);
@@ -466,8 +466,10 @@ module.exports = class Sessions {
 		}
 		//
 		const client = await wppconnect.create({
-			session: session.name,
-			catchQR: async (base64Qrimg, asciiQR, attempts, urlCode) => {
+			session: SessionName,
+			catchQR: (base64Qr, asciiQR, attempts, urlCode) => {
+			},
+			statusFind: (statusSession, session) => {
 				//
 				console.log("- Saudação:", await saudacao());
 				//
@@ -482,7 +484,7 @@ module.exports = class Sessions {
 				//
 				console.log("- Captura do QR-Code");
 				//console.log(base64Qrimg);
-				session.qrcode = base64Qrimg;
+				session.qrcode = base64Qr;
 				//
 				console.log("- Captura do asciiQR");
 				// Registrar o QR no terminal
@@ -502,73 +504,6 @@ module.exports = class Sessions {
 				const imageBuffer = Buffer.from(qrCode, 'base64');
 				//
 			},
-			// statusFind
-			statusFind: async (statusSession, session_wppconnect) => {
-				console.log('- Status da sessão:', statusSession);
-				//return isLogged || notLogged || browserClose || qrReadSuccess || qrReadFail || autocloseCalled || desconnectedMobile || deleteToken
-				//Create session wss return "serverClose" case server for close
-				console.log('- Session name: ', session_wppconnect);
-				//
-				//
-				switch (statusSession) {
-					case 'isLogged':
-					case 'qrReadSuccess':
-					case 'inChat':
-					case 'chatsAvailable':
-						session.result = "success";
-						session.state = "CONNECTED";
-						session.status = statusSession
-						session.qrcode = null;
-						session.CodeasciiQR = null;
-						session.CodeurlCode = null;
-						session.message = "Sistema iniciado e disponivel para uso";
-						//
-						await updateStateDb(session.state, session.status, session.AuthorizationToken);
-						//
-						break;
-					case 'autocloseCalled':
-					case 'browserClose':
-					case 'serverClose':
-					case 'autocloseCalled':
-						session.result = "info";
-						session.state = "CLOSED";
-						session.status = statusSession;
-						session.qrcode = null;
-						session.CodeasciiQR = null;
-						session.CodeurlCode = null;
-						session.message = "Sistema fechado";
-						//
-						await updateStateDb(session.state, session.status, session.AuthorizationToken);
-						//
-						break;
-					case 'qrReadFail':
-					case 'notLogged':
-					case 'deviceNotConnected':
-					case 'desconnectedMobile':
-					case 'deleteToken':
-						//session.client = false;
-						session.result = "info";
-						session.state = "DISCONNECTED";
-						session.status = statusSession;
-						session.qrcode = null;
-						session.message = "Dispositivo desconetado";
-						//
-						await updateStateDb(session.state, session.status, session.AuthorizationToken);
-						//
-						break;
-					default:
-						//session.client = false;
-						session.result = "info";
-						session.state = "DISCONNECTED";
-						session.status = statusSession;
-						session.qrcode = null;
-						session.message = "Dispositivo desconetado";
-						//
-						await updateStateDb(session.state, session.status, session.AuthorizationToken);
-					//
-				}
-			},
-			// options
 			whatsappVersion: `${config.WHATSAPPVERSION}`, // whatsappVersion: '2.2142.12',
 			deviceName: "My Whatsapp",
 			headless: true, // Headless chrome
@@ -577,73 +512,16 @@ module.exports = class Sessions {
 			debug: false, // Opens a debug session
 			logQR: parseInt(config.VIEW_QRCODE_TERMINAL), // Logs QR automatically in terminal
 			browserWS: '', // If u want to use browserWSEndpoint
-			browserArgs: [
-				'--log-level=3',
-				'--no-default-browser-check',
-				'--disable-site-isolation-trials',
-				'--no-experiments',
-				'--ignore-gpu-blacklist',
-				'--ignore-ssl-errors',
-				'--ignore-certificate-errors',
-				'--ignore-certificate-errors-spki-list',
-				'--disable-gpu',
-				'--disable-extensions',
-				'--disable-default-apps',
-				'--enable-features=NetworkService',
-				'--disable-setuid-sandbox',
-				'--no-sandbox',
-				// Extras
-				'--disable-webgl',
-				'--disable-threaded-animation',
-				'--disable-threaded-scrolling',
-				'--disable-in-process-stack-traces',
-				'--disable-histogram-customizer',
-				'--disable-gl-extensions',
-				'--disable-composited-antialiasing',
-				'--disable-canvas-aa',
-				'--disable-3d-apis',
-				'--disable-accelerated-2d-canvas',
-				'--disable-accelerated-jpeg-decoding',
-				'--disable-accelerated-mjpeg-decode',
-				'--disable-app-list-dismiss-on-blur',
-				'--disable-accelerated-video-decode',
-				'--disable-infobars',
-				'--window-position=0,0',
-				'--ignore-certifcate-errors',
-				'--ignore-certifcate-errors-spki-list',
-				'--disable-dev-shm-usage',
-				'--disable-gl-drawing-for-tests',
-				'--incognito',
-				'--user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.105 Safari/537.36',
-				//Outros
-				'--disable-web-security',
-				'--aggressive-cache-discard',
-				'--disable-cache',
-				'--disable-application-cache',
-				'--disable-offline-load-stale-cache',
-				'--disk-cache-size=0',
-				'--disable-background-networking',
-				'--disable-sync',
-				'--disable-translate',
-				'--hide-scrollbars',
-				'--metrics-recording-only',
-				'--mute-audio',
-				'--no-first-run',
-				'--safebrowsing-disable-auto-update',
-			],
+			browserArgs: [''], // Parameters to be added into the chrome browser instance
 			puppeteerOptions: {
 				userDataDir: `${config.TOKENSPATCH}/WPP-${SessionName}`, // or your custom directory
 			},
-			//executablePath: '/usr/bin/chromium-browser',
-			disableSpins: true, // Will disable Spinnies animation, useful for containers (docker) for a better log
-			disableWelcome: false, // Will disable the welcoming message which appears in the beginning
+			puppeteerOptions: {}, // Will be passed to puppeteer.launch
+			disableWelcome: false, // Option to disable the welcoming message which appears in the beginning
 			updatesLog: true, // Logs info updates automatically in terminal
-			//refreshQR: 15000, // Will refresh QR every 15 seconds, 0 will load QR once. Default is 30 seconds
-			autoClose: false, // Will auto close automatically if not synced, 'false' won't auto close. Default is 60 seconds (#Important!!! Will automatically set 'refreshQR' to 1000#)
+			autoClose: 30000, // Automatically closes the wppconnect only when scanning the QR code (default 60 seconds, if you want to turn it off, assign 0 or false)
 			tokenStore: 'file', // Define how work with tokens, that can be a custom interface
-			folderNameToken: config.TOKENSPATCH //folder name when saving tokens
-			//createPathFileToken: true, //creates a folder when inserting an object in the client's browser, to work it is necessary to pass the parameters in the function create browserSessionToken
-			//sessionToken: loadAuthInfo(config.TOKENSPATCH, SessionName)
+			folderNameToken: config.TOKENSPATCH, //folder name when saving tokens
 		});
 		// Levels: 'error', 'warn', 'info', 'http', 'verbose', 'debug', 'silly'
 		// All logs: 'silly'
