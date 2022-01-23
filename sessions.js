@@ -465,6 +465,7 @@ module.exports = class Sessions {
 			//
 		}
 		//
+		try{
 		const client = await wppconnect.create({
 			session: SessionName,
 			catchQR: async (base64Qr, asciiQR, attempts, urlCode) => {
@@ -649,6 +650,9 @@ module.exports = class Sessions {
 		session.browserSessionToken = browserSessionToken;
 		//
 		return client;
+	} catch (error) {
+		console.log("- Instância não criada:", error.message);
+	}
 	} //initSession
 	//
 	// ------------------------------------------------------------------------------------------------//
