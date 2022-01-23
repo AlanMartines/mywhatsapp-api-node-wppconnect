@@ -467,13 +467,11 @@ module.exports = class Sessions {
 		//
 		const client = await wppconnect.create({
 			session: SessionName,
-			catchQR: (base64Qr, asciiQR, attempts, urlCode) => {
-			},
-			statusFind: (statusSession, session) => {
+			catchQR: async (base64Qr, asciiQR, attempts, urlCode) => {
 				//
 				console.log("- Saudação:", await saudacao());
 				//
-				console.log('- Nome da sessão:', session.name);
+				console.log('- Nome da sessão:', SessionName);
 				//
 				session.state = "QRCODE";
 				session.status = "qrRead";
@@ -503,6 +501,71 @@ module.exports = class Sessions {
 				var qrCode = base64Qrimg.replace('data:image/png;base64,', '');
 				const imageBuffer = Buffer.from(qrCode, 'base64');
 				//
+			},
+			statusFind: async (statusSession, session_wppconnect) => {
+				console.log('- Status da sessão:', statusSession);
+				//return isLogged || notLogged || browserClose || qrReadSuccess || qrReadFail || autocloseCalled || desconnectedMobile || deleteToken
+				//Create session wss return "serverClose" case server for close
+				console.log('- Session name: ', session_wppconnect);
+				//
+				//
+				switch (statusSession) {
+					case 'isLogged':
+					case 'qrReadSuccess':
+					case 'inChat':
+					case 'chatsAvailable':
+						session.result = "success";
+						session.state = "CONNECTED";
+						session.status = statusSession
+						session.qrcode = null;
+						session.CodeasciiQR = null;
+						session.CodeurlCode = null;
+						session.message = "Sistema iniciado e disponivel para uso";
+						//
+						await updateStateDb(session.state, session.status, session.AuthorizationToken);
+						//
+						break;
+					case 'autocloseCalled':
+					case 'browserClose':
+					case 'serverClose':
+					case 'autocloseCalled':
+						session.result = "info";
+						session.state = "CLOSED";
+						session.status = statusSession;
+						session.qrcode = null;
+						session.CodeasciiQR = null;
+						session.CodeurlCode = null;
+						session.message = "Sistema fechado";
+						//
+						await updateStateDb(session.state, session.status, session.AuthorizationToken);
+						//
+						break;
+					case 'qrReadFail':
+					case 'notLogged':
+					case 'deviceNotConnected':
+					case 'desconnectedMobile':
+					case 'deleteToken':
+						//session.client = false;
+						session.result = "info";
+						session.state = "DISCONNECTED";
+						session.status = statusSession;
+						session.qrcode = null;
+						session.message = "Dispositivo desconetado";
+						//
+						await updateStateDb(session.state, session.status, session.AuthorizationToken);
+						//
+						break;
+					default:
+						//session.client = false;
+						session.result = "info";
+						session.state = "DISCONNECTED";
+						session.status = statusSession;
+						session.qrcode = null;
+						session.message = "Dispositivo desconetado";
+						//
+						await updateStateDb(session.state, session.status, session.AuthorizationToken);
+					//
+				}
 			},
 			whatsappVersion: `${config.WHATSAPPVERSION}`, // whatsappVersion: '2.2142.12',
 			deviceName: "My Whatsapp",
