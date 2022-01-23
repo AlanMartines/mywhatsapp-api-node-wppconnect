@@ -651,6 +651,11 @@ module.exports = class Sessions {
 			//
 			return client;
 		} catch (error) {
+			session.state = "CLOSE";
+			session.status = "notLogged";
+			session.qrcode = null;
+			session.attempts = 0;
+			session.message = 'Sistema desconectado';
 			console.log("- Instância não criada:", error.message);
 		}
 	} //initSession
