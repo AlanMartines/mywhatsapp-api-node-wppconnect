@@ -582,7 +582,7 @@ module.exports = class Sessions {
 			puppeteerOptions: {}, // Will be passed to puppeteer.launch
 			disableWelcome: false, // Option to disable the welcoming message which appears in the beginning
 			updatesLog: true, // Logs info updates automatically in terminal
-			autoClose: 30000, // Automatically closes the wppconnect only when scanning the QR code (default 60 seconds, if you want to turn it off, assign 0 or false)
+			autoClose: parseInt(config.AUTO_CLOSE), // Automatically closes the wppconnect only when scanning the QR code (default 60 seconds, if you want to turn it off, assign 0 or false)
 			tokenStore: 'file', // Define how work with tokens, that can be a custom interface
 			folderNameToken: config.TOKENSPATCH, //folder name when saving tokens
 		});
