@@ -498,7 +498,7 @@ module.exports = class Sessions {
 					await updateStateDb(session.state, session.status, session.AuthorizationToken);
 				}
 				//
-				var qrCode = base64Qrimg.replace('data:image/png;base64,', '');
+				var qrCode = base64Qr.replace('data:image/png;base64,', '');
 				const imageBuffer = Buffer.from(qrCode, 'base64');
 				//
 			},
