@@ -43,9 +43,9 @@ async function osplatform() {
 	}
 	//
 	console.log("- Sistema operacional", opsys) // I don't know what linux is.
-	//console.log("-", os.type());
-	//console.log("-", os.release());
-	//console.log("-", os.platform());
+	console.log("-", os.type());
+	console.log("-", os.release());
+	console.log("-", os.platform());
 	//
 	return opsys;
 }
@@ -368,7 +368,22 @@ module.exports = class Sessions {
 			//
 			session.client = Sessions.initSession(SessionName, AuthorizationToken);
 			Sessions.setup(SessionName);
-		} else {
+		} else if (["NOTFOUND"].includes(session.state)) {
+			//restart session
+			session.state = "CLOSE";
+			session.status = "notLogged";
+			session.qrcode = null;
+			session.attempts = 0;
+			session.message = 'Sistema desconectado';
+			session.prossesid = null;
+			//
+			console.log('- Nome da sessão:', session.name);
+			console.log('- State do sistema:', session.state);
+			console.log('- Status da sessão:', session.status);
+			//
+			session.client = Sessions.initSession(SessionName, AuthorizationToken);
+			Sessions.setup(SessionName);
+		}  else {
 			console.log('- Nome da sessão:', session.name);
 			console.log('- State do sistema:', session.state);
 			console.log('- Status da sessão:', session.status);
