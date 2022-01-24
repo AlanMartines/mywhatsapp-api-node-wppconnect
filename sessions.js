@@ -320,7 +320,6 @@ module.exports = class Sessions {
 
 		if (session == false) {
 			//create new session
-			//
 			session = await Sessions.addSesssion(SessionName, AuthorizationToken);
 		} else if (["CLOSED"].includes(session.state)) {
 			//restart session
@@ -336,8 +335,11 @@ module.exports = class Sessions {
 			console.log('- State do sistema:', session.state);
 			console.log('- Status da sessão:', session.status);
 			//
+			/*
 			session.client = Sessions.initSession(SessionName, AuthorizationToken);
 			Sessions.setup(SessionName);
+			*/
+			session = await Sessions.addSesssion(SessionName, AuthorizationToken);
 		} else if (["CONFLICT", "UNPAIRED", "UNLAUNCHED", "UNPAIRED_IDLE"].includes(session.state)) {
 			session.state = "CLOSED";
 			session.status = 'notLogged';
@@ -366,8 +368,11 @@ module.exports = class Sessions {
 			console.log('- State do sistema:', session.state);
 			console.log('- Status da sessão:', session.status);
 			//
+			/*
 			session.client = Sessions.initSession(SessionName, AuthorizationToken);
 			Sessions.setup(SessionName);
+			*/
+			session = await Sessions.addSesssion(SessionName, AuthorizationToken);
 		} else if (["NOTFOUND"].includes(session.state)) {
 			//restart session
 			session.state = "CLOSE";
@@ -381,8 +386,11 @@ module.exports = class Sessions {
 			console.log('- State do sistema:', session.state);
 			console.log('- Status da sessão:', session.status);
 			//
+			/*
 			session.client = Sessions.initSession(SessionName, AuthorizationToken);
 			Sessions.setup(SessionName);
+			*/
+			session = await Sessions.addSesssion(SessionName, AuthorizationToken);
 		} else {
 			console.log('- Nome da sessão:', session.name);
 			console.log('- State do sistema:', session.state);
