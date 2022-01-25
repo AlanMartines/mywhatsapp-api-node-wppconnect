@@ -1,15 +1,19 @@
 //
-const validator = require('json-file-validator').full;
+const validatorFull = require('json-file-validator').full;
+const validatorBasic = require('json-file-validator').basic;
 //
 exports.verify = async (req, res, next) => {
 	//
 	try {
 	//
-	console.log("Validator", req.body);
+	console.log("Validator:\n", req.body);
 	//
-	let result = content.match(validator);
 	let content = req.body;
-	console.log((result) ? true : false);
+	let resultFull = content.match(validatorFull);
+	let resultBasic = validatorBasic.test(content);
+	//
+	console.log("- resultFull:", resultFull);
+	console.log("- resultBasic:", resultBasic);
 	//
 	} catch (error) {
 	//
