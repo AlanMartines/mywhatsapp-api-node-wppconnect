@@ -2,6 +2,7 @@
 //
 const validatorFull = require('json-file-validator').full;
 const validatorBasic = require('json-file-validator').basic;
+const { body, validationResult } = require('express-validator');
 //
 exports.verify = async (req, res, next) => {
 	//
@@ -9,10 +10,11 @@ exports.verify = async (req, res, next) => {
 	//
 	try {
 		//
-		let content = req.body;
-		let resultBasic = validatorBasic.test(content);
+		//let content = req.body;
+		//let resultBasic = validatorBasic.test(content);
+		const errors = validationResult(req);
 		//
-		if (!resultBasic) {
+		if (!errors.isEmpty()) {
 			next();
 		} else {
 			res.setHeader('Content-Type', 'application/json');
