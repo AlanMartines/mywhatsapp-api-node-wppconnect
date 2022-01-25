@@ -14,7 +14,8 @@ exports.verify = async (req, res, next) => {
 		//let resultBasic = validatorBasic.test(content);
 		const errors = validationResult(req);
 		//
-		if (!errors.isEmpty()) {
+		//if (!errors.isEmpty()) {
+		if (!resultBasic) {
 			next();
 		} else {
 			res.setHeader('Content-Type', 'application/json');
