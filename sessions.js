@@ -335,11 +335,8 @@ module.exports = class Sessions {
 			console.log('- State do sistema:', session.state);
 			console.log('- Status da sessão:', session.status);
 			//
-			/*
 			session.client = Sessions.initSession(SessionName, AuthorizationToken);
 			Sessions.setup(SessionName);
-			*/
-			session = await Sessions.addSesssion(SessionName, AuthorizationToken);
 		} else if (["CONFLICT", "UNPAIRED", "UNLAUNCHED", "UNPAIRED_IDLE"].includes(session.state)) {
 			session.state = "CLOSED";
 			session.status = 'notLogged';
@@ -368,11 +365,8 @@ module.exports = class Sessions {
 			console.log('- State do sistema:', session.state);
 			console.log('- Status da sessão:', session.status);
 			//
-			/*
 			session.client = Sessions.initSession(SessionName, AuthorizationToken);
 			Sessions.setup(SessionName);
-			*/
-			session = await Sessions.addSesssion(SessionName, AuthorizationToken);
 		} else if (["NOTFOUND"].includes(session.state)) {
 			//restart session
 			session.state = "CLOSE";
@@ -386,11 +380,8 @@ module.exports = class Sessions {
 			console.log('- State do sistema:', session.state);
 			console.log('- Status da sessão:', session.status);
 			//
-			/*
 			session.client = Sessions.initSession(SessionName, AuthorizationToken);
 			Sessions.setup(SessionName);
-			*/
-			session = await Sessions.addSesssion(SessionName, AuthorizationToken);
 		} else {
 			console.log('- Nome da sessão:', session.name);
 			console.log('- State do sistema:', session.state);
@@ -726,6 +717,11 @@ module.exports = class Sessions {
 					if ('UNPAIRED'.includes(state)) console.log('- Logout');
 				});
 			} catch (error) {
+				session.state = "CLOSE";
+				session.status = "notLogged";
+				session.qrcode = null;
+				session.attempts = 0;
+				session.message = 'Sistema desconectado';
 				console.log("- Instância não iniciada:", error.message);
 			}
 			//
@@ -752,6 +748,11 @@ module.exports = class Sessions {
 					}
 				});
 			} catch (error) {
+				session.state = "CLOSE";
+				session.status = "notLogged";
+				session.qrcode = null;
+				session.attempts = 0;
+				session.message = 'Sistema desconectado';
 				console.log("- Error onMessage:", error.message);
 			}
 			//
@@ -761,6 +762,11 @@ module.exports = class Sessions {
 					client.sendText(call.peerJid, await saudacao() + ",\nDesculpe-me mas não consigo atender sua chamada, se for urgente manda msg de texto, grato.");
 				});
 			} catch (error) {
+				session.state = "CLOSE";
+				session.status = "notLogged";
+				session.qrcode = null;
+				session.attempts = 0;
+				session.message = 'Sistema desconectado';
 				console.log("- Error onIncomingCall:", error.message);
 			}
 			//
@@ -770,6 +776,11 @@ module.exports = class Sessions {
 					console.log('- Listen when client has been added to a group:', chatEvent.name);
 				});
 			} catch (error) {
+				session.state = "CLOSE";
+				session.status = "notLogged";
+				session.qrcode = null;
+				session.attempts = 0;
+				session.message = 'Sistema desconectado';
 				console.log("- Error onAddedToGroup:", error.message);
 			}
 			//
@@ -834,6 +845,11 @@ module.exports = class Sessions {
 					}
 				});
 			} catch (error) {
+				session.state = "CLOSE";
+				session.status = "notLogged";
+				session.qrcode = null;
+				session.attempts = 0;
+				session.message = 'Sistema desconectado';
 				console.log("- Error onAck:", error.message);
 			}
 		});
