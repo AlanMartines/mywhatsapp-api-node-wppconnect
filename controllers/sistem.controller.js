@@ -367,23 +367,6 @@ router.post("/QRCode", upload.none(''), verifyToken.verify, async (req, res, nex
 					});
 					//
 				}
-				/* 
-				else if (req.body.View === false) {
-					var getQRCode = {
-						result: 'error',
-						state: session.state,
-						status: session.status,
-						qrcode: session.qrcode,
-						message: 'Aguardando leitura do QR-Code'
-					};
-					//
-					res.setHeader('Content-Type', 'application/json');
-					res.status(200).json({
-						"Status": getQRCode
-					});
-					//
-				}
-				*/
 				//
 				break;
 			default:
@@ -490,7 +473,7 @@ router.post("/sendVoice", upload.single('file'), verifyToken.verify, async (req,
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				//
+				try{
 				var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
 				var filePath = path.join(folderName, req.file.originalname);
 				fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
@@ -519,6 +502,19 @@ router.post("/sendVoice", upload.single('file'), verifyToken.verify, async (req,
 				res.status(200).json({
 					"Status": sendVoice
 				});
+			} catch (error) {
+				//
+				var erroStatus = {
+					"erro": true,
+					"status": 404,
+					"message": "Erro ao enviar menssagem"
+				};
+				//
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": erroStatus
+				});
+			}
 				break;
 			default:
 				res.setHeader('Content-Type', 'application/json');
@@ -736,18 +732,20 @@ router.post("/sendContactVcardList", upload.single('file'), verifyToken.verify, 
 		case 'isLogged':
 		case 'chatsAvailable':
 			//
+				try{
+				var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
+				var filePath = path.join(folderName, req.file.originalname);
+				fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
+				console.log("- File:", filePath);
+				//
+			//
 			var checkNumberStatus = await Sessions.checkNumberStatus(
 				removeWithspace(req.body.SessionName),
 				soNumeros(req.body.phonefull).trim() + '@c.us'
 			);
 			//
 			if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
-				//
-				var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
-				var filePath = path.join(folderName, req.file.originalname);
-				fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
-				console.log("- File:", filePath);
-				//
+//
 				var arrayNumbers = fs.readFileSync(filePath, 'utf-8').toString().split(/\r?\n/);
 				//
 				var contactlistValid = [];
@@ -781,6 +779,19 @@ router.post("/sendContactVcardList", upload.single('file'), verifyToken.verify, 
 			res.status(200).json({
 				"Status": sendContactVcardList
 			});
+		} catch (error) {
+			//
+			var erroStatus = {
+				"erro": true,
+				"status": 404,
+				"message": "Erro ao enviar menssagem"
+			};
+			//
+			res.setHeader('Content-Type', 'application/json');
+			res.status(400).json({
+				"Status": erroStatus
+			});
+		}
 			break;
 		default:
 			res.setHeader('Content-Type', 'application/json');
@@ -880,6 +891,7 @@ router.post("/sendTextMassa", upload.single('file'), verifyToken.verify, async (
 			//
 			var sendTextMassa = [];
 			//
+			try{
 			var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
 			var filePath = path.join(folderName, req.file.originalname);
 			fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
@@ -923,6 +935,19 @@ router.post("/sendTextMassa", upload.single('file'), verifyToken.verify, async (
 			res.status(200).json({
 				"Status": sendTextMassa
 			});
+		} catch (error) {
+			//
+			var erroStatus = {
+				"erro": true,
+				"status": 404,
+				"message": "Erro ao enviar menssagem"
+			};
+			//
+			res.setHeader('Content-Type', 'application/json');
+			res.status(400).json({
+				"Status": erroStatus
+			});
+		}
 			break;
 		default:
 			res.setHeader('Content-Type', 'application/json');
@@ -1096,6 +1121,7 @@ router.post("/sendImage", upload.single('file'), verifyToken.verify, async (req,
 		case 'isLogged':
 		case 'chatsAvailable':
 			//
+			try{
 			var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
 			var filePath = path.join(folderName, req.file.originalname);
 			fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
@@ -1128,6 +1154,19 @@ router.post("/sendImage", upload.single('file'), verifyToken.verify, async (req,
 			res.status(200).json({
 				"Status": sendImage
 			});
+		} catch (error) {
+			//
+			var erroStatus = {
+				"erro": true,
+				"status": 404,
+				"message": "Erro ao enviar menssagem"
+			};
+			//
+			res.setHeader('Content-Type', 'application/json');
+			res.status(400).json({
+				"Status": erroStatus
+			});
+		}
 			break;
 		default:
 			res.setHeader('Content-Type', 'application/json');
@@ -1174,6 +1213,7 @@ router.post("/sendImageMassa", sendImageMassa, verifyToken.verify, async (req, r
 		case 'chatsAvailable':
 			//
 			//
+			try{
 			var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
 			var filePathContato = path.join(folderName, req.files['phonefull'][0].originalname);
 			fs.writeFileSync(filePathContato, req.files['phonefull'][0].buffer.toString('base64'), 'base64');
@@ -1230,6 +1270,19 @@ router.post("/sendImageMassa", sendImageMassa, verifyToken.verify, async (req, r
 			res.status(200).json({
 				"Status": sendImageMassa
 			});
+		} catch (error) {
+			//
+			var erroStatus = {
+				"erro": true,
+				"status": 404,
+				"message": "Erro ao enviar menssagem"
+			};
+			//
+			res.setHeader('Content-Type', 'application/json');
+			res.status(400).json({
+				"Status": erroStatus
+			});
+		}
 			break;
 		default:
 			res.setHeader('Content-Type', 'application/json');
@@ -1281,6 +1334,7 @@ router.post("/sendMultImage", upload.array('file', 50), verifyToken.verify, asyn
 				//
 				await forEach(resultsFiles, async (resultfile) => {
 					//
+					try{
 					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
 					var filePathImagem = path.join(folderName, resultfile.originalname);
 					fs.writeFileSync(filePathImagem, resultfile.buffer.toString('base64'), 'base64');
@@ -1300,6 +1354,22 @@ router.post("/sendMultImage", upload.array('file', 50), verifyToken.verify, asyn
 					//
 					await deletaArquivosTemp(filePathImagem);
 					//
+				} catch (error) {
+					//
+					var erroStatus = {
+						"erro": true,
+						"status": 404,
+						"number": checkNumberStatus.number,
+						"message": "Erro ao enviar menssagem"
+					};
+					//
+					sendMultImage.push(erroStatus);
+					//
+					await sleep(1000);
+					//
+					await deletaArquivosTemp(filePathImagem);
+					//
+				}
 				});
 			} else {
 				var sendMultImage = checkNumberStatus;
@@ -1358,6 +1428,7 @@ router.post("/sendMultImageMassa", sendMultImageMassa, verifyToken.verify, async
 			//
 			var resultsFilesImg = req.files.file;
 			//
+			try{
 			var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
 			var filePathContato = path.join(folderName, req.files['phonefull'][0].originalname);
 			fs.writeFileSync(filePathContato, req.files['phonefull'][0].buffer.toString('base64'), 'base64');
@@ -1381,6 +1452,7 @@ router.post("/sendMultImageMassa", sendMultImageMassa, verifyToken.verify, async
 						//
 						await forEach(resultsFilesImg, async (resultfile) => {
 							//
+							try{
 							var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
 							var filePathImagem = path.join(folderName, resultfile.originalname);
 							fs.writeFileSync(filePathImagem, resultfile.buffer.toString('base64'), 'base64');
@@ -1401,10 +1473,29 @@ router.post("/sendMultImageMassa", sendMultImageMassa, verifyToken.verify, async
 							//
 							await deletaArquivosTemp(filePathImagem);
 							//
+						} catch (error) {
+							//
+							var erroStatus = {
+								"erro": true,
+								"status": 404,
+								"number": checkNumberStatus.number,
+								"message": "Erro ao enviar menssagem"
+							};
+							//
+							//
+							sendMultImageMassa.push(erroStatus);
+							//
+							await sleep(1000);
+							//
+							//
+							await deletaArquivosTemp(filePathImagem);
+							//
+						}
 						});
 						//
 						await deletaArquivosTemp(filePathContato);
 						//
+						
 					} else {
 						var sendMultImageMassa = checkNumberStatus;
 					}
@@ -1417,6 +1508,19 @@ router.post("/sendMultImageMassa", sendMultImageMassa, verifyToken.verify, async
 			res.status(200).json({
 				"Status": sendMultImageMassa
 			});
+		} catch (error) {
+			//
+			var erroStatus = {
+				"erro": true,
+				"status": 404,
+				"message": "Erro ao enviar menssagem"
+			};
+			//
+			res.setHeader('Content-Type', 'application/json');
+			res.status(400).json({
+				"Status": erroStatus
+			});
+		}
 			break;
 		default:
 			res.setHeader('Content-Type', 'application/json');
@@ -1454,6 +1558,7 @@ router.post("/sendFile", upload.single('file'), verifyToken.verify, async (req, 
 		case 'isLogged':
 		case 'chatsAvailable':
 			//
+			try{
 			var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
 			var filePath = path.join(folderName, req.file.originalname);
 			fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
@@ -1486,6 +1591,19 @@ router.post("/sendFile", upload.single('file'), verifyToken.verify, async (req, 
 			res.status(200).json({
 				"Status": sendFile
 			});
+		} catch (error) {
+			//
+			var erroStatus = {
+				"erro": true,
+				"status": 404,
+				"message": "Erro ao enviar menssagem"
+			};
+			//
+			res.setHeader('Content-Type', 'application/json');
+			res.status(400).json({
+				"Status": erroStatus
+			});
+		}
 			break;
 		default:
 			res.setHeader('Content-Type', 'application/json');
@@ -1523,6 +1641,7 @@ router.post("/sendFileBase64", upload.none(''), verifyToken.verify, async (req, 
 		case 'isLogged':
 		case 'chatsAvailable':
 			//
+			try{
 			var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
 			var filePath = path.join(folderName, req.body.originalname);
 			fs.writeFileSync(filePath, req.body.base64, 'base64');
@@ -1554,6 +1673,19 @@ router.post("/sendFileBase64", upload.none(''), verifyToken.verify, async (req, 
 			res.status(200).json({
 				"Status": sendFileBase64
 			});
+		} catch (error) {
+			//
+			var erroStatus = {
+				"erro": true,
+				"status": 404,
+				"message": "Erro ao enviar menssagem"
+			};
+			//
+			res.setHeader('Content-Type', 'application/json');
+			res.status(400).json({
+				"Status": erroStatus
+			});
+		}
 			break;
 		default:
 			res.setHeader('Content-Type', 'application/json');
@@ -2296,6 +2428,7 @@ router.post("/sendImageGroup", upload.single('file'), verifyToken.verify, async 
 		case 'isLogged':
 		case 'chatsAvailable':
 			//
+			try{
 			var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
 			var filePath = path.join(folderName, req.file.originalname);
 			fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
@@ -2317,6 +2450,19 @@ router.post("/sendImageGroup", upload.single('file'), verifyToken.verify, async 
 			res.status(200).json({
 				"Status": sendImageGroup
 			});
+		} catch (error) {
+			//
+			var erroStatus = {
+				"erro": true,
+				"status": 404,
+				"message": "Erro ao enviar menssagem"
+			};
+			//
+			res.setHeader('Content-Type', 'application/json');
+			res.status(400).json({
+				"Status": erroStatus
+			});
+		}
 			break;
 		default:
 			res.setHeader('Content-Type', 'application/json');
@@ -2354,6 +2500,7 @@ router.post("/sendFileGroup", upload.single('file'), verifyToken.verify, async (
 		case 'isLogged':
 		case 'chatsAvailable':
 			//
+			try{
 			var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
 			var filePath = path.join(folderName, req.file.originalname);
 			fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
@@ -2374,6 +2521,19 @@ router.post("/sendFileGroup", upload.single('file'), verifyToken.verify, async (
 			res.status(200).json({
 				"Status": sendFileGroup
 			});
+		} catch (error) {
+			//
+			var erroStatus = {
+				"erro": true,
+				"status": 404,
+				"message": "Erro ao enviar menssagem"
+			};
+			//
+			res.setHeader('Content-Type', 'application/json');
+			res.status(400).json({
+				"Status": erroStatus
+			});
+		}
 			break;
 		default:
 			res.setHeader('Content-Type', 'application/json');
@@ -2411,6 +2571,7 @@ router.post("/sendFileBase64Group", upload.none(''), verifyToken.verify, async (
 		case 'isLogged':
 		case 'chatsAvailable':
 			//
+			try{
 			var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
 			var filePath = path.join(folderName, req.body.originalname);
 			fs.writeFileSync(filePath, req.body.base64, 'base64');
@@ -2431,6 +2592,19 @@ router.post("/sendFileBase64Group", upload.none(''), verifyToken.verify, async (
 			res.status(200).json({
 				"Status": sendFileBase64
 			});
+		} catch (error) {
+			//
+			var erroStatus = {
+				"erro": true,
+				"status": 404,
+				"message": "Erro ao enviar menssagem"
+			};
+			//
+			res.setHeader('Content-Type', 'application/json');
+			res.status(400).json({
+				"Status": erroStatus
+			});
+		}
 			break;
 		default:
 			res.setHeader('Content-Type', 'application/json');
@@ -2630,7 +2804,7 @@ router.post("/createGroup", upload.single('file'), verifyToken.verify, async (re
 		case 'isLogged':
 		case 'chatsAvailable':
 			//
-			//
+			try{
 			var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
 			var filePath = path.join(folderName, req.file.originalname);
 			fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
@@ -2677,6 +2851,19 @@ router.post("/createGroup", upload.single('file'), verifyToken.verify, async (re
 			res.status(200).json({
 				"Status": createGroup
 			});
+		} catch (error) {
+			//
+			var erroStatus = {
+				"erro": true,
+				"status": 404,
+				"message": "Erro ao criar grupo"
+			};
+			//
+			res.setHeader('Content-Type', 'application/json');
+			res.status(400).json({
+				"Status": erroStatus
+			});
+		}
 			break;
 		default:
 			res.setHeader('Content-Type', 'application/json');
@@ -2866,6 +3053,7 @@ router.post("/createGroupSetAdminMembers", upload.single('file'), verifyToken.ve
 			//
 			var createGroupSetAdminMembers = [];
 			//
+			try{
 			var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
 			var filePath = path.join(folderName, req.file.originalname);
 			fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
@@ -2935,6 +3123,19 @@ router.post("/createGroupSetAdminMembers", upload.single('file'), verifyToken.ve
 			res.status(200).json({
 				"Status": createGroupSetAdminMembers
 			});
+		} catch (error) {
+			//
+			var erroStatus = {
+				"erro": true,
+				"status": 404,
+				"message": "Erro ao criar grupo"
+			};
+			//
+			res.setHeader('Content-Type', 'application/json');
+			res.status(400).json({
+				"Status": erroStatus
+			});
+		}
 			break;
 		default:
 			res.setHeader('Content-Type', 'application/json');
@@ -2990,6 +3191,7 @@ router.post("/createCountGroupSetAdminMembers", upload.single('file'), verifyTok
 			var createCountGroupSetAdminMembers = [];
 			var createGroup = [];
 			//
+			try{
 			var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
 			var filePath = path.join(folderName, req.file.originalname);
 			fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
@@ -3066,6 +3268,19 @@ router.post("/createCountGroupSetAdminMembers", upload.single('file'), verifyTok
 			res.status(200).json({
 				"Status": createGroup
 			});
+		} catch (error) {
+			//
+			var erroStatus = {
+				"erro": true,
+				"status": 404,
+				"message": "Erro ao criar grupo"
+			};
+			//
+			res.setHeader('Content-Type', 'application/json');
+			res.status(400).json({
+				"Status": erroStatus
+			});
+		}
 			break;
 		default:
 			res.setHeader('Content-Type', 'application/json');
