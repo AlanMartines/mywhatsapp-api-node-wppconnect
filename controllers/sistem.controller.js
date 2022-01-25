@@ -473,48 +473,48 @@ router.post("/sendVoice", upload.single('file'), verifyToken.verify, async (req,
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				try{
-				var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
-				var filePath = path.join(folderName, req.file.originalname);
-				fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
-				console.log("- File", filePath);
-				//
-				var checkNumberStatus = await Sessions.checkNumberStatus(
-					removeWithspace(req.body.SessionName),
-					soNumeros(req.body.phonefull).trim() + '@c.us'
-				);
-				//
-				if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+				try {
+					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
+					var filePath = path.join(folderName, req.file.originalname);
+					fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
+					console.log("- File", filePath);
 					//
-					var sendVoice = await Sessions.sendVoice(
+					var checkNumberStatus = await Sessions.checkNumberStatus(
 						removeWithspace(req.body.SessionName),
-						checkNumberStatus.number + '@c.us',
-						filePath
+						soNumeros(req.body.phonefull).trim() + '@c.us'
 					);
 					//
-				} else {
-					var sendVoice = checkNumberStatus;
+					if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+						//
+						var sendVoice = await Sessions.sendVoice(
+							removeWithspace(req.body.SessionName),
+							checkNumberStatus.number + '@c.us',
+							filePath
+						);
+						//
+					} else {
+						var sendVoice = checkNumberStatus;
+					}
+					//
+					await deletaArquivosTemp(filePath);
+					//
+					res.setHeader('Content-Type', 'application/json');
+					res.status(200).json({
+						"Status": sendVoice
+					});
+				} catch (error) {
+					//
+					var erroStatus = {
+						"erro": true,
+						"status": 404,
+						"message": "Erro ao enviar menssagem"
+					};
+					//
+					res.setHeader('Content-Type', 'application/json');
+					res.status(400).json({
+						"Status": erroStatus
+					});
 				}
-				//
-				await deletaArquivosTemp(filePath);
-				//
-				res.setHeader('Content-Type', 'application/json');
-				res.status(200).json({
-					"Status": sendVoice
-				});
-			} catch (error) {
-				//
-				var erroStatus = {
-					"erro": true,
-					"status": 404,
-					"message": "Erro ao enviar menssagem"
-				};
-				//
-				res.setHeader('Content-Type', 'application/json');
-				res.status(400).json({
-					"Status": erroStatus
-				});
-			}
 				break;
 			default:
 				res.setHeader('Content-Type', 'application/json');
@@ -604,45 +604,45 @@ router.post("/sendVoiceFileBase64", upload.single('file'), verifyToken.verify, a
 		//
 	} else {
 		//
-	//Eviar menssagem de voz
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			var checkNumberStatus = await Sessions.checkNumberStatus(
-				removeWithspace(req.body.SessionName),
-				soNumeros(req.body.phonefull).trim() + '@c.us'
-			);
-			//
-			if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+		//Eviar menssagem de voz
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
 				//
-				var sendVoiceBase64 = await Sessions.sendVoiceBase64(
+				var checkNumberStatus = await Sessions.checkNumberStatus(
 					removeWithspace(req.body.SessionName),
-					checkNumberStatus.number + '@c.us',
-					req.file.buffer.toString('base64'),
-					req.file.mimetype
+					soNumeros(req.body.phonefull).trim() + '@c.us'
 				);
 				//
-			} else {
-				var sendVoiceBase64 = checkNumberStatus;
-			}
-			//
-			//console.log(result);
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": sendVoiceBase64
-			});
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
+				if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+					//
+					var sendVoiceBase64 = await Sessions.sendVoiceBase64(
+						removeWithspace(req.body.SessionName),
+						checkNumberStatus.number + '@c.us',
+						req.file.buffer.toString('base64'),
+						req.file.mimetype
+					);
+					//
+				} else {
+					var sendVoiceBase64 = checkNumberStatus;
+				}
+				//
+				//console.log(result);
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": sendVoiceBase64
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
 	}
-}
 }); //sendVoice
 //
 // ------------------------------------------------------------------------------------------------//
@@ -650,7 +650,7 @@ router.post("/sendVoiceFileBase64", upload.single('file'), verifyToken.verify, a
 // Enviar Contato
 router.post("/sendContactVcard", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
-	if (!removeWithspace(req.body.SessionName) || !req.body.phonefull  || !req.body.contact  || !req.body.namecontact) {
+	if (!removeWithspace(req.body.SessionName) || !req.body.phonefull || !req.body.contact || !req.body.namecontact) {
 		var validate = {
 			result: "info",
 			state: 'FAILURE',
@@ -665,44 +665,44 @@ router.post("/sendContactVcard", upload.none(''), verifyToken.verify, async (req
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			var checkNumberStatus = await Sessions.checkNumberStatus(
-				removeWithspace(req.body.SessionName),
-				soNumeros(req.body.phonefull).trim() + '@c.us'
-			);
-			//
-			if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
 				//
-				var sendContactVcard = await Sessions.sendContactVcard(
+				var checkNumberStatus = await Sessions.checkNumberStatus(
 					removeWithspace(req.body.SessionName),
-					checkNumberStatus.number + '@c.us',
-					soNumeros(req.body.contact) + '@c.us',
-					req.body.namecontact
+					soNumeros(req.body.phonefull).trim() + '@c.us'
 				);
 				//
-			} else {
-				var sendContactVcard = checkNumberStatus;
-			}
-			//
-			//console.log(result);
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": sendContactVcard
-			});
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
+				if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+					//
+					var sendContactVcard = await Sessions.sendContactVcard(
+						removeWithspace(req.body.SessionName),
+						checkNumberStatus.number + '@c.us',
+						soNumeros(req.body.contact) + '@c.us',
+						req.body.namecontact
+					);
+					//
+				} else {
+					var sendContactVcard = checkNumberStatus;
+				}
+				//
+				//console.log(result);
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": sendContactVcard
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
 	}
-}
 }); //sendContactVcard
 //
 // ------------------------------------------------------------------------------------------------//
@@ -710,7 +710,7 @@ router.post("/sendContactVcard", upload.none(''), verifyToken.verify, async (req
 // Enviar Lista de Contato
 router.post("/sendContactVcardList", upload.single('file'), verifyToken.verify, async (req, res, next) => {
 	//
-	if (!removeWithspace(req.body.SessionName) || !req.body.phonefull  || !req.file) {
+	if (!removeWithspace(req.body.SessionName) || !req.body.phonefull || !req.file) {
 		var validate = {
 			result: "info",
 			state: 'FAILURE',
@@ -725,81 +725,81 @@ router.post("/sendContactVcardList", upload.single('file'), verifyToken.verify, 
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-				try{
-				var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
-				var filePath = path.join(folderName, req.file.originalname);
-				fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
-				console.log("- File:", filePath);
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
 				//
-			//
-			var checkNumberStatus = await Sessions.checkNumberStatus(
-				removeWithspace(req.body.SessionName),
-				soNumeros(req.body.phonefull).trim() + '@c.us'
-			);
-			//
-			if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
-//
-				var arrayNumbers = fs.readFileSync(filePath, 'utf-8').toString().split(/\r?\n/);
-				//
-				var contactlistValid = [];
-				var contactlistInvalid = [];
-				//
-				for (var i in arrayNumbers) {
-					//console.log(arrayNumbers[i]);
-					var numero = soNumeros(arrayNumbers[i]);
+				try {
+					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
+					var filePath = path.join(folderName, req.file.originalname);
+					fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
+					console.log("- File:", filePath);
 					//
-					if (numero.length !== 0) {
+					//
+					var checkNumberStatus = await Sessions.checkNumberStatus(
+						removeWithspace(req.body.SessionName),
+						soNumeros(req.body.phonefull).trim() + '@c.us'
+					);
+					//
+					if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
 						//
-						contactlistValid.push(numero + '@c.us');
+						var arrayNumbers = fs.readFileSync(filePath, 'utf-8').toString().split(/\r?\n/);
 						//
+						var contactlistValid = [];
+						var contactlistInvalid = [];
+						//
+						for (var i in arrayNumbers) {
+							//console.log(arrayNumbers[i]);
+							var numero = soNumeros(arrayNumbers[i]);
+							//
+							if (numero.length !== 0) {
+								//
+								contactlistValid.push(numero + '@c.us');
+								//
+							}
+							await sleep(1000);
+						}
+						//
+						var sendContactVcardList = await Sessions.sendContactVcardList(
+							removeWithspace(req.body.SessionName),
+							checkNumberStatus.number + '@c.us',
+							contactlistValid,
+							contactlistInvalid
+						);
+						//
+					} else {
+						var sendContactVcardList = sessionStatus;
 					}
-					await sleep(1000);
+					//
+					//console.log(result);
+					res.setHeader('Content-Type', 'application/json');
+					res.status(200).json({
+						"Status": sendContactVcardList
+					});
+				} catch (error) {
+					//
+					var erroStatus = {
+						"erro": true,
+						"status": 404,
+						"message": "Erro ao enviar menssagem"
+					};
+					//
+					res.setHeader('Content-Type', 'application/json');
+					res.status(400).json({
+						"Status": erroStatus
+					});
 				}
-				//
-				var sendContactVcardList = await Sessions.sendContactVcardList(
-					removeWithspace(req.body.SessionName),
-					checkNumberStatus.number + '@c.us',
-					contactlistValid,
-					contactlistInvalid
-				);
-				//
-			} else {
-				var sendContactVcardList = sessionStatus;
-			}
-			//
-			//console.log(result);
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": sendContactVcardList
-			});
-		} catch (error) {
-			//
-			var erroStatus = {
-				"erro": true,
-				"status": 404,
-				"message": "Erro ao enviar menssagem"
-			};
-			//
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": erroStatus
-			});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
 		}
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
 	}
-}
 }); //sendContactVcardList
 //
 // ------------------------------------------------------------------------------------------------//
@@ -807,7 +807,7 @@ router.post("/sendContactVcardList", upload.single('file'), verifyToken.verify, 
 //Enviar Texto
 router.post("/sendText", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
-	if (!removeWithspace(req.body.SessionName) || !req.body.phonefull  || !req.body.msg) {
+	if (!removeWithspace(req.body.SessionName) || !req.body.phonefull || !req.body.msg) {
 		var validate = {
 			result: "info",
 			state: 'FAILURE',
@@ -822,44 +822,44 @@ router.post("/sendText", upload.none(''), verifyToken.verify, async (req, res, n
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			var checkNumberStatus = await Sessions.checkNumberStatus(
-				removeWithspace(req.body.SessionName),
-				soNumeros(req.body.phonefull).trim() + '@c.us'
-			);
-			//
-			if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
 				//
-				var sendText = await Sessions.sendText(
+				var checkNumberStatus = await Sessions.checkNumberStatus(
 					removeWithspace(req.body.SessionName),
-					checkNumberStatus.number + '@c.us',
-					req.body.msg
+					soNumeros(req.body.phonefull).trim() + '@c.us'
 				);
-
 				//
-			} else {
-				var sendText = checkNumberStatus;
-			}
-			//
-			//console.log(result);
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": sendText
-			});
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
+				if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+					//
+					var sendText = await Sessions.sendText(
+						removeWithspace(req.body.SessionName),
+						checkNumberStatus.number + '@c.us',
+						req.body.msg
+					);
+
+					//
+				} else {
+					var sendText = checkNumberStatus;
+				}
+				//
+				//console.log(result);
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": sendText
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
 	}
-}
 }); //sendText
 //
 // ------------------------------------------------------------------------------------------------//
@@ -882,80 +882,80 @@ router.post("/sendTextMassa", upload.single('file'), verifyToken.verify, async (
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			var sendTextMassa = [];
-			//
-			try{
-			var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
-			var filePath = path.join(folderName, req.file.originalname);
-			fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
-			console.log("- File:", filePath);
-			//
-			var arrayNumbers = fs.readFileSync(filePath, 'utf-8').toString().split(/\r?\n/);
-			for (var i in arrayNumbers) {
-				//console.log(arrayNumbers[i]);
-				var numero = soNumeros(arrayNumbers[i]);
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
 				//
-				if (numero.length !== 0) {
+				var sendTextMassa = [];
+				//
+				try {
+					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
+					var filePath = path.join(folderName, req.file.originalname);
+					fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
+					console.log("- File:", filePath);
 					//
-					var checkNumberStatus = await Sessions.checkNumberStatus(
-						removeWithspace(req.body.SessionName),
-						soNumeros(numero) + '@c.us'
-					);
-					//
-					if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+					var arrayNumbers = fs.readFileSync(filePath, 'utf-8').toString().split(/\r?\n/);
+					for (var i in arrayNumbers) {
+						//console.log(arrayNumbers[i]);
+						var numero = soNumeros(arrayNumbers[i]);
 						//
-						var sendTextMassaRes = await Sessions.sendText(
-							removeWithspace(req.body.SessionName),
-							checkNumberStatus.number + '@c.us',
-							req.body.msg
-						);
-						//
-					} else {
-						var sendTextMassaRes = checkNumberStatus;
+						if (numero.length !== 0) {
+							//
+							var checkNumberStatus = await Sessions.checkNumberStatus(
+								removeWithspace(req.body.SessionName),
+								soNumeros(numero) + '@c.us'
+							);
+							//
+							if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+								//
+								var sendTextMassaRes = await Sessions.sendText(
+									removeWithspace(req.body.SessionName),
+									checkNumberStatus.number + '@c.us',
+									req.body.msg
+								);
+								//
+							} else {
+								var sendTextMassaRes = checkNumberStatus;
+							}
+							//
+							sendTextMassa.push(sendTextMassaRes);
+							//
+						}
+						await sleep(1000);
 					}
 					//
-					sendTextMassa.push(sendTextMassaRes);
 					//
+					await deletaArquivosTemp(filePath);
+					//
+					//console.log(result);
+					res.setHeader('Content-Type', 'application/json');
+					res.status(200).json({
+						"Status": sendTextMassa
+					});
+				} catch (error) {
+					//
+					var erroStatus = {
+						"erro": true,
+						"status": 404,
+						"message": "Erro ao enviar menssagem"
+					};
+					//
+					res.setHeader('Content-Type', 'application/json');
+					res.status(400).json({
+						"Status": erroStatus
+					});
 				}
-				await sleep(1000);
-			}
-			//
-			//
-			await deletaArquivosTemp(filePath);
-			//
-			//console.log(result);
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": sendTextMassa
-			});
-		} catch (error) {
-			//
-			var erroStatus = {
-				"erro": true,
-				"status": 404,
-				"message": "Erro ao enviar menssagem"
-			};
-			//
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": erroStatus
-			});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
 		}
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
 	}
-}
 }); //sendText
 //
 // ------------------------------------------------------------------------------------------------//
@@ -978,45 +978,45 @@ router.post("/sendLocation", upload.none(''), verifyToken.verify, async (req, re
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			var checkNumberStatus = await Sessions.checkNumberStatus(
-				removeWithspace(req.body.SessionName),
-				soNumeros(req.body.phonefull).trim() + '@c.us'
-			);
-			//
-			if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
 				//
-				var sendLocation = await Sessions.sendLocation(
+				var checkNumberStatus = await Sessions.checkNumberStatus(
 					removeWithspace(req.body.SessionName),
-					checkNumberStatus.number + '@c.us',
-					req.body.lat,
-					req.body.long,
-					req.body.local
+					soNumeros(req.body.phonefull).trim() + '@c.us'
 				);
 				//
-			} else {
-				var sendLocation = checkNumberStatus;
-			}
-			//
-			//console.log(result);
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": sendLocation
-			});
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
+				if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+					//
+					var sendLocation = await Sessions.sendLocation(
+						removeWithspace(req.body.SessionName),
+						checkNumberStatus.number + '@c.us',
+						req.body.lat,
+						req.body.long,
+						req.body.local
+					);
+					//
+				} else {
+					var sendLocation = checkNumberStatus;
+				}
+				//
+				//console.log(result);
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": sendLocation
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
 	}
-}
 }); //sendLocation
 //
 // ------------------------------------------------------------------------------------------------//
@@ -1039,59 +1039,59 @@ router.post("/sendLinkPreview", upload.none(''), verifyToken.verify, async (req,
 		//
 	} else {
 		//
-			if (!validUrl.isUri(req.body.link)){
-				var validate = {
-					result: "error",
-					state: 'FAILURE',
-					status: 'notProvided',
-					message: 'O link informado é invalido, corrija e tente novamente.'
-				};
-				//
-				res.setHeader('Content-Type', 'application/json');
-				res.status(400).json({
-					"Status": validate
-				});
-				//
-			}
-		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
+		if (!validUrl.isUri(req.body.link)) {
+			var validate = {
+				result: "error",
+				state: 'FAILURE',
+				status: 'notProvided',
+				message: 'O link informado é invalido, corrija e tente novamente.'
+			};
 			//
-			var checkNumberStatus = await Sessions.checkNumberStatus(
-				removeWithspace(req.body.SessionName),
-				soNumeros(req.body.phonefull).trim() + '@c.us'
-			);
-			//
-			if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
-				//
-				var sendLinkPreview = await Sessions.sendLinkPreview(
-					removeWithspace(req.body.SessionName),
-					checkNumberStatus.number + '@c.us',
-					req.body.link,
-					req.body.descricao
-				);
-				//
-			} else {
-				var sendLinkPreview = checkNumberStatus;
-			}
-			//
-			//console.log(result);
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": sendLinkPreview
-			});
-			break;
-		default:
 			res.setHeader('Content-Type', 'application/json');
 			res.status(400).json({
-				"Status": sessionStatus
+				"Status": validate
 			});
+			//
+		}
+		//
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
+				//
+				var checkNumberStatus = await Sessions.checkNumberStatus(
+					removeWithspace(req.body.SessionName),
+					soNumeros(req.body.phonefull).trim() + '@c.us'
+				);
+				//
+				if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+					//
+					var sendLinkPreview = await Sessions.sendLinkPreview(
+						removeWithspace(req.body.SessionName),
+						checkNumberStatus.number + '@c.us',
+						req.body.link,
+						req.body.descricao
+					);
+					//
+				} else {
+					var sendLinkPreview = checkNumberStatus;
+				}
+				//
+				//console.log(result);
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": sendLinkPreview
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
 	}
-}
 }); //sendLinkPreview
 //
 // ------------------------------------------------------------------------------------------------//
@@ -1114,67 +1114,67 @@ router.post("/sendImage", upload.single('file'), verifyToken.verify, async (req,
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			try{
-			var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
-			var filePath = path.join(folderName, req.file.originalname);
-			fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
-			console.log("- File", filePath);
-			//
-			var checkNumberStatus = await Sessions.checkNumberStatus(
-				removeWithspace(req.body.SessionName),
-				soNumeros(req.body.phonefull).trim() + '@c.us'
-			);
-			//
-			if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
 				//
-				var sendImage = await Sessions.sendImage(
-					removeWithspace(req.body.SessionName),
-					checkNumberStatus.number + '@c.us',
-					filePath,
-					req.file.originalname,
-					req.body.caption
-				);
-				//
-			} else {
-				var sendImage = checkNumberStatus;
-			}
-			//
-			//
-			await deletaArquivosTemp(filePath);
-			//
-			//console.log(result);
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": sendImage
-			});
-		} catch (error) {
-			//
-			var erroStatus = {
-				"erro": true,
-				"status": 404,
-				"message": "Erro ao enviar menssagem"
-			};
-			//
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": erroStatus
-			});
+				try {
+					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
+					var filePath = path.join(folderName, req.file.originalname);
+					fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
+					console.log("- File", filePath);
+					//
+					var checkNumberStatus = await Sessions.checkNumberStatus(
+						removeWithspace(req.body.SessionName),
+						soNumeros(req.body.phonefull).trim() + '@c.us'
+					);
+					//
+					if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+						//
+						var sendImage = await Sessions.sendImage(
+							removeWithspace(req.body.SessionName),
+							checkNumberStatus.number + '@c.us',
+							filePath,
+							req.file.originalname,
+							req.body.caption
+						);
+						//
+					} else {
+						var sendImage = checkNumberStatus;
+					}
+					//
+					//
+					await deletaArquivosTemp(filePath);
+					//
+					//console.log(result);
+					res.setHeader('Content-Type', 'application/json');
+					res.status(200).json({
+						"Status": sendImage
+					});
+				} catch (error) {
+					//
+					var erroStatus = {
+						"erro": true,
+						"status": 404,
+						"message": "Erro ao enviar menssagem"
+					};
+					//
+					res.setHeader('Content-Type', 'application/json');
+					res.status(400).json({
+						"Status": erroStatus
+					});
+				}
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
 		}
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
 	}
-}
 }); //sendImage
 //
 // ------------------------------------------------------------------------------------------------//
@@ -1205,92 +1205,92 @@ router.post("/sendImageMassa", sendImageMassa, verifyToken.verify, async (req, r
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			//
-			try{
-			var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
-			var filePathContato = path.join(folderName, req.files['phonefull'][0].originalname);
-			fs.writeFileSync(filePathContato, req.files['phonefull'][0].buffer.toString('base64'), 'base64');
-			console.log("- File:", filePathContato);
-			//
-			//
-			var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
-			var filePathImagem = path.join(folderName, req.files['fileimg'][0].originalname);
-			fs.writeFileSync(filePathImagem, req.files['fileimg'][0].buffer.toString('base64'), 'base64');
-			console.log("- File:", filePathImagem);
-			//
-			var sendImageMassa = [];
-			//
-			var arrayNumbers = fs.readFileSync(filePathContato, 'utf-8').toString().split(/\r?\n/);
-			for (var i in arrayNumbers) {
-				//console.log(arrayNumbers[i]);
-				var numero = arrayNumbers[i].trim();
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
 				//
-				if (numero.length !== 0) {
+				//
+				try {
+					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
+					var filePathContato = path.join(folderName, req.files['phonefull'][0].originalname);
+					fs.writeFileSync(filePathContato, req.files['phonefull'][0].buffer.toString('base64'), 'base64');
+					console.log("- File:", filePathContato);
 					//
-					var checkNumberStatus = await Sessions.checkNumberStatus(
-						removeWithspace(req.body.SessionName),
-						soNumeros(numero) + '@c.us'
-					);
 					//
-					if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
+					var filePathImagem = path.join(folderName, req.files['fileimg'][0].originalname);
+					fs.writeFileSync(filePathImagem, req.files['fileimg'][0].buffer.toString('base64'), 'base64');
+					console.log("- File:", filePathImagem);
+					//
+					var sendImageMassa = [];
+					//
+					var arrayNumbers = fs.readFileSync(filePathContato, 'utf-8').toString().split(/\r?\n/);
+					for (var i in arrayNumbers) {
+						//console.log(arrayNumbers[i]);
+						var numero = arrayNumbers[i].trim();
 						//
-						var sendImageMassaRes = await Sessions.sendImage(
-							removeWithspace(req.body.SessionName),
-							checkNumberStatus.number + '@c.us',
-							filePathImagem,
-							req.files['fileimg'][0].originalname,
-							req.body.caption
-						);
-						//
-					} else {
-						var sendImageMassaRes = checkNumberStatus;
+						if (numero.length !== 0) {
+							//
+							var checkNumberStatus = await Sessions.checkNumberStatus(
+								removeWithspace(req.body.SessionName),
+								soNumeros(numero) + '@c.us'
+							);
+							//
+							if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+								//
+								var sendImageMassaRes = await Sessions.sendImage(
+									removeWithspace(req.body.SessionName),
+									checkNumberStatus.number + '@c.us',
+									filePathImagem,
+									req.files['fileimg'][0].originalname,
+									req.body.caption
+								);
+								//
+							} else {
+								var sendImageMassaRes = checkNumberStatus;
+							}
+							//
+							//return sendResult;
+							//
+							sendImageMassa.push(sendImageMassaRes);
+						}
+						await sleep(1000);
 					}
 					//
-					//return sendResult;
+					await deletaArquivosTemp(filePathContato);
 					//
-					sendImageMassa.push(sendImageMassaRes);
+					//
+					await deletaArquivosTemp(filePathImagem);
+					//
+					//console.log(result);
+					res.setHeader('Content-Type', 'application/json');
+					res.status(200).json({
+						"Status": sendImageMassa
+					});
+				} catch (error) {
+					//
+					var erroStatus = {
+						"erro": true,
+						"status": 404,
+						"message": "Erro ao enviar menssagem"
+					};
+					//
+					res.setHeader('Content-Type', 'application/json');
+					res.status(400).json({
+						"Status": erroStatus
+					});
 				}
-				await sleep(1000);
-			}
-			//
-			await deletaArquivosTemp(filePathContato);
-			//
-			//
-			await deletaArquivosTemp(filePathImagem);
-			//
-			//console.log(result);
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": sendImageMassa
-			});
-		} catch (error) {
-			//
-			var erroStatus = {
-				"erro": true,
-				"status": 404,
-				"message": "Erro ao enviar menssagem"
-			};
-			//
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": erroStatus
-			});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
 		}
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
 	}
-}
 }); //sendImageMassa
 //
 // ------------------------------------------------------------------------------------------------//
@@ -1313,81 +1313,81 @@ router.post("/sendMultImage", upload.array('file', 50), verifyToken.verify, asyn
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			//
-			var resultsFiles = req.files;
-			//
-			var sendMultImage = [];
-			//
-			var checkNumberStatus = await Sessions.checkNumberStatus(
-				removeWithspace(req.body.SessionName),
-				soNumeros(req.body.phonefull).trim() + '@c.us'
-			);
-			//
-			if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
 				//
-				await forEach(resultsFiles, async (resultfile) => {
+				//
+				var resultsFiles = req.files;
+				//
+				var sendMultImage = [];
+				//
+				var checkNumberStatus = await Sessions.checkNumberStatus(
+					removeWithspace(req.body.SessionName),
+					soNumeros(req.body.phonefull).trim() + '@c.us'
+				);
+				//
+				if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
 					//
-					try{
-					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
-					var filePathImagem = path.join(folderName, resultfile.originalname);
-					fs.writeFileSync(filePathImagem, resultfile.buffer.toString('base64'), 'base64');
-					console.log("- File:", filePathImagem);
-					//
-					var sendMultImageRes = await Sessions.sendImage(
-						removeWithspace(req.body.SessionName),
-						checkNumberStatus.number + '@c.us',
-						filePathImagem,
-						resultfile.originalname,
-						req.body.caption
-					);
-					//
-					sendMultImage.push(sendMultImageRes);
-					//
-					await sleep(1000);
-					//
-					await deletaArquivosTemp(filePathImagem);
-					//
-				} catch (error) {
-					//
-					var erroStatus = {
-						"erro": true,
-						"status": 404,
-						"number": checkNumberStatus.number,
-						"message": "Erro ao enviar menssagem"
-					};
-					//
-					sendMultImage.push(erroStatus);
-					//
-					await sleep(1000);
-					//
-					await deletaArquivosTemp(filePathImagem);
-					//
+					await forEach(resultsFiles, async (resultfile) => {
+						//
+						try {
+							var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
+							var filePathImagem = path.join(folderName, resultfile.originalname);
+							fs.writeFileSync(filePathImagem, resultfile.buffer.toString('base64'), 'base64');
+							console.log("- File:", filePathImagem);
+							//
+							var sendMultImageRes = await Sessions.sendImage(
+								removeWithspace(req.body.SessionName),
+								checkNumberStatus.number + '@c.us',
+								filePathImagem,
+								resultfile.originalname,
+								req.body.caption
+							);
+							//
+							sendMultImage.push(sendMultImageRes);
+							//
+							await sleep(1000);
+							//
+							await deletaArquivosTemp(filePathImagem);
+							//
+						} catch (error) {
+							//
+							var erroStatus = {
+								"erro": true,
+								"status": 404,
+								"number": checkNumberStatus.number,
+								"message": "Erro ao enviar menssagem"
+							};
+							//
+							sendMultImage.push(erroStatus);
+							//
+							await sleep(1000);
+							//
+							await deletaArquivosTemp(filePathImagem);
+							//
+						}
+					});
+				} else {
+					var sendMultImage = checkNumberStatus;
 				}
+				//
+				//console.log(result);
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": sendMultImage
 				});
-			} else {
-				var sendMultImage = checkNumberStatus;
-			}
-			//
-			//console.log(result);
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": sendMultImage
-			});
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
 	}
-}
 }); //sendMultImage
 //
 // ------------------------------------------------------------------------------------------------//
@@ -1418,117 +1418,117 @@ router.post("/sendMultImageMassa", sendMultImageMassa, verifyToken.verify, async
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			//
-			var resultsFilesImg = req.files.file;
-			//
-			try{
-			var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
-			var filePathContato = path.join(folderName, req.files['phonefull'][0].originalname);
-			fs.writeFileSync(filePathContato, req.files['phonefull'][0].buffer.toString('base64'), 'base64');
-			console.log("- File Contato:", filePathContato);
-			var arrayNumbers = fs.readFileSync(filePathContato, 'utf-8').toString().split(/\r?\n/);
-			//
-			var sendMultImageMassa = [];
-			//
-			for (var i in arrayNumbers) {
-				//console.log(arrayNumbers[i]);
-				var numero = arrayNumbers[i].trim();
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
 				//
-				if (numero.length !== 0) {
+				//
+				var resultsFilesImg = req.files.file;
+				//
+				try {
+					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
+					var filePathContato = path.join(folderName, req.files['phonefull'][0].originalname);
+					fs.writeFileSync(filePathContato, req.files['phonefull'][0].buffer.toString('base64'), 'base64');
+					console.log("- File Contato:", filePathContato);
+					var arrayNumbers = fs.readFileSync(filePathContato, 'utf-8').toString().split(/\r?\n/);
 					//
-					var checkNumberStatus = await Sessions.checkNumberStatus(
-						removeWithspace(req.body.SessionName),
-						soNumeros(numero) + '@c.us'
-					);
+					var sendMultImageMassa = [];
 					//
-					if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+					for (var i in arrayNumbers) {
+						//console.log(arrayNumbers[i]);
+						var numero = arrayNumbers[i].trim();
 						//
-						await forEach(resultsFilesImg, async (resultfile) => {
+						if (numero.length !== 0) {
 							//
-							try{
-							var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
-							var filePathImagem = path.join(folderName, resultfile.originalname);
-							fs.writeFileSync(filePathImagem, resultfile.buffer.toString('base64'), 'base64');
-							console.log("- File Imagem:", filePathImagem);
-							//
-							var sendMultImageMassaRes = await Sessions.sendImage(
+							var checkNumberStatus = await Sessions.checkNumberStatus(
 								removeWithspace(req.body.SessionName),
-								checkNumberStatus.number + '@c.us',
-								filePathImagem,
-								resultfile.originalname,
-								req.body.caption
+								soNumeros(numero) + '@c.us'
 							);
 							//
-							sendMultImageMassa.push(sendMultImageMassaRes);
-							//
-							await sleep(1000);
-							//
-							//
-							await deletaArquivosTemp(filePathImagem);
-							//
-						} catch (error) {
-							//
-							var erroStatus = {
-								"erro": true,
-								"status": 404,
-								"number": checkNumberStatus.number,
-								"message": "Erro ao enviar menssagem"
-							};
-							//
-							//
-							sendMultImageMassa.push(erroStatus);
-							//
-							await sleep(1000);
-							//
-							//
-							await deletaArquivosTemp(filePathImagem);
-							//
+							if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+								//
+								await forEach(resultsFilesImg, async (resultfile) => {
+									//
+									try {
+										var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
+										var filePathImagem = path.join(folderName, resultfile.originalname);
+										fs.writeFileSync(filePathImagem, resultfile.buffer.toString('base64'), 'base64');
+										console.log("- File Imagem:", filePathImagem);
+										//
+										var sendMultImageMassaRes = await Sessions.sendImage(
+											removeWithspace(req.body.SessionName),
+											checkNumberStatus.number + '@c.us',
+											filePathImagem,
+											resultfile.originalname,
+											req.body.caption
+										);
+										//
+										sendMultImageMassa.push(sendMultImageMassaRes);
+										//
+										await sleep(1000);
+										//
+										//
+										await deletaArquivosTemp(filePathImagem);
+										//
+									} catch (error) {
+										//
+										var erroStatus = {
+											"erro": true,
+											"status": 404,
+											"number": checkNumberStatus.number,
+											"message": "Erro ao enviar menssagem"
+										};
+										//
+										//
+										sendMultImageMassa.push(erroStatus);
+										//
+										await sleep(1000);
+										//
+										//
+										await deletaArquivosTemp(filePathImagem);
+										//
+									}
+								});
+								//
+								await deletaArquivosTemp(filePathContato);
+								//
+
+							} else {
+								var sendMultImageMassa = checkNumberStatus;
+							}
 						}
-						});
-						//
-						await deletaArquivosTemp(filePathContato);
-						//
-						
-					} else {
-						var sendMultImageMassa = checkNumberStatus;
+						await sleep(1000);
 					}
+					//
+					//console.log(result);
+					res.setHeader('Content-Type', 'application/json');
+					res.status(200).json({
+						"Status": sendMultImageMassa
+					});
+				} catch (error) {
+					//
+					var erroStatus = {
+						"erro": true,
+						"status": 404,
+						"message": "Erro ao enviar menssagem"
+					};
+					//
+					res.setHeader('Content-Type', 'application/json');
+					res.status(400).json({
+						"Status": erroStatus
+					});
 				}
-				await sleep(1000);
-			}
-			//
-			//console.log(result);
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": sendMultImageMassa
-			});
-		} catch (error) {
-			//
-			var erroStatus = {
-				"erro": true,
-				"status": 404,
-				"message": "Erro ao enviar menssagem"
-			};
-			//
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": erroStatus
-			});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
 		}
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
 	}
-}
 }); //sendMultImageMassa
 //
 // ------------------------------------------------------------------------------------------------//
@@ -1551,67 +1551,67 @@ router.post("/sendFile", upload.single('file'), verifyToken.verify, async (req, 
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			try{
-			var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
-			var filePath = path.join(folderName, req.file.originalname);
-			fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
-			console.log("- File", filePath);
-			//
-			var checkNumberStatus = await Sessions.checkNumberStatus(
-				removeWithspace(req.body.SessionName),
-				soNumeros(req.body.phonefull).trim() + '@c.us'
-			);
-			//
-			if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
 				//
-				var sendFile = await Sessions.sendFile(
-					removeWithspace(req.body.SessionName),
-					checkNumberStatus.number + '@c.us',
-					filePath,
-					req.file.originalname,
-					req.body.caption
-				);
-				//
-			} else {
-				var sendFile = checkNumberStatus;
-			}
-			//
-			//
-			await deletaArquivosTemp(filePath);
-			//
-			//console.log(result);
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": sendFile
-			});
-		} catch (error) {
-			//
-			var erroStatus = {
-				"erro": true,
-				"status": 404,
-				"message": "Erro ao enviar menssagem"
-			};
-			//
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": erroStatus
-			});
+				try {
+					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
+					var filePath = path.join(folderName, req.file.originalname);
+					fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
+					console.log("- File", filePath);
+					//
+					var checkNumberStatus = await Sessions.checkNumberStatus(
+						removeWithspace(req.body.SessionName),
+						soNumeros(req.body.phonefull).trim() + '@c.us'
+					);
+					//
+					if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+						//
+						var sendFile = await Sessions.sendFile(
+							removeWithspace(req.body.SessionName),
+							checkNumberStatus.number + '@c.us',
+							filePath,
+							req.file.originalname,
+							req.body.caption
+						);
+						//
+					} else {
+						var sendFile = checkNumberStatus;
+					}
+					//
+					//
+					await deletaArquivosTemp(filePath);
+					//
+					//console.log(result);
+					res.setHeader('Content-Type', 'application/json');
+					res.status(200).json({
+						"Status": sendFile
+					});
+				} catch (error) {
+					//
+					var erroStatus = {
+						"erro": true,
+						"status": 404,
+						"message": "Erro ao enviar menssagem"
+					};
+					//
+					res.setHeader('Content-Type', 'application/json');
+					res.status(400).json({
+						"Status": erroStatus
+					});
+				}
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
 		}
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
 	}
-}
 }); //sendFile
 //
 // ------------------------------------------------------------------------------------------------//
@@ -1634,66 +1634,66 @@ router.post("/sendFileBase64", upload.none(''), verifyToken.verify, async (req, 
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			try{
-			var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
-			var filePath = path.join(folderName, req.body.originalname);
-			fs.writeFileSync(filePath, req.body.base64, 'base64');
-			console.log("- File", filePath);
-			//
-			var checkNumberStatus = await Sessions.checkNumberStatus(
-				removeWithspace(req.body.SessionName),
-				soNumeros(req.body.phonefull).trim() + '@c.us'
-			);
-			//
-			if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
 				//
-				var sendFileBase64 = await Sessions.sendFile(
-					removeWithspace(req.body.SessionName),
-					checkNumberStatus.number + '@c.us',
-					filePath,
-					req.body.originalname,
-					req.body.caption
-				);
-				//
-			} else {
-				var sendFileBase64 = checkNumberStatus;
-			}
-			//
-			await deletaArquivosTemp(filePath);
-			//
-			//console.log(result);
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": sendFileBase64
-			});
-		} catch (error) {
-			//
-			var erroStatus = {
-				"erro": true,
-				"status": 404,
-				"message": "Erro ao enviar menssagem"
-			};
-			//
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": erroStatus
-			});
+				try {
+					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
+					var filePath = path.join(folderName, req.body.originalname);
+					fs.writeFileSync(filePath, req.body.base64, 'base64');
+					console.log("- File", filePath);
+					//
+					var checkNumberStatus = await Sessions.checkNumberStatus(
+						removeWithspace(req.body.SessionName),
+						soNumeros(req.body.phonefull).trim() + '@c.us'
+					);
+					//
+					if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+						//
+						var sendFileBase64 = await Sessions.sendFile(
+							removeWithspace(req.body.SessionName),
+							checkNumberStatus.number + '@c.us',
+							filePath,
+							req.body.originalname,
+							req.body.caption
+						);
+						//
+					} else {
+						var sendFileBase64 = checkNumberStatus;
+					}
+					//
+					await deletaArquivosTemp(filePath);
+					//
+					//console.log(result);
+					res.setHeader('Content-Type', 'application/json');
+					res.status(200).json({
+						"Status": sendFileBase64
+					});
+				} catch (error) {
+					//
+					var erroStatus = {
+						"erro": true,
+						"status": 404,
+						"message": "Erro ao enviar menssagem"
+					};
+					//
+					res.setHeader('Content-Type', 'application/json');
+					res.status(400).json({
+						"Status": erroStatus
+					});
+				}
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
 		}
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
 	}
-}
 }); //sendFileBase64
 //
 // ------------------------------------------------------------------------------------------------//
@@ -1701,7 +1701,7 @@ router.post("/sendFileBase64", upload.none(''), verifyToken.verify, async (req, 
 // Enviar arquivo/documento
 router.post("/sendFileToBase64", upload.single('file'), verifyToken.verify, async (req, res, next) => {
 	//
-	if (!removeWithspace(req.body.SessionName) || !req.body.phonefull || !req.file || !req.body.caption ) {
+	if (!removeWithspace(req.body.SessionName) || !req.body.phonefull || !req.file || !req.body.caption) {
 		var validate = {
 			result: "info",
 			state: 'FAILURE',
@@ -1716,46 +1716,46 @@ router.post("/sendFileToBase64", upload.single('file'), verifyToken.verify, asyn
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			var checkNumberStatus = await Sessions.checkNumberStatus(
-				removeWithspace(req.body.SessionName),
-				soNumeros(req.body.phonefull).trim() + '@c.us'
-			);
-			//
-			if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
 				//
-				var sendFileFromBase64 = await Sessions.sendFileFromBase64(
+				var checkNumberStatus = await Sessions.checkNumberStatus(
 					removeWithspace(req.body.SessionName),
-					checkNumberStatus.number + '@c.us',
-					req.file.buffer.toString('base64'),
-					req.file.mimetype,
-					req.file.originalname,
-					req.body.msg
+					soNumeros(req.body.phonefull).trim() + '@c.us'
 				);
 				//
-			} else {
-				var sendFileFromBase64 = checkNumberStatus;
-			}
-			//
-			//console.log(result);
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": sendFileFromBase64
-			});
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
+				if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+					//
+					var sendFileFromBase64 = await Sessions.sendFileFromBase64(
+						removeWithspace(req.body.SessionName),
+						checkNumberStatus.number + '@c.us',
+						req.file.buffer.toString('base64'),
+						req.file.mimetype,
+						req.file.originalname,
+						req.body.msg
+					);
+					//
+				} else {
+					var sendFileFromBase64 = checkNumberStatus;
+				}
+				//
+				//console.log(result);
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": sendFileFromBase64
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
 	}
-}
 }); //sendFileBase64
 //
 // ------------------------------------------------------------------------------------------------//
@@ -1778,46 +1778,46 @@ router.post("/sendFileFromBase64", upload.none(''), verifyToken.verify, async (r
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			var checkNumberStatus = await Sessions.checkNumberStatus(
-				removeWithspace(req.body.SessionName),
-				soNumeros(req.body.phonefull).trim() + '@c.us'
-			);
-			//
-			if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
 				//
-				var sendFileFromBase64 = await Sessions.sendFileFromBase64(
+				var checkNumberStatus = await Sessions.checkNumberStatus(
 					removeWithspace(req.body.SessionName),
-					checkNumberStatus.number + '@c.us',
-					req.body.base64,
-					req.body.mimetype,
-					req.body.originalname,
-					req.body.caption
+					soNumeros(req.body.phonefull).trim() + '@c.us'
 				);
 				//
-			} else {
-				var sendFileFromBase64 = checkNumberStatus;
-			}
-			//
-			//console.log(result);
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": sendFileFromBase64
-			});
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
+				if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+					//
+					var sendFileFromBase64 = await Sessions.sendFileFromBase64(
+						removeWithspace(req.body.SessionName),
+						checkNumberStatus.number + '@c.us',
+						req.body.base64,
+						req.body.mimetype,
+						req.body.originalname,
+						req.body.caption
+					);
+					//
+				} else {
+					var sendFileFromBase64 = checkNumberStatus;
+				}
+				//
+				//console.log(result);
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": sendFileFromBase64
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
 	}
-}
 }); //sendFileFromBase64
 //
 // ------------------------------------------------------------------------------------------------//
@@ -1846,28 +1846,28 @@ router.post("/getAllContacts", upload.none(''), verifyToken.verify, async (req, 
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			var getAllContacts = await Sessions.getAllContacts(
-				req.body.SessionName
-			);
-			//
-			res.json({
-				"Status": getAllContacts
-			});
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
+				//
+				var getAllContacts = await Sessions.getAllContacts(
+					req.body.SessionName
+				);
+				//
+				res.json({
+					"Status": getAllContacts
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
 	}
-}
 }); //getAllContacts
 //
 // ------------------------------------------------------------------------------------------------------- //
@@ -1890,28 +1890,28 @@ router.post("/getAllGroups", upload.none(''), verifyToken.verify, async (req, re
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			var getAllGroups = await Sessions.getAllGroups(
-				req.body.SessionName
-			);
-			//
-			res.json({
-				"Status": getAllGroups
-			});
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
+				//
+				var getAllGroups = await Sessions.getAllGroups(
+					req.body.SessionName
+				);
+				//
+				res.json({
+					"Status": getAllGroups
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
 	}
-}
 }); //getAllGroups
 //
 // ------------------------------------------------------------------------------------------------------- //
@@ -1934,28 +1934,28 @@ router.post("/getSessionTokenBrowser", upload.none(''), verifyToken.verify, asyn
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			var getSessionTokenBrowser = await Sessions.getSessionTokenBrowser(
-				req.body.SessionName
-			);
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": getSessionTokenBrowser
-			});
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
+				//
+				var getSessionTokenBrowser = await Sessions.getSessionTokenBrowser(
+					req.body.SessionName
+				);
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": getSessionTokenBrowser
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
 	}
-}
 }); //getSessionTokenBrowser
 //
 // ------------------------------------------------------------------------------------------------------- //
@@ -1978,28 +1978,28 @@ router.post("/getBlockList", upload.none(''), verifyToken.verify, async (req, re
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			var getBlockList = await Sessions.getBlockList(
-				req.body.SessionName
-			);
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": getBlockList
-			});
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
+				//
+				var getBlockList = await Sessions.getBlockList(
+					req.body.SessionName
+				);
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": getBlockList
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
 	}
-}
 }); //getBlockList
 //
 // ------------------------------------------------------------------------------------------------//
@@ -2022,42 +2022,42 @@ router.post("/getStatus", upload.none(''), verifyToken.verify, async (req, res, 
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			var checkNumberStatus = await Sessions.checkNumberStatus(
-				removeWithspace(req.body.SessionName),
-				soNumeros(req.body.phonefull).trim() + '@c.us'
-			);
-			//
-			if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
 				//
-				var getStatus = await Sessions.getStatus(
+				var checkNumberStatus = await Sessions.checkNumberStatus(
 					removeWithspace(req.body.SessionName),
 					soNumeros(req.body.phonefull).trim() + '@c.us'
 				);
 				//
-			} else {
-				var getStatus = checkNumberStatus;
-			}
-			//
-			//console.log(result);
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": getStatus
-			});
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
+				if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+					//
+					var getStatus = await Sessions.getStatus(
+						removeWithspace(req.body.SessionName),
+						soNumeros(req.body.phonefull).trim() + '@c.us'
+					);
+					//
+				} else {
+					var getStatus = checkNumberStatus;
+				}
+				//
+				//console.log(result);
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": getStatus
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
 	}
-}
 }); //getStatus
 //
 // ------------------------------------------------------------------------------------------------------- //
@@ -2080,42 +2080,42 @@ router.post("/getNumberProfile", upload.none(''), verifyToken.verify, async (req
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			var checkNumberStatus = await Sessions.checkNumberStatus(
-				removeWithspace(req.body.SessionName),
-				soNumeros(req.body.phonefull).trim() + '@c.us'
-			);
-			//
-			if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
 				//
-				var getNumberProfile = await Sessions.getNumberProfile(
+				var checkNumberStatus = await Sessions.checkNumberStatus(
 					removeWithspace(req.body.SessionName),
 					soNumeros(req.body.phonefull).trim() + '@c.us'
 				);
 				//
-			} else {
-				var getNumberProfile = checkNumberStatus;
-			}
-			//
-			//console.log(result);
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": getNumberProfile
-			});
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
+				if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+					//
+					var getNumberProfile = await Sessions.getNumberProfile(
+						removeWithspace(req.body.SessionName),
+						soNumeros(req.body.phonefull).trim() + '@c.us'
+					);
+					//
+				} else {
+					var getNumberProfile = checkNumberStatus;
+				}
+				//
+				//console.log(result);
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": getNumberProfile
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
 	}
-}
 }); //getNumberProfile
 //
 // ------------------------------------------------------------------------------------------------------- //
@@ -2138,42 +2138,42 @@ router.post("/getProfilePicFromServer", upload.none(''), verifyToken.verify, asy
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			var checkNumberStatus = await Sessions.checkNumberStatus(
-				removeWithspace(req.body.SessionName),
-				soNumeros(req.body.phonefull).trim() + '@c.us'
-			);
-			//
-			if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
 				//
-				var getProfilePicFromServer = await Sessions.getProfilePicFromServer(
+				var checkNumberStatus = await Sessions.checkNumberStatus(
 					removeWithspace(req.body.SessionName),
 					soNumeros(req.body.phonefull).trim() + '@c.us'
 				);
 				//
-			} else {
-				var getProfilePicFromServer = checkNumberStatus;
-			}
-			//
-			//console.log(result);
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": getProfilePicFromServer
-			});
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
+				if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+					//
+					var getProfilePicFromServer = await Sessions.getProfilePicFromServer(
+						removeWithspace(req.body.SessionName),
+						soNumeros(req.body.phonefull).trim() + '@c.us'
+					);
+					//
+				} else {
+					var getProfilePicFromServer = checkNumberStatus;
+				}
+				//
+				//console.log(result);
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": getProfilePicFromServer
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
 	}
-}
 }); //getProfilePicFromServer
 //
 // ------------------------------------------------------------------------------------------------------- //
@@ -2196,31 +2196,31 @@ router.post("/checkNumberStatus", upload.none(''), verifyToken.verify, async (re
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			var checkNumberStatus = await Sessions.checkNumberStatus(
-				removeWithspace(req.body.SessionName),
-				soNumeros(req.body.phonefull).trim() + '@c.us'
-			);
-			//
-			//console.log(result);
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": checkNumberStatus
-			});
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
+				//
+				var checkNumberStatus = await Sessions.checkNumberStatus(
+					removeWithspace(req.body.SessionName),
+					soNumeros(req.body.phonefull).trim() + '@c.us'
+				);
+				//
+				//console.log(result);
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": checkNumberStatus
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
 	}
-}
 }); //checkNumberStatus
 //
 // ------------------------------------------------------------------------------------------------------- //
@@ -2243,58 +2243,58 @@ router.post("/checkNumberStatusMassa", upload.single('file'), verifyToken.verify
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
-			var filePath = path.join(folderName, req.file.originalname);
-			fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
-			console.log("- File:", filePath);
-			//
-			var checkNumberStatusMassa = [];
-			//
-			var arrayNumbers = fs.readFileSync(filePath, 'utf-8').toString().split(/\r?\n/);
-			for (var i in arrayNumbers) {
-				//console.log(soNumeros(arrayNumbers[i]));
-				var numero = soNumeros(arrayNumbers[i]);
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
 				//
-				if (numero.length !== 0) {
+				var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
+				var filePath = path.join(folderName, req.file.originalname);
+				fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
+				console.log("- File:", filePath);
+				//
+				var checkNumberStatusMassa = [];
+				//
+				var arrayNumbers = fs.readFileSync(filePath, 'utf-8').toString().split(/\r?\n/);
+				for (var i in arrayNumbers) {
+					//console.log(soNumeros(arrayNumbers[i]));
+					var numero = soNumeros(arrayNumbers[i]);
 					//
-					var checkNumberStatus = await Sessions.checkNumberStatus(
-						removeWithspace(req.body.SessionName),
-						soNumeros(numero) + '@c.us'
-					);
-					//
-					if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+					if (numero.length !== 0) {
 						//
-						checkNumberStatusMassa.push(checkNumberStatus);
+						var checkNumberStatus = await Sessions.checkNumberStatus(
+							removeWithspace(req.body.SessionName),
+							soNumeros(numero) + '@c.us'
+						);
 						//
-					} else {
-						var checkNumberStatusMassa = checkNumberStatus;
+						if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+							//
+							checkNumberStatusMassa.push(checkNumberStatus);
+							//
+						} else {
+							var checkNumberStatusMassa = checkNumberStatus;
+						}
 					}
+					await sleep(1000);
 				}
-				await sleep(1000);
-			}
-			//
-			await deletaArquivosTemp(filePath);
-			//
-			//console.log(result);
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": checkNumberStatusMassa
-			});
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
+				//
+				await deletaArquivosTemp(filePath);
+				//
+				//console.log(result);
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": checkNumberStatusMassa
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
 	}
-}
 }); //checkNumberStatusMassa
 //
 // ------------------------------------------------------------------------------------------------------- //
@@ -2323,32 +2323,32 @@ router.post("/sendTextGrupo", upload.none(''), verifyToken.verify, async (req, r
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			var sendTextGrupo = await Sessions.sendText(
-				removeWithspace(req.body.SessionName),
-				req.body.groupId.trim() + '@g.us',
-				req.body.msg
-			);
-			//
-			//console.log(result);
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": sendTextGrupo
-			});
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
+				//
+				var sendTextGrupo = await Sessions.sendText(
+					removeWithspace(req.body.SessionName),
+					req.body.groupId.trim() + '@g.us',
+					req.body.msg
+				);
+				//
+				//console.log(result);
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": sendTextGrupo
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
 	}
-}
 }); //sendTextGrupo
 //
 // ------------------------------------------------------------------------------------------------//
@@ -2371,34 +2371,34 @@ router.post("/sendLocationGroup", upload.none(''), verifyToken.verify, async (re
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			var sendLocationGroup = await Sessions.sendLocation(
-				removeWithspace(req.body.SessionName),
-				req.body.groupId.trim() + '@g.us',
-				req.body.lat,
-				req.body.long,
-				req.body.local
-			);
-			//
-			//console.log(result);
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": sendLocationGroup
-			});
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
+				//
+				var sendLocationGroup = await Sessions.sendLocation(
+					removeWithspace(req.body.SessionName),
+					req.body.groupId.trim() + '@g.us',
+					req.body.lat,
+					req.body.long,
+					req.body.local
+				);
+				//
+				//console.log(result);
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": sendLocationGroup
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
 	}
-}
 }); //sendLocationGroup
 //
 // ------------------------------------------------------------------------------------------------//
@@ -2421,56 +2421,56 @@ router.post("/sendImageGroup", upload.single('file'), verifyToken.verify, async 
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			try{
-			var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
-			var filePath = path.join(folderName, req.file.originalname);
-			fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
-			console.log("- File", filePath);
-			//
-			var sendImageGroup = await Sessions.sendImage(
-				removeWithspace(req.body.SessionName),
-				req.body.groupId.trim() + '@g.us',
-				filePath,
-				req.file.originalname,
-				req.body.caption
-			);
-			//
-			//
-			await deletaArquivosTemp(filePath);
-			//
-			//console.log(result);
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": sendImageGroup
-			});
-		} catch (error) {
-			//
-			var erroStatus = {
-				"erro": true,
-				"status": 404,
-				"message": "Erro ao enviar menssagem"
-			};
-			//
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": erroStatus
-			});
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
+				//
+				try {
+					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
+					var filePath = path.join(folderName, req.file.originalname);
+					fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
+					console.log("- File", filePath);
+					//
+					var sendImageGroup = await Sessions.sendImage(
+						removeWithspace(req.body.SessionName),
+						req.body.groupId.trim() + '@g.us',
+						filePath,
+						req.file.originalname,
+						req.body.caption
+					);
+					//
+					//
+					await deletaArquivosTemp(filePath);
+					//
+					//console.log(result);
+					res.setHeader('Content-Type', 'application/json');
+					res.status(200).json({
+						"Status": sendImageGroup
+					});
+				} catch (error) {
+					//
+					var erroStatus = {
+						"erro": true,
+						"status": 404,
+						"message": "Erro ao enviar menssagem"
+					};
+					//
+					res.setHeader('Content-Type', 'application/json');
+					res.status(400).json({
+						"Status": erroStatus
+					});
+				}
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
 		}
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
 	}
-}
 }); //sendImageGroup
 //
 // ------------------------------------------------------------------------------------------------//
@@ -2493,55 +2493,55 @@ router.post("/sendFileGroup", upload.single('file'), verifyToken.verify, async (
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			try{
-			var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
-			var filePath = path.join(folderName, req.file.originalname);
-			fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
-			console.log("- File", filePath);
-			//
-			var sendFileGroup = await Sessions.sendFile(
-				removeWithspace(req.body.SessionName),
-				req.body.groupId.trim() + '@g.us',
-				filePath,
-				req.file.originalname,
-				req.body.caption
-			);
-			//
-			await deletaArquivosTemp(filePath);
-			//
-			//console.log(result);
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": sendFileGroup
-			});
-		} catch (error) {
-			//
-			var erroStatus = {
-				"erro": true,
-				"status": 404,
-				"message": "Erro ao enviar menssagem"
-			};
-			//
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": erroStatus
-			});
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
+				//
+				try {
+					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
+					var filePath = path.join(folderName, req.file.originalname);
+					fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
+					console.log("- File", filePath);
+					//
+					var sendFileGroup = await Sessions.sendFile(
+						removeWithspace(req.body.SessionName),
+						req.body.groupId.trim() + '@g.us',
+						filePath,
+						req.file.originalname,
+						req.body.caption
+					);
+					//
+					await deletaArquivosTemp(filePath);
+					//
+					//console.log(result);
+					res.setHeader('Content-Type', 'application/json');
+					res.status(200).json({
+						"Status": sendFileGroup
+					});
+				} catch (error) {
+					//
+					var erroStatus = {
+						"erro": true,
+						"status": 404,
+						"message": "Erro ao enviar menssagem"
+					};
+					//
+					res.setHeader('Content-Type', 'application/json');
+					res.status(400).json({
+						"Status": erroStatus
+					});
+				}
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
 		}
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
 	}
-}
 }); //sendFileGroup
 //
 // ------------------------------------------------------------------------------------------------//
@@ -2564,55 +2564,55 @@ router.post("/sendFileBase64Group", upload.none(''), verifyToken.verify, async (
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			try{
-			var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
-			var filePath = path.join(folderName, req.body.originalname);
-			fs.writeFileSync(filePath, req.body.base64, 'base64');
-			console.log("- File", filePath);
-			//
-			var sendFileBase64 = await Sessions.sendFile(
-				removeWithspace(req.body.SessionName),
-				req.body.groupId + '@g.us',
-				filePath,
-				req.body.originalname,
-				req.body.caption
-			);
-			//
-			await deletaArquivosTemp(filePath);
-			//
-			//console.log(result);
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": sendFileBase64
-			});
-		} catch (error) {
-			//
-			var erroStatus = {
-				"erro": true,
-				"status": 404,
-				"message": "Erro ao enviar menssagem"
-			};
-			//
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": erroStatus
-			});
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
+				//
+				try {
+					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
+					var filePath = path.join(folderName, req.body.originalname);
+					fs.writeFileSync(filePath, req.body.base64, 'base64');
+					console.log("- File", filePath);
+					//
+					var sendFileBase64 = await Sessions.sendFile(
+						removeWithspace(req.body.SessionName),
+						req.body.groupId + '@g.us',
+						filePath,
+						req.body.originalname,
+						req.body.caption
+					);
+					//
+					await deletaArquivosTemp(filePath);
+					//
+					//console.log(result);
+					res.setHeader('Content-Type', 'application/json');
+					res.status(200).json({
+						"Status": sendFileBase64
+					});
+				} catch (error) {
+					//
+					var erroStatus = {
+						"erro": true,
+						"status": 404,
+						"message": "Erro ao enviar menssagem"
+					};
+					//
+					res.setHeader('Content-Type', 'application/json');
+					res.status(400).json({
+						"Status": erroStatus
+					});
+				}
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
 		}
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
 	}
-}
 }); //sendFileBase64Group
 //
 // ------------------------------------------------------------------------------------------------//
@@ -2620,7 +2620,7 @@ router.post("/sendFileBase64Group", upload.none(''), verifyToken.verify, async (
 // Enviar arquivo/documento
 router.post("/sendFileToBase64Group", upload.single('file'), verifyToken.verify, async (req, res, next) => {
 	//
-	if (!removeWithspace(req.body.SessionName) || !req.body.groupId || !req.file || !req.body.caption ) {
+	if (!removeWithspace(req.body.SessionName) || !req.body.groupId || !req.file || !req.body.caption) {
 		var validate = {
 			result: "info",
 			state: 'FAILURE',
@@ -2635,35 +2635,35 @@ router.post("/sendFileToBase64Group", upload.single('file'), verifyToken.verify,
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			var sendFileToBase64 = await Sessions.sendFileFromBase64(
-				removeWithspace(req.body.SessionName),
-				req.body.groupId.trim() + '@g.us',
-				req.file.buffer.toString('base64'),
-				req.file.mimetype,
-				req.file.originalname,
-				req.body.msg
-			);
-			//
-			//console.log(result);
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": sendFileToBase64
-			});
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
+				//
+				var sendFileToBase64 = await Sessions.sendFileFromBase64(
+					removeWithspace(req.body.SessionName),
+					req.body.groupId.trim() + '@g.us',
+					req.file.buffer.toString('base64'),
+					req.file.mimetype,
+					req.file.originalname,
+					req.body.msg
+				);
+				//
+				//console.log(result);
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": sendFileToBase64
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
 	}
-}
 }); //sendFileToBase64Group
 //
 // ------------------------------------------------------------------------------------------------------- //
@@ -2686,35 +2686,35 @@ router.post("/sendFileFromBase64Group", upload.none(''), verifyToken.verify, asy
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			var sendFileFromBase64 = await Sessions.sendFileFromBase64(
-				removeWithspace(req.body.SessionName),
-				req.body.groupId.trim() + '@g.us',
-				req.body.base64,
-				req.body.mimetype,
-				req.body.originalname,
-				req.body.msg
-			);
-			//
-			//console.log(result);
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": sendFileFromBase64
-			});
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
+				//
+				var sendFileFromBase64 = await Sessions.sendFileFromBase64(
+					removeWithspace(req.body.SessionName),
+					req.body.groupId.trim() + '@g.us',
+					req.body.base64,
+					req.body.mimetype,
+					req.body.originalname,
+					req.body.msg
+				);
+				//
+				//console.log(result);
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": sendFileFromBase64
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
 	}
-}
 }); //sendFileFromBase64Group
 //
 // ------------------------------------------------------------------------------------------------------- //
@@ -2737,29 +2737,29 @@ router.post("/leaveGroup", upload.none(''), verifyToken.verify, async (req, res,
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			var leaveGroup = await Sessions.leaveGroup(
-				removeWithspace(req.body.SessionName),
-				req.body.groupId + '@g.us'
-			);
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": leaveGroup
-			});
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
+				//
+				var leaveGroup = await Sessions.leaveGroup(
+					removeWithspace(req.body.SessionName),
+					req.body.groupId + '@g.us'
+				);
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": leaveGroup
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
 	}
-}
 }); //leaveGroup
 //
 // ------------------------------------------------------------------------------------------------------- //
@@ -2797,81 +2797,81 @@ router.post("/createGroup", upload.single('file'), verifyToken.verify, async (re
 			//
 		}
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			try{
-			var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
-			var filePath = path.join(folderName, req.file.originalname);
-			fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
-			console.log("- File:", filePath);
-			//
-			var arrayNumbers = fs.readFileSync(filePath, 'utf-8').toString().split(/\r?\n/);
-			//
-			var contactlistValid = [];
-			var contactlistInvalid = [];
-			//
-			for (var i in arrayNumbers) {
-				//console.log(arrayNumbers[i]);
-				var numero = soNumeros(arrayNumbers[i]);
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
 				//
-				if (numero.length !== 0) {
+				try {
+					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
+					var filePath = path.join(folderName, req.file.originalname);
+					fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
+					console.log("- File:", filePath);
 					//
-					var checkNumberStatus = await Sessions.checkNumberStatus(
-						removeWithspace(req.body.SessionName),
-						soNumeros(numero) + '@c.us'
-					);
+					var arrayNumbers = fs.readFileSync(filePath, 'utf-8').toString().split(/\r?\n/);
 					//
-					if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+					var contactlistValid = [];
+					var contactlistInvalid = [];
+					//
+					for (var i in arrayNumbers) {
+						//console.log(arrayNumbers[i]);
+						var numero = soNumeros(arrayNumbers[i]);
 						//
-						contactlistValid.push(checkNumberStatus.number + '@c.us');
-					} else {
-						contactlistInvalid.push(numero + '@c.us');
+						if (numero.length !== 0) {
+							//
+							var checkNumberStatus = await Sessions.checkNumberStatus(
+								removeWithspace(req.body.SessionName),
+								soNumeros(numero) + '@c.us'
+							);
+							//
+							if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+								//
+								contactlistValid.push(checkNumberStatus.number + '@c.us');
+							} else {
+								contactlistInvalid.push(numero + '@c.us');
+							}
+							//
+						}
+						//
+						await sleep(1000);
 					}
 					//
+					var createGroup = await Sessions.createGroup(
+						removeWithspace(req.body.SessionName),
+						req.body.title,
+						contactlistValid,
+						contactlistInvalid
+					);
+					//
+					await deletaArquivosTemp(filePath);
+					//
+					res.setHeader('Content-Type', 'application/json');
+					res.status(200).json({
+						"Status": createGroup
+					});
+				} catch (error) {
+					//
+					var erroStatus = {
+						"erro": true,
+						"status": 404,
+						"message": "Erro ao criar grupo"
+					};
+					//
+					res.setHeader('Content-Type', 'application/json');
+					res.status(400).json({
+						"Status": erroStatus
+					});
 				}
-				//
-				await sleep(1000);
-			}
-			//
-			var createGroup = await Sessions.createGroup(
-				removeWithspace(req.body.SessionName),
-				req.body.title,
-				contactlistValid,
-				contactlistInvalid
-			);
-			//
-			await deletaArquivosTemp(filePath);
-			//
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": createGroup
-			});
-		} catch (error) {
-			//
-			var erroStatus = {
-				"erro": true,
-				"status": 404,
-				"message": "Erro ao criar grupo"
-			};
-			//
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": erroStatus
-			});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
 		}
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
 	}
-}
 }); //createGroup
 //
 // ------------------------------------------------------------------------------------------------//
@@ -2894,29 +2894,29 @@ router.post("/getGroupMembers", upload.none(''), verifyToken.verify, async (req,
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			var getGroupMembers = await Sessions.getGroupMembers(
-				removeWithspace(req.body.SessionName),
-				req.body.groupId + '@g.us'
-			);
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": getGroupMembers
-			});
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
+				//
+				var getGroupMembers = await Sessions.getGroupMembers(
+					removeWithspace(req.body.SessionName),
+					req.body.groupId + '@g.us'
+				);
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": getGroupMembers
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
 	}
-}
 }); //getGroupMembers
 //
 // ------------------------------------------------------------------------------------------------//
@@ -2939,29 +2939,29 @@ router.post("/getGroupMembersIds", upload.none(''), verifyToken.verify, async (r
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			var getGroupMembersIds = await Sessions.getGroupMembersIds(
-				removeWithspace(req.body.SessionName),
-				req.body.groupId + '@g.us'
-			);
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": getGroupMembersIds
-			});
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
+				//
+				var getGroupMembersIds = await Sessions.getGroupMembersIds(
+					removeWithspace(req.body.SessionName),
+					req.body.groupId + '@g.us'
+				);
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": getGroupMembersIds
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
 	}
-}
 }); //getGroupMembersIds
 //
 // ------------------------------------------------------------------------------------------------//
@@ -2984,29 +2984,29 @@ router.post("/getGroupInviteLink", upload.none(''), verifyToken.verify, async (r
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			var GroupInviteLink = await Sessions.getGroupInviteLink(
-				removeWithspace(req.body.SessionName),
-				req.body.groupId + '@g.us'
-			);
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": GroupInviteLink
-			});
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
+				//
+				var GroupInviteLink = await Sessions.getGroupInviteLink(
+					removeWithspace(req.body.SessionName),
+					req.body.groupId + '@g.us'
+				);
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": GroupInviteLink
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
 	}
-}
 }); //getGroupInviteLink
 //
 // ------------------------------------------------------------------------------------------------//
@@ -3044,106 +3044,106 @@ router.post("/createGroupSetAdminMembers", upload.single('file'), verifyToken.ve
 			//
 		}
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			var createGroupSetAdminMembers = [];
-			//
-			try{
-			var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
-			var filePath = path.join(folderName, req.file.originalname);
-			fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
-			console.log("- File:", filePath);
-			//
-			var arrayNumbers = fs.readFileSync(filePath, 'utf-8').toString().split(/\r?\n/);
-			//
-			var contactlistValid = [];
-			var contactlistInvalid = [];
-			//
-			for (var i in arrayNumbers) {
-				//console.log(arrayNumbers[i]);
-				var numero = soNumeros(arrayNumbers[i]);
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
 				//
-				if (numero.length !== 0) {
+				var createGroupSetAdminMembers = [];
+				//
+				try {
+					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
+					var filePath = path.join(folderName, req.file.originalname);
+					fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
+					console.log("- File:", filePath);
 					//
-					var checkNumberStatus = await Sessions.checkNumberStatus(
-						removeWithspace(req.body.SessionName),
-						soNumeros(numero) + '@c.us'
-					);
+					var arrayNumbers = fs.readFileSync(filePath, 'utf-8').toString().split(/\r?\n/);
 					//
-					if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+					var contactlistValid = [];
+					var contactlistInvalid = [];
+					//
+					for (var i in arrayNumbers) {
+						//console.log(arrayNumbers[i]);
+						var numero = soNumeros(arrayNumbers[i]);
 						//
-						contactlistValid.push(checkNumberStatus.number + "@c.us");
-					} else {
-						contactlistInvalid.push(numero + "@c.us");
+						if (numero.length !== 0) {
+							//
+							var checkNumberStatus = await Sessions.checkNumberStatus(
+								removeWithspace(req.body.SessionName),
+								soNumeros(numero) + '@c.us'
+							);
+							//
+							if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+								//
+								contactlistValid.push(checkNumberStatus.number + "@c.us");
+							} else {
+								contactlistInvalid.push(numero + "@c.us");
+							}
+							//
+						}
+						//
+						await sleep(1000);
 					}
 					//
-				}
-				//
-				await sleep(1000);
-			}
-			//
-			var createGroup = await Sessions.createGroup(
-				removeWithspace(req.body.SessionName),
-				req.body.title,
-				contactlistValid,
-				contactlistInvalid
-			);
-			//
-			await sleep(5000);
-			//
-			createGroupSetAdminMembers.push(createGroup);
-			//
-			if (createGroup.erro !== true && createGroup.status !== 404) {
-				//
-				await forEach(contactlistValid, async (resultfile) => {
-					//
-					var promoteParticipant = await Sessions.promoteParticipant(
+					var createGroup = await Sessions.createGroup(
 						removeWithspace(req.body.SessionName),
-						createGroup.gid + '@g.us',
-						resultfile
+						req.body.title,
+						contactlistValid,
+						contactlistInvalid
 					);
 					//
-					createGroupSetAdminMembers.push(promoteParticipant);
+					await sleep(5000);
 					//
-					await sleep(1000);
+					createGroupSetAdminMembers.push(createGroup);
+					//
+					if (createGroup.erro !== true && createGroup.status !== 404) {
+						//
+						await forEach(contactlistValid, async (resultfile) => {
+							//
+							var promoteParticipant = await Sessions.promoteParticipant(
+								removeWithspace(req.body.SessionName),
+								createGroup.gid + '@g.us',
+								resultfile
+							);
+							//
+							createGroupSetAdminMembers.push(promoteParticipant);
+							//
+							await sleep(1000);
+						});
+						//
+					} else {
+						var createGroupSetAdminMembers = createGroup;
+					}
+					//
+					await deletaArquivosTemp(filePath);
+					//
+					res.setHeader('Content-Type', 'application/json');
+					res.status(200).json({
+						"Status": createGroupSetAdminMembers
+					});
+				} catch (error) {
+					//
+					var erroStatus = {
+						"erro": true,
+						"status": 404,
+						"message": "Erro ao criar grupo"
+					};
+					//
+					res.setHeader('Content-Type', 'application/json');
+					res.status(400).json({
+						"Status": erroStatus
+					});
+				}
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
 				});
-				//
-			} else {
-				var createGroupSetAdminMembers = createGroup;
-			}
-			//
-			await deletaArquivosTemp(filePath);
-			//
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": createGroupSetAdminMembers
-			});
-		} catch (error) {
-			//
-			var erroStatus = {
-				"erro": true,
-				"status": 404,
-				"message": "Erro ao criar grupo"
-			};
-			//
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": erroStatus
-			});
 		}
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
 	}
-}
 }); //createGroupSetAdminMembers
 //
 // ------------------------------------------------------------------------------------------------//
@@ -3181,121 +3181,121 @@ router.post("/createCountGroupSetAdminMembers", upload.single('file'), verifyTok
 			//
 		}
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			var createCountGroupSetAdminMembers = [];
-			var createGroup = [];
-			//
-			try{
-			var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
-			var filePath = path.join(folderName, req.file.originalname);
-			fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
-			console.log("- File:", filePath);
-			//
-			var arrayNumbers = fs.readFileSync(filePath, 'utf-8').toString().split(/\r?\n/);
-			//
-			var contactlistValid = [];
-			var contactlistInvalid = [];
-			//
-			for (var i in arrayNumbers) {
-				//console.log(arrayNumbers[i]);
-				var numero = soNumeros(arrayNumbers[i]);
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
 				//
-				if (numero.length !== 0) {
+				var createCountGroupSetAdminMembers = [];
+				var createGroup = [];
+				//
+				try {
+					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
+					var filePath = path.join(folderName, req.file.originalname);
+					fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
+					console.log("- File:", filePath);
 					//
-					var checkNumberStatus = await Sessions.checkNumberStatus(
-						removeWithspace(req.body.SessionName),
-						soNumeros(numero) + '@c.us'
-					);
+					var arrayNumbers = fs.readFileSync(filePath, 'utf-8').toString().split(/\r?\n/);
 					//
-					if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+					var contactlistValid = [];
+					var contactlistInvalid = [];
+					//
+					for (var i in arrayNumbers) {
+						//console.log(arrayNumbers[i]);
+						var numero = soNumeros(arrayNumbers[i]);
 						//
-						contactlistValid.push(checkNumberStatus.number + "@c.us");
-					} else {
-						contactlistInvalid.push(numero + "@c.us");
-					}
-					//
-				}
-				//
-				await sleep(1000);
-			}
-			//
-			for (count = 1; count <= req.body.count; count++) {
-				var resCreateGroup = await Sessions.createGroup(
-					removeWithspace(req.body.SessionName),
-					req.body.title + "-" + count,
-					contactlistValid,
-					contactlistInvalid
-				);
-				//
-				await sleep(5000);
-				//
-				createCountGroupSetAdminMembers.push(resCreateGroup);
-				//
-				if (resCreateGroup.erro !== true && resCreateGroup.status !== 404) {
-					//
-					await forEach(contactlistValid, async (resultfile) => {
-						//
-						var promoteParticipant = await Sessions.promoteParticipant(
-							removeWithspace(req.body.SessionName),
-							resCreateGroup.gid + '@g.us',
-							resultfile
-						);
-						//
-						createCountGroupSetAdminMembers.push(promoteParticipant);
+						if (numero.length !== 0) {
+							//
+							var checkNumberStatus = await Sessions.checkNumberStatus(
+								removeWithspace(req.body.SessionName),
+								soNumeros(numero) + '@c.us'
+							);
+							//
+							if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+								//
+								contactlistValid.push(checkNumberStatus.number + "@c.us");
+							} else {
+								contactlistInvalid.push(numero + "@c.us");
+							}
+							//
+						}
 						//
 						await sleep(1000);
-					});
+					}
 					//
-				} else {
-					var createCountGroupSetAdminMembers = resCreateGroup;
+					for (count = 1; count <= req.body.count; count++) {
+						var resCreateGroup = await Sessions.createGroup(
+							removeWithspace(req.body.SessionName),
+							req.body.title + "-" + count,
+							contactlistValid,
+							contactlistInvalid
+						);
+						//
+						await sleep(5000);
+						//
+						createCountGroupSetAdminMembers.push(resCreateGroup);
+						//
+						if (resCreateGroup.erro !== true && resCreateGroup.status !== 404) {
+							//
+							await forEach(contactlistValid, async (resultfile) => {
+								//
+								var promoteParticipant = await Sessions.promoteParticipant(
+									removeWithspace(req.body.SessionName),
+									resCreateGroup.gid + '@g.us',
+									resultfile
+								);
+								//
+								createCountGroupSetAdminMembers.push(promoteParticipant);
+								//
+								await sleep(1000);
+							});
+							//
+						} else {
+							var createCountGroupSetAdminMembers = resCreateGroup;
+						}
+						//
+						createGroup.push({
+							"createGroup": createCountGroupSetAdminMembers
+						});
+						//
+					}
+					//
+					await deletaArquivosTemp(filePath);
+					//
+					res.setHeader('Content-Type', 'application/json');
+					res.status(200).json({
+						"Status": createGroup
+					});
+				} catch (error) {
+					//
+					var erroStatus = {
+						"erro": true,
+						"status": 404,
+						"message": "Erro ao criar grupo"
+					};
+					//
+					res.setHeader('Content-Type', 'application/json');
+					res.status(400).json({
+						"Status": erroStatus
+					});
 				}
-				//
-				createGroup.push({
-					"createGroup": createCountGroupSetAdminMembers
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
 				});
-				//
-			}
-			//
-			await deletaArquivosTemp(filePath);
-			//
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": createGroup
-			});
-		} catch (error) {
-			//
-			var erroStatus = {
-				"erro": true,
-				"status": 404,
-				"message": "Erro ao criar grupo"
-			};
-			//
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": erroStatus
-			});
 		}
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
 	}
-}
 }); //createCountGroupSetAdminMembers
 //
 // ------------------------------------------------------------------------------------------------//
 //
 router.post("/removeParticipant", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
-	if (!removeWithspace(req.body.SessionName) || !req.body.groupId || !req.body.phonefull ) {
+	if (!removeWithspace(req.body.SessionName) || !req.body.groupId || !req.body.phonefull) {
 		var validate = {
 			result: "info",
 			state: 'FAILURE',
@@ -3310,43 +3310,43 @@ router.post("/removeParticipant", upload.none(''), verifyToken.verify, async (re
 		//
 	} else {
 		//
-	// Remove participante
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			var checkNumberStatus = await Sessions.checkNumberStatus(
-				removeWithspace(req.body.SessionName),
-				soNumeros(req.body.phonefull).trim() + '@c.us'
-			);
-			//
-			if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+		// Remove participante
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
 				//
-				var removeParticipant = await Sessions.removeParticipant(
+				var checkNumberStatus = await Sessions.checkNumberStatus(
 					removeWithspace(req.body.SessionName),
-					req.body.groupId.trim() + '@g.us',
-					checkNumberStatus.number + '@c.us'
+					soNumeros(req.body.phonefull).trim() + '@c.us'
 				);
 				//
-			} else {
-				var removeParticipant = checkNumberStatus;
-			}
-			//
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": removeParticipant
-			});
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
+				if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+					//
+					var removeParticipant = await Sessions.removeParticipant(
+						removeWithspace(req.body.SessionName),
+						req.body.groupId.trim() + '@g.us',
+						checkNumberStatus.number + '@c.us'
+					);
+					//
+				} else {
+					var removeParticipant = checkNumberStatus;
+				}
+				//
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": removeParticipant
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
 	}
-}
 }); //removeParticipant
 //
 // ------------------------------------------------------------------------------------------------//
@@ -3354,7 +3354,7 @@ router.post("/removeParticipant", upload.none(''), verifyToken.verify, async (re
 // Adicionar participante
 router.post("/addParticipant", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
-	if (!removeWithspace(req.body.SessionName) || !req.body.groupId || !req.body.phonefull ) {
+	if (!removeWithspace(req.body.SessionName) || !req.body.groupId || !req.body.phonefull) {
 		var validate = {
 			result: "info",
 			state: 'FAILURE',
@@ -3369,42 +3369,42 @@ router.post("/addParticipant", upload.none(''), verifyToken.verify, async (req, 
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			var checkNumberStatus = await Sessions.checkNumberStatus(
-				removeWithspace(req.body.SessionName),
-				soNumeros(req.body.phonefull).trim() + '@c.us'
-			);
-			//
-			if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
 				//
-				var addParticipant = await Sessions.addParticipant(
+				var checkNumberStatus = await Sessions.checkNumberStatus(
 					removeWithspace(req.body.SessionName),
-					req.body.groupId.trim() + '@g.us',
-					checkNumberStatus.number + '@c.us'
+					soNumeros(req.body.phonefull).trim() + '@c.us'
 				);
 				//
-			} else {
-				var addParticipant = checkNumberStatus;
-			}
-			//
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": addParticipant
-			});
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
+				if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+					//
+					var addParticipant = await Sessions.addParticipant(
+						removeWithspace(req.body.SessionName),
+						req.body.groupId.trim() + '@g.us',
+						checkNumberStatus.number + '@c.us'
+					);
+					//
+				} else {
+					var addParticipant = checkNumberStatus;
+				}
+				//
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": addParticipant
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
 	}
-}
 }); //addParticipant
 //
 // ------------------------------------------------------------------------------------------------//
@@ -3412,7 +3412,7 @@ router.post("/addParticipant", upload.none(''), verifyToken.verify, async (req, 
 // Promote participant (Give admin privileges)
 router.post("/promoteParticipant", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
-	if (!removeWithspace(req.body.SessionName) || !req.body.groupId || !req.body.phonefull ) {
+	if (!removeWithspace(req.body.SessionName) || !req.body.groupId || !req.body.phonefull) {
 		var validate = {
 			result: "info",
 			state: 'FAILURE',
@@ -3427,42 +3427,42 @@ router.post("/promoteParticipant", upload.none(''), verifyToken.verify, async (r
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			var checkNumberStatus = await Sessions.checkNumberStatus(
-				removeWithspace(req.body.SessionName),
-				soNumeros(req.body.phonefull).trim() + '@c.us'
-			);
-			//
-			if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
 				//
-				var promoteParticipant = await Sessions.promoteParticipant(
+				var checkNumberStatus = await Sessions.checkNumberStatus(
 					removeWithspace(req.body.SessionName),
-					req.body.groupId.trim() + '@g.us',
-					checkNumberStatus.number + '@c.us'
+					soNumeros(req.body.phonefull).trim() + '@c.us'
 				);
 				//
-			} else {
-				var promoteParticipant = checkNumberStatus;
-			}
-			//
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": promoteParticipant
-			});
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
+				if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+					//
+					var promoteParticipant = await Sessions.promoteParticipant(
+						removeWithspace(req.body.SessionName),
+						req.body.groupId.trim() + '@g.us',
+						checkNumberStatus.number + '@c.us'
+					);
+					//
+				} else {
+					var promoteParticipant = checkNumberStatus;
+				}
+				//
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": promoteParticipant
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
 	}
-}
 }); //promoteParticipant
 //
 // ------------------------------------------------------------------------------------------------//
@@ -3470,7 +3470,7 @@ router.post("/promoteParticipant", upload.none(''), verifyToken.verify, async (r
 // Depromote participant (Give admin privileges)
 router.post("/demoteParticipant", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
-	if (!removeWithspace(req.body.SessionName) || !req.body.groupId || !req.body.phonefull ) {
+	if (!removeWithspace(req.body.SessionName) || !req.body.groupId || !req.body.phonefull) {
 		var validate = {
 			result: "info",
 			state: 'FAILURE',
@@ -3485,42 +3485,42 @@ router.post("/demoteParticipant", upload.none(''), verifyToken.verify, async (re
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			var checkNumberStatus = await Sessions.checkNumberStatus(
-				removeWithspace(req.body.SessionName),
-				soNumeros(req.body.phonefull).trim() + '@c.us'
-			);
-			//
-			if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
 				//
-				var demoteParticipant = await Sessions.demoteParticipant(
+				var checkNumberStatus = await Sessions.checkNumberStatus(
 					removeWithspace(req.body.SessionName),
-					req.body.groupId.trim() + '@g.us',
 					soNumeros(req.body.phonefull).trim() + '@c.us'
 				);
 				//
-			} else {
-				var demoteParticipant = checkNumberStatus;
-			}
-			//
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": demoteParticipant
-			});
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
+				if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+					//
+					var demoteParticipant = await Sessions.demoteParticipant(
+						removeWithspace(req.body.SessionName),
+						req.body.groupId.trim() + '@g.us',
+						soNumeros(req.body.phonefull).trim() + '@c.us'
+					);
+					//
+				} else {
+					var demoteParticipant = checkNumberStatus;
+				}
+				//
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": demoteParticipant
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
 	}
-}
 }); //demoteParticipant
 //
 // ------------------------------------------------------------------------------------------------//
@@ -3528,7 +3528,7 @@ router.post("/demoteParticipant", upload.none(''), verifyToken.verify, async (re
 // Retorna o status do grupo, jid, descrição do link de convite
 router.post("/getGroupInfoFromInviteLink", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
-	if (!removeWithspace(req.body.SessionName) || !req.body.InviteLink ) {
+	if (!removeWithspace(req.body.SessionName) || !req.body.InviteLink) {
 		var validate = {
 			result: "info",
 			state: 'FAILURE',
@@ -3543,7 +3543,7 @@ router.post("/getGroupInfoFromInviteLink", upload.none(''), verifyToken.verify, 
 		//
 	} else {
 		//
-		if (!validUrl.isUri(req.body.link)){
+		if (!validUrl.isUri(req.body.link)) {
 			var validate = {
 				result: "error",
 				state: 'FAILURE',
@@ -3557,30 +3557,30 @@ router.post("/getGroupInfoFromInviteLink", upload.none(''), verifyToken.verify, 
 			});
 			//
 		}
-	//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			var getGroupInfoFromInviteLink = await Sessions.getGroupInfoFromInviteLink(
-				removeWithspace(req.body.SessionName),
-				req.body.InviteCode
-			);
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": getGroupInfoFromInviteLink
-			});
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
+		//
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
+				//
+				var getGroupInfoFromInviteLink = await Sessions.getGroupInfoFromInviteLink(
+					removeWithspace(req.body.SessionName),
+					req.body.InviteCode
+				);
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": getGroupInfoFromInviteLink
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
 	}
-}
 }); //getGroupInfoFromInviteLink
 //
 // ------------------------------------------------------------------------------------------------//
@@ -3588,7 +3588,7 @@ router.post("/getGroupInfoFromInviteLink", upload.none(''), verifyToken.verify, 
 // Junte-se a um grupo usando o código de convite do grupo
 router.post("/joinGroup", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
-	if (!removeWithspace(req.body.SessionName) || !req.body.InviteLink ) {
+	if (!removeWithspace(req.body.SessionName) || !req.body.InviteLink) {
 		var validate = {
 			result: "info",
 			state: 'FAILURE',
@@ -3603,7 +3603,7 @@ router.post("/joinGroup", upload.none(''), verifyToken.verify, async (req, res, 
 		//
 	} else {
 		//
-		if (!validUrl.isUri(req.body.link)){
+		if (!validUrl.isUri(req.body.link)) {
 			var validate = {
 				result: "error",
 				state: 'FAILURE',
@@ -3617,30 +3617,30 @@ router.post("/joinGroup", upload.none(''), verifyToken.verify, async (req, res, 
 			});
 			//
 		}
-	//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			var joinGroup = await Sessions.joinGroup(
-				removeWithspace(req.body.SessionName),
-				req.body.InviteCode
-			);
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": joinGroup
-			});
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
+		//
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
+				//
+				var joinGroup = await Sessions.joinGroup(
+					removeWithspace(req.body.SessionName),
+					req.body.InviteCode
+				);
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": joinGroup
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
 	}
-}
 }); //joinGroup
 //
 // ------------------------------------------------------------------------------------------------//
@@ -3650,11 +3650,11 @@ router.post("/joinGroup", upload.none(''), verifyToken.verify, async (req, res, 
 ╠═╝├┬┘│ │├┤ ││  ├┤   ╠╣ │ │││││   │ ││ ││││└─┐           
 ╩  ┴└─└─┘└  ┴┴─┘└─┘  ╚  └─┘┘└┘└─┘ ┴ ┴└─┘┘└┘└─┘           
 */
-	//
-	// Set client status
+//
+// Set client status
 router.post("/setProfileStatus", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
-	if (!removeWithspace(req.body.SessionName) || !req.body.ProfileStatus ) {
+	if (!removeWithspace(req.body.SessionName) || !req.body.ProfileStatus) {
 		var validate = {
 			result: "info",
 			state: 'FAILURE',
@@ -3669,37 +3669,37 @@ router.post("/setProfileStatus", upload.none(''), verifyToken.verify, async (req
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			var setProfileStatus = await Sessions.setProfileStatus(
-				removeWithspace(req.body.SessionName),
-				req.body.ProfileStatus
-			);
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": setProfileStatus
-			});
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
+				//
+				var setProfileStatus = await Sessions.setProfileStatus(
+					removeWithspace(req.body.SessionName),
+					req.body.ProfileStatus
+				);
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": setProfileStatus
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
 	}
-}
 }); //setProfileStatus
 //
 // ------------------------------------------------------------------------------------------------//
-	//
-	// Set client profile name
+//
+// Set client profile name
 router.post("/setProfileName", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
-	if (!removeWithspace(req.body.SessionName) || !req.body.ProfileName ) {
+	if (!removeWithspace(req.body.SessionName) || !req.body.ProfileName) {
 		var validate = {
 			result: "info",
 			state: 'FAILURE',
@@ -3714,36 +3714,36 @@ router.post("/setProfileName", upload.none(''), verifyToken.verify, async (req, 
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			var setProfileName = await Sessions.setProfileName(
-				removeWithspace(req.body.SessionName),
-				req.body.ProfileName
-			);
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": setProfileName
-			});
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
+				//
+				var setProfileName = await Sessions.setProfileName(
+					removeWithspace(req.body.SessionName),
+					req.body.ProfileName
+				);
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": setProfileName
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
 	}
-}
 }); //setProfileName
 //
 // ------------------------------------------------------------------------------------------------//
 //
 router.post("/setProfilePic", upload.single('file'), verifyToken.verify, async (req, res, next) => {
 	//
-	if (!removeWithspace(req.body.SessionName) || !req.file ) {
+	if (!removeWithspace(req.body.SessionName) || !req.file) {
 		var validate = {
 			result: "info",
 			state: 'FAILURE',
@@ -3758,36 +3758,36 @@ router.post("/setProfilePic", upload.single('file'), verifyToken.verify, async (
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			//
-			var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
-			var filePath = path.join(folderName, req.file.originalname);
-			fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
-			console.log("- File", filePath);
-			//
-			var setProfilePic = await Sessions.setProfilePic(
-				removeWithspace(req.body.SessionName),
-				filePath
-			);
-			//
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": setProfilePic
-			});
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
+				//
+				//
+				var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
+				var filePath = path.join(folderName, req.file.originalname);
+				fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
+				console.log("- File", filePath);
+				//
+				var setProfilePic = await Sessions.setProfilePic(
+					removeWithspace(req.body.SessionName),
+					filePath
+				);
+				//
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": setProfilePic
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
 	}
-}
 }); //setProfilePic
 //
 // ------------------------------------------------------------------------------------------------//
@@ -3816,27 +3816,27 @@ router.post("/killServiceWorker", upload.none(''), verifyToken.verify, async (re
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			var killServiceWorker = await Sessions.killServiceWorker(removeWithspace(req.body.SessionName));
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": killServiceWorker
-			});
-			//
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
+				//
+				var killServiceWorker = await Sessions.killServiceWorker(removeWithspace(req.body.SessionName));
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": killServiceWorker
+				});
+				//
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
 	}
-}
 }); //killServiceWorker
 //
 // ------------------------------------------------------------------------------------------------//
@@ -3859,27 +3859,27 @@ router.post("/restartService", upload.none(''), verifyToken.verify, async (req, 
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			var restartService = await Sessions.restartService(removeWithspace(req.body.SessionName));
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": restartService
-			});
-			//
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
+				//
+				var restartService = await Sessions.restartService(removeWithspace(req.body.SessionName));
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": restartService
+				});
+				//
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
 	}
-}
 }); //restartService
 //
 // ------------------------------------------------------------------------------------------------//
@@ -3902,40 +3902,51 @@ router.post("/reloadService", upload.none(''), verifyToken.verify, async (req, r
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-		case 'notLogged':
-		case 'deviceNotConnected':
-		case 'desconnectedMobile':
-		case 'qrReadFail':
-		case 'deleteToken':
-		case 'DISCONNECTED':
-			//
-			try {
-				var killServiceWorker = await Sessions.killServiceWorker(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
+			case 'notLogged':
+			case 'deviceNotConnected':
+			case 'desconnectedMobile':
+			case 'qrReadFail':
+			case 'deleteToken':
+			case 'DISCONNECTED':
 				//
-				if (killServiceWorker.erro === false && killServiceWorker.status === 200) {
+				try {
+					var killServiceWorker = await Sessions.killServiceWorker(removeWithspace(req.body.SessionName));
 					//
-					var restartService = await Sessions.restartService(removeWithspace(req.body.SessionName));
-					//
-					if (restartService.erro === false && restartService.status === 200) {
+					if (killServiceWorker.erro === false && killServiceWorker.status === 200) {
 						//
-						var reload = restartService;
+						var restartService = await Sessions.restartService(removeWithspace(req.body.SessionName));
 						//
-						//await deletaToken(session.tokenPatch + "/" + req.body.SessionName + ".data.json");
-						//
-						res.setHeader('Content-Type', 'application/json');
-						res.status(200).json({
-							"Status": reload
-						});
+						if (restartService.erro === false && restartService.status === 200) {
+							//
+							var reload = restartService;
+							//
+							//await deletaToken(session.tokenPatch + "/" + req.body.SessionName + ".data.json");
+							//
+							res.setHeader('Content-Type', 'application/json');
+							res.status(200).json({
+								"Status": reload
+							});
+							//
+						} else {
+							//
+							var reload = restartService;
+							//
+							res.setHeader('Content-Type', 'application/json');
+							res.status(400).json({
+								"Status": reload
+							});
+							//
+						}
 						//
 					} else {
 						//
-						var reload = restartService;
+						var reload = killServiceWorker;
 						//
 						res.setHeader('Content-Type', 'application/json');
 						res.status(400).json({
@@ -3943,39 +3954,28 @@ router.post("/reloadService", upload.none(''), verifyToken.verify, async (req, r
 						});
 						//
 					}
-					//
-				} else {
-					//
-					var reload = killServiceWorker;
+				} catch (error) {
 					//
 					res.setHeader('Content-Type', 'application/json');
-					res.status(400).json({
-						"Status": reload
+					res.status(404).json({
+						"Status": {
+							"erro": true,
+							"status": 404,
+							"message": "Sessão não iniciada.",
+							"restartService": false
+						}
 					});
 					//
 				}
-			} catch (error) {
 				//
+				break;
+			default:
 				res.setHeader('Content-Type', 'application/json');
-				res.status(404).json({
-					"Status": {
-						"erro": true,
-						"status": 404,
-						"message": "Sessão não iniciada.",
-						"restartService": false
-					}
+				res.status(400).json({
+					"Status": sessionStatus
 				});
-				//
-			}
-			//
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
+		}
 	}
-}
 }); //reloadService
 //
 // ------------------------------------------------------------------------------------------------//
@@ -3998,28 +3998,28 @@ router.post("/getHostDevice", upload.none(''), verifyToken.verify, async (req, r
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			var getHostDevice = await Sessions.getHostDevice(removeWithspace(req.body.SessionName));
-			//
-			//console.log(result);
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": getHostDevice
-			});
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
+				//
+				var getHostDevice = await Sessions.getHostDevice(removeWithspace(req.body.SessionName));
+				//
+				//console.log(result);
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": getHostDevice
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
 	}
-}
 }); //getHostDevice
 //
 // ------------------------------------------------------------------------------------------------//
@@ -4042,28 +4042,28 @@ router.post("/isMultiDevice", upload.none(''), verifyToken.verify, async (req, r
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			var isMultiDevice = await Sessions.isMultiDevice(removeWithspace(req.body.SessionName));
-			//
-			//console.log(result);
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": isMultiDevice
-			});
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
+				//
+				var isMultiDevice = await Sessions.isMultiDevice(removeWithspace(req.body.SessionName));
+				//
+				//console.log(result);
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": isMultiDevice
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
 	}
-}
 }); //isMultiDevice
 //
 // ------------------------------------------------------------------------------------------------//
@@ -4086,26 +4086,26 @@ router.post("/getConnectionState", upload.none(''), verifyToken.verify, async (r
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			var getConnectionState = await Sessions.getConnectionState(removeWithspace(req.body.SessionName));
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": getConnectionState
-			});
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
+				//
+				var getConnectionState = await Sessions.getConnectionState(removeWithspace(req.body.SessionName));
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": getConnectionState
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
 	}
-}
 }); //getConnectionState
 //
 // ------------------------------------------------------------------------------------------------//
@@ -4128,27 +4128,27 @@ router.post("/getBatteryLevel", upload.none(''), verifyToken.verify, async (req,
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			var getBatteryLevel = await Sessions.getBatteryLevel(removeWithspace(req.body.SessionName));
-			//
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": getBatteryLevel
-			});
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
+				//
+				var getBatteryLevel = await Sessions.getBatteryLevel(removeWithspace(req.body.SessionName));
+				//
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": getBatteryLevel
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
 	}
-}
 }); //getBatteryLevel
 //
 // ------------------------------------------------------------------------------------------------//
@@ -4196,26 +4196,26 @@ router.post("/getWAVersion", upload.none(''), verifyToken.verify, async (req, re
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			var getWAVersion = await Sessions.getWAVersion(removeWithspace(req.body.SessionName));
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": getWAVersion
-			});
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
+				//
+				var getWAVersion = await Sessions.getWAVersion(removeWithspace(req.body.SessionName));
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": getWAVersion
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
 	}
-}
 }); //getWAVersion
 //
 // ------------------------------------------------------------------------------------------------//
@@ -4238,26 +4238,26 @@ router.post("/getWAVersion", upload.none(''), verifyToken.verify, async (req, re
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			var getWAVersion = await Sessions.getWAVersion(removeWithspace(req.body.SessionName));
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": getWAVersion
-			});
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
+				//
+				var getWAVersion = await Sessions.getWAVersion(removeWithspace(req.body.SessionName));
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": getWAVersion
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
 	}
-}
 }); //getWAVersion
 //
 // ------------------------------------------------------------------------------------------------//
@@ -4280,29 +4280,29 @@ router.post("/startPhoneWatchdog", upload.none(''), verifyToken.verify, async (r
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			var startPhoneWatchdog = await Sessions.startPhoneWatchdog(
-				removeWithspace(req.body.SessionName),
-				req.body.interval
-			);
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": startPhoneWatchdog
-			});
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
+				//
+				var startPhoneWatchdog = await Sessions.startPhoneWatchdog(
+					removeWithspace(req.body.SessionName),
+					req.body.interval
+				);
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": startPhoneWatchdog
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
 	}
-}
 }); //startPhoneWatchdog
 //
 // ------------------------------------------------------------------------------------------------//
@@ -4325,26 +4325,26 @@ router.post("/stopPhoneWatchdog", upload.none(''), verifyToken.verify, async (re
 		//
 	} else {
 		//
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			var stopPhoneWatchdog = await Sessions.stopPhoneWatchdog(removeWithspace(req.body.SessionName));
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": stopPhoneWatchdog
-			});
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
+				//
+				var stopPhoneWatchdog = await Sessions.stopPhoneWatchdog(removeWithspace(req.body.SessionName));
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": stopPhoneWatchdog
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
 	}
-}
 }); //stopPhoneWatchdog
 //
 // ------------------------------------------------------------------------------------------------//

@@ -1,31 +1,42 @@
 // https://www.npmjs.com/package/json-file-validator
+//
 const validatorFull = require('json-file-validator').full;
 const validatorBasic = require('json-file-validator').basic;
 //
 exports.verify = async (req, res, next) => {
 	//
+	console.log("- Validando syntax json");
+	//
 	try {
-	//
-	console.log("Validator:\n", req.body);
-	//
-	let content = req.body;
-	let teste = {
-		"name": "John",
-		"lastname": "Doe",
-		"age": 35
-	};
-	//let resultFull = content.match(validatorFull);
-	let resultBasic = validatorBasic.test(content);
-	let resultTeste = validatorBasic.test(teste);
-	//
-	//console.log("- resultFull:", resultFull);
-	console.log("- resultBasic:", resultBasic);
-	console.log("- resultTeste:", resultTeste);
-	//
+		//
+		let content = req.body;
+		let resultBasic = validatorBasic.test(content);
+		//
+		if (!resultBasic) {
+			next();
+		} else {
+			res.setHeader('Content-Type', 'application/json');
+			return res.status(404).json({
+				"Status": {
+					"result": "error",
+					"state": "FAILURE",
+					"status": "notProvided",
+					"message": "Json gerado de forma incorreta, efetue a correção e tente novamente"
+				}
+			});
+		}
+		//
 	} catch (error) {
-	//
-	console.log("- Validator error:", error);
-	//
+		console.log("- Validator error:", error);
+		res.setHeader('Content-Type', 'application/json');
+		res.status(404).json({
+			"Status": {
+				"result": "error",
+				"state": "FAILURE",
+				"status": "notProvided",
+				"message": "Erro na validação do json gerado, verifique e tente novamente"
+			}
+		});
 	}
-//
+	//
 }
