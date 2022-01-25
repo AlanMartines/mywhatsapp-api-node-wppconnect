@@ -975,6 +975,7 @@ module.exports = class Sessions {
 		filePath
 	) {
 		console.log("- Enviando menssagem de voz.");
+		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var sendResult = await session.client.then(async client => {
 			// Send basic text
@@ -1020,6 +1021,7 @@ module.exports = class Sessions {
 		mimetype
 	) {
 		console.log("- Enviando menssagem de voz.");
+		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var sendResult = await session.client.then(async client => {
 			return await client.sendVoiceBase64(
@@ -1064,7 +1066,7 @@ module.exports = class Sessions {
 		namecontact
 	) {
 		console.log("- Enviando contato.");
-		//
+		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var sendResult = await session.client.then(async client => {
 			// Send contact
@@ -1109,6 +1111,7 @@ module.exports = class Sessions {
 
 	) {
 		console.log("- Enviando lista de contato.");
+		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var sendResult = await session.client.then(async client => {
 			// Send contact
@@ -1128,8 +1131,7 @@ module.exports = class Sessions {
 					"message": "Lista de contatos validos envida com sucesso."
 				};
 				//
-			})
-				.catch((erro) => {
+			}).catch((erro) => {
 					console.error("Error when:", erro); //return object error
 					//
 					return {
@@ -1155,6 +1157,7 @@ module.exports = class Sessions {
 		msg
 	) {
 		console.log("- Enviando menssagem de texto.");
+		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var sendResult = await session.client.then(async client => {
 			// Send basic text
@@ -1199,6 +1202,7 @@ module.exports = class Sessions {
 		local
 	) {
 		console.log("- Enviando localização.");
+		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var sendResult = await session.client.then(async client => {
 			// Send basic text
@@ -1246,6 +1250,7 @@ module.exports = class Sessions {
 		detail
 	) {
 		console.log("- Enviando link.");
+		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var sendResult = await session.client.then(async client => {
 			// Send basic text
@@ -1293,6 +1298,7 @@ module.exports = class Sessions {
 		caption
 	) {
 		console.log("- Enviando menssagem com imagem.");
+		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultsendImage = await session.client.then(async (client) => {
 			return await client.sendImage(
@@ -1338,6 +1344,7 @@ module.exports = class Sessions {
 		caption
 	) {
 		console.log("- Enviando arquivo.");
+		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultsendImage = await session.client.then(async (client) => {
 			return await client.sendFile(
@@ -1384,6 +1391,7 @@ module.exports = class Sessions {
 		caption
 	) {
 		console.log("- Enviando arquivo em Base64Data");
+		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultSendFile = await session.client.then(async (client) => {
 			return await client.sendFileFromBase64(
@@ -1469,6 +1477,7 @@ module.exports = class Sessions {
 		filePath
 	) {
 		console.log("- Enviando figura.");
+		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultsendImage = await session.client.then(async (client) => {
 			return await client.sendImageAsSticker(
@@ -1514,7 +1523,7 @@ module.exports = class Sessions {
 		SessionName
 	) {
 		console.log("- Obtendo todos os contatos!");
-		//
+		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultgetAllContacts = await session.client.then(async client => {
 			return await client.getAllContacts().then(async (result) => {
@@ -1564,7 +1573,7 @@ module.exports = class Sessions {
 		SessionName
 	) {
 		console.log("- Obtendo todos os grupos!");
-		//
+		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultgetAllGroups = await session.client.then(async client => {
 			return await client.getAllGroups().then(async (result) => {
@@ -1608,6 +1617,7 @@ module.exports = class Sessions {
 	// Returns browser session token
 	static async getSessionTokenBrowser(SessionName) {
 		console.log("- Obtendo  Session Token Browser.");
+		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultgetSessionTokenBrowser = await session.client.then(async client => {
 			return await client.getSessionTokenBrowser().then((result) => {
@@ -1631,7 +1641,8 @@ module.exports = class Sessions {
 	//
 	// Chama sua lista de contatos bloqueados
 	static async getBlockList(SessionName) {
-		console.log("- getBlockList");
+		console.log("- Obtendo lista de contatos bloqueados");
+		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultgetBlockList = await session.client.then(async client => {
 			return await client.getBlockList().then((result) => {
@@ -1653,12 +1664,13 @@ module.exports = class Sessions {
 	//
 	// ------------------------------------------------------------------------------------------------//
 	//
-	// Recuperar status de contato
+	// Recuperar status
 	static async getStatus(
 		SessionName,
 		number
 	) {
 		console.log("- Obtendo status!");
+		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultgetStatus = await session.client.then(async client => {
 			return await client.getStatus(number).then((result) => {
@@ -1680,12 +1692,13 @@ module.exports = class Sessions {
 	//
 	// ------------------------------------------------------------------------------------------------//
 	//
-	// Recuperar status de contato
+	// Recuperar status do contato
 	static async getNumberProfile(
 		SessionName,
 		number
 	) {
-		console.log("- Obtendo status!");
+		console.log("- Obtendo status do contato!");
+		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultgetNumberProfile = await session.client.then(async client => {
 			return await client.getNumberProfile(number).then((result) => {
@@ -1713,6 +1726,7 @@ module.exports = class Sessions {
 		number
 	) {
 		console.log("- canReceiveMessage");
+		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultcheckNumberStatus = await session.client.then(async client => {
 			return await client.checkNumberStatus(number).then((result) => {
@@ -1769,6 +1783,7 @@ module.exports = class Sessions {
 		number
 	) {
 		console.log("- Obtendo a foto do perfil do servidor!");
+		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultgetProfilePicFromServer = await session.client.then(async client => {
 			try {
@@ -1802,7 +1817,8 @@ module.exports = class Sessions {
 		SessionName,
 		groupId
 	) {
-		console.log("- leaveGroup");
+		console.log("- Deixar o grupo");
+		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultleaveGroup = await session.client.then(async client => {
 			return await client.leaveGroup(groupId).then((result) => {
@@ -1837,7 +1853,8 @@ module.exports = class Sessions {
 		SessionName,
 		groupId
 	) {
-		console.log("- getGroupMembers");
+		console.log("- Obtendo membros do grupo");
+		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultgetGroupMembers = await session.client.then(async client => {
 			return await client.getGroupMembers(groupId).then(async (result) => {
@@ -1884,7 +1901,8 @@ module.exports = class Sessions {
 		SessionName,
 		groupId
 	) {
-		console.log("- getGroupMembersIds");
+		console.log("- Obter IDs dos membros do grupo");
+		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultgetGroupMembersIds = await session.client.then(async client => {
 			return await client.getGroupMembersIds(groupId).then((result) => {
@@ -1912,7 +1930,8 @@ module.exports = class Sessions {
 		SessionName,
 		groupId
 	) {
-		console.log("- getGroupInviteLink");
+		console.log("- Gerar link de convite do grupo");
+		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultgetGroupInviteLink = await session.client.then(async client => {
 			return await client.getGroupInviteLink(groupId).then((result) => {
@@ -1942,7 +1961,8 @@ module.exports = class Sessions {
 		contactlistValid,
 		contactlistInvalid
 	) {
-		console.log("- createGroup");
+		console.log("- Criando grupo");
+		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultgetGroupInviteLink = await session.client.then(async client => {
 			return await client.createGroup(title, contactlistValid).then((result) => {
@@ -1995,7 +2015,8 @@ module.exports = class Sessions {
 		groupId,
 		phonefull
 	) {
-		console.log("- removeParticipant");
+		console.log("- Removendo participante do grupo");
+		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultremoveParticipant = await session.client.then(async client => {
 			return await client.removeParticipant(groupId, phonefull).then((result) => {
@@ -2042,7 +2063,8 @@ module.exports = class Sessions {
 		groupId,
 		phonefull
 	) {
-		console.log("- addParticipant");
+		console.log("- Adicionando participante no grupo");
+		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultaddParticipant = await session.client.then(async client => {
 			return await client.addParticipant(groupId, phonefull).then((result) => {
@@ -2083,13 +2105,14 @@ module.exports = class Sessions {
 	//
 	// ------------------------------------------------------------------------------------------------//
 	//
-	// Promote participant (Give admin privileges)
+	// Promote participante (Give admin privileges)
 	static async promoteParticipant(
 		SessionName,
 		groupId,
 		number
 	) {
-		console.log("- promoteParticipant");
+		console.log("- Promovendo participante do grupo para admin");
+		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultpromoteParticipant = await session.client.then(async client => {
 			return await client.promoteParticipant(groupId, number).then((result) => {
@@ -2136,7 +2159,8 @@ module.exports = class Sessions {
 		groupId,
 		phonefull
 	) {
-		console.log("- demoteParticipant");
+		console.log("- Removendo participante do grupo de admin");
+		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultdemoteParticipant = await session.client.then(async client => {
 			return await client.demoteParticipant(groupId, phonefull).then((result) => {
@@ -2182,7 +2206,8 @@ module.exports = class Sessions {
 		SessionName,
 		InviteCode
 	) {
-		console.log("- Obtendo chats!");
+		console.log("- Obtendo status do grupo via link de convite");
+		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultgetGroupInfoFromInviteLink = await session.client.then(async client => {
 			return await client.getGroupInfoFromInviteLink(InviteCode).then((result) => {
@@ -2208,7 +2233,8 @@ module.exports = class Sessions {
 		SessionName,
 		InviteCode
 	) {
-		console.log("- joinGroup");
+		console.log("- Entrando no grupo via link de convite");
+		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultjoinGroup = await session.client.then(async client => {
 			return await await client.joinGroup(InviteCode).then((result) => {
@@ -2257,7 +2283,8 @@ module.exports = class Sessions {
 		SessionName,
 		ProfileStatus
 	) {
-		console.log("- setProfileStatus");
+		console.log("- Mudando o estatus");
+		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultsetProfileStatus = await session.client.then(async client => {
 			return await client.setProfileStatus(ProfileStatus).then((result) => {
@@ -2290,7 +2317,8 @@ module.exports = class Sessions {
 		SessionName,
 		ProfileName
 	) {
-		console.log("- setProfileName");
+		console.log("- Mudando profile name");
+		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultsetProfileName = await session.client.then(async client => {
 			return await client.setProfileName(ProfileName).then((result) => {
@@ -2323,7 +2351,8 @@ module.exports = class Sessions {
 		SessionName,
 		path
 	) {
-		console.log("- setProfilePic");
+		console.log("- Mudando imagem do perfil");
+		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultsetProfilePic = await session.client.then(async client => {
 			return await client.setProfilePic(path).then((result) => {
@@ -2359,7 +2388,8 @@ module.exports = class Sessions {
 	//
 	// Delete the Service Worker
 	static async killServiceWorker(SessionName) {
-		console.log("- killServiceWorker");
+		console.log("- Delete the Service Worker");
+		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultkillServiceWorker = await session.client.then(async client => {
 			return await client.killServiceWorker().then((result) => {
@@ -2390,7 +2420,8 @@ module.exports = class Sessions {
 	//
 	// Load the service again
 	static async restartService(SessionName) {
-		console.log("- restartService");
+		console.log("- Reload the service again");
+		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultrestartService = await session.client.then(async client => {
 			return await client.restartService().then((result) => {
@@ -2421,7 +2452,8 @@ module.exports = class Sessions {
 	//
 	// Get device info
 	static async getHostDevice(SessionName) {
-		console.log("- getHostDevice");
+		console.log("- Obtendo informações do dispositivo");
+		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultgetHostDevice = await session.client.then(async client => {
 			return await client.getHostDevice().then((result) => {
@@ -2465,7 +2497,8 @@ module.exports = class Sessions {
 	//
 	// Get is multi device info
 	static async isMultiDevice(SessionName) {
-		console.log("- isMultiDevice");
+		console.log("- Obendo informações do multi-device");
+		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultgetHostDevice = await session.client.then(async client => {
 			return await client.isMultiDevice().then((result) => {
@@ -2529,7 +2562,8 @@ module.exports = class Sessions {
 	//
 	// Get battery level
 	static async getBatteryLevel(SessionName) {
-		console.log("- getBatteryLevel");
+		console.log("- Obtendo nivel de bateria");
+		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultgetBatteryLevel = await session.client.then(async client => {
 			return await client.getBatteryLevel().then((result) => {
@@ -2561,7 +2595,8 @@ module.exports = class Sessions {
 	//
 	// Is Connected
 	static async isConnected(SessionName) {
-		console.log("- isConnected");
+		console.log("- Obtendo se esta conectado");
+		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultisConnected = await session.client.then(async client => {
 			return await client.isConnected().then((result) => {
@@ -2592,38 +2627,8 @@ module.exports = class Sessions {
 	//
 	// Obter versão do WhatsappWeb
 	static async getWAVersion(SessionName) {
-		console.log("- getWAVersion");
-		var session = Sessions.getSession(SessionName);
-		var resultgetWAVersion = await session.client.then(async client => {
-			return await client.getWAVersion().then((result) => {
-				//console.log('Result: ', result); //return object success
-				//
-				return {
-					"erro": false,
-					"status": 200,
-					"message": "Versão do WhatsappWeb obtido com sucesso",
-					"WAVersion": result
-				};
-				//
-			}).catch((erro) => {
-				console.error("Error when:", erro); //return object error
-				//
-				return {
-					"erro": true,
-					"status": 404,
-					"message": "Erro ao obter versão do WhatsappWeb"
-				};
-				//
-			});
-		});
-		return resultgetWAVersion;
-	} //getWAVersion
-	//
-	// ------------------------------------------------------------------------------------------------//
-	//
-	// Obter versão do WhatsappWeb
-	static async getWAVersion(SessionName) {
-		console.log("- getWAVersion");
+		console.log("- Obtendo versão do WhatsappWeb");
+		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultgetWAVersion = await session.client.then(async client => {
 			return await client.getWAVersion().then((result) => {
@@ -2654,7 +2659,8 @@ module.exports = class Sessions {
 	//
 	// Inicia a verificação de conexão do telefone
 	static async startPhoneWatchdog(SessionName, interval) {
-		console.log("- startPhoneWatchdog");
+		console.log("- Iniciando a verificação de conexão do telefone");
+		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultstartPhoneWatchdog = await session.client.then(async client => {
 			return await client.startPhoneWatchdog(interval).then((result) => {
@@ -2685,7 +2691,8 @@ module.exports = class Sessions {
 	//
 	// Para a verificação de conexão do telefone
 	static async stopPhoneWatchdog(SessionName) {
-		console.log("- stopPhoneWatchdog");
+		console.log("- Parando a verificação de conexão do telefone");
+		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultstopPhoneWatchdog = await session.client.then(async client => {
 			return await client.stopPhoneWatchdog().then((result) => {
@@ -2723,7 +2730,8 @@ module.exports = class Sessions {
 	// ------------------------------------------------------------------------------------------------//
 	//
 	static async RotaTeste() {
-
+		console.log("- Iniciando rota de teste");
+		await sleep(3000);
 	} //RotaTeste
 	//
 	// ------------------------------------------------------------------------------------------------//

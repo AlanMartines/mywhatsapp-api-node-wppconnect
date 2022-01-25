@@ -8,7 +8,8 @@ exports.verify = async (req, res, next) => {
 	//
 	console.log("Validator", req.body);
 	//
-	const result = Validate.validate(req.body);
+	var instance = 4;
+	const result = Validate.validate(instance, req.body);
 	console.log("- Validator:", result);
 	//
 	} catch (error) {
