@@ -1,4 +1,4 @@
-//
+// https://www.npmjs.com/package/json-file-validator
 const validatorFull = require('json-file-validator').full;
 const validatorBasic = require('json-file-validator').basic;
 //
