@@ -7,7 +7,9 @@ exports.verify = async (req, res, next) => {
 	//
 	console.log("Validator", req.body);
 	//
-	console.log((validator.test(req.body)) ? 'Correct' : 'Wrong');
+	let result = content.match(validator);
+
+	console.log((result) ? true : false);
 	//
 	} catch (error) {
 	//
