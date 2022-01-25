@@ -14,7 +14,7 @@ const upload = multer({})
 const router = express.Router();
 const Sessions = require("../sessions.js");
 const verifyToken = require("../middleware/verifyToken");
-const verifyBody = require("../middleware/verifyBody");
+const verifyJson = require("../middleware/validateJson");
 //
 // ------------------------------------------------------------------------------------------------//
 //
@@ -99,7 +99,7 @@ const convertBytes = function (bytes) {
 ╚═╝└─┘ ┴  ┴ ┴┘└┘└─┘  └─┘ ┴ ┴ ┴┴└─ ┴ └─┘─┴┘
 */
 //
-router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next) => {
+router.post("/Start", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName)) {
 		var validate = {
