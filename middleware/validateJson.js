@@ -5,7 +5,7 @@ exports.verify = async (req, res, next) => {
 	//
 	try {
 	//
-	console.log("Validator", req);
+	console.log("Validator", req.body);
 	//
 	} catch (error) {
 	//
