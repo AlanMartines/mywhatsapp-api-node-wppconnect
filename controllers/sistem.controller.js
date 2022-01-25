@@ -140,6 +140,7 @@ router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next
 			case 'deleteToken':
 			case 'CLOSED':
 			case 'DISCONNECTED':
+			case 'NOTFOUND':
 			case 'qrRead':
 				//
 				var getStart = await Sessions.Start(removeWithspace(req.body.SessionName), removeWithspace(req.body.SessionName));
