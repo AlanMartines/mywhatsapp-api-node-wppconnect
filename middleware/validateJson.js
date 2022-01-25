@@ -10,8 +10,8 @@ exports.verify = async (req, res, next) => {
 	//
 	try {
 		//
-		//let content = req.body;
-		//let resultBasic = validatorBasic.test(content);
+		let content = req.body;
+		let resultBasic = validatorBasic.test(content);
 		const errors = validationResult(req);
 		//
 		//if (!errors.isEmpty()) {
