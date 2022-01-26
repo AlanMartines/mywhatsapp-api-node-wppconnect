@@ -1,6 +1,7 @@
 //
 // Configuração dos módulos
 const express = require('express');
+require('express-async-errors');
 const app = express();
 const cors = require('cors');
 const path = require('path');
@@ -22,9 +23,13 @@ const sistem = require("../controllers/sistem.controller");
 //
 module.exports = () => {
   //
-  app.use(function(req, res, next) {
+  app.use(function(err, req, res, next) {
     res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+		if (err.message) {
+			console.error("- Router error\n", err.message);
+			next();
+		}
     next();
   });
   //
