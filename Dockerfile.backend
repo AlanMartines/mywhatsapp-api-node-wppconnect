@@ -78,3 +78,5 @@ WORKDIR /home/ApiWPPconnect
 
 EXPOSE 3001
 CMD [ "node", "--trace-warnings", "server.js" ]
+
+## docker-compose up --build -d
