@@ -294,7 +294,7 @@ WHATSAPPVERSION=
 MULTIDEVICE=0
 #
 # Auto close
-AUTO_CLOSE=30000
+AUTO_CLOSE=60000
 #
 # Chave de segurança para validação no JWT
 JWT_SECRET=09f26e402586e2faa8da4c98a35f1b20d6b033c60
@@ -465,7 +465,7 @@ docker run -d -p 9001:9001 --name ApiWPPconnect \
 	-e VIEW_QRCODE_TERMINAL=0 \
 	-e WHATSAPPVERSION= \
 	-e MULTIDEVICE=0 \
-	-e AUTO_CLOSE=30000 \
+	-e AUTO_CLOSE=60000 \
 	-e JWT_SECRET=09f26e402586e2faa8da4c98a35f1b20d6b033c60 \
 	-e TOKENSPATCH=/usr/local/tokens \
 	-e VALIDATE_MYSQL=0 \
