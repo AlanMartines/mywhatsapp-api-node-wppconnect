@@ -503,6 +503,8 @@ router.post("/sendVoice", upload.single('file'), verifyJson.verify, verifyToken.
 						"Status": sendVoice
 					});
 				} catch (error) {
+					console.log("Erro on sendVoice\n", error);
+					//
 					//
 					var erroStatus = {
 						"erro": true,
@@ -780,6 +782,7 @@ router.post("/sendContactVcardList", upload.single('file'), verifyJson.verify, v
 						"Status": sendContactVcardList
 					});
 				} catch (error) {
+					console.log("Erro on sendContactVcardList\n", error);
 					//
 					var erroStatus = {
 						"erro": true,
@@ -936,6 +939,7 @@ router.post("/sendTextMassa", upload.single('file'), verifyJson.verify, verifyTo
 						"Status": sendTextMassa
 					});
 				} catch (error) {
+					console.log("Erro on sendText\n", error);
 					//
 					var erroStatus = {
 						"erro": true,
@@ -1155,6 +1159,7 @@ router.post("/sendImage", upload.single('file'), verifyJson.verify, verifyToken.
 						"Status": sendImage
 					});
 				} catch (error) {
+					console.log("Erro on sendImage\n", error);
 					//
 					var erroStatus = {
 						"erro": true,
@@ -1271,6 +1276,7 @@ router.post("/sendImageMassa", sendImageMassa, verifyJson.verify, verifyToken.ve
 						"Status": sendImageMassa
 					});
 				} catch (error) {
+					console.log("Erro on sendImage\n", error);
 					//
 					var erroStatus = {
 						"erro": true,
@@ -1355,6 +1361,7 @@ router.post("/sendMultImage", upload.array('file', 50), verifyJson.verify, verif
 							await deletaArquivosTemp(filePathImagem);
 							//
 						} catch (error) {
+							console.log("Erro on sendImage\n", error);
 							//
 							var erroStatus = {
 								"erro": true,
@@ -1474,6 +1481,7 @@ router.post("/sendMultImageMassa", sendMultImageMassa, verifyJson.verify, verify
 										await deletaArquivosTemp(filePathImagem);
 										//
 									} catch (error) {
+										console.log("Erro on sendImage\n", error);
 										//
 										var erroStatus = {
 											"erro": true,
@@ -1509,6 +1517,7 @@ router.post("/sendMultImageMassa", sendMultImageMassa, verifyJson.verify, verify
 						"Status": sendMultImageMassa
 					});
 				} catch (error) {
+					console.log("Erro on sendImage\n", error);
 					//
 					var erroStatus = {
 						"erro": true,
@@ -1592,6 +1601,7 @@ router.post("/sendFile", upload.single('file'), verifyJson.verify, verifyToken.v
 						"Status": sendFile
 					});
 				} catch (error) {
+					console.log("Erro on sendFile\n", error);
 					//
 					var erroStatus = {
 						"erro": true,
@@ -1674,7 +1684,7 @@ router.post("/sendFileBase64", upload.none(''), verifyJson.verify, verifyToken.v
 						"Status": sendFileBase64
 					});
 				} catch (error) {
-					console.log("Erro on sendFileBase64\n", error);
+					console.log("Erro on sendFile\n", error);
 					//
 					var erroStatus = {
 						"erro": true,
@@ -2452,6 +2462,7 @@ router.post("/sendImageGroup", upload.single('file'), verifyJson.verify, verifyT
 						"Status": sendImageGroup
 					});
 				} catch (error) {
+					console.log("Erro on sendImage\n", error);
 					//
 					var erroStatus = {
 						"erro": true,
@@ -2523,6 +2534,7 @@ router.post("/sendFileGroup", upload.single('file'), verifyJson.verify, verifyTo
 						"Status": sendFileGroup
 					});
 				} catch (error) {
+					console.log("Erro on sendFile\n", error);
 					//
 					var erroStatus = {
 						"erro": true,
@@ -2594,6 +2606,7 @@ router.post("/sendFileBase64Group", upload.none(''), verifyJson.verify, verifyTo
 						"Status": sendFileBase64
 					});
 				} catch (error) {
+					console.log("Erro on sendFile\n", error);
 					//
 					var erroStatus = {
 						"erro": true,
@@ -2853,6 +2866,7 @@ router.post("/createGroup", upload.single('file'), verifyJson.verify, verifyToke
 						"Status": createGroup
 					});
 				} catch (error) {
+					console.log("Erro on createGroup\n", error);
 					//
 					var erroStatus = {
 						"erro": true,
@@ -3125,6 +3139,7 @@ router.post("/createGroupSetAdminMembers", upload.single('file'), verifyJson.ver
 						"Status": createGroupSetAdminMembers
 					});
 				} catch (error) {
+					console.log("Erro on createGroup\n", error);
 					//
 					var erroStatus = {
 						"erro": true,
@@ -3270,6 +3285,7 @@ router.post("/createCountGroupSetAdminMembers", upload.single('file'), verifyJso
 						"Status": createGroup
 					});
 				} catch (error) {
+					console.log("Erro on createGroup\n", error);
 					//
 					var erroStatus = {
 						"erro": true,
@@ -3956,6 +3972,7 @@ router.post("/reloadService", upload.none(''), verifyJson.verify, verifyToken.ve
 						//
 					}
 				} catch (error) {
+					console.log("Erro on killServiceWorker\n", error);
 					//
 					res.setHeader('Content-Type', 'application/json');
 					res.status(404).json({
