@@ -28,4 +28,9 @@ services:
     volumes:
       - ${VOLUME}:/usr/local/tokens
     ports:
-      - "${PORT}:9001"
+      - ${PORT}:9001
+    networks:
+      - WPPconnect
+networks:
+  WPPconnect:
+    driver: bridge
