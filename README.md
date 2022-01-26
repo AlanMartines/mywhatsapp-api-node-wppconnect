@@ -450,25 +450,40 @@ docker-compose up --build -d
 ## Instalar o certbot Debian (e.g. Ubuntu) 64bits
 
 ```barsh
+# Instalar Python e cerbot
 sudo apt install -y certbot python3-certbot-nginx
+
+# Renew certificate interactively
+sudo certbot renew
 ```
 
 ## Instalar o certbot CentOS 7/8 64bits
 
 ```barsh
+# Instalar Python e cerbot
 sudo yum install -y epel-release
 
+# Instalar plugin para nginex
 sudo yum install -y certbot-nginx
+
+# Renew certificate interactively
+sudo certbot renew
 ```
 
 ## Instalar o certbot Alpine 64bits
 
 ```barsh
+# Instalar Python
 apk add --update python3 py3-pip
 
+# Instalar cerbot
 apk add certbot
 
+# Instalar plugin para nginex
 pip install certbot-nginx
+
+# Renew certificate interactively
+certbot renew
 ```
 
 ## Criar o certificado SSL para domínios https Debian (e.g. Ubuntu) 64bits e CentOS 7/8 64bits
