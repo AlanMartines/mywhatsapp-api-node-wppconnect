@@ -2,6 +2,7 @@
 // Configuração dos módulos
 const express = require('express');
 require('express-async-errors');
+const bodyParser = require('body-parser');
 const app = express();
 const cors = require('cors');
 const path = require('path');
@@ -17,7 +18,27 @@ const io = require('socket.io')(http, {
 	},
 	allowEIO3: true
 });
+//
 app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+//
+// Express Parser
+app.use(express.json({
+	limit: '50mb',
+	extended: true
+}));
+//
+app.use(express.urlencoded({
+	limit: '50mb',
+	extended: true
+}));
+// Rotas
+//
+app.use((req, res, next) => {
+	req.io = io;
+	next();
+});
 //
 const sistem = require("../controllers/sistem.controller");
 //
@@ -43,23 +64,7 @@ module.exports = () => {
 		next();
 	});
 	//
-	// Express Parser
-	app.use(express.json({
-		limit: '50mb',
-		extended: true
-	}));
-	//
-	app.use(express.urlencoded({
-		limit: '50mb',
-		extended: true
-	}));
-	// Rotas
-	//
-	app.use((req, res, next) => {
-		req.io = io;
-		next();
-	});
-	//
+//
 	app.get('/', function (req, res) {
 		//res.status(200).send('Server WPPConnect is running API. https://github.com/AlanMartines/mywhatsapp-api-node-wppconnect');
 		res.sendFile(path.join(__dirname, '/index.html'));
