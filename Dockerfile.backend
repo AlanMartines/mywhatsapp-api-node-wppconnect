@@ -60,7 +60,8 @@ RUN apt-get update && \
 	build-essential \
 	nodejs \
 	libappindicator1 \
-	sudo
+	sudo && \
+	apt-get autoremove -y
 
 RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
 	&& apt-get install -y ./google-chrome-stable_current_amd64.deb \
@@ -71,7 +72,14 @@ RUN apt-get update \
 
 COPY . /home/ApiWPPconnect/
 
-RUN cd /home/ApiWPPconnect/ && npm install
+RUN cd /home/ApiWPPconnect/ && \
+	npm install --allow-root --unsafe-perm=true
+
+RUN cd /home/ApiWPPconnect/ && \
+	git clone https://github.com/wppconnect-team/wppconnect.git && \
+	cd wppconnect && \
+	npm install --allow-root --unsafe-perm=true && \
+	npm run build
 
 WORKDIR /home/ApiWPPconnect
 
