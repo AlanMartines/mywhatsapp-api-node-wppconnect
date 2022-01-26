@@ -443,20 +443,8 @@ router.post("/Close", (req, res, next) => {
 ## Dockerfile
 
 ```bash
-# Ir para seu diretório home
-cd ~
-
-# Clone este repositório
-git clone https://github.com/AlanMartines/mywhatsapp-api-node-wppconnect.git
-
-# Acesse a pasta do projeto no terminal/cmd
-cd mywhatsapp-api-node-wppconnect
-
-# Processando o arquivo Dockerfile
-docker build -t alanmartines/mywhatsapp-api-node-wppconnect:1.0
-
 # Criar um contêiner
-docker container run --name mywhatsapp-api-node-wppconnect -p 9001:9001 -d alanmartines/mywhatsapp-api-node-wppconnect:1.0
+docker-compose up --build -d
 ```
 
 ## Instalar o certbot
