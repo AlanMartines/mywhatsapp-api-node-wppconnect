@@ -452,14 +452,31 @@ docker-compose up --build -d
 ## Dockerfile
 
 ```bash
-# Criar um contêiner
-docker-compose up --build -d
-
 # Processando o arquivo Dockerfile
 docker build -t alanmartines/mywhatsapp-api-node-wppconnect:1.0.0 -f Dockerfile.backend .
 
-# Criar um contêiner
-docker container run --name ApiWPPconnect -p 9001:9001 -d mywhatsapp-api-node-wppconnect:1.0.0
+# Criar contêiner
+docker run -d -p 9001:9001 --name ApiWPPconnect \
+  --restart=always \
+	-v /usr/local/tokens:/usr/local/tokens \
+	-e NODE_EN=production \
+	-e HOST=localhost \
+	-e PORT=9001 \
+	-e VIEW_QRCODE_TERMINAL=0 \
+	-e WHATSAPPVERSION= \
+	-e MULTIDEVICE=0 \
+	-e AUTO_CLOSE=30000 \
+	-e JWT_SECRET=09f26e402586e2faa8da4c98a35f1b20d6b033c60 \
+	-e TOKENSPATCH=/usr/local/tokens \
+	-e VALIDATE_MYSQL=0 \
+	-e MYSQL_HOST=localhost \
+	-e MYSQL_PORT=3306 \
+	-e MYSQL_USER=mywhatsappapi \
+	-e MYSQL_PASSWORD=TuUep8KkjCtAA@ \
+	-e MYSQL_DATABASE=mywhatsapp-api \
+	-e MYSQL_DIALECT=mysql \
+	-e MYSQL_TIMEZONE='-04:00' \
+  alanmartines/mywhatsapp-api-node-wppconnect:1.0.0
 ```
 
 ## Instalar o certbot Debian (e.g. Ubuntu) 64bits
