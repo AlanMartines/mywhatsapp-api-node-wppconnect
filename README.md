@@ -460,7 +460,7 @@ docker run -d -p 9001:9001 --name ApiWPPconnect \
   --restart=always \
 	-v /usr/local/tokens:/usr/local/tokens \
 	-e NODE_EN=production \
-	-e HOST=localhost \
+	-e HOST=0.0.0.0 \
 	-e PORT=9001 \
 	-e VIEW_QRCODE_TERMINAL=0 \
 	-e WHATSAPPVERSION= \

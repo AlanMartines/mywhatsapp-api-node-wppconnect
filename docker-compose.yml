@@ -11,7 +11,7 @@ services:
     restart: always
     environment:
       NODE_ENV: production
-      HOST: localhost
+      HOST: 0.0.0.0
       PORT: 9001
       VIEW_QRCODE_TERMINAL: ${VIEW_QRCODE_TERMINAL}
       WHATSAPPVERSION: ${WHATSAPPVERSION}
