@@ -1,5 +1,5 @@
 # ignore .git and .cache folders
-.git
+.git*
 .cache
 
 # ignore all *.class files in all folders, including build root
@@ -14,3 +14,4 @@ README-secret.md
 *Dockerfile*
 *docker-compose*
 node_modules
+.env*
