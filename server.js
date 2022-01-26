@@ -62,9 +62,6 @@ MYSQL_USER=mywhatsappapi
 # A senha do usuário do banco. Ex: user123
 MYSQL_PASSWORD=TuUep8KkjCtAA@
 #
-# A senha do usuário root do banco. Ex: root123
-MYSQL_ROOT_PASSWORD=TuUep8KkjCtAA@
-#
 # A base de dados a qual a aplicação irá se conectar. Ex: node_mysql
 MYSQL_DATABASE=mywhatsapp-api
 #

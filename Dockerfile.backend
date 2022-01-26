@@ -1,0 +1,80 @@
+FROM node:14.17.6
+
+LABEL version="1.0.0" description="ApiWPPconnect" maintainer="Alan Martines<alancpmartines@hotmail.com>"
+
+RUN mkdir /home/ApiWPPconnect
+RUN mkdir -p /usr/local/tokens
+
+RUN apt-get update && \
+	apt-get upgrade -y && \
+	apt-get install -y \
+	git \
+	curl \
+	yarn \
+	gcc \
+	g++ \
+	make \
+	libgbm-dev \
+	wget \
+	unzip \
+	fontconfig \
+	locales \
+	gconf-service \
+	libasound2 \
+	libatk1.0-0 \
+	libc6 \
+	libcairo2 \
+	libcups2 \
+	libdbus-1-3 \
+	libexpat1 \
+	libfontconfig1 \
+	libgconf-2-4 \
+	libgdk-pixbuf2.0-0 \
+	libglib2.0-0 \
+	libgtk-3-0 \
+	libnspr4 \
+	libpango-1.0-0 \
+	libpangocairo-1.0-0 \
+	libstdc++6 \
+	libx11-6 \
+	libx11-xcb1 \
+	libxcb1 \
+	libxcomposite1 \
+	libxcursor1 \
+	libxdamage1 \
+	libxext6 \
+	libxfixes3 \
+	libxi6 \
+	libxrandr2 \
+	libxrender1 \
+	libxss1 \
+	libxtst6 \
+	ca-certificates \
+	fonts-liberation \
+	libnss3 \
+	lsb-release \
+	xdg-utils \
+	libatk-bridge2.0-0 \
+	libgbm1 \
+	libgcc1 \
+	libu2f-udev \
+	build-essential \
+	nodejs \
+	libappindicator1 \
+	sudo
+
+RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
+	&& apt-get install -y ./google-chrome-stable_current_amd64.deb \
+	&& rm -fr ./google-chrome-stable_current_amd64.deb
+
+RUN apt-get update \
+	&& apt-get upgrade -y
+
+COPY . /home/ApiWPPconnect/
+
+RUN cd /home/ApiWPPconnect/ && npm install
+
+WORKDIR /home/ApiWPPconnect
+
+EXPOSE 3001
+CMD [ "node", "--trace-warnings", "server.js" ]
