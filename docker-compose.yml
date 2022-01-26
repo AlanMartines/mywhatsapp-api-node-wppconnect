@@ -3,14 +3,14 @@ services:
   backend:
     container_name: ApiWPPconnect
     hostname: ApiWPPconnect
-    #network_mode: bridge
+    network_mode: bridge
     build:
       context: .
       dockerfile: Dockerfile.backend
     restart: always
     environment:
       NODE_ENV: production
-      HOST: ${HOST}
+      HOST: localhost
       PORT: 9001
       VIEW_QRCODE_TERMINAL: ${VIEW_QRCODE_TERMINAL}
       WHATSAPPVERSION: ${WHATSAPPVERSION}
@@ -29,8 +29,3 @@ services:
       - ${VOLUME}:/usr/local/tokens
     ports:
       - ${PORT}:9001
-    networks:
-      - WPPconnect
-networks:
-  WPPconnect:
-    driver: bridge
