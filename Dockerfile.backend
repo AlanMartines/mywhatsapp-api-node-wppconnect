@@ -75,7 +75,7 @@ RUN cd /home/ApiWPPconnect/ && npm install
 
 WORKDIR /home/ApiWPPconnect
 
-EXPOSE 9001
+EXPOSE 9001/tcp
 
 CMD [ "node", "--trace-warnings", "server.js" ]
 
