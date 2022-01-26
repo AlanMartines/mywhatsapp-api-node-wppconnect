@@ -99,7 +99,7 @@ const convertBytes = function (bytes) {
 ╚═╝└─┘ ┴  ┴ ┴┘└┘└─┘  └─┘ ┴ ┴ ┴┴└─ ┴ └─┘─┴┘
 */
 //
-router.post("/Start", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName)) {
 		var validate = {
@@ -173,7 +173,7 @@ router.post("/Start", upload.none(''), verifyJson.verify, verifyToken.verify, as
 //
 // ------------------------------------------------------------------------------------------------//
 //
-router.post("/Status", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/Status", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName)) {
 		var validate = {
@@ -201,7 +201,7 @@ router.post("/Status", upload.none(''), verifyJson.verify, verifyToken.verify, a
 // ------------------------------------------------------------------------------------------------//
 //
 // Fecha a sessão
-router.post("/Close", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/Close", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName)) {
 		var validate = {
@@ -245,7 +245,7 @@ router.post("/Close", upload.none(''), verifyJson.verify, verifyToken.verify, as
 // ------------------------------------------------------------------------------------------------//
 //
 // Desconecta do whatsapp web
-router.post("/Logout", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/Logout", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName)) {
 		var validate = {
@@ -287,7 +287,7 @@ router.post("/Logout", upload.none(''), verifyJson.verify, verifyToken.verify, a
 // ------------------------------------------------------------------------------------------------//
 //
 // Gera o QR-Code
-router.post("/QRCode", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/QRCode", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	console.log("- getQRCode");
 	//
 	if (!removeWithspace(req.body.SessionName)) {
@@ -381,7 +381,7 @@ router.post("/QRCode", upload.none(''), verifyJson.verify, verifyToken.verify, a
 //
 // ------------------------------------------------------------------------------------------------//
 //
-router.post("/getSessions", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/getSessions", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName)) {
 		var validate = {
@@ -411,7 +411,7 @@ router.post("/getSessions", upload.none(''), verifyJson.verify, verifyToken.veri
 // ------------------------------------------------------------------------------------------------//
 //
 // Dados de memoria e uptime
-router.post("/getHardWare", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/getHardWare", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	console.log("- getHardWare");
 	//
 	var getHardWare = {
@@ -448,7 +448,7 @@ router.post("/getHardWare", upload.none(''), verifyJson.verify, verifyToken.veri
 */
 //
 //Eviar menssagem de voz
-router.post("/sendVoice", upload.single('file'), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/sendVoice", upload.single('file'), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName) || !req.file || !req.body.phonefull) {
 		var validate = {
@@ -530,7 +530,7 @@ router.post("/sendVoice", upload.single('file'), verifyJson.verify, verifyToken.
 // ------------------------------------------------------------------------------------------------//
 //
 //Eviar menssagem de voz
-router.post("/sendVoiceBase64", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/sendVoiceBase64", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName) || !req.body.phonefull || !req.body.base64 || !req.body.mimetype) {
 		var validate = {
@@ -589,7 +589,7 @@ router.post("/sendVoiceBase64", upload.none(''), verifyJson.verify, verifyToken.
 // ------------------------------------------------------------------------------------------------//
 //
 //Eviar menssagem de voz
-router.post("/sendVoiceFileBase64", upload.single('file'), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/sendVoiceFileBase64", upload.single('file'), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName) || !req.file || !req.body.phonefull) {
 		var validate = {
@@ -650,7 +650,7 @@ router.post("/sendVoiceFileBase64", upload.single('file'), verifyJson.verify, ve
 // ------------------------------------------------------------------------------------------------//
 //
 // Enviar Contato
-router.post("/sendContactVcard", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/sendContactVcard", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName) || !req.body.phonefull || !req.body.contact || !req.body.namecontact) {
 		var validate = {
@@ -710,7 +710,7 @@ router.post("/sendContactVcard", upload.none(''), verifyJson.verify, verifyToken
 // ------------------------------------------------------------------------------------------------//
 //
 // Enviar Lista de Contato
-router.post("/sendContactVcardList", upload.single('file'), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/sendContactVcardList", upload.single('file'), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName) || !req.body.phonefull || !req.file) {
 		var validate = {
@@ -808,7 +808,7 @@ router.post("/sendContactVcardList", upload.single('file'), verifyJson.verify, v
 // ------------------------------------------------------------------------------------------------//
 //
 //Enviar Texto
-router.post("/sendText", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/sendText", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName) || !req.body.phonefull || !req.body.msg) {
 		var validate = {
@@ -868,7 +868,7 @@ router.post("/sendText", upload.none(''), verifyJson.verify, verifyToken.verify,
 // ------------------------------------------------------------------------------------------------//
 //
 //Enviar Texto em Massa
-router.post("/sendTextMassa", upload.single('file'), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/sendTextMassa", upload.single('file'), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName) || !req.body.phonefull || !req.file || !req.body.msg) {
 		var validate = {
@@ -965,7 +965,7 @@ router.post("/sendTextMassa", upload.single('file'), verifyJson.verify, verifyTo
 // ------------------------------------------------------------------------------------------------//
 //
 //Enviar localização
-router.post("/sendLocation", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/sendLocation", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName) || !req.body.phonefull || !req.body.lat || !req.body.long || !req.body.local) {
 		var validate = {
@@ -1026,7 +1026,7 @@ router.post("/sendLocation", upload.none(''), verifyJson.verify, verifyToken.ver
 // ------------------------------------------------------------------------------------------------//
 //
 //Enviar links com preview
-router.post("/sendLinkPreview", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/sendLinkPreview", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName) || !req.body.phonefull || !req.body.link || !req.body.descricao) {
 		var validate = {
@@ -1101,7 +1101,7 @@ router.post("/sendLinkPreview", upload.none(''), verifyJson.verify, verifyToken.
 // ------------------------------------------------------------------------------------------------//
 //
 //Enviar Imagem
-router.post("/sendImage", upload.single('file'), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/sendImage", upload.single('file'), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName) || !req.body.phonefull || !req.file || !req.body.caption) {
 		var validate = {
@@ -1193,7 +1193,7 @@ var sendImageMassa = upload.fields([{
 	maxCount: 1
 }]);
 //
-router.post("/sendImageMassa", sendImageMassa, verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/sendImageMassa", sendImageMassa, verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName) || !req.body.phonefull || !req.phonefull[0] || !req.fileimg[0] || !req.body.caption) {
 		var validate = {
@@ -1302,7 +1302,7 @@ router.post("/sendImageMassa", sendImageMassa, verifyJson.verify, verifyToken.ve
 // ------------------------------------------------------------------------------------------------//
 //
 // Enviar varia imagens
-router.post("/sendMultImage", upload.array('file', 50), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/sendMultImage", upload.array('file', 50), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName) || !req.body.phonefull || !req.files || !req.body.caption) {
 		var validate = {
@@ -1408,7 +1408,7 @@ var sendMultImageMassa = upload.fields([{
 	maxCount: 50
 }]);
 //
-router.post("/sendMultImageMassa", sendMultImageMassa, verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/sendMultImageMassa", sendMultImageMassa, verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName) || !req.body.phonefull || !req.files['phonefull'][0] || !req.files.file) {
 		var validate = {
@@ -1543,7 +1543,7 @@ router.post("/sendMultImageMassa", sendMultImageMassa, verifyJson.verify, verify
 // ------------------------------------------------------------------------------------------------//
 //
 // Enviar arquivo/documento
-router.post("/sendFile", upload.single('file'), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/sendFile", upload.single('file'), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName) || !req.body.phonefull || !req.file || !req.body.caption) {
 		var validate = {
@@ -1627,7 +1627,7 @@ router.post("/sendFile", upload.single('file'), verifyJson.verify, verifyToken.v
 // ------------------------------------------------------------------------------------------------//
 //
 // Enviar arquivo/documento
-router.post("/sendFileBase64", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/sendFileBase64", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName) || !req.body.phonefull || !req.body.base64 || !req.body.originalname || !req.body.caption) {
 		var validate = {
@@ -1710,7 +1710,7 @@ router.post("/sendFileBase64", upload.none(''), verifyJson.verify, verifyToken.v
 // ------------------------------------------------------------------------------------------------//
 //
 // Enviar arquivo/documento
-router.post("/sendFileToBase64", upload.single('file'), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/sendFileToBase64", upload.single('file'), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName) || !req.body.phonefull || !req.file || !req.body.caption) {
 		var validate = {
@@ -1772,7 +1772,7 @@ router.post("/sendFileToBase64", upload.single('file'), verifyJson.verify, verif
 // ------------------------------------------------------------------------------------------------//
 //
 // Enviar arquivo/documento
-router.post("/sendFileFromBase64", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/sendFileFromBase64", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName) || !req.body.phonefull || !req.body.base64 || !req.body.mimetype || !req.body.originalname || !req.body.caption) {
 		var validate = {
@@ -1840,7 +1840,7 @@ router.post("/sendFileFromBase64", upload.none(''), verifyJson.verify, verifyTok
 */
 //
 // Recuperar contatos
-router.post("/getAllContacts", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/getAllContacts", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName)) {
 		var validate = {
@@ -1884,7 +1884,7 @@ router.post("/getAllContacts", upload.none(''), verifyJson.verify, verifyToken.v
 // ------------------------------------------------------------------------------------------------------- //
 //
 // Recuperar grupos
-router.post("/getAllGroups", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/getAllGroups", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName)) {
 		var validate = {
@@ -1928,7 +1928,7 @@ router.post("/getAllGroups", upload.none(''), verifyJson.verify, verifyToken.ver
 // ------------------------------------------------------------------------------------------------------- //
 //
 // Returns browser session token
-router.post("/getSessionTokenBrowser", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/getSessionTokenBrowser", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName)) {
 		var validate = {
@@ -1972,7 +1972,7 @@ router.post("/getSessionTokenBrowser", upload.none(''), verifyJson.verify, verif
 // ------------------------------------------------------------------------------------------------------- //
 //
 // Chama sua lista de contatos bloqueados
-router.post("/getBlockList", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/getBlockList", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName)) {
 		var validate = {
@@ -2016,7 +2016,7 @@ router.post("/getBlockList", upload.none(''), verifyJson.verify, verifyToken.ver
 // ------------------------------------------------------------------------------------------------//
 //
 // Recuperar status de contato
-router.post("/getStatus", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/getStatus", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName) || !req.body.phonefull) {
 		var validate = {
@@ -2074,7 +2074,7 @@ router.post("/getStatus", upload.none(''), verifyJson.verify, verifyToken.verify
 // ------------------------------------------------------------------------------------------------------- //
 //
 // Obter o perfil do número
-router.post("/getNumberProfile", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/getNumberProfile", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName) || !req.body.phonefull) {
 		var validate = {
@@ -2132,7 +2132,7 @@ router.post("/getNumberProfile", upload.none(''), verifyJson.verify, verifyToken
 // ------------------------------------------------------------------------------------------------------- //
 //
 // Obter o perfil do número
-router.post("/getProfilePicFromServer", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/getProfilePicFromServer", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName) || !req.body.phonefull) {
 		var validate = {
@@ -2190,7 +2190,7 @@ router.post("/getProfilePicFromServer", upload.none(''), verifyJson.verify, veri
 // ------------------------------------------------------------------------------------------------------- //
 //
 // Verificar o status do número
-router.post("/checkNumberStatus", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/checkNumberStatus", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName) || !req.body.phonefull) {
 		var validate = {
@@ -2237,7 +2237,7 @@ router.post("/checkNumberStatus", upload.none(''), verifyJson.verify, verifyToke
 // ------------------------------------------------------------------------------------------------------- //
 //
 // Verificar o status do número em massa
-router.post("/checkNumberStatusMassa", upload.single('file'), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/checkNumberStatusMassa", upload.single('file'), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName) || !req.file) {
 		var validate = {
@@ -2317,7 +2317,7 @@ router.post("/checkNumberStatusMassa", upload.single('file'), verifyJson.verify,
 */
 //
 //Enviar Texto em Grupo
-router.post("/sendTextGrupo", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/sendTextGrupo", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName) || !req.body.groupId || !req.body.msg) {
 		var validate = {
@@ -2365,7 +2365,7 @@ router.post("/sendTextGrupo", upload.none(''), verifyJson.verify, verifyToken.ve
 // ------------------------------------------------------------------------------------------------//
 //
 //Enviar localização no grupo
-router.post("/sendLocationGroup", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/sendLocationGroup", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName) || !req.body.groupId || !req.body.lat || !req.body.long || !req.body.local) {
 		var validate = {
@@ -2415,7 +2415,7 @@ router.post("/sendLocationGroup", upload.none(''), verifyJson.verify, verifyToke
 // ------------------------------------------------------------------------------------------------//
 //
 // Enviar imagen no grupo
-router.post("/sendImageGroup", upload.single('file'), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/sendImageGroup", upload.single('file'), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName) || !req.body.groupId || !req.file || !req.body.caption) {
 		var validate = {
@@ -2488,7 +2488,7 @@ router.post("/sendImageGroup", upload.single('file'), verifyJson.verify, verifyT
 // ------------------------------------------------------------------------------------------------//
 //
 // Enviar arquivo/documento
-router.post("/sendFileGroup", upload.single('file'), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/sendFileGroup", upload.single('file'), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName) || !req.body.groupId || !req.file || !req.body.caption) {
 		var validate = {
@@ -2560,7 +2560,7 @@ router.post("/sendFileGroup", upload.single('file'), verifyJson.verify, verifyTo
 // ------------------------------------------------------------------------------------------------//
 //
 // Enviar arquivo/documento
-router.post("/sendFileBase64Group", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/sendFileBase64Group", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName) || !req.body.groupId || !req.body.base64 || !req.body.originalname || !req.body.caption) {
 		var validate = {
@@ -2632,7 +2632,7 @@ router.post("/sendFileBase64Group", upload.none(''), verifyJson.verify, verifyTo
 // ------------------------------------------------------------------------------------------------//
 //
 // Enviar arquivo/documento
-router.post("/sendFileToBase64Group", upload.single('file'), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/sendFileToBase64Group", upload.single('file'), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName) || !req.body.groupId || !req.file || !req.body.caption) {
 		var validate = {
@@ -2683,7 +2683,7 @@ router.post("/sendFileToBase64Group", upload.single('file'), verifyJson.verify, 
 // ------------------------------------------------------------------------------------------------------- //
 //
 // Enviar arquivo/documento
-router.post("/sendFileFromBase64Group", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/sendFileFromBase64Group", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName) || !req.body.groupId || !req.body.base64 || !req.body.mimetype || !req.body.originalname || !req.body.caption) {
 		var validate = {
@@ -2734,7 +2734,7 @@ router.post("/sendFileFromBase64Group", upload.none(''), verifyJson.verify, veri
 // ------------------------------------------------------------------------------------------------------- //
 //
 //Deixar o grupo
-router.post("/leaveGroup", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/leaveGroup", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName) || !req.body.groupId) {
 		var validate = {
@@ -2779,7 +2779,7 @@ router.post("/leaveGroup", upload.none(''), verifyJson.verify, verifyToken.verif
 // ------------------------------------------------------------------------------------------------------- //
 //
 // Criar grupo (título, participantes a adicionar)
-router.post("/createGroup", upload.single('file'), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/createGroup", upload.single('file'), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName) || !req.body.title || !req.file) {
 		var validate = {
@@ -2892,7 +2892,7 @@ router.post("/createGroup", upload.single('file'), verifyJson.verify, verifyToke
 // ------------------------------------------------------------------------------------------------//
 //
 // Obtenha membros do grupo
-router.post("/getGroupMembers", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/getGroupMembers", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName) || !req.body.groupId) {
 		var validate = {
@@ -2937,7 +2937,7 @@ router.post("/getGroupMembers", upload.none(''), verifyJson.verify, verifyToken.
 // ------------------------------------------------------------------------------------------------//
 //
 // Obter IDs de membros do grupo 
-router.post("/getGroupMembersIds", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/getGroupMembersIds", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName) || !req.body.groupId) {
 		var validate = {
@@ -2982,7 +2982,7 @@ router.post("/getGroupMembersIds", upload.none(''), verifyJson.verify, verifyTok
 // ------------------------------------------------------------------------------------------------//
 //
 // Gerar link de url de convite de grupo
-router.post("/getGroupInviteLink", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/getGroupInviteLink", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName) || !req.body.groupId) {
 		var validate = {
@@ -3027,7 +3027,7 @@ router.post("/getGroupInviteLink", upload.none(''), verifyJson.verify, verifyTok
 // ------------------------------------------------------------------------------------------------//
 //
 // Criar grupo (título, participantes a adicionar)
-router.post("/createGroupSetAdminMembers", upload.single('file'), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/createGroupSetAdminMembers", upload.single('file'), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName) || !req.body.title || !req.file) {
 		var validate = {
@@ -3165,7 +3165,7 @@ router.post("/createGroupSetAdminMembers", upload.single('file'), verifyJson.ver
 // ------------------------------------------------------------------------------------------------//
 //
 // Criar grupo (título, participantes a adicionar)
-router.post("/createCountGroupSetAdminMembers", upload.single('file'), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/createCountGroupSetAdminMembers", upload.single('file'), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName) || !req.body.title || !req.file) {
 		var validate = {
@@ -3310,7 +3310,7 @@ router.post("/createCountGroupSetAdminMembers", upload.single('file'), verifyJso
 //
 // ------------------------------------------------------------------------------------------------//
 //
-router.post("/removeParticipant", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/removeParticipant", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName) || !req.body.groupId || !req.body.phonefull) {
 		var validate = {
@@ -3369,7 +3369,7 @@ router.post("/removeParticipant", upload.none(''), verifyJson.verify, verifyToke
 // ------------------------------------------------------------------------------------------------//
 //
 // Adicionar participante
-router.post("/addParticipant", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/addParticipant", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName) || !req.body.groupId || !req.body.phonefull) {
 		var validate = {
@@ -3427,7 +3427,7 @@ router.post("/addParticipant", upload.none(''), verifyJson.verify, verifyToken.v
 // ------------------------------------------------------------------------------------------------//
 //
 // Promote participant (Give admin privileges)
-router.post("/promoteParticipant", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/promoteParticipant", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName) || !req.body.groupId || !req.body.phonefull) {
 		var validate = {
@@ -3485,7 +3485,7 @@ router.post("/promoteParticipant", upload.none(''), verifyJson.verify, verifyTok
 // ------------------------------------------------------------------------------------------------//
 //
 // Depromote participant (Give admin privileges)
-router.post("/demoteParticipant", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/demoteParticipant", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName) || !req.body.groupId || !req.body.phonefull) {
 		var validate = {
@@ -3543,7 +3543,7 @@ router.post("/demoteParticipant", upload.none(''), verifyJson.verify, verifyToke
 // ------------------------------------------------------------------------------------------------//
 //
 // Retorna o status do grupo, jid, descrição do link de convite
-router.post("/getGroupInfoFromInviteLink", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/getGroupInfoFromInviteLink", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName) || !req.body.InviteLink) {
 		var validate = {
@@ -3603,7 +3603,7 @@ router.post("/getGroupInfoFromInviteLink", upload.none(''), verifyJson.verify, v
 // ------------------------------------------------------------------------------------------------//
 //
 // Junte-se a um grupo usando o código de convite do grupo
-router.post("/joinGroup", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/joinGroup", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName) || !req.body.InviteLink) {
 		var validate = {
@@ -3669,7 +3669,7 @@ router.post("/joinGroup", upload.none(''), verifyJson.verify, verifyToken.verify
 */
 //
 // Set client status
-router.post("/setProfileStatus", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/setProfileStatus", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName) || !req.body.ProfileStatus) {
 		var validate = {
@@ -3714,7 +3714,7 @@ router.post("/setProfileStatus", upload.none(''), verifyJson.verify, verifyToken
 // ------------------------------------------------------------------------------------------------//
 //
 // Set client profile name
-router.post("/setProfileName", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/setProfileName", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName) || !req.body.ProfileName) {
 		var validate = {
@@ -3758,7 +3758,7 @@ router.post("/setProfileName", upload.none(''), verifyJson.verify, verifyToken.v
 //
 // ------------------------------------------------------------------------------------------------//
 //
-router.post("/setProfilePic", upload.single('file'), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/setProfilePic", upload.single('file'), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName) || !req.file) {
 		var validate = {
@@ -3816,7 +3816,7 @@ router.post("/setProfilePic", upload.single('file'), verifyJson.verify, verifyTo
 */
 //
 // Delete the Service Worker
-router.post("/killServiceWorker", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/killServiceWorker", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName)) {
 		var validate = {
@@ -3859,7 +3859,7 @@ router.post("/killServiceWorker", upload.none(''), verifyJson.verify, verifyToke
 // ------------------------------------------------------------------------------------------------//
 //
 // Load the service again
-router.post("/restartService", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/restartService", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName)) {
 		var validate = {
@@ -3902,7 +3902,7 @@ router.post("/restartService", upload.none(''), verifyJson.verify, verifyToken.v
 // ------------------------------------------------------------------------------------------------//
 //
 // Reload do whatsapp web
-router.post("/reloadService", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/reloadService", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName)) {
 		var validate = {
@@ -3999,7 +3999,7 @@ router.post("/reloadService", upload.none(''), verifyJson.verify, verifyToken.ve
 // ------------------------------------------------------------------------------------------------//
 //
 // Get device info
-router.post("/getHostDevice", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/getHostDevice", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName)) {
 		var validate = {
@@ -4043,7 +4043,7 @@ router.post("/getHostDevice", upload.none(''), verifyJson.verify, verifyToken.ve
 // ------------------------------------------------------------------------------------------------//
 //
 // Get is multi device info
-router.post("/isMultiDevice", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/isMultiDevice", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName)) {
 		var validate = {
@@ -4087,7 +4087,7 @@ router.post("/isMultiDevice", upload.none(''), verifyJson.verify, verifyToken.ve
 // ------------------------------------------------------------------------------------------------//
 //
 // Get connection state
-router.post("/getConnectionState", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/getConnectionState", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName)) {
 		var validate = {
@@ -4129,7 +4129,7 @@ router.post("/getConnectionState", upload.none(''), verifyJson.verify, verifyTok
 // ------------------------------------------------------------------------------------------------//
 //
 // Get battery level
-router.post("/getBatteryLevel", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/getBatteryLevel", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName)) {
 		var validate = {
@@ -4172,7 +4172,7 @@ router.post("/getBatteryLevel", upload.none(''), verifyJson.verify, verifyToken.
 // ------------------------------------------------------------------------------------------------//
 //
 // Is Connected
-router.post("/isConnected", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/isConnected", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
@@ -4197,7 +4197,7 @@ router.post("/isConnected", upload.none(''), verifyJson.verify, verifyToken.veri
 // ------------------------------------------------------------------------------------------------//
 //
 // Obter versão da web do Whatsapp
-router.post("/getWAVersion", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/getWAVersion", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName)) {
 		var validate = {
@@ -4239,7 +4239,7 @@ router.post("/getWAVersion", upload.none(''), verifyJson.verify, verifyToken.ver
 // ------------------------------------------------------------------------------------------------//
 //
 // Obter versão da web do Whatsapp
-router.post("/getWAVersion", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/getWAVersion", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName)) {
 		var validate = {
@@ -4281,7 +4281,7 @@ router.post("/getWAVersion", upload.none(''), verifyJson.verify, verifyToken.ver
 // ------------------------------------------------------------------------------------------------//
 //
 // Inicia a verificação de conexão do telefone
-router.post("/startPhoneWatchdog", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/startPhoneWatchdog", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName) || !req.body.interval) {
 		var validate = {
@@ -4326,7 +4326,7 @@ router.post("/startPhoneWatchdog", upload.none(''), verifyJson.verify, verifyTok
 // ------------------------------------------------------------------------------------------------//
 //
 // Para a verificação de conexão do telefone
-router.post("/stopPhoneWatchdog", upload.none(''), verifyJson.verify, verifyToken.verify, async (req, res, next) => {
+router.post("/stopPhoneWatchdog", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName)) {
 		var validate = {
@@ -4375,7 +4375,7 @@ router.post("/stopPhoneWatchdog", upload.none(''), verifyJson.verify, verifyToke
 //
 // ------------------------------------------------------------------------------------------------//
 //
-router.post("/RotaTeste", verifyJson.verify, verifyToken.verify, upload.single('file'), async (req, res, next) => {
+router.post("/RotaTeste", verifyToken.verify, upload.single('file'), async (req, res, next) => {
 	//
 	res.setHeader('Content-Type', 'application/json');
 	res.status(200).json({
