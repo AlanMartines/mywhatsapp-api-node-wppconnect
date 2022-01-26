@@ -49,8 +49,8 @@ module.exports = () => {
 		res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 		//
 		if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
+			//
 			//console.error(err);
-			//return res.status(400).json({status: false, error: 'Enter valid json body'}); // Bad request
 			res.setHeader('Content-Type', 'application/json');
 			return res.status(404).json({
 				"Status": {
@@ -61,6 +61,7 @@ module.exports = () => {
 				}
 			});
 		}
+		//
 		next();
 	});
 	//
