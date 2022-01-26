@@ -26,10 +26,19 @@ module.exports = () => {
   app.use(function(err, req, res, next) {
     res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-		if (err.message) {
-			console.error("- Router error\n", err.message);
-			next();
-		}
+		if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
+			console.error(err);
+			//return res.status(400).json({status: false, error: 'Enter valid json body'}); // Bad request
+			res.setHeader('Content-Type', 'application/json');
+			return res.status(404).json({
+				"Status": {
+					"result": "error",
+					"state": "FAILURE",
+					"status": "notProvided",
+					"message": "Json gerado de forma incorreta, efetue a correção e tente novamente"
+				}
+			});
+	}
     next();
   });
   //
