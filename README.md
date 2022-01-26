@@ -149,7 +149,7 @@ cd ~
 curl -sL https://deb.nodesource.com/setup_14.x | sudo bash -
 
 # Instalar o pacote Node.js
-sudo apt install -y git nodejs yarn gcc g++ make vim curl npm python python3
+sudo apt install -y git nodejs yarn gcc g++ make vim curl python python3
 
 # Remover pacotes que não são mais necessários
 sudo apt autoremove -y
@@ -167,7 +167,7 @@ cd ~
 curl -sL https://rpm.nodesource.com/setup_14.x | sudo -E bash -
 
 # Instalar o pacote Node.js
-sudo yum install -y git nodejs yarn gcc g++ tar make vim curl npm python python3
+sudo yum install -y git nodejs yarn gcc g++ tar make vim curl python python3
 
 # Remover pacotes que não são mais necessários
 sudo yum autoremove -y

@@ -1674,6 +1674,7 @@ router.post("/sendFileBase64", upload.none(''), verifyJson.verify, verifyToken.v
 						"Status": sendFileBase64
 					});
 				} catch (error) {
+					console.log("Erro on sendFileBase64\n", error);
 					//
 					var erroStatus = {
 						"erro": true,
