@@ -3,6 +3,7 @@
 const config = require('./config.global');
 const fs = require('fs-extra');
 const rimraf = require("rimraf");
+const sleep = require('sleep-promise');
 const {
 	forEach
 } = require('p-iteration');
