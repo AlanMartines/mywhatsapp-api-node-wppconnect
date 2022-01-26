@@ -15,9 +15,9 @@ Esta Api, segue os mesmos termos de serviço do WhatsApp. É importante que voc�
 #### Dependências Debian (e.g. Ubuntu) 64bits
 
 ```bash
-sudo apt-get update && \
-apt-get upgrade -y && \
-apt-get install -y \
+sudo apt update && \
+apt upgrade -y && \
+apt install -y \
 git \
 curl \
 yarn \
@@ -447,27 +447,42 @@ router.post("/Close", (req, res, next) => {
 docker-compose up --build -d
 ```
 
-## Instalar o certbot
+## Instalar o certbot Debian (e.g. Ubuntu) 64bits
 
 ```barsh
-sudo apt-get update
-sudo apt-get install -y software-properties-common
-sudo add-apt-repository universe
-sudo add-apt-repository ppa:certbot/certbot
-sudo apt-get update
-sudo apt-get install -y certbot
-sudo apt-get update
-sudo apt-get install -y software-properties-common
-sudo add-apt-repository universe
-sudo add-apt-repository ppa:certbot/certbot
-sudo apt-get update
-sudo apt-get install -y certbot
+sudo apt install -y certbot python3-certbot-nginx
 ```
 
-## Criar o certificado SSL para domínios https
+## Instalar o certbot CentOS 7/8 64bits
+
+```barsh
+sudo yum install -y epel-release
+
+sudo yum install -y certbot-nginx
+```
+
+## Instalar o certbot Alpine 64bits
+
+```barsh
+apk add --update python3 py3-pip
+
+apk add certbot
+
+pip install certbot-nginx
+```
+
+## Criar o certificado SSL para domínios https Debian (e.g. Ubuntu) 64bits e CentOS 7/8 64bits
 
 ```barsh
 sudo certbot certonly --manual --force-renewal -d *.yourdomain.net -d yourdomain.net \
+--agree-tos --no-bootstrap --manual-public-ip-logging-ok --preferred-challenges dns-01 \
+--server https://acme-v02.api.letsencrypt.org/directory
+```
+
+## Criar o certificado SSL para domínios https Alpine 64bits
+
+```barsh
+certbot certonly --manual --force-renewal -d *.yourdomain.net -d yourdomain.net \
 --agree-tos --no-bootstrap --manual-public-ip-logging-ok --preferred-challenges dns-01 \
 --server https://acme-v02.api.letsencrypt.org/directory
 ```
