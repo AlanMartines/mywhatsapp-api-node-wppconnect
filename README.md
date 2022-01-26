@@ -67,7 +67,6 @@ xdg-utils \
 libatk-bridge2.0-0 \
 libgbm1 \
 libgcc1 \
-libu2f-udev \
 build-essential \
 nodejs \
 libappindicator1 \
