@@ -19,6 +19,8 @@ const io = require('socket.io')(http, {
 	allowEIO3: true
 });
 //
+const sistem = require("../controllers/sistem.controller");
+//
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -39,8 +41,6 @@ app.use((req, res, next) => {
 	req.io = io;
 	next();
 });
-//
-const sistem = require("../controllers/sistem.controller");
 //
 module.exports = () => {
 	//
