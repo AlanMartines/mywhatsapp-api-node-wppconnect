@@ -287,6 +287,15 @@ PORT=9001
 # Define se o qrcode vai ser mostrado no terminal
 VIEW_QRCODE_TERMINAL=0
 #
+# whatsappVersion
+WHATSAPPVERSION=
+#
+#multi-device
+MULTIDEVICE=0
+#
+# Auto close
+AUTO_CLOSE=30000
+#
 # Chave de segurança para validação no JWT
 JWT_SECRET=09f26e402586e2faa8da4c98a35f1b20d6b033c60
 #
@@ -300,7 +309,7 @@ VALIDATE_MYSQL=0
 MYSQL_HOST=localhost
 #
 # Port do banco. Ex: 3306
-MYSQL_PORT=4306
+MYSQL_PORT=3306
 #
 # Um usuário do banco. Ex: user
 MYSQL_USER=mywhatsappapi
@@ -308,20 +317,14 @@ MYSQL_USER=mywhatsappapi
 # A senha do usuário do banco. Ex: user123
 MYSQL_PASSWORD=TuUep8KkjCtAA@
 #
-# A senha do usuário root do banco. Ex: root123
-MYSQL_ROOT_PASSWORD=TuUep8KkjCtAA@
-#
 # A base de dados a qual a aplicação irá se conectar. Ex: node_mysql
 MYSQL_DATABASE=mywhatsapp-api
 #
 # Criando volume onde irá salvar os tokens gerados
 VOLUME=/usr/local/tokens
 #
-# Host para uso do Webdriver
-WEBDRIVER_HOST=ws://localhost
-#
-# Porta para uso do Webdriver
-WEBDRIVER_PORT=4000
+# Gag image
+TAG=1.0.0
 ```
 
 ## Create MySQL DATABASE/TABLE
@@ -439,11 +442,24 @@ router.post("/Close", (req, res, next) => {
 });
 ```
 
+## Docker-Compose
+
+```bash
+# Criar um contêiner
+docker-compose up --build -d
+```
+
 ## Dockerfile
 
 ```bash
 # Criar um contêiner
 docker-compose up --build -d
+
+# Processando o arquivo Dockerfile
+docker build -t alanmartines/mywhatsapp-api-node-wppconnect:1.0.0 -f Dockerfile.backend .
+
+# Criar um contêiner
+docker container run --name ApiWPPconnect -p 9001:9001 -d mywhatsapp-api-node-wppconnect:1.0.0
 ```
 
 ## Instalar o certbot Debian (e.g. Ubuntu) 64bits

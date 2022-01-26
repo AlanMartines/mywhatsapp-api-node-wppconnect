@@ -4,6 +4,7 @@ services:
     container_name: ApiWPPconnect
     hostname: ApiWPPconnect
     network_mode: bridge
+    image: alanmartines/mywhatsapp-api-node-wppconnect:${TAG}
     build:
       context: .
       dockerfile: Dockerfile.backend

@@ -67,6 +67,9 @@ MYSQL_DATABASE=mywhatsapp-api
 #
 # Criando volume onde irá salvar os tokens gerados
 VOLUME=/usr/local/tokens
+#
+# Gag image
+TAG=1.0.0
 `;
       console.log("- Modelo do arquivo de configuração:\n", modelo);
       process.exit(1);
