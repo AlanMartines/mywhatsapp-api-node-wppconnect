@@ -43,6 +43,7 @@ wppconnect/
 node_modules/
 jspm_packages/
 tokens/
+.env
 
 # TypeScript v1 declaration files
 typings/
