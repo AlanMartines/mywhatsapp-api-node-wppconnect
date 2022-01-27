@@ -35,6 +35,9 @@ VIEW_QRCODE_TERMINAL=0
 # whatsappVersion
 WHATSAPPVERSION=
 #
+# Device name
+DEVICE_NAME='My Whatsapp'
+#
 #multi-device
 MULTIDEVICE=0
 #
