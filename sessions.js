@@ -631,7 +631,7 @@ module.exports = class Sessions {
 				],
 				puppeteerOptions: {
 					userDataDir: `${config.TOKENSPATCH}/WPP-${SessionName}`, // or your custom directory
-					browserWSEndpoint: "ws://chrome:3000",
+					browserWSEndpoint: `${config.BROWSER_WSENDPOINT}`,
 				},
 				disableWelcome: false, // Option to disable the welcoming message which appears in the beginning
 				updatesLog: true, // Logs info updates automatically in terminal
