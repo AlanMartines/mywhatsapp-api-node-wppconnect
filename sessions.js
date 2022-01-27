@@ -89,7 +89,7 @@ async function deletaToken(userDataDir, filePath, filename) {
 			// other errors, e.g. maybe we don't have enough permission
 			console.log(`- Erro ao remover arquivo "${filePath}/${filename}"`);
 		} else {
-			console.log(`- Arquivo "${filePath}/${filename}" removido com sucesso`);
+			console.log(`- Pasta userDataDir "${filePath}/${filename}" removido com sucesso`);
 			rimraf(`${filePath}/${userDataDir}`, function () {
 				console.log(`- Pasta "${userDataDir}" removida com sucesso`);
 			});
