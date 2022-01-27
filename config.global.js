@@ -6,6 +6,7 @@ config.HOST = process.env.HOST || 'localhost';
 config.PORT = process.env.PORT || '9001';
 config.VIEW_QRCODE_TERMINAL = process.env.VIEW_QRCODE_TERMINAL || 1;
 config.WHATSAPPVERSION = process.env.WHATSAPPVERSION || '';
+config.DEVICE_NAME = process.env.DEVICE_NAME || 'My Whatsapp';
 config.MULTIDEVICE = process.env.MULTIDEVICE || 0;
 config.AUTO_CLOSE = process.env.AUTO_CLOSE || 60000;
 config.JWT_SECRET = process.env.JWT_SECRET;

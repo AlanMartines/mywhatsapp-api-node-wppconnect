@@ -568,7 +568,7 @@ module.exports = class Sessions {
 					}
 				},
 				whatsappVersion: `${config.WHATSAPPVERSION}`, // whatsappVersion: '2.2142.12',
-				deviceName: "My Whatsapp",
+				deviceName: `${config.DEVICE_NAME}`,
 				headless: true, // Headless chrome
 				devtools: false, // Open devtools by default
 				useChrome: true, // If false will use Chromium instance
