@@ -3404,7 +3404,7 @@ router.post("/getGroupInfoFromInviteLink", upload.none(''), verifyToken.verify, 
 // Junte-se a um grupo usando o código de convite do grupo
 router.post("/joinGroup", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
-	if (!removeWithspace(req.body.SessionName) || !req.body.InviteLink) {
+	if (!removeWithspace(req.body.SessionName) || !req.body.link) {
 		var validate = {
 			result: "info",
 			state: 'FAILURE',

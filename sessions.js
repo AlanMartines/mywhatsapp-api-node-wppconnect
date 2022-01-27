@@ -1178,7 +1178,7 @@ module.exports = class Sessions {
 					"erro": false,
 					"status": 200,
 					"number": number,
-					"message": "Link envida com sucesso."
+					"message": "Link envido com sucesso."
 				};
 				//
 			}).catch((erro) => {
