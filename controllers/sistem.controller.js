@@ -841,6 +841,7 @@ router.post("/sendLinkPreview", upload.none(''), verifyToken.verify, async (req,
 		});
 		//
 	} else {
+		//
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
@@ -987,13 +988,13 @@ var sendImageMassa = upload.fields([{
 	name: 'phonefull',
 	maxCount: 1
 }, {
-	name: 'fileimg',
+	name: 'file',
 	maxCount: 1
 }]);
 //
 router.post("/sendImageMassa", sendImageMassa, verifyToken.verify, async (req, res, next) => {
 	//
-	if (!removeWithspace(req.body.SessionName) || !req.body.phonefull || !req.phonefull[0] || !req.fileimg[0] || !req.body.caption) {
+	if (!removeWithspace(req.body.SessionName) || !req.body.phonefull || !req.phonefull[0] || !req.file[0] || !req.body.caption) {
 		var validate = {
 			result: "info",
 			state: 'FAILURE',
