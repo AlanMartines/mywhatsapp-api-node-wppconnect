@@ -19,6 +19,7 @@ RUN apt-get update && \
 	unzip \
 	fontconfig \
 	locales \
+	apt-utils \
 	gconf-service \
 	libasound2 \
 	libatk1.0-0 \
