@@ -464,6 +464,7 @@ docker run -d -p 9001:9001 --name ApiWPPconnect \
 	-e PORT=9001 \
 	-e VIEW_QRCODE_TERMINAL=0 \
 	-e WHATSAPPVERSION= \
+	-e DEVICE_NAME='My Whatsapp' \
 	-e MULTIDEVICE=0 \
 	-e AUTO_CLOSE=60000 \
 	-e JWT_SECRET=09f26e402586e2faa8da4c98a35f1b20d6b033c60 \
