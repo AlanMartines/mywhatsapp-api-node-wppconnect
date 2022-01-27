@@ -1636,7 +1636,7 @@ module.exports = class Sessions {
 		SessionName,
 		number
 	) {
-		console.log("- canReceiveMessage");
+		console.log("- Validando numero");
 		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultcheckNumberStatus = await session.client.then(async client => {
