@@ -73,6 +73,9 @@ VOLUME=/usr/local/tokens
 #
 # Gag image
 TAG=1.0.0
+#
+# browserWSEndpoint Ex.: ws://127.0.0.1:3000
+BROWSER_WSENDPOINT=
 `;
       console.log("- Modelo do arquivo de configuração:\n", modelo);
       process.exit(1);

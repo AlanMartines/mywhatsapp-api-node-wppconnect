@@ -631,8 +631,8 @@ module.exports = class Sessions {
 				],
 				puppeteerOptions: {
 					userDataDir: `${config.TOKENSPATCH}/WPP-${SessionName}`, // or your custom directory
+					browserWSEndpoint: "ws://chrome:3000",
 				},
-				puppeteerOptions: {}, // Will be passed to puppeteer.launch
 				disableWelcome: false, // Option to disable the welcoming message which appears in the beginning
 				updatesLog: true, // Logs info updates automatically in terminal
 				autoClose: parseInt(config.AUTO_CLOSE), // Automatically closes the wppconnect only when scanning the QR code (default 60 seconds, if you want to turn it off, assign 0 or false)

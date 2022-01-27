@@ -325,6 +325,9 @@ VOLUME=/usr/local/tokens
 #
 # Gag image
 TAG=1.0.0
+#
+# browserWSEndpoint Ex.: ws://127.0.0.1:3000
+BROWSER_WSENDPOINT=
 ```
 
 ## Create MySQL DATABASE/TABLE
@@ -477,6 +480,7 @@ docker run -d -p 9001:9001 --name ApiWPPconnect \
 	-e MYSQL_DATABASE=mywhatsapp-api \
 	-e MYSQL_DIALECT=mysql \
 	-e MYSQL_TIMEZONE='-04:00' \
+	-e BROWSER_WSENDPOINT= \
   alanmartines/mywhatsapp-api-node-wppconnect:1.0.0
 ```
 
