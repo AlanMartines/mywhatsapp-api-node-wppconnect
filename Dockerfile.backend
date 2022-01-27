@@ -92,7 +92,7 @@ CMD [ "node", "--trace-warnings", "server.js" ]
 # docker exec -it <container id> /bin/bash
 
 ## Logs do container
-# docker logs -f --tail 1000 <container name>
+# docker logs -f --tail 1000 ApiWPPconnect
 
 ## Removendo todos os containers e imagens de uma só vez
 # docker rm $(docker ps -qa)
