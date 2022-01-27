@@ -1631,6 +1631,88 @@ router.post("/sendFileFromBase64", upload.none(''), verifyToken.verify, async (r
 //
 // ------------------------------------------------------------------------------------------------//
 //
+//Enviar Imagem
+router.post("/sendImageAsStickerGif", upload.single('file'), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName) || !req.body.phonefull || !req.file) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
+				//
+				try {
+					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
+					var filePath = path.join(folderName, req.file.originalname);
+					fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
+					console.log("- File", filePath);
+					//
+					var checkNumberStatus = await Sessions.checkNumberStatus(
+						removeWithspace(req.body.SessionName),
+						soNumeros(req.body.phonefull).trim() + '@c.us'
+					);
+					//
+					if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+						//
+						var sendImage = await Sessions.sendImage(
+							removeWithspace(req.body.SessionName),
+							checkNumberStatus.number + '@c.us',
+							filePath
+						);
+						//
+					} else {
+						var sendImage = checkNumberStatus;
+					}
+					//
+					//
+					await deletaArquivosTemp(filePath);
+					//
+					//console.log(result);
+					res.setHeader('Content-Type', 'application/json');
+					res.status(200).json({
+						"Status": sendImage
+					});
+				} catch (error) {
+					console.log("Erro on sendImage\n", error);
+					//
+					var erroStatus = {
+						"erro": true,
+						"status": 404,
+						"message": "Erro ao enviar menssagem"
+					};
+					//
+					res.setHeader('Content-Type', 'application/json');
+					res.status(400).json({
+						"Status": erroStatus
+					});
+				}
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
+	}
+}); //sendImageAsStickerGif
+//
+// ------------------------------------------------------------------------------------------------//
+//
 /*
 ╦═╗┌─┐┌┬┐┬─┐┬┌─┐┬  ┬┬┌┐┌┌─┐  ╔╦╗┌─┐┌┬┐┌─┐                
 ╠╦╝├┤  │ ├┬┘│├┤ └┐┌┘│││││ ┬   ║║├─┤ │ ├─┤                
