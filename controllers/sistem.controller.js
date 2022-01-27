@@ -841,28 +841,27 @@ router.post("/sendLinkPreview", upload.none(''), verifyToken.verify, async (req,
 		});
 		//
 	} else {
-		//
-		if (!validUrl.isUri(req.body.link)) {
-			var validate = {
-				result: "error",
-				state: 'FAILURE',
-				status: 'notProvided',
-				message: 'O link informado é invalido, corrija e tente novamente.'
-			};
-			//
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": validate
-			});
-			//
-		}
-		//
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
+				//
+				if (!validUrl.isUri(req.body.link)) {
+					var validate = {
+						result: "error",
+						state: 'FAILURE',
+						status: 'notProvided',
+						message: 'O link informado é invalido, corrija e tente novamente.'
+					};
+					//
+					res.setHeader('Content-Type', 'application/json');
+					res.status(400).json({
+						"Status": validate
+					});
+					//
+				}
 				//
 				var checkNumberStatus = await Sessions.checkNumberStatus(
 					removeWithspace(req.body.SessionName),
@@ -3358,22 +3357,6 @@ router.post("/getGroupInfoFromInviteLink", upload.none(''), verifyToken.verify, 
 		});
 		//
 	} else {
-		//
-		if (!validUrl.isUri(req.body.link)) {
-			var validate = {
-				result: "error",
-				state: 'FAILURE',
-				status: 'notProvided',
-				message: 'O link informado é invalido, corrija e tente novamente.'
-			};
-			//
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": validate
-			});
-			//
-		}
-		//
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
@@ -3381,6 +3364,23 @@ router.post("/getGroupInfoFromInviteLink", upload.none(''), verifyToken.verify, 
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
+				//
+				if (!validUrl.isUri(req.body.link)) {
+					var validate = {
+						result: "error",
+						state: 'FAILURE',
+						status: 'notProvided',
+						message: 'O link informado é invalido, corrija e tente novamente.'
+					};
+					//
+					res.setHeader('Content-Type', 'application/json');
+					res.status(400).json({
+						"Status": validate
+					});
+					//
+				}
+				//
+
 				var getGroupInfoFromInviteLink = await Sessions.getGroupInfoFromInviteLink(
 					removeWithspace(req.body.SessionName),
 					req.body.InviteCode
@@ -3418,22 +3418,6 @@ router.post("/joinGroup", upload.none(''), verifyToken.verify, async (req, res, 
 		});
 		//
 	} else {
-		//
-		if (!validUrl.isUri(req.body.link)) {
-			var validate = {
-				result: "error",
-				state: 'FAILURE',
-				status: 'notProvided',
-				message: 'O link informado é invalido, corrija e tente novamente.'
-			};
-			//
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": validate
-			});
-			//
-		}
-		//
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
@@ -3441,6 +3425,23 @@ router.post("/joinGroup", upload.none(''), verifyToken.verify, async (req, res, 
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
+				//
+				if (!validUrl.isUri(req.body.link)) {
+					var validate = {
+						result: "error",
+						state: 'FAILURE',
+						status: 'notProvided',
+						message: 'O link informado é invalido, corrija e tente novamente.'
+					};
+					//
+					res.setHeader('Content-Type', 'application/json');
+					res.status(400).json({
+						"Status": validate
+					});
+					//
+				}
+				//
+
 				var joinGroup = await Sessions.joinGroup(
 					removeWithspace(req.body.SessionName),
 					req.body.InviteCode
