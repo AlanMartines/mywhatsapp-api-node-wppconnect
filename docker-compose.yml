@@ -33,5 +33,3 @@ services:
       - ${VOLUME}:/usr/local/tokens
     ports:
       - "${PORT}:9001"
-    extra_hosts:
-      - "dockerhost:${DOCKERHOST}"
