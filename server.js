@@ -76,6 +76,13 @@ TAG=1.0.0
 #
 # browserWSEndpoint Ex.: ws://127.0.0.1:3000
 BROWSER_WSENDPOINT=
+#
+# Defina o DOCKERHOST aqui caso voce utilize a api em container
+# Exemplos:
+# DOCKERHOST=204.202.54.2 => IP da VPS, caso esteja usando virtualização via hospedagem
+# DOCKERHOST=10.0.0.10 => IP da VM, caso esteja usando virtualização ou usando na sua proprima maquina local
+# DOCKERHOST= => Deixe em branco caso esteja usando a API diretamente no host
+DOCKERHOST=
 `;
       console.log("- Modelo do arquivo de configuração:\n", modelo);
       process.exit(1);
