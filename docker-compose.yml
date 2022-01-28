@@ -3,7 +3,8 @@ services:
   backend:
     container_name: ApiWPPconnect
     hostname: ApiWPPconnect
-    network_mode: bridge
+    #network_mode: bridge
+    network_mode: host
     image: alanmartines/mywhatsapp-api-node-wppconnect:${TAG}
     build:
       context: .
