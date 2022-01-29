@@ -76,6 +76,12 @@ TAG=1.0.0
 #
 # browserWSEndpoint Ex.: ws://127.0.0.1:3000
 BROWSER_WSENDPOINT=
+#
+# Set name instace for use ecosystem.config.js
+NAME_INSTANCES=ApiWPPConnectClus
+#
+# Set count instace for use ecosystem.config.js
+INSTANCES=1
 `;
       console.log("- Modelo do arquivo de configuração:\n", modelo);
       process.exit(1);
