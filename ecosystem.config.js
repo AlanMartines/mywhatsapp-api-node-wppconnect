@@ -20,13 +20,15 @@ const MYSQL_DIALECT = process.env.MYSQL_DIALECT || 'mysql';
 const MYSQL_PASSWORD = process.env.MYSQL_PASSWORD || '';
 const MYSQL_DATABASE = process.env.MYSQL_DATABASE || '';
 const MYSQL_TIMEZONE = process.env.MYSQL_TIMEZONE || '-04:00';
-const BROWSER_WSENDPOINT = process.env.BROWSER_WSENDPOINT || '';
+const BROWSER_WSENDPOINT = process.env.BROWSER_WSENDPOINT || 'ApiWPPConnect';
+const NAME_INSTANCES = process.env.INSTANCES || NAME_INSTANCES;
+const INSTANCES = process.env.INSTANCES || 1;
 //
 module.exports = {
   apps: [{
-    name: "ApiWPPConnect",
+    name: NAME_INSTANCES,
     script: "./server.js",
-    instances: 5,
+    instances: INSTANCES,
     exec_mode: "cluster",
     watch: true,
     env: {
