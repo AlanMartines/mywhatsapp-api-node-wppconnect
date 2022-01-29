@@ -20,8 +20,8 @@ const MYSQL_DIALECT = process.env.MYSQL_DIALECT || 'mysql';
 const MYSQL_PASSWORD = process.env.MYSQL_PASSWORD || '';
 const MYSQL_DATABASE = process.env.MYSQL_DATABASE || '';
 const MYSQL_TIMEZONE = process.env.MYSQL_TIMEZONE || '-04:00';
-const BROWSER_WSENDPOINT = process.env.BROWSER_WSENDPOINT || 'ApiWPPConnect';
-const NAME_INSTANCES = process.env.INSTANCES || NAME_INSTANCES;
+const BROWSER_WSENDPOINT = process.env.BROWSER_WSENDPOINT || '';
+const NAME_INSTANCES = process.env.NAME_INSTANCES || 'ApiWPPConnect';
 const INSTANCES = process.env.INSTANCES || 1;
 //
 module.exports = {
