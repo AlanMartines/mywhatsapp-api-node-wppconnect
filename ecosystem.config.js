@@ -26,7 +26,7 @@ module.exports = {
   apps: [{
     name: "ApiWPPConnect",
     script: "./server.js",
-    instances: 1,
+    instances: 5,
     exec_mode: "cluster",
     watch: true,
     env: {
