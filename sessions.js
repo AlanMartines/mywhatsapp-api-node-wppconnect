@@ -89,7 +89,7 @@ async function deletaToken(filePath, filename) {
 			// other errors, e.g. maybe we don't have enough permission
 			console.log(`- Erro ao remover arquivo "${filePath}/${filename}"`);
 		} else {
-			console.log(`- Pasta userDataDir "${filePath}/${filename}" removido com sucesso`);
+			console.log(`- Arquivo json "${filePath}/${filename}" removido com sucesso`);
 		}
 	});
 }
