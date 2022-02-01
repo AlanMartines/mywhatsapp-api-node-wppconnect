@@ -450,7 +450,6 @@ module.exports = class Sessions {
 	static async initSession(SessionName, AuthorizationToken, MultiDevice) {
 		console.log("- Iniciando sessão");
 		console.log("- Multi-Device:", MultiDevice);
-		console.log("\n");
 		var session = Sessions.getSession(SessionName);
 		session.browserSessionToken = null;
 		session.AuthorizationToken = AuthorizationToken;
@@ -671,7 +670,6 @@ module.exports = class Sessions {
 	*/
 	//
 	static async setup(SessionName) {
-		console.log("\n");
 		var session = Sessions.getSession(SessionName);
 		await session.client.then(client => {
 			try {
