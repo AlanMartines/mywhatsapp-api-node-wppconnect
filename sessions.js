@@ -460,6 +460,7 @@ module.exports = class Sessions {
 		//
 		if (parseInt(config.MULTIDEVICE)) {
 			//
+			console.log('- Número de tentativas de ler o qr-code:', attempts);
 			await deletaToken(`WPP-${SessionName}`, `${config.TOKENSPATCH}`, `${SessionName}.data.json`);
 			//
 		}
@@ -630,7 +631,7 @@ module.exports = class Sessions {
 					'--safebrowsing-disable-auto-update',
 				],
 				puppeteerOptions: {
-					userDataDir: parseInt(config.MULTIDEVICE) ? `${config.TOKENSPATCH}/WPP-${SessionName}` : '', // or your custom directory
+					userDataDir: parseInt(config.MULTIDEVICE) ? `${config.TOKENSPATCH}/WPP-${SessionName}` : undefined, // or your custom directory
 					browserWSEndpoint: `${config.BROWSER_WSENDPOINT}`,
 				},
 				disableWelcome: false, // Option to disable the welcoming message which appears in the beginning
