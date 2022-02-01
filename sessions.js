@@ -314,14 +314,14 @@ module.exports = class Sessions {
 	//
 	// ------------------------------------------------------------------------------------------------------- //
 	//
-	static async Start(SessionName, AuthorizationToken) {
+	static async Start(SessionName, AuthorizationToken, MultiDevice) {
 		Sessions.sessions = Sessions.sessions || []; //start array
 
 		var session = Sessions.getSession(SessionName);
 
 		if (session == false) {
 			//create new session
-			session = await Sessions.addSesssion(SessionName, AuthorizationToken);
+			session = await Sessions.addSesssion(SessionName, AuthorizationToken, MultiDevice);
 		} else if (["CLOSED"].includes(session.state)) {
 			//restart session
 			console.log("- State: CLOSED");
@@ -336,7 +336,7 @@ module.exports = class Sessions {
 			console.log('- State do sistema:', session.state);
 			console.log('- Status da sessão:', session.status);
 			//
-			session.client = Sessions.initSession(SessionName, AuthorizationToken);
+			session.client = Sessions.initSession(SessionName, AuthorizationToken, MultiDevice);
 			Sessions.setup(SessionName);
 		} else if (["CONFLICT", "UNPAIRED", "UNLAUNCHED", "UNPAIRED_IDLE"].includes(session.state)) {
 			session.state = "CLOSED";
@@ -352,7 +352,7 @@ module.exports = class Sessions {
 				console.log("- Client UseHere");
 				client.useHere();
 			});
-			session.client = Sessions.initSession(SessionName, AuthorizationToken);
+			session.client = Sessions.initSession(SessionName, AuthorizationToken, MultiDevice);
 		} else if (["DISCONNECTED"].includes(session.state)) {
 			//restart session
 			session.state = "CLOSE";
@@ -366,7 +366,7 @@ module.exports = class Sessions {
 			console.log('- State do sistema:', session.state);
 			console.log('- Status da sessão:', session.status);
 			//
-			session.client = Sessions.initSession(SessionName, AuthorizationToken);
+			session.client = Sessions.initSession(SessionName, AuthorizationToken, MultiDevice);
 			Sessions.setup(SessionName);
 		} else if (["NOTFOUND"].includes(session.state)) {
 			//restart session
@@ -381,7 +381,7 @@ module.exports = class Sessions {
 			console.log('- State do sistema:', session.state);
 			console.log('- Status da sessão:', session.status);
 			//
-			session = await Sessions.addSesssion(SessionName, AuthorizationToken);
+			session = await Sessions.addSesssion(SessionName, AuthorizationToken, MultiDevice);
 		} else {
 			console.log('- Nome da sessão:', session.name);
 			console.log('- State do sistema:', session.state);
@@ -395,10 +395,11 @@ module.exports = class Sessions {
 	//
 	// ------------------------------------------------------------------------------------------------------- //
 	//
-	static async addSesssion(SessionName, AuthorizationToken) {
+	static async addSesssion(SessionName, AuthorizationToken, MultiDevice) {
 		console.log("- Adicionando sessão");
 		var newSession = {
 			AuthorizationToken: AuthorizationToken,
+			MultiDevice: MultiDevice,
 			name: SessionName,
 			process: null,
 			qrcode: null,
@@ -415,7 +416,7 @@ module.exports = class Sessions {
 		console.log("- Nova sessão: " + newSession.state);
 
 		//setup session
-		newSession.client = Sessions.initSession(SessionName, AuthorizationToken);
+		newSession.client = Sessions.initSession(SessionName, AuthorizationToken, MultiDevice);
 		Sessions.setup(SessionName);
 
 		return newSession;
@@ -446,7 +447,7 @@ module.exports = class Sessions {
 	//
 	// ------------------------------------------------------------------------------------------------------- //
 	//
-	static async initSession(SessionName, AuthorizationToken) {
+	static async initSession(SessionName, AuthorizationToken, MultiDevice) {
 		console.log("- Iniciando sessão");
 		var session = Sessions.getSession(SessionName);
 		session.browserSessionToken = null;
@@ -458,8 +459,9 @@ module.exports = class Sessions {
 			╚═╝┴   ┴ ┴└─┘┘└┘┴ ┴┴─┘  ╚═╝┴└─└─┘┴ ┴ ┴ └─┘  ╩  ┴ ┴┴└─┴ ┴┴ ┴└─┘ ┴ └─┘┴└─└─┘
 	 */
 		//
-		if (parseInt(config.MULTIDEVICE)) {
+		if (MultiDevice) {
 			//
+			console.log("- Multi-Device:", MultiDevice);
 			console.log('- Número de tentativas de ler o qr-code:', attempts);
 			await deletaToken(`WPP-${SessionName}`, `${config.TOKENSPATCH}`, `${SessionName}.data.json`);
 			//
@@ -631,7 +633,7 @@ module.exports = class Sessions {
 					'--safebrowsing-disable-auto-update',
 				],
 				puppeteerOptions: {
-					userDataDir: parseInt(config.MULTIDEVICE) ? `${config.TOKENSPATCH}/WPP-${SessionName}` : undefined, // or your custom directory
+					userDataDir: MultiDevice ? `${config.TOKENSPATCH}/WPP-${SessionName}` : undefined, // or your custom directory
 					browserWSEndpoint: `${config.BROWSER_WSENDPOINT}`,
 				},
 				disableWelcome: false, // Option to disable the welcoming message which appears in the beginning
