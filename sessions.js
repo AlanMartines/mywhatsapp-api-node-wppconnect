@@ -462,7 +462,6 @@ module.exports = class Sessions {
 		if (MultiDevice) {
 			//
 			console.log("- Multi-Device:", MultiDevice);
-			console.log('- Número de tentativas de ler o qr-code:', attempts);
 			await deletaToken(`WPP-${SessionName}`, `${config.TOKENSPATCH}`, `${SessionName}.data.json`);
 			//
 		}
