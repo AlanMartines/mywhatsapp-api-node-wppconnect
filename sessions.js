@@ -79,7 +79,7 @@ async function updateStateDb(state, status, AuthorizationToken) {
 //
 // ------------------------------------------------------------------------------------------------------- //
 //
-async function deletaToken(userDataDir, filePath, filename) {
+async function deletaToken(filePath, filename) {
 	//
 	fs.unlink(`${filePath}/${filename}`, function (err) {
 		if (err && err.code == 'ENOENT') {
@@ -90,11 +90,28 @@ async function deletaToken(userDataDir, filePath, filename) {
 			console.log(`- Erro ao remover arquivo "${filePath}/${filename}"`);
 		} else {
 			console.log(`- Pasta userDataDir "${filePath}/${filename}" removido com sucesso`);
-			rimraf(`${filePath}/${userDataDir}`, function () {
-				console.log(`- Pasta "${userDataDir}" removida com sucesso`);
-			});
 		}
 	});
+}
+//
+// ------------------------------------------------------------------------------------------------------- //
+//
+async function deletaCache(filePath, userDataDir) {
+	//
+	if (fs.existsSync(`${filePath}/${userDataDir}`)) {
+		//
+		rimraf(`${filePath}/${userDataDir}`, (error) => {
+			if (error) {
+				console.error(`- Diretório "${filePath}/${userDataDir}" não removido`);
+			} else {
+				console.log(`- Diretórios "${filePath}/${userDataDir}" removida com sucesso`);
+			}
+		});
+		//
+	}else{
+		console.error(`- Diretório "${filePath}/${userDataDir}" não encontrado`);
+	}
+	//
 }
 //
 // ------------------------------------------------------------------------------------------------------- //
@@ -460,9 +477,13 @@ module.exports = class Sessions {
 			╚═╝┴   ┴ ┴└─┘┘└┘┴ ┴┴─┘  ╚═╝┴└─└─┘┴ ┴ ┴ └─┘  ╩  ┴ ┴┴└─┴ ┴┴ ┴└─┘ ┴ └─┘┴└─└─┘
 	 */
 		//
-		if (MultiDevice) {
+		if (MultiDevice == true) {
 			//
-			await deletaToken(`WPP-${SessionName}`, `${config.TOKENSPATCH}`, `${SessionName}.data.json`);
+			await deletaToken(`${config.TOKENSPATCH}`, `${SessionName}.data.json`);
+			//
+		} else if (MultiDevice == false || typeof MultiDevice == 'undefined') {
+			//
+			await deletaCache(`${config.TOKENSPATCH}`, `WPP-${SessionName}`);
 			//
 		}
 		//
@@ -689,20 +710,23 @@ module.exports = class Sessions {
 						session.status = 'notLogged';
 						session.qrcode = null;
 						//
-						//await deletaToken(`WPP-${SessionName}`,`${config.TOKENSPATCH}`,`${SessionName}.data.json`);
+						//await deletaToken(`${config.TOKENSPATCH}`, `${SessionName}.data.json`);
+						//await deletaCache(`${config.TOKENSPATCH}`, `WPP-${SessionName}`);
 						//
 					} else if (state == "UNPAIRED") {
 						session.state = state;
 						session.status = 'notLogged';
 						session.qrcode = null;
 						//
-						await deletaToken(`WPP-${SessionName}`, `${config.TOKENSPATCH}`, `${SessionName}.data.json`);
+						await deletaToken(`${config.TOKENSPATCH}`, `${SessionName}.data.json`);
+						await deletaCache(`${config.TOKENSPATCH}`, `WPP-${SessionName}`);
 						//
 					} else if (state === 'DISCONNECTED' || state === 'SYNCING') {
 						session.state = state;
 						session.qrcode = null;
 						//
-						await deletaToken(`WPP-${SessionName}`, `${config.TOKENSPATCH}`, `${SessionName}.data.json`);
+						await deletaToken(`${config.TOKENSPATCH}`, `${SessionName}.data.json`);
+						await deletaCache(`${config.TOKENSPATCH}`, `WPP-${SessionName}`);
 						//
 						time = setTimeout(() => {
 							client.close();
@@ -938,7 +962,10 @@ module.exports = class Sessions {
 					//
 				}
 				//
-				await deletaToken(`WPP-${SessionName}`, `${config.TOKENSPATCH}`, `${SessionName}.data.json`);
+				//
+				await deletaToken(`${config.TOKENSPATCH}`, `${SessionName}.data.json`);
+				await deletaCache(`${config.TOKENSPATCH}`, `WPP-${SessionName}`);
+				//
 				//
 				await updateStateDb(session.state, session.status, session.AuthorizationToken);
 				//
@@ -1044,18 +1071,18 @@ module.exports = class Sessions {
 				};
 				//
 			}).catch((erro) => {
-					console.error("Error when:", erro); //return object error
-					//
-					return {
-						"erro": true,
-						"status": 404,
-						"canReceiveMessage": false,
-						"contactlistValid": contactlistValid,
-						"contactlistInvalid": contactlistInvalid,
-						"message": "Erro ao enviar lista de contatos validos"
-					};
-					//
-				});
+				console.error("Error when:", erro); //return object error
+				//
+				return {
+					"erro": true,
+					"status": 404,
+					"canReceiveMessage": false,
+					"contactlistValid": contactlistValid,
+					"contactlistInvalid": contactlistInvalid,
+					"message": "Erro ao enviar lista de contatos validos"
+				};
+				//
+			});
 		});
 		return sendResult;
 	} //sendContactVcardList
