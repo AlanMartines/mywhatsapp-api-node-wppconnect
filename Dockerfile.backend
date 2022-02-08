@@ -73,18 +73,18 @@ RUN apt-get update \
 	&& apt-get upgrade -y
 
 RUN cd /home/ && \
-	git clone https://github.com/AlanMartines/mywhatsapp-api-node-wppconnect.git ApiWPPconnect
+	git clone https://github.com/AlanMartines/mywhatsapp-api-node-wppconnect.git ApiWPPConnect
 
-RUN cd /home/ApiWPPconnect/ && \
+RUN cd /home/ApiWPPConnect/ && \
 	npm install --allow-root --unsafe-perm=true
 
-RUN cd /home/ApiWPPconnect/ && \
+RUN cd /home/ApiWPPConnect/ && \
 	git clone https://github.com/wppconnect-team/wppconnect.git && \
 	cd wppconnect && \
 	npm install --allow-root --unsafe-perm=true && \
 	npm run build
 
-WORKDIR /home/ApiWPPconnect
+WORKDIR /home/ApiWPPConnect
 
 EXPOSE 9001/tcp
 
