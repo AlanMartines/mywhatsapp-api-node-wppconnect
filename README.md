@@ -290,9 +290,6 @@ VIEW_QRCODE_TERMINAL=0
 # whatsappVersion
 WHATSAPPVERSION=
 #
-#multi-device
-MULTIDEVICE=0
-#
 # Auto close
 AUTO_CLOSE=60000
 #
