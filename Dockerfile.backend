@@ -2,7 +2,7 @@ FROM node:14.17.6
 
 LABEL version="1.0.0" description="ApiWPPconnect" maintainer="Alan Martines<alancpmartines@hotmail.com>"
 
-RUN mkdir /home/ApiWPPconnect
+# RUN mkdir /home/ApiWPPconnect
 RUN mkdir -p /usr/local/tokens
 
 RUN apt-get update && \
@@ -72,7 +72,8 @@ RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.d
 RUN apt-get update \
 	&& apt-get upgrade -y
 
-COPY . /home/ApiWPPconnect/
+RUN /home/ && \
+	git clone https://github.com/AlanMartines/mywhatsapp-api-node-wppconnect.git ApiWPPConnect
 
 RUN cd /home/ApiWPPconnect/ && \
 	npm install --allow-root --unsafe-perm=true
