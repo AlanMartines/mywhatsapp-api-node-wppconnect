@@ -28,7 +28,5 @@ services:
       MYSQL_DIALECT: ${MYSQL_DIALECT}
       MYSQL_TIMEZONE: ${MYSQL_TIMEZONE}
       BROWSER_WSENDPOINT: ${BROWSER_WSENDPOINT}
-    volumes:
-      - ${VOLUME}:/usr/local/tokens
     ports:
       - "${PORT}:9001"

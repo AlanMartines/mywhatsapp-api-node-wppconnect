@@ -464,7 +464,6 @@ docker build -t alanmartines/mywhatsapp-api-node-wppconnect:1.0.0 -f Dockerfile.
 # Criar contêiner
 docker run -d -p 9001:9001 --name ApiWPPconnect \
   --restart=always \
-	-v /usr/local/tokens:/usr/local/tokens \
 	-e NODE_EN=production \
 	-e HOST=0.0.0.0 \
 	-e PORT=9001 \
