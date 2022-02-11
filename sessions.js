@@ -1014,7 +1014,7 @@ module.exports = class Sessions {
     var session = Sessions.getSession(SessionName);
     var sendResult = await session.client.then(async client => {
       // Send contact
-      return queue.add(() => await client.sendContactVcard(
+      return await client.sendContactVcard(
         number,
         contact,
         namecontact).then((result) => {
@@ -1037,7 +1037,7 @@ module.exports = class Sessions {
           "message": "Erro ao enviar contato"
         };
         //
-      }));
+      });
     });
     return sendResult;
   } //sendContactVcard
@@ -1057,7 +1057,7 @@ module.exports = class Sessions {
     var session = Sessions.getSession(SessionName);
     var sendResult = await session.client.then(async client => {
       // Send contact
-      return queue.add(() => await client.sendContactVcardList(
+      return await client.sendContactVcardList(
         number,
         contactlistValid,
         contactlistInvalid
@@ -1085,7 +1085,7 @@ module.exports = class Sessions {
           "message": "Erro ao enviar lista de contatos validos"
         };
         //
-      }));
+      });
     });
     return sendResult;
   } //sendContactVcardList
@@ -1103,7 +1103,7 @@ module.exports = class Sessions {
     var session = Sessions.getSession(SessionName);
     var sendResult = await session.client.then(async client => {
       // Send basic text
-      return queue.add(() => await client.sendText(
+      return await client.sendText(
         number,
         msg
       ).then((result) => {
@@ -1128,7 +1128,7 @@ module.exports = class Sessions {
           "message": "Erro ao enviar menssagem"
         };
         //
-      }));
+      });
     });
     return sendResult;
   } //sendText
@@ -1148,7 +1148,7 @@ module.exports = class Sessions {
     var session = Sessions.getSession(SessionName);
     var sendResult = await session.client.then(async client => {
       // Send basic text
-      return queue.add(() => await client.sendLocation(
+      return await client.sendLocation(
         number,
         lat,
         long,
@@ -1177,7 +1177,7 @@ module.exports = class Sessions {
           "message": "Erro ao enviar localização."
         };
         //
-      }));
+      });
     });
     return sendResult;
   } //sendLocation
@@ -1196,7 +1196,7 @@ module.exports = class Sessions {
     var session = Sessions.getSession(SessionName);
     var sendResult = await session.client.then(async client => {
       // Send basic text
-      return queue.add(() => await client.sendLinkPreview(
+      return await client.sendLinkPreview(
         number,
         link,
         detail
@@ -1224,7 +1224,7 @@ module.exports = class Sessions {
           "message": "Erro ao enviar link."
         };
         //
-      }));
+      });
     });
     return sendResult;
   } //sendLinkPreview
@@ -1243,7 +1243,7 @@ module.exports = class Sessions {
     await sleep(3000);
     var session = Sessions.getSession(SessionName);
     var resultsendImage = await session.client.then(async (client) => {
-      return queue.add(() => await client.sendImage(
+      return await client.sendImage(
         number,
         filePath,
         fileName,
@@ -1270,7 +1270,7 @@ module.exports = class Sessions {
           "message": "Erro ao enviar menssagem"
         };
         //
-      }));
+      });
     });
     return resultsendImage;
   } //sendImage
@@ -1289,7 +1289,7 @@ module.exports = class Sessions {
     await sleep(3000);
     var session = Sessions.getSession(SessionName);
     var resultsendImage = await session.client.then(async (client) => {
-      return queue.add(() => await client.sendFile(
+      return await client.sendFile(
         number,
         filePath,
         originalname,
@@ -1316,7 +1316,7 @@ module.exports = class Sessions {
           "message": "Erro ao enviar arquivo"
         };
         //
-      }));
+      });
     });
     return resultsendImage;
   } //sendFile
@@ -1336,7 +1336,7 @@ module.exports = class Sessions {
     await sleep(3000);
     var session = Sessions.getSession(SessionName);
     var resultSendFile = await session.client.then(async (client) => {
-      return queue.add(() => await client.sendFileFromBase64(
+      return await client.sendFileFromBase64(
         number,
         "data:" + mimetype + ";base64," + base64Data,
         originalname,
@@ -1363,7 +1363,7 @@ module.exports = class Sessions {
           "message": "Erro ao enviar arquivo"
         };
         //
-      }));
+      });
     });
     //
     return resultSendFile;
@@ -1385,7 +1385,7 @@ module.exports = class Sessions {
     await sleep(3000);
     var session = Sessions.getSession(SessionName);
     var resultgetAllContacts = await session.client.then(async client => {
-      return queue.add(() => await client.getAllContacts().then(async (result) => {
+      return await client.getAllContacts().then(async (result) => {
         //console.log('Result: ', result); //return object success
         //
         var getChatGroupNewMsg = [];
@@ -1418,7 +1418,7 @@ module.exports = class Sessions {
           "message": "Erro ao recuperar contatos"
         };
         //
-      }));
+      });
       //
     });
     //
@@ -1435,7 +1435,7 @@ module.exports = class Sessions {
     await sleep(3000);
     var session = Sessions.getSession(SessionName);
     var resultgetAllGroups = await session.client.then(async client => {
-      return queue.add(() => await client.getAllGroups().then(async (result) => {
+      return await client.getAllGroups().then(async (result) => {
         //console.log('Result: ', result); //return object success
         //
         var getAllGroups = [];
@@ -1464,7 +1464,7 @@ module.exports = class Sessions {
           "message": "Erro ao recuperar grupos"
         };
         //
-      }));
+      });
       //
     });
     //
@@ -1479,7 +1479,7 @@ module.exports = class Sessions {
     await sleep(3000);
     var session = Sessions.getSession(SessionName);
     var resultgetSessionTokenBrowser = await session.client.then(async client => {
-      return queue.add(() => await client.getSessionTokenBrowser().then((result) => {
+      return await client.getSessionTokenBrowser().then((result) => {
         //console.log('Result: ', result); //return object success
         return result;
       }).catch((erro) => {
@@ -1491,7 +1491,7 @@ module.exports = class Sessions {
           "message": "Erro ao recuperar token browser"
         };
         //
-      }));
+      });
     });
     return resultgetSessionTokenBrowser;
   } //getSessionTokenBrowser
@@ -1532,7 +1532,7 @@ module.exports = class Sessions {
     await sleep(3000);
     var session = Sessions.getSession(SessionName);
     var resultgetStatus = await session.client.then(async client => {
-      return queue.add(() => await client.getStatus(number).then((result) => {
+      return await client.getStatus(number).then((result) => {
         //console.log('Result: ', result); //return object success
         return result;
       }).catch((erro) => {
@@ -1544,7 +1544,7 @@ module.exports = class Sessions {
           "message": "Erro ao recuperar status de contato"
         };
         //
-      }));
+      });
     });
     return resultgetStatus;
   } //getStatus
@@ -1560,7 +1560,7 @@ module.exports = class Sessions {
     await sleep(3000);
     var session = Sessions.getSession(SessionName);
     var resultgetNumberProfile = await session.client.then(async client => {
-      return queue.add(() => await client.getNumberProfile(number).then((result) => {
+      return await client.getNumberProfile(number).then((result) => {
         //console.log('Result: ', result); //return object success
         return result;
       }).catch((erro) => {
@@ -1572,7 +1572,7 @@ module.exports = class Sessions {
           "message": "Erro ao recuperar profile"
         };
         //
-      }));
+      });
     });
     return resultgetNumberProfile;
   } //getStatus
@@ -1588,7 +1588,7 @@ module.exports = class Sessions {
     await sleep(3000);
     var session = Sessions.getSession(SessionName);
     var resultcheckNumberStatus = await session.client.then(async client => {
-      return queue.add(() => await client.checkNumberStatus(number).then((result) => {
+      return await client.checkNumberStatus(number).then((result) => {
         //console.log('Result: ', result); //return object success
         //
         if (result.canReceiveMessage === true) {
@@ -1629,7 +1629,7 @@ module.exports = class Sessions {
           "message": "Erro ao verificar número informado"
         };
         //
-      }));
+      });
     });
     return resultcheckNumberStatus;
   } //checkNumberStatus
@@ -1646,7 +1646,7 @@ module.exports = class Sessions {
     var session = Sessions.getSession(SessionName);
     var resultgetProfilePicFromServer = await session.client.then(async client => {
       try {
-        const url = queue.add(() => await client.getProfilePicFromServer(number));
+        const url = await client.getProfilePicFromServer(number);
         //console.log('Result: ', result); //return object success
         return url;
       } catch (erro) {
@@ -1680,7 +1680,7 @@ module.exports = class Sessions {
     await sleep(3000);
     var session = Sessions.getSession(SessionName);
     var resultleaveGroup = await session.client.then(async client => {
-      return queue.add(() => await client.leaveGroup(groupId).then((result) => {
+      return await client.leaveGroup(groupId).then((result) => {
         //console.log('Result: ', result); //return object success
         //
         return {
@@ -1700,7 +1700,7 @@ module.exports = class Sessions {
           "message": "Erro ao deixar o grupo"
         };
         //
-      }));
+      });
     });
     return resultleaveGroup;
   } //leaveGroup
@@ -1716,7 +1716,7 @@ module.exports = class Sessions {
     await sleep(3000);
     var session = Sessions.getSession(SessionName);
     var resultgetGroupMembers = await session.client.then(async client => {
-      return queue.add(() => await client.getGroupMembers(groupId).then(async (result) => {
+      return await client.getGroupMembers(groupId).then(async (result) => {
         //console.log('Result: ', result); //return object success
         //
         var getGroupMembers = [];
@@ -1748,7 +1748,7 @@ module.exports = class Sessions {
           "message": "Erro ao obter membros do grupo"
         };
         //
-      }));
+      });
     });
     return resultgetGroupMembers;
   } //getGroupMembers
@@ -1764,7 +1764,7 @@ module.exports = class Sessions {
     await sleep(3000);
     var session = Sessions.getSession(SessionName);
     var resultgetGroupMembersIds = await session.client.then(async client => {
-      return queue.add(() => await client.getGroupMembersIds(groupId).then((result) => {
+      return await client.getGroupMembersIds(groupId).then((result) => {
         //console.log('Result: ', result); //return object success
         return result;
       }).catch((erro) => {
@@ -1777,7 +1777,7 @@ module.exports = class Sessions {
           "message": "Erro ao obter membros do grupo"
         };
         //
-      }));
+      });
     });
     return resultgetGroupMembersIds;
   } //getGroupMembersIds
@@ -1793,7 +1793,7 @@ module.exports = class Sessions {
     await sleep(3000);
     var session = Sessions.getSession(SessionName);
     var resultgetGroupInviteLink = await session.client.then(async client => {
-      return queue.add(() => await client.getGroupInviteLink(groupId).then((result) => {
+      return await client.getGroupInviteLink(groupId).then((result) => {
         //console.log('Result: ', result); //return object success
         return result;
       }).catch((erro) => {
@@ -1806,7 +1806,7 @@ module.exports = class Sessions {
           "message": "Erro ao obter link de convite de grupo"
         };
         //
-      }));
+      });
     });
     return resultgetGroupInviteLink;
   } //getGroupInviteLink
@@ -1824,7 +1824,7 @@ module.exports = class Sessions {
     await sleep(3000);
     var session = Sessions.getSession(SessionName);
     var resultgetGroupInviteLink = await session.client.then(async client => {
-      return queue.add(() => await client.createGroup(title, contactlistValid).then((result) => {
+      return await client.createGroup(title, contactlistValid).then((result) => {
         //console.log('Result: ', result); //return object success
         //
         if (result.status === 200) {
@@ -1861,7 +1861,7 @@ module.exports = class Sessions {
           "message": "Erro ao criar grupo"
         };
         //
-      }));
+      });
     });
     return resultgetGroupInviteLink;
   } //createGroup
@@ -1878,7 +1878,7 @@ module.exports = class Sessions {
     await sleep(3000);
     var session = Sessions.getSession(SessionName);
     var resultremoveParticipant = await session.client.then(async client => {
-      return queue.add(() => await client.removeParticipant(groupId, phonefull).then((result) => {
+      return await client.removeParticipant(groupId, phonefull).then((result) => {
         //console.log('Result: ', result); //return object success
         //
         if (result === true) {
@@ -1909,7 +1909,7 @@ module.exports = class Sessions {
           "message": "Erro ao remover participante"
         };
         //
-      }));
+      });
     });
     return resultremoveParticipant;
   } //removeParticipant
@@ -1926,7 +1926,7 @@ module.exports = class Sessions {
     await sleep(3000);
     var session = Sessions.getSession(SessionName);
     var resultaddParticipant = await session.client.then(async client => {
-      return queue.add(() => await client.addParticipant(groupId, phonefull).then((result) => {
+      return await client.addParticipant(groupId, phonefull).then((result) => {
         //console.log('Result: ', addParticipant); //return object success
         //
         if (result === true) {
@@ -1957,7 +1957,7 @@ module.exports = class Sessions {
           "message": "Erro ao adicionar participante"
         };
         //
-      }));
+      });
     });
     return resultaddParticipant;
   } //addParticipant
@@ -1974,7 +1974,7 @@ module.exports = class Sessions {
     await sleep(3000);
     var session = Sessions.getSession(SessionName);
     var resultpromoteParticipant = await session.client.then(async client => {
-      return queue.add(() => await client.promoteParticipant(groupId, number).then((result) => {
+      return await client.promoteParticipant(groupId, number).then((result) => {
         //console.log('Result: ', promoteParticipant); //return object success
         //
         if (result === true) {
@@ -2005,7 +2005,7 @@ module.exports = class Sessions {
           "message": "Erro ao promover participante a administrador"
         };
         //
-      }));
+      });
     });
     return resultpromoteParticipant;
   } //promoteParticipant
@@ -2022,7 +2022,7 @@ module.exports = class Sessions {
     await sleep(3000);
     var session = Sessions.getSession(SessionName);
     var resultdemoteParticipant = await session.client.then(async client => {
-      return queue.add(() => await client.demoteParticipant(groupId, phonefull).then((result) => {
+      return await client.demoteParticipant(groupId, phonefull).then((result) => {
         //console.log('Result: ', demoteParticipant); //return object success
         //
         if (demoteParticipant === true) {
@@ -2053,7 +2053,7 @@ module.exports = class Sessions {
           "message": "Erro ao remover participante de administrador"
         };
         //
-      }));
+      });
     });
     return resultdemoteParticipant;
   } //demoteParticipant
@@ -2069,7 +2069,7 @@ module.exports = class Sessions {
     await sleep(3000);
     var session = Sessions.getSession(SessionName);
     var resultgetGroupInfoFromInviteLink = await session.client.then(async client => {
-      return queue.add(() => await client.getGroupInfoFromInviteLink(InviteCode).then((result) => {
+      return await client.getGroupInfoFromInviteLink(InviteCode).then((result) => {
         //console.log('Result: ', result); //return object success
         return result;
       }).catch((erro) => {
@@ -2080,7 +2080,7 @@ module.exports = class Sessions {
           "message": "Erro ao obter link de convite"
         };
         //
-      }));
+      });
     });
     return resultgetGroupInfoFromInviteLink;
   } //getGroupInfoFromInviteLink
@@ -2096,7 +2096,7 @@ module.exports = class Sessions {
     await sleep(3000);
     var session = Sessions.getSession(SessionName);
     var resultjoinGroup = await session.client.then(async client => {
-      return queue.add(() => await await client.joinGroup(InviteCode).then((result) => {
+      return await client.joinGroup(InviteCode).then((result) => {
         //console.log('Result: ', result); //return object success
         //
         if (result.status === 200) {
@@ -2124,7 +2124,7 @@ module.exports = class Sessions {
           "message": "Erro ao entra no grupo via convite"
         };
         //
-      }));
+      });
     });
     return resultjoinGroup;
   } //joinGroup
@@ -2146,7 +2146,7 @@ module.exports = class Sessions {
     await sleep(3000);
     var session = Sessions.getSession(SessionName);
     var resultsetProfileStatus = await session.client.then(async client => {
-      return queue.add(() => await client.setProfileStatus(ProfileStatus).then((result) => {
+      return await client.setProfileStatus(ProfileStatus).then((result) => {
         //console.log('Result: ', result); //return object success
         //
         return {
@@ -2164,7 +2164,7 @@ module.exports = class Sessions {
           "message": "Erro ao alterar profile status."
         };
         //
-      }));
+      });
     });
     return resultsetProfileStatus;
   } //setProfileStatus
@@ -2180,7 +2180,7 @@ module.exports = class Sessions {
     await sleep(3000);
     var session = Sessions.getSession(SessionName);
     var resultsetProfileName = await session.client.then(async client => {
-      return queue.add(() => await client.setProfileName(ProfileName).then((result) => {
+      return await client.setProfileName(ProfileName).then((result) => {
         //console.log('Result: ', result); //return object success
         //
         return {
@@ -2198,7 +2198,7 @@ module.exports = class Sessions {
           "message": "Erro ao alterar profile name."
         };
         //
-      }));
+      });
     });
     return resultsetProfileName;
   } //setProfileName
@@ -2214,7 +2214,7 @@ module.exports = class Sessions {
     await sleep(3000);
     var session = Sessions.getSession(SessionName);
     var resultsetProfilePic = await session.client.then(async client => {
-      return queue.add(() => await client.setProfilePic(path).then((result) => {
+      return await client.setProfilePic(path).then((result) => {
         //console.log('Result: ', result); //return object success
         //
         return {
@@ -2232,7 +2232,7 @@ module.exports = class Sessions {
           "message": "Erro ao alterar profile pic."
         };
         //
-      }));
+      });
     });
     return resultsetProfilePic;
   } //setProfilePic
@@ -2251,7 +2251,7 @@ module.exports = class Sessions {
     await sleep(3000);
     var session = Sessions.getSession(SessionName);
     var resultkillServiceWorker = await session.client.then(async client => {
-      return queue.add(() => await client.killServiceWorker().then((result) => {
+      return await client.killServiceWorker().then((result) => {
         //console.log('Result: ', result); //return object success
         //
         return {
@@ -2270,7 +2270,7 @@ module.exports = class Sessions {
           "message": "Erro ao parar serviço."
         };
         //
-      }));
+      });
     });
     return resultkillServiceWorker;
   } //killServiceWorker
@@ -2283,7 +2283,7 @@ module.exports = class Sessions {
     await sleep(3000);
     var session = Sessions.getSession(SessionName);
     var resultrestartService = await session.client.then(async client => {
-      return queue.add(() => await client.restartService().then((result) => {
+      return await client.restartService().then((result) => {
         //console.log('Result: ', result); //return object success
         //
         return {
@@ -2302,7 +2302,7 @@ module.exports = class Sessions {
           "message": "Erro ao reiniciar serviço."
         };
         //
-      }));
+      });
     });
     return resultrestartService;
   } //restartService
@@ -2315,7 +2315,7 @@ module.exports = class Sessions {
     await sleep(3000);
     var session = Sessions.getSession(SessionName);
     var resultgetHostDevice = await session.client.then(async client => {
-      return queue.add(() => await client.getHostDevice().then((result) => {
+      return await client.getHostDevice().then((result) => {
         //console.log('Result: ', result); //return object success
         //
         return {
@@ -2347,7 +2347,7 @@ module.exports = class Sessions {
           "message": "Erro ao obter dados do dispositivo"
         };
         //
-      }));
+      });
     });
     return resultgetHostDevice;
   } //getHostDevice
@@ -2360,7 +2360,7 @@ module.exports = class Sessions {
     await sleep(3000);
     var session = Sessions.getSession(SessionName);
     var resultgetHostDevice = await session.client.then(async client => {
-      return queue.add(() => await client.isMultiDevice().then((result) => {
+      return await client.isMultiDevice().then((result) => {
         //console.log('Result: ', result); //return object success
         //
         return {
@@ -2380,7 +2380,7 @@ module.exports = class Sessions {
           "message": "Erro ao obter estatus do MultiDevice"
         };
         //
-      }));
+      });
     });
     return resultgetHostDevice;
   } //isMultiDevice
@@ -2392,7 +2392,7 @@ module.exports = class Sessions {
     console.log("- getConnectionState");
     var session = Sessions.getSession(SessionName);
     var resultisConnected = await session.client.then(async client => {
-      return queue.add(() => await client.getConnectionState().then((result) => {
+      return await client.getConnectionState().then((result) => {
         //console.log('Result: ', result); //return object success
         //
         return {
@@ -2412,7 +2412,7 @@ module.exports = class Sessions {
           "message": "Erro ao obter o estado da conexão"
         };
         //
-      }));
+      });
     });
     return resultisConnected;
   } //getConnectionState
@@ -2425,7 +2425,7 @@ module.exports = class Sessions {
     await sleep(3000);
     var session = Sessions.getSession(SessionName);
     var resultgetBatteryLevel = await session.client.then(async client => {
-      return queue.add(() => await client.getBatteryLevel().then((result) => {
+      return await client.getBatteryLevel().then((result) => {
         //console.log('Result: ', result); //return object success
         //
         return {
@@ -2445,7 +2445,7 @@ module.exports = class Sessions {
           "message": "Erro ao obter o nivel da bateria"
         };
         //
-      }));
+      });
     });
     return resultgetBatteryLevel;
   } //getBatteryLevel
@@ -2458,7 +2458,7 @@ module.exports = class Sessions {
     await sleep(3000);
     var session = Sessions.getSession(SessionName);
     var resultisConnected = await session.client.then(async client => {
-      return queue.add(() => await client.isConnected().then((result) => {
+      return await client.isConnected().then((result) => {
         //console.log('Result: ', result); //return object success
         //
         return {
@@ -2477,7 +2477,7 @@ module.exports = class Sessions {
           "message": "Erro ao obter estatus"
         };
         //
-      }));
+      });
     });
     return resultisConnected;
   } //isConnected
@@ -2490,7 +2490,7 @@ module.exports = class Sessions {
     await sleep(3000);
     var session = Sessions.getSession(SessionName);
     var resultgetWAVersion = await session.client.then(async client => {
-      return queue.add(() => await client.getWAVersion().then((result) => {
+      return await client.getWAVersion().then((result) => {
         //console.log('Result: ', result); //return object success
         //
         return {
@@ -2509,7 +2509,7 @@ module.exports = class Sessions {
           "message": "Erro ao obter versão do WhatsappWeb"
         };
         //
-      }));
+      });
     });
     return resultgetWAVersion;
   } //getWAVersion
@@ -2522,7 +2522,7 @@ module.exports = class Sessions {
     await sleep(3000);
     var session = Sessions.getSession(SessionName);
     var resultstartPhoneWatchdog = await session.client.then(async client => {
-      return queue.add(() => await client.startPhoneWatchdog(interval).then((result) => {
+      return await client.startPhoneWatchdog(interval).then((result) => {
         //console.log('Result: ', result); //return object success
         //
         return {
@@ -2541,7 +2541,7 @@ module.exports = class Sessions {
           "message": "Erro ao inicia a verificação de conexão do telefone"
         };
         //
-      }));
+      });
     });
     return resultstartPhoneWatchdog;
   } //startPhoneWatchdog
@@ -2554,7 +2554,7 @@ module.exports = class Sessions {
     await sleep(3000);
     var session = Sessions.getSession(SessionName);
     var resultstopPhoneWatchdog = await session.client.then(async client => {
-      return queue.add(() => await client.stopPhoneWatchdog().then((result) => {
+      return await client.stopPhoneWatchdog().then((result) => {
         //console.log('Result: ', result); //return object success
         //
         return {
@@ -2573,7 +2573,7 @@ module.exports = class Sessions {
           "message": "Erro ao parar a verificação de conexão do telefone"
         };
         //
-      }));
+      });
     });
     return resultstopPhoneWatchdog;
   } //stopPhoneWatchdog
