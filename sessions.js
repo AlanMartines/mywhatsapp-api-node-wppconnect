@@ -492,7 +492,7 @@ module.exports = class Sessions {
     }
     //
     try {
-      const client = await queue.add(() => wppconnect.create({
+      const client = await wppconnect.create({
         session: SessionName,
         catchQR: async (base64Qr, asciiQR, attempts, urlCode) => {
           //
@@ -665,7 +665,7 @@ module.exports = class Sessions {
         autoClose: parseInt(config.AUTO_CLOSE), // Automatically closes the wppconnect only when scanning the QR code (default 60 seconds, if you want to turn it off, assign 0 or false)
         tokenStore: 'file', // Define how work with tokens, that can be a custom interface
         folderNameToken: `${config.TOKENSPATCH}`, //folder name when saving tokens
-      }));
+      });
       // Levels: 'error', 'warn', 'info', 'http', 'verbose', 'debug', 'silly'
       // All logs: 'silly'
       wppconnect.defaultLogger.level = 'silly';
