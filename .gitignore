@@ -39,11 +39,10 @@ bower_components
 build/Release
 
 # Dependency directories
-wppconnect/
-node_modules/
+*wppconnect/
+*node_modules/
 jspm_packages/
-tokens/
-.env
+*tokens/
 
 # TypeScript v1 declaration files
 typings/
@@ -73,7 +72,7 @@ typings/
 .yarn-integrity
 
 # dotenv environment variables file
-.env-*
+.env
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
