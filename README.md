@@ -314,9 +314,6 @@ MYSQL_PASSWORD=TuUep8KkjCtAA@
 # A base de dados a qual a aplicação irá se conectar. Ex: node_mysql
 MYSQL_DATABASE=mywhatsapp-api
 #
-# Criando volume onde irá salvar os tokens gerados
-VOLUME=/usr/local/tokens
-#
 # Gag image
 TAG=1.0.0
 #
