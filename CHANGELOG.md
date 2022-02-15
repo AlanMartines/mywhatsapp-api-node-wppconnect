@@ -1,10 +1,11 @@
 ﻿## Changelog
 
-_Todas as mudanças notáveis neste projeto serão documentadas neste arquivo. As datas são exibidas em UTC -04:00._
+_Todas as mudanças notáveis ​​neste projeto serão documentadas neste arquivo. As datas são exibidas em UTC -04:00._
 
-**1.0.1** - (21 Janeiro 2022)
+**1.0.1**
+(21 Janeiro 2022)
 
-##### Getting started - ✔️📝
+#### Getting started - ✔️📝
 
 - Add Start router
 - Add Status router
@@ -14,7 +15,7 @@ _Todas as mudanças notáveis neste projeto serão documentadas neste arquivo. A
 - Add getSessions router
 - Add getHardware router
 
-##### Basic Functions (usage) - ✔️📝
+#### Basic Functions (usage) - ✔️📝
 
 - Add sendContactVcard router
 - Add sendContactVcardList router
@@ -31,7 +32,7 @@ _Todas as mudanças notáveis neste projeto serão documentadas neste arquivo. A
 - Add sendFileToBase64 router
 - Add sendFileFromBase64 router
 
-##### Retrieving Data - ✔️📝
+#### Retrieving Data - ✔️📝
 
 - Add getAllContacts router
 - Add getAllGroups router
@@ -43,7 +44,7 @@ _Todas as mudanças notáveis neste projeto serão documentadas neste arquivo. A
 - Add checkNumberStatus router
 - Add checkNumberStatusMassa router
 
-##### Group Functions - ✔️📝
+#### Group Functions - ✔️📝
 
 - Add sendTextGrupo router
 - Add sendLocationGroup router
@@ -66,13 +67,13 @@ _Todas as mudanças notáveis neste projeto serão documentadas neste arquivo. A
 - Add getGroupInfoFromInviteLink router
 - Add joinGroup router
 
-##### Profile Functions - ✔️📝
+#### Profile Functions - ✔️📝
 
 - Add setProfileStatus router
 - Add setProfileName router
 - Add setProfilePic router
 
-##### Device Functions - ✔️📝
+#### Device Functions - ✔️📝
 
 - Add killServiceWorker router
 - Add restartService router
@@ -83,12 +84,13 @@ _Todas as mudanças notáveis neste projeto serão documentadas neste arquivo. A
 - Add isConnected router
 - Add getWAVersion router
 
-##### Phone connection verification - ✔️📝
+#### Phone connection verification - ✔️📝
 
 - Add startPhoneWatchdog router
 - Add stopPhoneWatchdog router
 
-**1.0.0** - (1 Outubro 2020)
+**1.0.0**
+(1 Outubro 2020)
 
 - Primeira versão
 
