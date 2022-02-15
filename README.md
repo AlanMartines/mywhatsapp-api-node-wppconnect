@@ -287,9 +287,6 @@ PORT=9001
 # Define se o qrcode vai ser mostrado no terminal
 VIEW_QRCODE_TERMINAL=0
 #
-# whatsappVersion
-WHATSAPPVERSION=
-#
 # Auto close
 AUTO_CLOSE=60000
 #

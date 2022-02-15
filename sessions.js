@@ -337,14 +337,14 @@ module.exports = class Sessions {
   //
   // ------------------------------------------------------------------------------------------------------- //
   //
-  static async Start(SessionName, AuthorizationToken, MultiDevice) {
+  static async Start(SessionName, AuthorizationToken, MultiDevice, whatsappVersion) {
     Sessions.sessions = Sessions.sessions || []; //start array
 
     var session = Sessions.getSession(SessionName);
 
     if (session == false) {
       //create new session
-      session = await Sessions.addSesssion(SessionName, AuthorizationToken, MultiDevice);
+      session = await Sessions.addSesssion(SessionName, AuthorizationToken, MultiDevice, whatsappVersion);
     } else if (["CLOSED"].includes(session.state)) {
       //restart session
       console.log("- State: CLOSED");
@@ -359,7 +359,7 @@ module.exports = class Sessions {
       console.log('- State do sistema:', session.state);
       console.log('- Status da sessão:', session.status);
       //
-      session.client = Sessions.initSession(SessionName, AuthorizationToken, MultiDevice);
+      session.client = Sessions.initSession(SessionName, AuthorizationToken, MultiDevice, whatsappVersion);
       Sessions.setup(SessionName);
     } else if (["CONFLICT", "UNPAIRED", "UNLAUNCHED", "UNPAIRED_IDLE"].includes(session.state)) {
       session.state = "CLOSED";
@@ -375,7 +375,7 @@ module.exports = class Sessions {
         console.log("- Client UseHere");
         client.useHere();
       });
-      session.client = Sessions.initSession(SessionName, AuthorizationToken, MultiDevice);
+      session.client = Sessions.initSession(SessionName, AuthorizationToken, MultiDevice, whatsappVersion);
     } else if (["DISCONNECTED"].includes(session.state)) {
       //restart session
       session.state = "CLOSE";
@@ -389,7 +389,7 @@ module.exports = class Sessions {
       console.log('- State do sistema:', session.state);
       console.log('- Status da sessão:', session.status);
       //
-      session.client = Sessions.initSession(SessionName, AuthorizationToken, MultiDevice);
+      session.client = Sessions.initSession(SessionName, AuthorizationToken, MultiDevice, whatsappVersion);
       Sessions.setup(SessionName);
     } else if (["NOTFOUND"].includes(session.state)) {
       //restart session
@@ -404,7 +404,7 @@ module.exports = class Sessions {
       console.log('- State do sistema:', session.state);
       console.log('- Status da sessão:', session.status);
       //
-      session = await Sessions.addSesssion(SessionName, AuthorizationToken, MultiDevice);
+      session = await Sessions.addSesssion(SessionName, AuthorizationToken, MultiDevice, whatsappVersion);
     } else {
       console.log('- Nome da sessão:', session.name);
       console.log('- State do sistema:', session.state);
@@ -418,7 +418,7 @@ module.exports = class Sessions {
   //
   // ------------------------------------------------------------------------------------------------------- //
   //
-  static async addSesssion(SessionName, AuthorizationToken, MultiDevice) {
+  static async addSesssion(SessionName, AuthorizationToken, MultiDevice, whatsappVersion) {
     console.log("- Adicionando sessão");
     var newSession = {
       AuthorizationToken: AuthorizationToken,
@@ -439,7 +439,7 @@ module.exports = class Sessions {
     console.log("- Nova sessão: " + newSession.state);
 
     //setup session
-    newSession.client = Sessions.initSession(SessionName, AuthorizationToken, MultiDevice);
+    newSession.client = Sessions.initSession(SessionName, AuthorizationToken, MultiDevice, whatsappVersion);
     Sessions.setup(SessionName);
 
     return newSession;
@@ -470,7 +470,7 @@ module.exports = class Sessions {
   //
   // ------------------------------------------------------------------------------------------------------- //
   //
-  static async initSession(SessionName, AuthorizationToken, MultiDevice) {
+  static async initSession(SessionName, AuthorizationToken, MultiDevice, whatsappVersion) {
     console.log("- Iniciando sessão");
     console.log("- Multi-Device:", MultiDevice);
     var session = Sessions.getSession(SessionName);
@@ -596,7 +596,7 @@ module.exports = class Sessions {
               //
           }
         },
-        whatsappVersion: `${config.WHATSAPPVERSION}`, // whatsappVersion: '2.2142.12',
+        whatsappVersion: `${whatsappVersion}`, // whatsappVersion: '2.2142.12',
         deviceName: `${config.DEVICE_NAME}`,
         headless: true, // Headless chrome
         devtools: false, // Open devtools by default

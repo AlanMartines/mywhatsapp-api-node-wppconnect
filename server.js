@@ -32,9 +32,6 @@ PORT=9001
 # Define se o qrcode vai ser mostrado no terminal
 VIEW_QRCODE_TERMINAL=0
 #
-# whatsappVersion
-WHATSAPPVERSION=
-#
 # Device name
 DEVICE_NAME='My Whatsapp'
 #
