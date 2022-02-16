@@ -6,12 +6,9 @@ const NODE_ENV = process.env.NODE_ENV || 'production';
 const HOST = process.env.HOST || 'localhost';
 const PORT = process.env.PORT || '9001';
 const VIEW_QRCODE_TERMINAL = process.env.VIEW_QRCODE_TERMINAL || 1;
-const WHATSAPPVERSION = process.env.WHATSAPPVERSION || '';
 const DEVICE_NAME = process.env.DEVICE_NAME || 'My Whatsapp';
-const MULTIDEVICE = process.env.MULTIDEVICE || 0;
 const AUTO_CLOSE = process.env.AUTO_CLOSE || 60000;
 const JWT_SECRET = process.env.JWT_SECRET;
-const TOKENSPATCH = process.env.TOKENSPATCH || 'tokens';
 const VALIDATE_MYSQL = process.env.VALIDATE_MYSQL || 0;
 const MYSQL_HOST = process.env.MYSQL_HOST || 'localhost';
 const MYSQL_PORT = process.env.MYSQL_PORT || '3306';
@@ -31,6 +28,9 @@ module.exports = {
     instances: INSTANCES,
     exec_mode: "cluster",
     watch: true,
+		// Delay between restart
+		watch_delay: 1000,
+		ignore_watch : ["node_modules", "client/img"],
     env: {
 			NODE_ENV,
 			HOST,
