@@ -1,31 +1,57 @@
 version: "3.9"
+
+networks:
+  mywhatsapp-api:
+
 services:
+
   backend:
     container_name: ApiWPPconnect
     hostname: ApiWPPconnect
-    network_mode: bridge
+    #network_mode: bridge
     image: alanmartines/mywhatsapp-api-node-wppconnect:${TAG}
     build:
       context: .
       dockerfile: Dockerfile.backend
     restart: always
+    networks:
+      - mywhatsapp-api
     environment:
-      NODE_ENV: production
-      HOST: 0.0.0.0
-      PORT: 9001
-      VIEW_QRCODE_TERMINAL: ${VIEW_QRCODE_TERMINAL}
-      WHATSAPPVERSION: ${WHATSAPPVERSION}
-      DEVICE_NAME: ${DEVICE_NAME}
-      AUTO_CLOSE: ${AUTO_CLOSE}
-      JWT_SECRET: ${JWT_SECRET}
-      VALIDATE_MYSQL: ${VALIDATE_MYSQL}
-      MYSQL_HOST: ${MYSQL_HOST}
-      MYSQL_PORT: ${MYSQL_PORT}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_DIALECT: ${MYSQL_DIALECT}
-      MYSQL_TIMEZONE: ${MYSQL_TIMEZONE}
-      BROWSER_WSENDPOINT: ${BROWSER_WSENDPOINT}
+      - NODE_ENV: production
+      - HOST: 0.0.0.0
+      - PORT: 9001
+      - VIEW_QRCODE_TERMINAL: ${VIEW_QRCODE_TERMINAL:-1}
+      - WHATSAPPVERSION: ${WHATSAPPVERSION:-''}
+      - DEVICE_NAME: ${DEVICE_NAME:-'My Whatsapp'}
+      - AUTO_CLOSE: ${AUTO_CLOSE:-60000}
+      - JWT_SECRET: ${JWT_SECRET:-09f26e402586e2faa8da4c98a35f1b20d6b033c60}
+      - VALIDATE_MYSQL: ${VALIDATE_MYSQL:-0}
+      - MYSQL_HOST: ${MYSQL_HOST:-mysql}
+      - MYSQL_PORT: ${MYSQL_PORT:-3306}
+      - MYSQL_USER: ${MYSQL_USER:-root}
+      - MYSQL_PASSWORD: ${MYSQL_PASSWORD:-strongpassword}
+      - MYSQL_DATABASE: ${MYSQL_DATABASE:-mywhatsapp-api}
+      - MYSQL_DIALECT: ${MYSQL_DIALECT:-mysql}
+      - MYSQL_TIMEZONE: ${MYSQL_TIMEZONE:-'-04:00'}
+      - BROWSER_WSENDPOINT: ${BROWSER_WSENDPOINT:-''}
     ports:
-      - "${PORT}:9001"
+      - ${PORT:-9001}:9001
+
+mysql:
+    container_name: ApiDatabase
+    hostname: ApiDatabase
+    #network_mode: bridge
+    image: ${MYSQL_ENGINE:-mariadb}:${MYSQL_VERSION:-10.6}
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_bin    
+    volumes:
+      - ./.docker/data/:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE: ${MYSQL_DATABASE:-mywhatsapp-api}
+      - MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD:-strongpassword}
+      - MYSQL_PASSWORD: ${MYSQL_PASSWORD:-strongpassword}
+      - TZ: ${TZ:-America/Sao_Paulo}
+    ports:
+      - ${MYSQL_PORT:-3306}:3306
+    restart: always
+    networks:
+      - mywhatsapp-api
