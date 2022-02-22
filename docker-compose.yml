@@ -37,21 +37,21 @@ services:
     ports:
       - ${PORT:-9001}:9001
 
-mysql:
-    container_name: ApiDatabase
-    hostname: ApiDatabase
-    #network_mode: bridge
-    image: ${MYSQL_ENGINE:-mariadb}:${MYSQL_VERSION:-10.6}
-    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_bin    
-    volumes:
-      - ./.docker/data/:/var/lib/mysql
-    environment:
-      - MYSQL_DATABASE: ${MYSQL_DATABASE:-mywhatsapp-api}
-      - MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD:-strongpassword}
-      - MYSQL_PASSWORD: ${MYSQL_PASSWORD:-strongpassword}
-      - TZ: ${TZ:-America/Sao_Paulo}
-    ports:
-      - ${MYSQL_PORT:-3306}:3306
-    restart: always
-    networks:
-      - mywhatsapp-api
+#mysql:
+#    container_name: ApiDatabase
+#    hostname: ApiDatabase
+#    #network_mode: bridge
+#    image: ${MYSQL_ENGINE:-mariadb}:${MYSQL_VERSION:-10.6}
+#    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_bin    
+#    volumes:
+#      - ./.docker/data/:/var/lib/mysql
+#    environment:
+#      - MYSQL_DATABASE: ${MYSQL_DATABASE:-mywhatsapp-api}
+#      - MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD:-strongpassword}
+#      - MYSQL_PASSWORD: ${MYSQL_PASSWORD:-strongpassword}
+#      - TZ: ${TZ:-America/Sao_Paulo}
+#    ports:
+#      - ${MYSQL_PORT:-3306}:3306
+#    restart: always
+#    networks:
+#      - mywhatsapp-api
