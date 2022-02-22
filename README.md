@@ -442,6 +442,18 @@ router.post("/Close", (req, res, next) => {
 ## Docker-Compose
 
 ```bash
+# Ir para seu diretório home
+cd ~
+
+# Clone este repositório
+git clone https://github.com/AlanMartines/mywhatsapp-api-node-wppconnect.git ApiWPPConnect
+
+# Acesse a pasta do projeto no terminal/cmd
+cd ApiWPPConnect
+
+# Configuração inicial
+cp .env-example .env
+
 # Criar um contêiner
 docker-compose up --build -d
 ```
@@ -449,6 +461,18 @@ docker-compose up --build -d
 ## Dockerfile
 
 ```bash
+# Ir para seu diretório home
+cd ~
+
+# Clone este repositório
+git clone https://github.com/AlanMartines/mywhatsapp-api-node-wppconnect.git ApiWPPConnect
+
+# Acesse a pasta do projeto no terminal/cmd
+cd ApiWPPConnect
+
+# Configuração inicial
+cp .env-example .env
+
 # Processando o arquivo Dockerfile
 docker build -t alanmartines/mywhatsapp-api-node-wppconnect:1.0.0 -f Dockerfile.backend .
 
