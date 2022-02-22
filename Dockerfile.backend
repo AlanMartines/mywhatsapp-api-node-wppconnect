@@ -50,7 +50,6 @@ RUN apt-get update && \
 	libxrender1 \
 	libxss1 \
 	libxtst6 \
-	mysql-client \
 	ca-certificates \
 	fonts-liberation \
 	libnss3 \
