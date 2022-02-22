@@ -597,7 +597,7 @@ module.exports = class Sessions {
               //
           }
         },
-        whatsappVersion: whatsappVersion != "" ? `${whatsappVersion}` : undefined, // whatsappVersion: '2.2142.12',
+        whatsappVersion: whatsappVersion != "" ? `${whatsappVersion}` : '', // whatsappVersion: '2.2142.12',
         deviceName: `${config.DEVICE_NAME}`,
         headless: true, // Headless chrome
         devtools: false, // Open devtools by default
