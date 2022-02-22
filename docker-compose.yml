@@ -17,7 +17,7 @@ services:
     networks:
       - mywhatsapp-api
     environment:
-      - NODE_ENV: production
+      - NODE_ENV: "production"
       - HOST: 0.0.0.0
       - PORT: 9001
       - VIEW_QRCODE_TERMINAL: ${VIEW_QRCODE_TERMINAL:-1}
