@@ -1,4 +1,4 @@
-FROM node:14.17.6
+FROM node:latest
 
 LABEL version="1.0.0" description="ApiWPPconnect" maintainer="Alan Martines<alancpmartines@hotmail.com>"
 
