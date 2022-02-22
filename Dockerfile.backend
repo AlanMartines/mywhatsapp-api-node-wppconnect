@@ -72,6 +72,8 @@ RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.d
 RUN apt-get update \
 	&& apt-get upgrade -y
 
+RUN npm install -g npm@latest
+
 RUN cd /home/ && \
 	git clone https://github.com/AlanMartines/mywhatsapp-api-node-wppconnect.git ApiWPPConnect
 
