@@ -15,3 +15,5 @@ services:
       - MAX_CONCURRENT_SESSIONS=${MAX_CONCURRENT_SESSIONS:-1}
     networks:
       - mywhatsapp-api
+    ports:
+      - ${PORT_WS:-3000}:3000
