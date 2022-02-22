@@ -17,22 +17,23 @@ services:
     networks:
       - mywhatsapp-api
     environment:
-      - HOST: 0.0.0.0
-      - PORT: 9001
-      - VIEW_QRCODE_TERMINAL: ${VIEW_QRCODE_TERMINAL:-1}
-      - WHATSAPPVERSION: ${WHATSAPPVERSION:-''}
-      - DEVICE_NAME: ${DEVICE_NAME:-'My Whatsapp'}
-      - AUTO_CLOSE: ${AUTO_CLOSE:-60000}
-      - JWT_SECRET: ${JWT_SECRET:-09f26e402586e2faa8da4c98a35f1b20d6b033c60}
-      - VALIDATE_MYSQL: ${VALIDATE_MYSQL:-0}
-      - MYSQL_HOST: ${MYSQL_HOST:-mysql}
-      - MYSQL_PORT: ${MYSQL_PORT:-3306}
-      - MYSQL_USER: ${MYSQL_USER:-root}
-      - MYSQL_PASSWORD: ${MYSQL_PASSWORD:-strongpassword}
-      - MYSQL_DATABASE: ${MYSQL_DATABASE:-mywhatsapp-api}
-      - MYSQL_DIALECT: ${MYSQL_DIALECT:-mysql}
-      - MYSQL_TIMEZONE: ${MYSQL_TIMEZONE:-'-04:00'}
-      - BROWSER_WSENDPOINT: ${BROWSER_WSENDPOINT:-''}
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: 9001
+      VIEW_QRCODE_TERMINAL: ${VIEW_QRCODE_TERMINAL:-1}
+      WHATSAPPVERSION: ${WHATSAPPVERSION:-''}
+      DEVICE_NAME: ${DEVICE_NAME:-'My Whatsapp'}
+      AUTO_CLOSE: ${AUTO_CLOSE:-60000}
+      JWT_SECRET: ${JWT_SECRET:-09f26e402586e2faa8da4c98a35f1b20d6b033c60}
+      VALIDATE_MYSQL: ${VALIDATE_MYSQL:-0}
+      MYSQL_HOST: ${MYSQL_HOST:-mysql}
+      MYSQL_PORT: ${MYSQL_PORT:-3306}
+      MYSQL_USER: ${MYSQL_USER:-root}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-strongpassword}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-mywhatsapp-api}
+      MYSQL_DIALECT: ${MYSQL_DIALECT:-mysql}
+      MYSQL_TIMEZONE: ${MYSQL_TIMEZONE:-'-04:00'}
+      BROWSER_WSENDPOINT: ${BROWSER_WSENDPOINT:-''}
     ports:
       - ${PORT:-9001}:9001
 
