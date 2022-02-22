@@ -14,6 +14,7 @@ const queue = new PQueue({
 });
 */
 const wppconnect = require('./wppconnect/dist/index');
+const tokenPatch = "/usr/local/tokens";
 //
 // ------------------------------------------------------------------------------------------------------- //
 //
@@ -485,11 +486,11 @@ module.exports = class Sessions {
     //
     if (MultiDevice == true) {
       //
-      await deletaToken(`${config.TOKENSPATCH}`, `${SessionName}.data.json`);
+      await deletaToken(`${tokenPatch}`, `${SessionName}.data.json`);
       //
     } else if (MultiDevice == false || typeof MultiDevice == 'undefined') {
       //
-      await deletaCache(`${config.TOKENSPATCH}`, `WPP-${SessionName}`);
+      await deletaCache(`${tokenPatch}`, `WPP-${SessionName}`);
       //
     }
     //
@@ -659,14 +660,14 @@ module.exports = class Sessions {
           '--safebrowsing-disable-auto-update',
         ],
         puppeteerOptions: {
-          userDataDir: MultiDevice ? `${config.TOKENSPATCH}/WPP-${SessionName}` : undefined, // or your custom directory
+          userDataDir: MultiDevice ? `${tokenPatch}/WPP-${SessionName}` : undefined, // or your custom directory
           browserWSEndpoint: `${config.BROWSER_WSENDPOINT}`,
         },
         disableWelcome: false, // Option to disable the welcoming message which appears in the beginning
         updatesLog: true, // Logs info updates automatically in terminal
         autoClose: parseInt(config.AUTO_CLOSE), // Automatically closes the wppconnect only when scanning the QR code (default 60 seconds, if you want to turn it off, assign 0 or false)
         tokenStore: 'file', // Define how work with tokens, that can be a custom interface
-        folderNameToken: `${config.TOKENSPATCH}`, //folder name when saving tokens
+        folderNameToken: `${tokenPatch}`, //folder name when saving tokens
       });
       // Levels: 'error', 'warn', 'info', 'http', 'verbose', 'debug', 'silly'
       // All logs: 'silly'
@@ -716,23 +717,23 @@ module.exports = class Sessions {
             session.status = 'notLogged';
             session.qrcode = null;
             //
-            //await deletaToken(`${config.TOKENSPATCH}`, `${SessionName}.data.json`);
-            //await deletaCache(`${config.TOKENSPATCH}`, `WPP-${SessionName}`);
+            //await deletaToken(`${tokenPatch}`, `${SessionName}.data.json`);
+            //await deletaCache(`${tokenPatch}`, `WPP-${SessionName}`);
             //
           } else if (state == "UNPAIRED") {
             session.state = state;
             session.status = 'notLogged';
             session.qrcode = null;
             //
-            await deletaToken(`${config.TOKENSPATCH}`, `${SessionName}.data.json`);
-            await deletaCache(`${config.TOKENSPATCH}`, `WPP-${SessionName}`);
+            await deletaToken(`${tokenPatch}`, `${SessionName}.data.json`);
+            await deletaCache(`${tokenPatch}`, `WPP-${SessionName}`);
             //
           } else if (state === 'DISCONNECTED' || state === 'SYNCING') {
             session.state = state;
             session.qrcode = null;
             //
-            await deletaToken(`${config.TOKENSPATCH}`, `${SessionName}.data.json`);
-            await deletaCache(`${config.TOKENSPATCH}`, `WPP-${SessionName}`);
+            await deletaToken(`${tokenPatch}`, `${SessionName}.data.json`);
+            await deletaCache(`${tokenPatch}`, `WPP-${SessionName}`);
             //
             time = setTimeout(() => {
               client.close();
@@ -970,8 +971,8 @@ module.exports = class Sessions {
         }
         //
         //
-        await deletaToken(`${config.TOKENSPATCH}`, `${SessionName}.data.json`);
-        await deletaCache(`${config.TOKENSPATCH}`, `WPP-${SessionName}`);
+        await deletaToken(`${tokenPatch}`, `${SessionName}.data.json`);
+        await deletaCache(`${tokenPatch}`, `WPP-${SessionName}`);
         //
         //
         await updateStateDb(session.state, session.status, session.AuthorizationToken);
