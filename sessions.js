@@ -13,6 +13,7 @@ const queue = new PQueue({
   concurrency: 1
 });
 */
+//const wppconnect = require('./wppconnect/dist/index');
 const wppconnect = require('./wppconnect/dist/index');
 const tokenPatch = "/usr/local/tokens";
 //
