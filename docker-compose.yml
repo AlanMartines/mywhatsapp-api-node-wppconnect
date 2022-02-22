@@ -46,10 +46,10 @@ services:
 #    volumes:
 #      - ./.docker/data/:/var/lib/mysql
 #    environment:
-#      - MYSQL_DATABASE: ${MYSQL_DATABASE:-mywhatsapp-api}
-#      - MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD:-strongpassword}
-#      - MYSQL_PASSWORD: ${MYSQL_PASSWORD:-strongpassword}
-#      - TZ: ${TZ:-America/Sao_Paulo}
+#      MYSQL_DATABASE: ${MYSQL_DATABASE:-mywhatsapp-api}
+#      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD:-strongpassword}
+#      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-strongpassword}
+#      TZ: ${TZ:-America/Sao_Paulo}
 #    ports:
 #      - ${MYSQL_PORT:-3306}:3306
 #    restart: always
