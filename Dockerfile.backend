@@ -50,6 +50,7 @@ RUN apt-get update && \
 	libxrender1 \
 	libxss1 \
 	libxtst6 \
+	# mysql-client \
 	ca-certificates \
 	fonts-liberation \
 	libnss3 \
@@ -60,7 +61,7 @@ RUN apt-get update && \
 	libgcc1 \
 	build-essential \
 	nodejs \
-	libappindicator1 \
+	#libappindicator1 \
 	sudo && \
 	apt-get autoremove -y
 
