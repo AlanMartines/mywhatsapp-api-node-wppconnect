@@ -157,6 +157,8 @@ router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next
 				console.log(data);
 				console.log(confToken);
 				//
+				console.log(confToken.SessionName);
+				//
 				if (confToken) {
 					if (confToken.SessionName == data.SessionName && confToken.MultiDevice == data.MultiDevice && confToken.whatsappVersion == data.whatsappVersion) {
 						console.log("- Configuração mantida");
