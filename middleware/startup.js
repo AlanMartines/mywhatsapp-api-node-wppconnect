@@ -32,7 +32,7 @@ module.exports = class startAll {
 }
 
 static async startAllSessions() {
-	let dados = getAllSessions()
+	let dados = startAll.getAllSessions();
 	if (dados != null) {
 		dados.map((SessionName) => {
 			var options = {
