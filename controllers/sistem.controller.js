@@ -16,7 +16,7 @@ const router = express.Router();
 const Sessions = require("../sessions.js");
 const verifyToken = require("../middleware/verifyToken");
 const verifyJson = require("../middleware/validateJson");
-const config = require('./config.global');
+const config = require('../config.global');
 const startAll = require("../middleware/startup.js");
 //
 // ------------------------------------------------------------------------------------------------//
