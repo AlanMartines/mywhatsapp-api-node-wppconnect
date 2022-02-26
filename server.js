@@ -151,6 +151,7 @@ async function exitHandler(options, exitCode) {
 	}
 	*/
 	if (exitCode || exitCode === 0) {
+		console.log('- Não foi fossivel iniciar o sistema');
 		console.log(exitCode);
 	}
 	//
