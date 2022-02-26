@@ -185,8 +185,6 @@ router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next
 					message: 'Sistema iniciando e indisponivel para uso'
 				};
 				//
-
-				//
 				res.setHeader('Content-Type', 'application/json');
 				res.status(200).json({
 					"Status": Start
