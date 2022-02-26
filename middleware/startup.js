@@ -20,26 +20,14 @@ module.exports = class startAll {
 					//
 					if (row.length > 0) {
 						//
-						await forEach(row, async (result) => {
-						console.log(result.token);
+						await forEach(row, async (SessionName) => {
+							SessionsArray.push(SessionName);
 						});
 						//
-						const results = JSON.parse(JSON.stringify(row[0]));
-						//
-						const tokenToken = results.token.trim();
-						//
 					}
+					return SessionsArray;
 				} catch (err) {
 					console.log("- Error:", err);
-					res.setHeader('Content-Type', 'application/json');
-					return res.status(400).json({
-						"Status": {
-							"result": "info",
-							"state": "FAILURE",
-							"status": "notChequed",
-							"message": "Erro na verificação do token, contate o administrador do sistema"
-						}
-					});
 				}
 			} else {
 				//
@@ -72,14 +60,14 @@ module.exports = class startAll {
 			}
 			//
 			return SessionsArray;
-		} catch (error) {
-			return (error.message);
+		} catch (err) {
+			console.log("- Error:", err);
 		}
 	}
 
 	static async startAllSessions() {
 		let dados = await startAll.getAllSessions();
-
+		console.log(dados);
 		if (dados != null) {
 			dados.map((SessionName) => {
 				var options = {
@@ -97,7 +85,7 @@ module.exports = class startAll {
 					console.log(result);
 				}).catch(error => {
 					console.log(error);
-				})
+				});
 			});
 		}
 	}
