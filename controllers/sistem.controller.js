@@ -16,6 +16,8 @@ const router = express.Router();
 const Sessions = require("../sessions.js");
 const verifyToken = require("../middleware/verifyToken");
 const verifyJson = require("../middleware/validateJson");
+const config = require('./config.global');
+const startAll = require("../middleware/startup.js");
 //
 // ------------------------------------------------------------------------------------------------//
 //
@@ -92,7 +94,7 @@ const convertBytes = function (bytes) {
 	return (bytes / Math.pow(1024, i)).toFixed(1) + " " + sizes[i]
 }
 //
-// ------------------------------------------------------------------------------------------------//
+// ------------------------------------------------------------------------------------------------------- //
 //
 /*
 ╔═╗┌─┐┌┬┐┌┬┐┬┌┐┌┌─┐  ┌─┐┌┬┐┌─┐┬─┐┌┬┐┌─┐┌┬┐
@@ -144,7 +146,30 @@ router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next
 			case 'NOTFOUND':
 			case 'qrRead':
 				//
-				var getStart = await Sessions.Start(removeWithspace(req.body.SessionName), removeWithspace(req.body.SessionName), req.body.MultiDevice, req.body.whatsappVersion);
+				let data = {
+					"SessionName": removeWithspace(req.body.SessionName),
+					"MultiDevice": req.body.MultiDevice,
+					"whatsappVersion": req.body.whatsappVersion
+				};
+				//
+				const confToken = await startAll.confToken(`${config.tokenPatch}`, `${data.SessionName}.auto.json`, null, true);
+				//
+				if (confToken) {
+					if (confToken.SessionName == data.SessionName || confToken.MultiDevice == data.MultiDevice || confToken.whatsappVersion == data.whatsappVersion) {
+						console.log("- Configuração mantida");
+						var getStart = await Sessions.Start(confToken.SessionName, confToken.SessionName, confToken.MultiDevice, confToken.whatsappVersion);
+					} else {
+						var getStart = await Sessions.Start(data.SessionName, data.SessionName, data.MultiDevice, data.whatsappVersion);
+						console.log("- Configuração atualizada");
+						await startAll.confToken(`${config.tokenPatch}`, `${data.SessionName}.auto.json`, data, false);
+					}
+				} else {
+					var getStart = await Sessions.Start(data.SessionName, data.SessionName, data.MultiDevice, data.whatsappVersion);
+					console.log("- Configuração criada");
+					await startAll.confToken(`${config.tokenPatch}`, `${data.SessionName}.auto.json`, data, false);
+				}
+				//
+				//var getStart = await Sessions.Start(removeWithspace(req.body.SessionName), removeWithspace(req.body.SessionName), req.body.MultiDevice, req.body.whatsappVersion);
 				var session = Sessions.getSession(removeWithspace(req.body.SessionName));
 				console.log("- AuthorizationToken:", removeWithspace(req.body.SessionName));
 				session.state = 'STARTING';
@@ -155,6 +180,8 @@ router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next
 					status: 'notLogged',
 					message: 'Sistema iniciando e indisponivel para uso'
 				};
+				//
+
 				//
 				res.setHeader('Content-Type', 'application/json');
 				res.status(200).json({

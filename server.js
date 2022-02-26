@@ -4,6 +4,7 @@ const {
 } = require('yoo-hoo');
 //
 const config = require('./config.global');
+const startAll = require("./middleware/startup.js");
 //
 yo('My-WhatsApp', {
 	color: 'rainbow',
@@ -107,7 +108,6 @@ fs.access(".env", fs.constants.F_OK, async (err) => {
 		try{
 		const customExpress = require('./config/custom-express');
 		const http = customExpress();
-		const startAll = require("./middleware/startup.js");
 		//
 		// ------------------------------------------------------------------------------------------------//
 		//

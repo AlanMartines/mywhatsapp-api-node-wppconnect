@@ -8,6 +8,29 @@ const config = require('../config.global');
 const tokenPatch = config.tokenPatch;
 //
 module.exports = class startAll {
+	static async confToken(filePath, filename, dataRes, read) {
+		//
+		try {
+			if (read) {
+				if (fs.existsSync(`${filePath}/${filename}`)) {
+					fs.readFile(`${filePath}/${filename}`, (err, data) => {
+						if (err) throw err;
+						let confToken = JSON.parse(data);
+						return confToken;
+					});
+				} else {
+					return false;
+				}
+			} else {
+				let data = JSON.stringify(dataRes, null, 2);
+				fs.writeFileSync(`${filePath}/${filename}`, data);
+			}
+		} catch (err) {
+			return false;
+		}
+	}
+	//
+	// ------------------------------------------------------------------------------------------------------- //
 	//
 	static async getAllSessions() {
 		try {

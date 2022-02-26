@@ -15,6 +15,7 @@ const queue = new PQueue({
 */
 //const wppconnect = require('./wppconnect/dist/index');
 const wppconnect = require('@wppconnect-team/wppconnect');
+const startAll = require("./middleware/startup.js");
 const tokenPatch = config.tokenPatch;
 //
 // ------------------------------------------------------------------------------------------------------- //
@@ -129,7 +130,7 @@ module.exports = class Sessions {
   static async ApiStatus(SessionName) {
     console.log("- Status");
     var session = Sessions.getSession(SessionName);
-
+		//
     if (session) { //só adiciona se não existir
       if (session.state == "CONNECTED") {
         return {
@@ -328,6 +329,7 @@ module.exports = class Sessions {
         }
       }
     } else {
+
       return {
         result: 'error',
         state: 'NOTFOUND',
