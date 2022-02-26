@@ -121,9 +121,6 @@ fs.access(".env", fs.constants.F_OK, async (err) => {
 			}
 			if (parseInt(config.START_ALL_SESSIONS) == true) {
 				let result = await startAll.startAllSessions();
-				if (result != undefined) {
-					console.log(result);
-				}
 			}
 		});
 	}catch(error){

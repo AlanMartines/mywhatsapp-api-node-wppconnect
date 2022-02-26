@@ -319,7 +319,7 @@ module.exports = class Sessions {
             break;
           default:
             //
-
+						let result = await startAll.startSession(SessionName);
 						//
             return {
               result: 'error',
