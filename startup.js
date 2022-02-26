@@ -32,7 +32,7 @@ module.exports = async () => {
 }
 
 function startAllSessions() {
-	let dados = await getAllSessions()
+	let dados = getAllSessions()
 	if (dados != null) {
 		dados.map((SessionName) => {
 			var options = {
