@@ -18,10 +18,10 @@ module.exports = class startAll {
 						let confToken = JSON.parse(data);
 						return confToken;
 					});
+					return confTokenRes;
 				} else {
 					return false;
 				}
-				return confTokenRes;
 			} else {
 				let data = JSON.stringify(dataRes, null, 2);
 				fs.writeFileSync(`${filePath}/${filename}`, data);
