@@ -1,4 +1,7 @@
 const fs = require('fs-extra');
+const {
+  forEach
+} = require('p-iteration');
 const config = require('../config.global');
 const tokenPatch = config.tokenPatch;
 //
@@ -17,7 +20,9 @@ module.exports = class startAll {
 					//
 					if (row.length > 0) {
 						//
-						console.log(row);
+						await forEach(row, async (result) => {
+						console.log(result.token);
+						});
 						//
 						const results = JSON.parse(JSON.stringify(row[0]));
 						//
