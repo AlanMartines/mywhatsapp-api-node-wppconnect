@@ -14,8 +14,6 @@ module.exports = class startAll {
 					//
 					const sql = "SELECT * FROM tokens";
 					const [row] = await conn.execute(sql);
-					//conn.end();
-					//conn.release();
 					//
 					if (row.length > 0) {
 						//
