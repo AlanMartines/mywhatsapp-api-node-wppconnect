@@ -1,7 +1,9 @@
 const config = require('./config.global');
 const tokenPatch = config.tokenPatch;
 //
-async function getAllSessions() {
+module.exports = async () => {
+	//
+	static async function getAllSessions() {
 	try {
 		const SessionsArray = [];
 		//
@@ -29,7 +31,7 @@ async function getAllSessions() {
 	}
 }
 
-async function startAllSessions() {
+static async function startAllSessions() {
 	let dados = await getAllSessions()
 	if (dados != null) {
 		dados.map((SessionName) => {
@@ -53,4 +55,4 @@ async function startAllSessions() {
 
 	}
 }
-export default { startAllSessions };
+}
