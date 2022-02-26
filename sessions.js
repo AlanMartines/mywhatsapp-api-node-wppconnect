@@ -332,7 +332,7 @@ module.exports = class Sessions {
 			}
 		} else {
 			//
-			await startAll.startSession(SessionName);
+			let result = await startAll.startSession(SessionName);
 			//
 			return {
 				result: 'error',
