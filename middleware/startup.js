@@ -16,6 +16,7 @@ module.exports = class startAll {
 					return fs.readFile(`${filePath}/${filename}`, 'utf8' , (err, data) => {
 						if (err) throw err;
 						let confToken = JSON.parse(data);
+						console.log(confToken);
 						return confToken;
 					});
 				} else {
