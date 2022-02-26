@@ -95,10 +95,11 @@ module.exports = class startAll {
 	}
 
 	static async startSession(SessionName) {
+		console.log("- Auto startSession");
 		if (SessionName != null && typeof SessionName != 'undefined') {
 			const confToken = await startAll.confToken(`${config.tokenPatch}`, `${SessionName}.auto.json`, null, true);
 			await axios.post(`http://127.0.0.1:${config.PORT}/sistema/Start`, {
-				"SessionName": confToken.SessionName ? `${confToken.SessionName}` : SessionName,
+				"SessionName": confToken.SessionName ? `${confToken.SessionName}` : `${cSessionName}`,
 				"MultiDevice": confToken.MultiDevice ? `${confToken.MultiDevice}` : null,
 				"whatsappVersion": confToken.whatsappVersion ? `${confToken.whatsappVersion}` : null
 			}).then(function (response) {
