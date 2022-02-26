@@ -112,6 +112,7 @@ module.exports = class startAll {
 	}
 
 	static async startAllSessions() {
+		console.log("- Auto startAllSessions");
 		let dados = await startAll.getAllSessions();
 		if (dados != null) {
 			dados.map(async (SessionName) => {
