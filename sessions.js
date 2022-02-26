@@ -332,8 +332,6 @@ module.exports = class Sessions {
 			}
 		} else {
 			//
-			let result = await startAll.startAllSessions(SessionName);
-			//
 			return {
 				result: 'error',
 				state: 'NOTFOUND',
