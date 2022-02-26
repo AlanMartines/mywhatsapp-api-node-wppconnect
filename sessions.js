@@ -332,7 +332,8 @@ module.exports = class Sessions {
 			}
 		} else {
 			//
-			let result = await startAll.startSession(SessionName);
+			//let result = await startAll.startSession(SessionName);
+			console.log("Aquiiiiiiiiiiiiiiii");
 			//
 			return {
 				result: 'error',
