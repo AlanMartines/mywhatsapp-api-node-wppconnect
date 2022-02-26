@@ -152,9 +152,10 @@ router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next
 					whatsappVersion: req.body.whatsappVersion
 				};
 				//
-				const confToken = await startAll.confToken(`${config.tokenPatch}`, `${data.SessionName}.auto.json`, null, true);
+				const confToken = JSON.stringify(await startAll.confToken(`${config.tokenPatch}`, `${data.SessionName}.auto.json`, null, true), null, 2);
 				//
 				console.log(data);
+				console.log(confToken);
 				console.log(confToken.SessionName);
 				//
 				if (confToken) {

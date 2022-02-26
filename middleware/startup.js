@@ -23,7 +23,7 @@ module.exports = class startAll {
 					return false;
 				}
 			} else {
-				let data = JSON.stringify(dataRes);
+				let data = JSON.stringify(dataRes, null, 2);
 				await fs.writeFileSync(`${filePath}/${filename}`, data);
 			}
 		} catch (err) {
