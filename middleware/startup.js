@@ -13,11 +13,14 @@ module.exports = class startAll {
 		try {
 			if (read) {
 				if (fs.existsSync(`${filePath}/${filename}`)) {
+					/*
 					const confTokenRes = await fs.readFileSync(`${filePath}/${filename}`, 'utf8' , (err, data) => {
 						if (err) throw err;
 						let confToken = JSON.parse(data);
 						return confToken;
 					});
+					*/
+					let confTokenRes = require(`${filePath}/${filename}`);
 					return confTokenRes;
 				} else {
 					return false;
