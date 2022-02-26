@@ -15,7 +15,7 @@ const queue = new PQueue({
 */
 //const wppconnect = require('./wppconnect/dist/index');
 const wppconnect = require('@wppconnect-team/wppconnect');
-const startAll = require("./middleware/startup.js");
+const { confToken, startSession } = require("./middleware/startup.js");
 const tokenPatch = config.tokenPatch;
 //
 // ------------------------------------------------------------------------------------------------------- //
@@ -332,8 +332,7 @@ module.exports = class Sessions {
 			}
 		} else {
 			//
-			const confToken = await startAll.confToken(`${config.tokenPatch}`, `${SessionName}.auto.json`, null, true);
-			var getStart = await Sessions.Start(confToken.SessionName, confToken.SessionName, confToken.MultiDevice, confToken.whatsappVersion);
+			let res = await startSession(SessionName);
 			//
 			return {
 				result: 'error',
