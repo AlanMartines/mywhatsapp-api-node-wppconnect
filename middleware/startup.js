@@ -25,6 +25,7 @@ module.exports = class startAll {
 			}
 		});
 		//
+		console.log(SessionsArray);
 		return (SessionsArray);
 	} catch (error) {
 		return (error.message);
@@ -32,7 +33,7 @@ module.exports = class startAll {
 }
 
 static async startAllSessions() {
-	let dados = startAll.getAllSessions();
+	let dados = await startAll.getAllSessions();
 	if (dados != null) {
 		dados.map((SessionName) => {
 			var options = {
