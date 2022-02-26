@@ -2,6 +2,7 @@ const fs = require('fs-extra');
 const {
   forEach
 } = require('p-iteration');
+const request = require('request');
 const config = require('../config.global');
 const tokenPatch = config.tokenPatch;
 //
