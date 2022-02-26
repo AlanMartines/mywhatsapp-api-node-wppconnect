@@ -319,7 +319,7 @@ module.exports = class Sessions {
 						break;
 					default:
 						//
-						let result = await startAll.startSession(SessionName);
+						//let result = await startAll.startSession(SessionName);
 						//
 						return {
 							result: 'error',
@@ -332,9 +332,14 @@ module.exports = class Sessions {
 			}
 		} else {
 			//
-			let result = await startAll.startSession(SessionName);
+			//let result = await startAll.startSession(SessionName);
 			//
-			return result;
+			return {
+				result: 'error',
+				state: 'NOTFOUND',
+				status: 'notLogged',
+				message: 'Sistema Off-line'
+			};
 		}
 	} //status
 	//
