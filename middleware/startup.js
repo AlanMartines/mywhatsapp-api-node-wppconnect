@@ -5,6 +5,7 @@ const {
 const request = require('request');
 const axios = require('axios');
 const config = require('../config.global');
+const Sessions = require("../sessions.js");
 const tokenPatch = config.tokenPatch;
 //
 module.exports = class startAll {
@@ -98,6 +99,8 @@ module.exports = class startAll {
 		console.log("- Auto startSession");
 		if (SessionName != null && typeof SessionName != 'undefined') {
 			const confToken = await startAll.confToken(`${config.tokenPatch}`, `${SessionName}.auto.json`, null, true);
+			var getStart = await Sessions.Start(confToken.SessionName, confToken.SessionName, confToken.MultiDevice, confToken.whatsappVersion);
+			/*
 			await axios.post(`http://127.0.0.1:${config.PORT}/sistema/Start`, {
 				"SessionName": confToken.SessionName ? `${confToken.SessionName}` : `${cSessionName}`,
 				"MultiDevice": confToken.MultiDevice ? `${confToken.MultiDevice}` : null,
@@ -107,6 +110,7 @@ module.exports = class startAll {
 			}).catch(function (error) {
 				console.log(error);
 			});
+			*/
 		}
 	}
 
