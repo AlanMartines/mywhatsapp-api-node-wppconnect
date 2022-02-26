@@ -3,6 +3,7 @@ const {
 	forEach
 } = require('p-iteration');
 const request = require('request');
+const axios = require('axios');
 const config = require('../config.global');
 const tokenPatch = config.tokenPatch;
 //
@@ -68,26 +69,15 @@ module.exports = class startAll {
 
 	static async startAllSessions() {
 		let dados = await startAll.getAllSessions();
-		console.log(dados);
 		if (dados != null) {
 			dados.map(async (SessionName) => {
-				var options = {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-					},
-					url: `http://127.0.0.1:${config.PORT}/sistema/Start`,
-					body: {
-						"SessionName": SessionName,
-						"MultiDevice": false,
-						"whatsappVersion": null
-					},
-					json: true
-
-				};
-				await request(options).then(result => {
-					console.log(result);
-				}).catch(error => {
+				await axios.post(`http://127.0.0.1:${config.PORT}/sistema/Start`, {
+					"SessionName": SessionName,
+					"MultiDevice": false,
+					"whatsappVersion": null
+				}).then(function (response) {
+					console.log(response);
+				}).catch(function (error) {
 					console.log(error);
 				});
 			});
