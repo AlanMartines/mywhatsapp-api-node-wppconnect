@@ -73,7 +73,7 @@ module.exports = class startAll {
 			dados.map(async (SessionName) => {
 				await axios.post(`http://127.0.0.1:${config.PORT}/sistema/Start`, {
 					"SessionName": SessionName,
-					"MultiDevice": false,
+					"MultiDevice": null,
 					"whatsappVersion": null
 				}).then(function (response) {
 					console.log(response);
