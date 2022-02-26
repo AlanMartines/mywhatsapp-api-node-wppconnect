@@ -8,7 +8,7 @@ module.exports = class startAll {
 	try {
 		const SessionsArray = [];
 		//
-		fs.readdir(dirname, function (err, files) {
+		fs.readdir(tokenPatch, function (err, files) {
 			if (err) {
 				// some sort of error
 			} else {
