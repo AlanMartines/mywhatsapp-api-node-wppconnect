@@ -12,7 +12,7 @@ yo('My-WhatsApp', {
 //
 // ------------------------------------------------------------------------------------------------//
 //
-fs.access(".env", fs.constants.F_OK, (err) => {
+fs.access(".env", fs.constants.F_OK, async (err) => {
 	if (err && err.code === 'ENOENT') {
 		console.error('- Arquivo ".env');
 		var modelo = `
@@ -113,7 +113,7 @@ fs.access(".env", fs.constants.F_OK, (err) => {
 		//
 		// ------------------------------------------------------------------------------------------------//
 		//
-		http.listen(config.PORT, config.HOST, function (err) {
+		http.listen(config.PORT, config.HOST, async function (err) {
 			if (err) {
 				console.log(err);
 			} else {
