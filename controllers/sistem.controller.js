@@ -147,14 +147,14 @@ router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next
 			case 'qrRead':
 				//
 				let data = {
-					"SessionName": removeWithspace(req.body.SessionName),
-					"MultiDevice": req.body.MultiDevice,
-					"whatsappVersion": req.body.whatsappVersion
+					SessionName: removeWithspace(req.body.SessionName),
+					MultiDevice: req.body.MultiDevice,
+					whatsappVersion: req.body.whatsappVersion
 				};
 				//
 				const confToken = await startAll.confToken(`${config.tokenPatch}`, `${data.SessionName}.auto.json`, null, true);
 				//
-				console.log(data);
+				console.log(confToken);
 				//
 				if (confToken !== false) {
 					if (confToken.SessionName == data.SessionName && confToken.MultiDevice == data.MultiDevice && confToken.whatsappVersion == data.whatsappVersion) {
