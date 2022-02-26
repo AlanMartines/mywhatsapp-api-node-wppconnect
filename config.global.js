@@ -16,5 +16,7 @@ config.MYSQL_DIALECT = process.env.MYSQL_DIALECT || 'mysql';
 config.MYSQL_PASSWORD = process.env.MYSQL_PASSWORD || '';
 config.MYSQL_DATABASE = process.env.MYSQL_DATABASE || '';
 config.MYSQL_TIMEZONE = process.env.MYSQL_TIMEZONE || '-04:00';
-config.BROWSER_WSENDPOINT = process.env.BROWSER_WSENDPOINT || '';
+config.BROWSER_WSENDPOINT = process.env.BROWSER_WSENDPOINT || undefined;
+config.START_ALL_SESSIONS = process.env.START_ALL_SESSIONS || 0;
+config.FORCE_CONNECTION_USE_HERE = process.env.FORCE_CONNECTION_USE_HERE || 0;
 //

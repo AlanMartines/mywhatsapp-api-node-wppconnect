@@ -10,13 +10,13 @@ const path = require('path');
 const http = require('http').Server(app);
 // https://www.scaleway.com/en/docs/tutorials/socket-io/
 const io = require('socket.io')(http, {
-	cors: {
-		origins: ["*"],
-		methods: ["GET", "POST"],
-		transports: ['websocket', 'polling'],
-		credentials: true
-	},
-	allowEIO3: true
+  cors: {
+    origins: ["*"],
+    methods: ["GET", "POST"],
+    transports: ['websocket', 'polling'],
+    credentials: true
+  },
+  allowEIO3: true
 });
 //
 const sistem = require("../controllers/sistem.controller");

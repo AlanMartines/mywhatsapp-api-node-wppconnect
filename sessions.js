@@ -605,7 +605,7 @@ module.exports = class Sessions {
         useChrome: true, // If false will use Chromium instance
         debug: false, // Opens a debug session
         logQR: parseInt(config.VIEW_QRCODE_TERMINAL), // Logs QR automatically in terminal
-        browserWS: '', // If u want to use browserWSEndpoint
+        browserWS:  config.BROWSER_WSENDPOINT ? `${config.BROWSER_WSENDPOINT}` : '', // If u want to use browserWSEndpoint
         browserArgs: [
           '--log-level=3',
           '--no-default-browser-check',
@@ -662,7 +662,7 @@ module.exports = class Sessions {
         ],
         puppeteerOptions: {
           userDataDir: MultiDevice ? `${tokenPatch}/WPP-${SessionName}` : undefined, // or your custom directory
-          browserWSEndpoint: `${config.BROWSER_WSENDPOINT}`,
+          browserWSEndpoint: config.BROWSER_WSENDPOINT ? `${config.BROWSER_WSENDPOINT}` : undefined,
         },
         disableWelcome: false, // Option to disable the welcoming message which appears in the beginning
         updatesLog: true, // Logs info updates automatically in terminal
@@ -675,7 +675,7 @@ module.exports = class Sessions {
       wppconnect.defaultLogger.level = 'silly';
       //
       var browserSessionToken = await client.getSessionTokenBrowser();
-      console.log("- Token WPPConnect:\n", JSON.parse(JSON.stringify(browserSessionToken)));
+      console.log("- Token WPPConnect:\n", JSON.stringify(browserSessionToken, null, 2));
       session.state = "CONNECTED";
       session.browserSessionToken = browserSessionToken;
       //
