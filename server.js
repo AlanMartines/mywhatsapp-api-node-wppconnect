@@ -129,9 +129,7 @@ fs.access(".env", fs.constants.F_OK, async (err) => {
 			}
 		});
 	}catch(error){
-		console.log('- Não foi fossivel iniciar o sistema');
-		console.log(error.message);
-		process.exit(1);
+
 	}
 		//
 		// ------------------------------------------------------------------------------------------------//
