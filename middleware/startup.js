@@ -17,7 +17,7 @@ module.exports = class startAll {
 					//
 					if (row.length > 0) {
 						//
-						console.log(row[0]);
+						console.log(row);
 						//
 						const results = JSON.parse(JSON.stringify(row[0]));
 						//
