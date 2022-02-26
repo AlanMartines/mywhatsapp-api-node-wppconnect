@@ -12,7 +12,7 @@ module.exports = class startAll {
 				const conn = require('../config/dbConnection').promise();
 				try {
 					//
-					const sql = "SELECT * FROM tokens";
+					const sql = "SELECT token FROM tokens";
 					const [row] = await conn.execute(sql);
 					//
 					if (row.length > 0) {
@@ -72,7 +72,7 @@ module.exports = class startAll {
 
 	static async startAllSessions() {
 		let dados = await startAll.getAllSessions();
-		console.log("- Sessões:", dados);
+
 		if (dados != null) {
 			dados.map((SessionName) => {
 				var options = {
