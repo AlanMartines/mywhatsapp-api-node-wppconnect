@@ -104,6 +104,7 @@ fs.access(".env", fs.constants.F_OK, async (err) => {
 		//
 		// ------------------------------------------------------------------------------------------------//
 		//
+		try{
 		const customExpress = require('./config/custom-express');
 		const http = customExpress();
 		const {
@@ -127,6 +128,10 @@ fs.access(".env", fs.constants.F_OK, async (err) => {
 				}
 			}
 		});
+	}catch(error){
+		console.log(error.message);
+		process.exit(1);
+	}
 		//
 		// ------------------------------------------------------------------------------------------------//
 		//
@@ -136,12 +141,14 @@ fs.access(".env", fs.constants.F_OK, async (err) => {
 process.stdin.resume(); //so the program will not close instantly
 //
 async function exitHandler(options, exitCode) {
+	/*
 	if (options.cleanup) {
 		console.log("- Cleanup");
 		await Sessions.getSessions().forEach(async session => {
 			await Sessions.closeSession(session.sessionName);
 		});
 	}
+	*/
 	if (exitCode || exitCode === 0) {
 		console.log(exitCode);
 	}
