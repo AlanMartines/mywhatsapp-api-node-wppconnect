@@ -13,15 +13,15 @@ module.exports = class startAll {
 		try {
 			if (read) {
 				if (fs.existsSync(`${filePath}/${filename}`)) {
-					return fs.readFile(`${filePath}/${filename}`, 'utf8' , (err, data) => {
+					let confTokenRes =  fs.readFile(`${filePath}/${filename}`, 'utf8' , (err, data) => {
 						if (err) throw err;
 						let confToken = JSON.parse(data);
-						console.log(confToken);
 						return confToken;
 					});
 				} else {
 					return false;
 				}
+				return confTokenRes;
 			} else {
 				let data = JSON.stringify(dataRes, null, 2);
 				fs.writeFileSync(`${filePath}/${filename}`, data);
