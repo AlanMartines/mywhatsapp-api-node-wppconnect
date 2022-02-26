@@ -36,6 +36,7 @@ module.exports = class startAll {
 
 static async startAllSessions() {
 	let dados = await startAll.getAllSessions();
+	console.log("- Sessões:", dados);
 	if (dados != null) {
 		dados.map((SessionName) => {
 			var options = {
