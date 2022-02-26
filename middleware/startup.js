@@ -97,7 +97,7 @@ module.exports = class startAll {
 	static async startSession(SessionName) {
 		if (SessionName != null && typeof SessionName != 'undefined') {
 			const confToken = await startAll.confToken(`${config.tokenPatch}`, `${SessionName}.auto.json`, null, true);
-			return await axios.post(`http://127.0.0.1:${config.PORT}/sistema/Start`, {
+			await axios.post(`http://127.0.0.1:${config.PORT}/sistema/Start`, {
 				"SessionName": confToken.SessionName ? `${confToken.SessionName}` : SessionName,
 				"MultiDevice": confToken.MultiDevice ? `${confToken.MultiDevice}` : null,
 				"whatsappVersion": confToken.whatsappVersion ? `${confToken.whatsappVersion}` : null
