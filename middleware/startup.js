@@ -15,8 +15,7 @@ module.exports = class startAll {
 				if (fs.existsSync(`${filePath}/${filename}`)) {
 					const confTokenRes = await fs.readFileSync(`${filePath}/${filename}`, 'utf8' , (err, data) => {
 						if (err) throw err;
-						//let confToken = JSON.parse(data);
-						let confToken = data;
+						let confToken = JSON.parse(data);
 						return confToken;
 					});
 					return confTokenRes;
@@ -24,7 +23,7 @@ module.exports = class startAll {
 					return false;
 				}
 			} else {
-				let data = JSON.stringify(dataRes, null, 2);
+				let data = JSON.stringify(dataRes);
 				await fs.writeFileSync(`${filePath}/${filename}`, data);
 			}
 		} catch (err) {
