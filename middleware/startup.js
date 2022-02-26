@@ -25,6 +25,7 @@ module.exports = class startAll {
 			}
 		});
 		//
+		console.log("- Patch:", tokenPatch);
 		console.log(SessionsArray);
 		return (SessionsArray);
 	} catch (error) {
