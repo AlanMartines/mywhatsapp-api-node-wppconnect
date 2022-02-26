@@ -129,7 +129,7 @@ fs.access(".env", fs.constants.F_OK, async (err) => {
 			}
 		});
 	}catch(error){
-		console.log(error.message);
+		console.log(error.message.Error);
 		process.exit(1);
 	}
 		//
