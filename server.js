@@ -121,10 +121,10 @@ fs.access(".env", fs.constants.F_OK, (err) => {
 				const port = http.address().port;
 				console.log(`- HTTP Server running on: ${host}:${port}`);
 			}
-			if (config.start_all_sessions === true) {
+			if (parseInt(config.START_ALL_SESSIONS) == true) {
 				let result = await startAllSessions();
 				if (result != undefined) {
-					console.log(result)
+					console.log(result);
 				}
 			}
 		});
