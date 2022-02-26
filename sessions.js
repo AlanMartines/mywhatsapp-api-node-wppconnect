@@ -334,12 +334,7 @@ module.exports = class Sessions {
 			//
 			let result = await startAll.startSession(SessionName);
 			//
-			return {
-				result: 'error',
-				state: 'NOTFOUND',
-				status: 'notLogged',
-				message: 'Sistema Off-line'
-			};
+			return result;
 		}
 	} //status
 	//
