@@ -1,9 +1,9 @@
-const config = require('./config.global');
+const config = require('../config.global');
 const tokenPatch = config.tokenPatch;
 //
-module.exports = async () => {
-	//
-	function getAllSessions() {
+module.exports = class startAll {
+  //
+  static async getAllSessions() {
 	try {
 		const SessionsArray = [];
 		//
@@ -31,7 +31,7 @@ module.exports = async () => {
 	}
 }
 
-function startAllSessions() {
+static async startAllSessions() {
 	let dados = getAllSessions()
 	if (dados != null) {
 		dados.map((SessionName) => {

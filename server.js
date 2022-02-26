@@ -107,9 +107,7 @@ fs.access(".env", fs.constants.F_OK, async (err) => {
 		try{
 		const customExpress = require('./config/custom-express');
 		const http = customExpress();
-		const {
-			startAllSessions
-		} = require("./startup.js");
+		const startAll = require("./middleware/startup.js");
 		//
 		// ------------------------------------------------------------------------------------------------//
 		//
@@ -122,7 +120,7 @@ fs.access(".env", fs.constants.F_OK, async (err) => {
 				console.log(`- HTTP Server running on: ${host}:${port}`);
 			}
 			if (parseInt(config.START_ALL_SESSIONS) == true) {
-				let result = await startAllSessions();
+				let result = await startAll.startAllSessions();
 				if (result != undefined) {
 					console.log(result);
 				}
