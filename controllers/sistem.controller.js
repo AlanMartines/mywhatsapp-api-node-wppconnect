@@ -146,31 +146,23 @@ router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next
 			case 'NOTFOUND':
 			case 'qrRead':
 				//
-				let data = {
-					"SessionName": removeWithspace(req.body.SessionName),
-					"MultiDevice": req.body.MultiDevice,
-					"whatsappVersion": req.body.whatsappVersion
-				};
-				//
-				data = JSON.parse(data);
-				//
-				const confToken = await startAll.confToken(`${config.tokenPatch}`, `${data.SessionName}.auto.json`, null, true);
+				const confToken = await startAll.confToken(`${config.tokenPatch}`, `${req.body.SessionName}.auto.json`, null, true);
 				//
 				console.log(confToken);
 				//
 				if (confToken !== false) {
-					if (confToken.SessionName == data.SessionName && confToken.MultiDevice == data.MultiDevice && confToken.whatsappVersion == data.whatsappVersion) {
+					if (confToken.SessionName == req.body.SessionName && confToken.MultiDevice == req.body.MultiDevice && confToken.whatsappVersion == req.body.whatsappVersion) {
 						console.log("- Configuração mantida");
 						var getStart = await Sessions.Start(confToken.SessionName, confToken.SessionName, confToken.MultiDevice, confToken.whatsappVersion);
 					} else {
-						var getStart = await Sessions.Start(data.SessionName, data.SessionName, data.MultiDevice, data.whatsappVersion);
+						var getStart = await Sessions.Start(req.body.SessionName, req.body.SessionName, req.body.MultiDevice, req.body.whatsappVersion);
 						console.log("- Configuração atualizada");
-						await startAll.confToken(`${config.tokenPatch}`, `${data.SessionName}.auto.json`, data, false);
+						await startAll.confToken(`${config.tokenPatch}`, `${req.body.SessionName}.auto.json`, data, false);
 					}
 				} else {
-					var getStart = await Sessions.Start(data.SessionName, data.SessionName, data.MultiDevice, data.whatsappVersion);
+					var getStart = await Sessions.Start(req.body.SessionName, req.body.SessionName, req.body.MultiDevice, req.body.whatsappVersion);
 					console.log("- Configuração criada");
-					await startAll.confToken(`${config.tokenPatch}`, `${data.SessionName}.auto.json`, data, false);
+					await startAll.confToken(`${config.tokenPatch}`, `${req.body.SessionName}.auto.json`, data, false);
 				}
 				//
 				//var getStart = await Sessions.Start(removeWithspace(req.body.SessionName), removeWithspace(req.body.SessionName), req.body.MultiDevice, req.body.whatsappVersion);
