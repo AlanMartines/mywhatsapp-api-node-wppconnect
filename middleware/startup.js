@@ -102,7 +102,7 @@ module.exports = class startAll {
 				"MultiDevice": confToken.MultiDevice ? `${confToken.MultiDevice}` : null,
 				"whatsappVersion": confToken.whatsappVersion ? `${confToken.whatsappVersion}` : null
 			}).then(function (response) {
-				return JSON.stringify(response.data, null, 2);
+				console.log(JSON.stringify(response.data, null, 2));
 			}).catch(function (error) {
 				console.log(error);
 			});
