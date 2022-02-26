@@ -107,9 +107,10 @@ fs.access(".env", fs.constants.F_OK, async (err) => {
 		const customExpress = require('./config/custom-express');
 		const http = customExpress();
 		const Sessions = require("./sessions.js");
+		const startup = require("./startup.js");
 		const {
 			startAllSessions
-		} = require("./startup.js");
+		} = startup;
 		//
 		// ------------------------------------------------------------------------------------------------//
 		//
