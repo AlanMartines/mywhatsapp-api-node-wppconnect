@@ -115,6 +115,7 @@ fs.access(".env", fs.constants.F_OK, async (err) => {
 		//
 		http.listen(config.PORT, config.HOST, async function (err) {
 			if (err) {
+				console.log('- Não foi fossivel iniciar o sistema');
 				console.log(err);
 			} else {
 				const host = http.address().address;
@@ -129,7 +130,9 @@ fs.access(".env", fs.constants.F_OK, async (err) => {
 			}
 		});
 	}catch(error){
-
+		console.log('- Não foi fossivel iniciar o sistema');
+		console.log(error.message);
+		process.exit(1);
 	}
 		//
 		// ------------------------------------------------------------------------------------------------//
