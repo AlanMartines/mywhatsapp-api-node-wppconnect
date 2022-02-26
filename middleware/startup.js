@@ -90,14 +90,30 @@ module.exports = class startAll {
 		}
 	}
 
+	static async startSession(SessionName) {
+		if (SessionName != null || typeof SessionName != 'undefined') {
+			const confToken = await startAll.confToken(`${config.tokenPatch}`, `${SessionName}.auto.json`, null, true);
+			await axios.post(`http://127.0.0.1:${config.PORT}/sistema/Start`, {
+				"SessionName": confToken.SessionName ? `${confToken.SessionName}` : SessionName,
+				"MultiDevice": confToken.MultiDevice ? `${confToken.MultiDevice}` : null,
+				"whatsappVersion": confToken.whatsappVersion ? `${confToken.whatsappVersion}` : null
+			}).then(function (response) {
+				console.log(JSON.stringify(response.data, null, 2));
+			}).catch(function (error) {
+				console.log(error);
+			});
+		}
+	}
+
 	static async startAllSessions() {
 		let dados = await startAll.getAllSessions();
 		if (dados != null) {
 			dados.map(async (SessionName) => {
+				const confToken = await startAll.confToken(`${config.tokenPatch}`, `${SessionName}.auto.json`, null, true);
 				await axios.post(`http://127.0.0.1:${config.PORT}/sistema/Start`, {
-					"SessionName": SessionName,
-					"MultiDevice": null,
-					"whatsappVersion": null
+					"SessionName": confToken.SessionName ? `${confToken.SessionName}` : SessionName,
+					"MultiDevice": confToken.MultiDevice ? `${confToken.MultiDevice}` : null,
+					"whatsappVersion": confToken.whatsappVersion ? `${confToken.whatsappVersion}` : null
 				}).then(function (response) {
 					console.log(JSON.stringify(response.data, null, 2));
 				}).catch(function (error) {

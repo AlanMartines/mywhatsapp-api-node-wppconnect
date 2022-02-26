@@ -319,6 +319,8 @@ module.exports = class Sessions {
             break;
           default:
             //
+
+						//
             return {
               result: 'error',
                 state: 'NOTFOUND',
@@ -329,7 +331,9 @@ module.exports = class Sessions {
         }
       }
     } else {
+//
 
+//
       return {
         result: 'error',
         state: 'NOTFOUND',
