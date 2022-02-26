@@ -22,7 +22,7 @@ module.exports = class startAll {
 					if (row.length > 0) {
 						//
 						await forEach(row, async (SessionName) => {
-							SessionsArray.push(SessionName);
+							SessionsArray.push(SessionName.token);
 						});
 						//
 					}
