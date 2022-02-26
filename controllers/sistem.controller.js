@@ -146,16 +146,17 @@ router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next
 			case 'NOTFOUND':
 			case 'qrRead':
 				//
-				let data = {
+				var data = {
 					"SessionName": removeWithspace(req.body.SessionName),
 					"MultiDevice": req.body.MultiDevice,
 					"whatsappVersion": req.body.whatsappVersion
 				};
 				//
-				data = JSON.parse(data);
+				var data = JSON.parse(data);
 				//
 				const confToken = await startAll.confToken(`${config.tokenPatch}`, `${data.SessionName}.auto.json`, null, true);
 				//
+				console.log(data);
 				console.log(confToken);
 				//
 				if (confToken !== false) {
