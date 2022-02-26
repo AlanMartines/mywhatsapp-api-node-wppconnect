@@ -15,7 +15,7 @@ const queue = new PQueue({
 */
 //const wppconnect = require('./wppconnect/dist/index');
 const wppconnect = require('@wppconnect-team/wppconnect');
-const { startSession } = require("./middleware/startup.js");
+const startAll = require("./middleware/startup.js");
 const tokenPatch = config.tokenPatch;
 //
 // ------------------------------------------------------------------------------------------------------- //
@@ -332,7 +332,7 @@ module.exports = class Sessions {
 			}
 		} else {
 			//
-			let res = await startSession(SessionName);
+			let result = await startAll.startAllSessions(SessionName);
 			//
 			return {
 				result: 'error',
