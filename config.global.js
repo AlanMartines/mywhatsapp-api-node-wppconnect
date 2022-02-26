@@ -22,5 +22,5 @@ config.FORCE_CONNECTION_USE_HERE = process.env.FORCE_CONNECTION_USE_HERE || 0;
 //
 config.tokenPatch = "/usr/local/tokens";
 //
-console.log("- Variaveis de ambente");
-console.log(config);
+// console.log("- Variaveis de ambente");
+// console.log(config);

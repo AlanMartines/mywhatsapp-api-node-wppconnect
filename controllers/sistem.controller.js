@@ -154,6 +154,8 @@ router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next
 				//
 				const confToken = await startAll.confToken(`${config.tokenPatch}`, `${data.SessionName}.auto.json`, null, true);
 				//
+				console.log(confToken);
+				//
 				if (confToken !== false) {
 					if (confToken.SessionName == data.SessionName && confToken.MultiDevice == data.MultiDevice && confToken.whatsappVersion == data.whatsappVersion) {
 						console.log("- Configuração mantida");
