@@ -76,7 +76,7 @@ module.exports = class startAll {
 					"MultiDevice": null,
 					"whatsappVersion": null
 				}).then(function (response) {
-					console.log(response);
+					console.log(JSON.stringify(response.data, null, 2));
 				}).catch(function (error) {
 					console.log(error);
 				});
