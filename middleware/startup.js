@@ -1,6 +1,6 @@
 const fs = require('fs-extra');
 const {
-  forEach
+	forEach
 } = require('p-iteration');
 const request = require('request');
 const config = require('../config.global');
@@ -72,17 +72,20 @@ module.exports = class startAll {
 		if (dados != null) {
 			dados.map((SessionName) => {
 				var options = {
-					'method': 'POST',
-					'json': true,
-					'url': `http://127.0.0.1:${config.PORT}/sistema/Start`,
-					'body': {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					url: `http://127.0.0.1:${config.PORT}/sistema/Start`,
+					body: {
 						"SessionName": SessionName,
-						"MultiDevice": true,
+						"MultiDevice": false,
 						"whatsappVersion": null
-					}
+					},
+					json: true
 
 				};
-				request(options).then(result => {
+				await request(options).then(result => {
 					console.log(result);
 				}).catch(error => {
 					console.log(error);
