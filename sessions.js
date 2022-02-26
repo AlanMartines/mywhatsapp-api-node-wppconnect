@@ -13,8 +13,8 @@ const queue = new PQueue({
 	concurrency: 1
 });
 */
-//const wppconnect = require('./wppconnect/dist/index');
-const wppconnect = require('@wppconnect-team/wppconnect');
+const wppconnect = require('./wppconnect/dist/index');
+//const wppconnect = require('@wppconnect-team/wppconnect');
 const startAll = require("./middleware/startup.js");
 const tokenPatch = config.tokenPatch;
 //
