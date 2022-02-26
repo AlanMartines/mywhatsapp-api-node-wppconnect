@@ -12,9 +12,8 @@ module.exports = class startAll {
 				const conn = require('../config/dbConnection').promise();
 				try {
 					//
-					const sql = "SELECT * FROM tokens WHERE token=? LIMIT 1";
-					const values = [theTokenAuth];
-					const [row] = await conn.execute(sql, values);
+					const sql = "SELECT * FROM tokens";
+					const [row] = await conn.execute(sql);
 					//conn.end();
 					//conn.release();
 					//
