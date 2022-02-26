@@ -15,7 +15,7 @@ const queue = new PQueue({
 */
 //const wppconnect = require('./wppconnect/dist/index');
 const wppconnect = require('@wppconnect-team/wppconnect');
-const tokenPatch = "/usr/local/tokens";
+const tokenPatch = config.tokenPatch;
 //
 // ------------------------------------------------------------------------------------------------------- //
 //

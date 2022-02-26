@@ -20,3 +20,5 @@ config.BROWSER_WSENDPOINT = process.env.BROWSER_WSENDPOINT || undefined;
 config.START_ALL_SESSIONS = process.env.START_ALL_SESSIONS || 0;
 config.FORCE_CONNECTION_USE_HERE = process.env.FORCE_CONNECTION_USE_HERE || 0;
 //
+config.tokenPatch = "/usr/local/tokens";
+//
