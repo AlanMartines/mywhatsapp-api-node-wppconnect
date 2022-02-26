@@ -149,10 +149,10 @@ async function exitHandler(options, exitCode) {
 			await Sessions.closeSession(session.sessionName);
 		});
 	}
+	*/
 	if (exitCode || exitCode === 0) {
 		console.log(exitCode);
 	}
-	*/
 	//
 	if (options.exit) {
 		process.exit();
