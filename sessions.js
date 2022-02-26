@@ -332,7 +332,8 @@ module.exports = class Sessions {
 			}
 		} else {
 			//
-			let result = await startAll.startSession(SessionName);
+			const confToken = await startAll.confToken(`${config.tokenPatch}`, `${SessionName}.auto.json`, null, true);
+			var getStart = await Sessions.Start(confToken.SessionName, confToken.SessionName, confToken.MultiDevice, confToken.whatsappVersion);
 			//
 			return {
 				result: 'error',

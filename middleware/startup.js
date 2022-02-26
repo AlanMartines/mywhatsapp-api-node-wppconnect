@@ -99,8 +99,6 @@ module.exports = class startAll {
 		console.log("- Auto startSession");
 		if (SessionName != null && typeof SessionName != 'undefined') {
 			const confToken = await startAll.confToken(`${config.tokenPatch}`, `${SessionName}.auto.json`, null, true);
-			console.log(confToken);
-			/*
 			await axios.post(`http://127.0.0.1:${config.PORT}/sistema/Start`, {
 				"SessionName": confToken.SessionName ? `${confToken.SessionName}` : `${cSessionName}`,
 				"MultiDevice": confToken.MultiDevice ? `${confToken.MultiDevice}` : null,
@@ -110,7 +108,6 @@ module.exports = class startAll {
 			}).catch(function (error) {
 				console.log(error);
 			});
-			*/
 		}
 	}
 
