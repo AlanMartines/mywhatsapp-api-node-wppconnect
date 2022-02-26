@@ -3,7 +3,7 @@ const tokenPatch = config.tokenPatch;
 //
 module.exports = async () => {
 	//
-	static async function getAllSessions() {
+	function getAllSessions() {
 	try {
 		const SessionsArray = [];
 		//
@@ -31,7 +31,7 @@ module.exports = async () => {
 	}
 }
 
-static async function startAllSessions() {
+function startAllSessions() {
 	let dados = await getAllSessions()
 	if (dados != null) {
 		dados.map((SessionName) => {
