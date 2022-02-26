@@ -70,7 +70,7 @@ module.exports = class startAll {
 		let dados = await startAll.getAllSessions();
 		console.log(dados);
 		if (dados != null) {
-			dados.map((SessionName) => {
+			dados.map(async (SessionName) => {
 				var options = {
 					method: 'POST',
 					headers: {
