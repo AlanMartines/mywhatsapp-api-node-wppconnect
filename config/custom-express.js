@@ -39,7 +39,8 @@ app.use(express.json({
 //
 app.use(express.urlencoded({
   limit: '50mb',
-  extended: true
+  extended: true,
+  parameterLimit: 50000
 }));
 // Rotas
 app.set('view engine', 'ejs');
