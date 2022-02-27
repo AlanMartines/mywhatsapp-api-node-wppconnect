@@ -4,6 +4,7 @@ const config = module.exports = {};
 config.NODE_ENV = process.env.NODE_ENV || 'production';
 config.HOST = process.env.HOST || 'localhost';
 config.PORT = process.env.PORT || '9001';
+config.DOMAIN_SSL = process.env.DOMAIN_SSL || '';
 config.VIEW_QRCODE_TERMINAL = process.env.VIEW_QRCODE_TERMINAL || 1;
 config.DEVICE_NAME = process.env.DEVICE_NAME || 'My Whatsapp';
 config.AUTO_CLOSE = process.env.AUTO_CLOSE || 60000;
