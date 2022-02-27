@@ -1,2802 +1,2485 @@
 {
-	"_type": "export",
-	"__export_format": 4,
-	"__export_date": "2022-02-15T20:22:59.234Z",
-	"__export_source": "insomnia.desktop.app:v2021.7.2",
-	"resources": [
-		{
-			"_id": "req_5e91c166c9f149248750520140b9b364",
-			"parentId": "fld_a1a8e5ed10404b78984573d1756a1179",
-			"modified": 1644956559502,
-			"created": 1632079892455,
-			"url": "{{ _.Localhost }}/sistema/Start",
-			"name": "Start - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"MultiDevice\": true,\n\t\"whatsappVersion\": null\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_db0c91da2c874dcfbca1944b692c42c6",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -1211746115437.25,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "fld_a1a8e5ed10404b78984573d1756a1179",
-			"parentId": "wrk_43f3024baba5440caec06b068fd61b21",
-			"modified": 1644352975476,
-			"created": 1632079892439,
-			"name": "Getting started - ✔️📝",
-			"description": "",
-			"environment": {},
-			"environmentPropertyOrder": null,
-			"metaSortKey": -1615661487283,
-			"_type": "request_group"
-		},
-		{
-			"_id": "wrk_43f3024baba5440caec06b068fd61b21",
-			"parentId": null,
-			"modified": 1639058050608,
-			"created": 1632079892392,
-			"name": "API My WhatsApp - WPPConnect v2.0",
-			"description": "",
-			"scope": "collection",
-			"_type": "workspace"
-		},
-		{
-			"_id": "req_4a77c326c6354f74b6f4244e9ba31331",
-			"parentId": "fld_a1a8e5ed10404b78984573d1756a1179",
-			"modified": 1644942204228,
-			"created": 1632079892467,
-			"url": "{{ _.Localhost }}/sistema/Status",
-			"name": "Status - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\"\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_a139eed056024fa3be77f9acad4fd719",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -1211746115387.25,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_561c437873ef4225a7abaa5fe3166c8b",
-			"parentId": "fld_a1a8e5ed10404b78984573d1756a1179",
-			"modified": 1643725181374,
-			"created": 1632079892475,
-			"url": "{{ _.Localhost }}/sistema/Close",
-			"name": "Close - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\"\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_db0c91da2c874dcfbca1944b692c42c6",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -1211746115337.25,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_2b48e437f0744b6f8c9e7390fcf18c11",
-			"parentId": "fld_a1a8e5ed10404b78984573d1756a1179",
-			"modified": 1643226588482,
-			"created": 1632079892508,
-			"url": "{{ _.Localhost }}/sistema/Logout",
-			"name": "Logout - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\"\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_db0c91da2c874dcfbca1944b692c42c6",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -1211746115312.25,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_c05b57af17134feeb26e61c5b69ec67a",
-			"parentId": "fld_a1a8e5ed10404b78984573d1756a1179",
-			"modified": 1644352899404,
-			"created": 1632079892446,
-			"url": "{{ _.Localhost }}/sistema/QRCode",
-			"name": "Read QR-Code - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"View\": true\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_955f230122eb48c7abc44f7b1267b3a6",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -1211746115237.25,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_6a29ce642f2f44d29be028e12ba0b7b2",
-			"parentId": "fld_a1a8e5ed10404b78984573d1756a1179",
-			"modified": 1639058050559,
-			"created": 1632079892486,
-			"url": "{{ _.Localhost }}/sistema/getSessions",
-			"name": "getSessions - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\"\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_a39da786aede4e7e8448cd66b0f352d1",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -1211746115187.25,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_6b36e659ef304e778d977bdbff158b69",
-			"parentId": "fld_a1a8e5ed10404b78984573d1756a1179",
-			"modified": 1639058050561,
-			"created": 1632079892498,
-			"url": "{{ _.Localhost }}/sistema/getHardware",
-			"name": "geHardware - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\"\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_db0c91da2c874dcfbca1944b692c42c6",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -1211746115162.25,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_9f8f06dbf08d4eb29ddbd4ec141b223c",
-			"parentId": "fld_a1a8e5ed10404b78984573d1756a1179",
-			"modified": 1639058050571,
-			"created": 1632079892519,
-			"url": "https://painel.connectzap.com.br/sistema/QRCode.php",
-			"name": "RotaTeste - ✔️✔️",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"View\": true\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_db0c91da2c874dcfbca1944b692c42c6",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -1211746115137.25,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_eb093f347e3348adaca4834b52bcf891",
-			"parentId": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
-			"modified": 1639058050601,
-			"created": 1632079892655,
-			"url": "{{ _.Localhost }}/sistema/sendContactVcard",
-			"name": "sendContactVcard - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"phonefull\": \"+55(67)9 9678-7854\",\n\t\"contact\": \"+55 (67)9 9678-7854\",\n\t\"namecontact\": \"Alan Martines\"\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_4babf707aab14016981eb3dda83fe7c0",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -1312724982337.9375,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
-			"parentId": "wrk_43f3024baba5440caec06b068fd61b21",
-			"modified": 1639058050510,
-			"created": 1632079892546,
-			"name": "Basic Functions (usage) - ✔️📝",
-			"description": "",
-			"environment": {},
-			"environmentPropertyOrder": null,
-			"metaSortKey": -807830743441.5,
-			"_type": "request_group"
-		},
-		{
-			"_id": "req_fc6e9bfd3475482787e60ba8a27a807c",
-			"parentId": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
-			"modified": 1643130714837,
-			"created": 1632079892667,
-			"url": "{{ _.Localhost }}/sistema/sendContactVcardList",
-			"name": "sendContactVcardList - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "multipart/form-data",
-				"params": [
-					{
-						"description": "",
-						"id": "pair_96b65874693c4b2ba78673830e6bf593",
-						"name": "AuthorizationToken",
-						"value": "{{ _.AuthorizationToken }}"
-					},
-					{
-						"description": "",
-						"id": "pair_684bfe49dfb74b8c862f23a956937fbc",
-						"name": "SessionName",
-						"value": "{{ _.SessionName }}"
-					},
-					{
-						"description": "",
-						"id": "pair_afed293fed0c4c378ce4991412cf88ea",
-						"name": "phonefull",
-						"value": "+55(67)9 9678-7854"
-					},
-					{
-						"description": "",
-						"fileName": "C:\\Scripts\\Contatos.txt",
-						"id": "pair_3ac75b8aac4e43aba1a8bdaaf8928f29",
-						"name": "file",
-						"type": "file",
-						"value": ""
-					}
-				]
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_8d0bda3c793042f7af12a434d8674c56",
-					"name": "Content-Type",
-					"value": "multipart/form-data"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -1262235548887.5938,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_d048baba45f34c41abd98be0c00c1c40",
-			"parentId": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
-			"modified": 1643720851513,
-			"created": 1632079892555,
-			"url": "{{ _.Localhost }}/sistema/sendText",
-			"name": "sendText - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"phonefull\":\"+55(67)9 9678-7854\",\n\t\"msg\":\"Teste\"\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_a139eed056024fa3be77f9acad4fd719",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -1262235548837.5938,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_db1230dbf9794fa3b1e81c94011e48cd",
-			"parentId": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
-			"modified": 1643130714836,
-			"created": 1632079892624,
-			"url": "{{ _.Localhost }}/sistema/sendTextMassa",
-			"name": "sendTextMassa - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "multipart/form-data",
-				"params": [
-					{
-						"description": "",
-						"id": "pair_2ff7a88e7c4d48769498793a409d2f7b",
-						"name": "AuthorizationToken",
-						"value": "{{ _.AuthorizationToken }}"
-					},
-					{
-						"description": "",
-						"id": "pair_815d07e8171e41bf8f35000b52ca7a88",
-						"name": "SessionName",
-						"value": "{{ _.SessionName }}"
-					},
-					{
-						"description": "",
-						"fileName": "C:\\Scripts\\Contatos.txt",
-						"id": "pair_cc70471defa24b4381bf0bb9a20b5c5d",
-						"name": "file",
-						"type": "file",
-						"value": ""
-					},
-					{
-						"description": "",
-						"id": "pair_78d40608e16d49c2a82994beb3d3795e",
-						"name": "msg",
-						"value": "Teste...."
-					}
-				]
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_a139eed056024fa3be77f9acad4fd719",
-					"name": "Content-Type",
-					"value": "multipart/form-data"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -1262235548825.0938,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_55cc547268714a57a45024e47f14f045",
-			"parentId": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
-			"modified": 1643229696950,
-			"created": 1632079892679,
-			"url": "{{ _.Localhost }}/sistema/sendLocation",
-			"name": "sendLocation - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"phonefull\":\"+55(67)9 9678-7854\",\n\t\"lat\":\"-20.44278\",\n\t\"long\":\"-54.64639\",\n\t\"local\": \"Campo Grande - Brasil\"\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_ae6ebbb1921745cc9862b3043356bf54",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -1262235548787.5938,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_5f981de403a945ebba3aa4370f449dd2",
-			"parentId": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
-			"modified": 1639058050554,
-			"created": 1632079892689,
-			"url": "{{ _.Localhost }}/sistema/sendLinkPreview",
-			"name": "sendLinkPreview - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"phonefull\":\"+55(67)9 9678-7854\",\n\t\"link\":\"https://www.youtube.com/watch?v=V1bFr2SWP1I\",\n\t\"descricao\": \"Kamakawiwo ole\"\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_d4d63641b4514a8c8970084d6ceb4f29",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -1255924369618.8008,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_56911f003f694c30947c3ff3282f8d85",
-			"parentId": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
-			"modified": 1643130714834,
-			"created": 1632079892567,
-			"url": "{{ _.Localhost }}/sistema/sendImage",
-			"name": "sendImage - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "multipart/form-data",
-				"params": [
-					{
-						"description": "",
-						"id": "pair_f19652fd86e742d3908651494119ad41",
-						"name": "AuthorizationToken",
-						"value": "{{ _.AuthorizationToken }}"
-					},
-					{
-						"description": "",
-						"id": "pair_815d07e8171e41bf8f35000b52ca7a88",
-						"name": "SessionName",
-						"value": "{{ _.SessionName }}"
-					},
-					{
-						"description": "",
-						"fileName": "C:\\Scripts\\contatos.txt",
-						"id": "pair_cc70471defa24b4381bf0bb9a20b5c5d",
-						"multiline": false,
-						"name": "phonefull",
-						"type": "text",
-						"value": "+55(67)9 9678-7854"
-					},
-					{
-						"description": "",
-						"fileName": "C:\\Scripts\\Engrenagens.gif",
-						"id": "pair_f3e26b070cc14d9099b89594fdcc8b46",
-						"name": "file",
-						"type": "file",
-						"value": ""
-					},
-					{
-						"description": "",
-						"id": "pair_78d40608e16d49c2a82994beb3d3795e",
-						"name": "caption",
-						"value": "Teste imagem"
-					}
-				]
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_a139eed056024fa3be77f9acad4fd719",
-					"name": "Content-Type",
-					"value": "multipart/form-data"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -1254346574826.6025,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_3c1f4e32ae034831b9f38bca3b531cad",
-			"parentId": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
-			"modified": 1643130714833,
-			"created": 1632079892708,
-			"url": "{{ _.Localhost }}/sistema/sendImageMassa",
-			"name": "sendImageMassa - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "multipart/form-data",
-				"params": [
-					{
-						"description": "",
-						"id": "pair_85f653ba5c9b4aaeb763077755418c0b",
-						"name": "AuthorizationToken",
-						"value": "{{ _.AuthorizationToken }}"
-					},
-					{
-						"description": "",
-						"id": "pair_815d07e8171e41bf8f35000b52ca7a88",
-						"name": "SessionName",
-						"value": "{{ _.SessionName }}"
-					},
-					{
-						"description": "",
-						"fileName": "C:\\Scripts\\Contatos.txt",
-						"id": "pair_cc70471defa24b4381bf0bb9a20b5c5d",
-						"name": "phonefull",
-						"type": "file",
-						"value": ""
-					},
-					{
-						"description": "",
-						"fileName": "C:\\Scripts\\Check.png",
-						"id": "pair_f3e26b070cc14d9099b89594fdcc8b46",
-						"name": "fileimg",
-						"type": "file",
-						"value": ""
-					},
-					{
-						"description": "",
-						"id": "pair_78d40608e16d49c2a82994beb3d3795e",
-						"name": "caption",
-						"value": "Teste imagem"
-					}
-				]
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_a139eed056024fa3be77f9acad4fd719",
-					"name": "Content-Type",
-					"value": "multipart/form-data"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -1253557677430.5034,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_6016c7c7905c47ceb10264dd70f6baef",
-			"parentId": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
-			"modified": 1643130714834,
-			"created": 1632079892720,
-			"url": "{{ _.Localhost }}/sistema/sendMultImage",
-			"name": "sendMultImage - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "multipart/form-data",
-				"params": [
-					{
-						"description": "",
-						"id": "pair_b668d916f5f0474cbf51acc05759059b",
-						"name": "AuthorizationToken",
-						"value": "{{ _.AuthorizationToken }}"
-					},
-					{
-						"description": "",
-						"id": "pair_815d07e8171e41bf8f35000b52ca7a88",
-						"name": "SessionName",
-						"value": "{{ _.SessionName }}"
-					},
-					{
-						"description": "",
-						"id": "pair_8bfc2267aab34cefb8b42964e60ea5e1",
-						"name": "phonefull",
-						"value": "+55(67)9 9678-7854"
-					},
-					{
-						"description": "",
-						"fileName": "C:\\Scripts\\Check.png",
-						"id": "pair_f3e26b070cc14d9099b89594fdcc8b46",
-						"name": "file",
-						"type": "file",
-						"value": ""
-					},
-					{
-						"description": "",
-						"fileName": "C:\\Scripts\\Road Runner.gif",
-						"id": "pair_a5b99771981743d2a7365db6f3f9369b",
-						"name": "file",
-						"type": "file",
-						"value": ""
-					},
-					{
-						"description": "",
-						"fileName": "C:\\Scripts\\Check.png",
-						"id": "pair_b568f7a9382c4f1f9492e36aff1d66a8",
-						"name": "file",
-						"type": "file",
-						"value": ""
-					},
-					{
-						"description": "",
-						"fileName": "C:\\Scripts\\Road Runner.gif",
-						"id": "pair_1e192eeab409476d8308669337ea7b9a",
-						"name": "file",
-						"type": "file",
-						"value": ""
-					},
-					{
-						"description": "",
-						"fileName": "C:\\Scripts\\Check.png",
-						"id": "pair_738eac36b71e405fa2ff8ae30f6f8950",
-						"name": "file",
-						"type": "file",
-						"value": ""
-					},
-					{
-						"description": "",
-						"fileName": "C:\\Scripts\\Road Runner.gif",
-						"id": "pair_d333a5728b764a489f7369d6bc3d3f01",
-						"name": "file",
-						"type": "file",
-						"value": ""
-					},
-					{
-						"description": "",
-						"id": "pair_78d40608e16d49c2a82994beb3d3795e",
-						"multiline": false,
-						"name": "caption",
-						"type": "text",
-						"value": "Teste imagens..."
-					}
-				]
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_a139eed056024fa3be77f9acad4fd719",
-					"name": "Content-Type",
-					"value": "multipart/form-data"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -1253163228732.4539,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_04376144117f4e919db58fb513f9bddf",
-			"parentId": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
-			"modified": 1643130714832,
-			"created": 1632079892731,
-			"url": "{{ _.Localhost }}/sistema/sendMultImageMassa",
-			"name": "sendMultImageMassa - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "multipart/form-data",
-				"params": [
-					{
-						"description": "",
-						"id": "pair_336de89ee7c24781bf4adfda401a1260",
-						"name": "AuthorizationToken",
-						"value": "{{ _.AuthorizationToken }}"
-					},
-					{
-						"description": "",
-						"id": "pair_815d07e8171e41bf8f35000b52ca7a88",
-						"name": "SessionName",
-						"value": "{{ _.SessionName }}"
-					},
-					{
-						"description": "",
-						"fileName": "C:\\Scripts\\Contatos.txt",
-						"id": "pair_85ce72f0ae8940e2853d7af63493fbf2",
-						"name": "phonefull",
-						"type": "file",
-						"value": ""
-					},
-					{
-						"description": "",
-						"fileName": "C:\\Scripts\\Check.png",
-						"id": "pair_f3e26b070cc14d9099b89594fdcc8b46",
-						"name": "file",
-						"type": "file",
-						"value": ""
-					},
-					{
-						"description": "",
-						"fileName": "C:\\Scripts\\Road Runner.gif",
-						"id": "pair_a5b99771981743d2a7365db6f3f9369b",
-						"name": "file",
-						"type": "file",
-						"value": ""
-					},
-					{
-						"description": "",
-						"fileName": "C:\\Scripts\\Check.png",
-						"id": "pair_b568f7a9382c4f1f9492e36aff1d66a8",
-						"name": "file",
-						"type": "file",
-						"value": ""
-					},
-					{
-						"description": "",
-						"fileName": "C:\\Scripts\\Road Runner.gif",
-						"id": "pair_1e192eeab409476d8308669337ea7b9a",
-						"name": "file",
-						"type": "file",
-						"value": ""
-					},
-					{
-						"description": "",
-						"fileName": "C:\\Scripts\\Check.png",
-						"id": "pair_738eac36b71e405fa2ff8ae30f6f8950",
-						"name": "file",
-						"type": "file",
-						"value": ""
-					},
-					{
-						"description": "",
-						"fileName": "C:\\Scripts\\Road Runner.gif",
-						"id": "pair_d333a5728b764a489f7369d6bc3d3f01",
-						"name": "file",
-						"type": "file",
-						"value": ""
-					},
-					{
-						"description": "",
-						"id": "pair_78d40608e16d49c2a82994beb3d3795e",
-						"multiline": false,
-						"name": "caption",
-						"type": "text",
-						"value": "Teste imagens"
-					}
-				]
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_a139eed056024fa3be77f9acad4fd719",
-					"name": "Content-Type",
-					"value": "multipart/form-data"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -1252966004383.4292,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_5d1f0a3b6d2c4d9f99b0ef6210de4298",
-			"parentId": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
-			"modified": 1643720804183,
-			"created": 1632079892601,
-			"url": "{{ _.Localhost }}/sistema/sendFile",
-			"name": "sendFile - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "multipart/form-data",
-				"params": [
-					{
-						"description": "",
-						"id": "pair_4cce9ca2d4ac4a73bccb7569ad0cb774",
-						"name": "AuthorizationToken",
-						"value": "{{ _.AuthorizationToken }}"
-					},
-					{
-						"description": "",
-						"id": "pair_815d07e8171e41bf8f35000b52ca7a88",
-						"name": "SessionName",
-						"value": "{{ _.SessionName }}"
-					},
-					{
-						"description": "",
-						"fileName": "C:\\Scripts\\contatos.txt",
-						"id": "pair_cc70471defa24b4381bf0bb9a20b5c5d",
-						"multiline": false,
-						"name": "phonefull",
-						"type": "text",
-						"value": "+55(67)9 9678-7854"
-					},
-					{
-						"description": "",
-						"fileName": "C:\\Users\\alan.martines\\Downloads\\rufus-3.17.exe",
-						"id": "pair_f3e26b070cc14d9099b89594fdcc8b46",
-						"name": "file",
-						"type": "file",
-						"value": ""
-					},
-					{
-						"description": "",
-						"id": "pair_78d40608e16d49c2a82994beb3d3795e",
-						"name": "caption",
-						"value": "Oi..."
-					}
-				]
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_a139eed056024fa3be77f9acad4fd719",
-					"name": "Content-Type",
-					"value": "multipart/form-data"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -1252768780034.4043,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_ad2674f85a6342529d08d60f434e88a2",
-			"parentId": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
-			"modified": 1643229707738,
-			"created": 1632079892612,
-			"url": "{{ _.Localhost }}/sistema/sendFileBase64",
-			"name": "sendFileBase64 - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\"phonefull\":\"+55(67)9 9678-7854\",\n\"base64\":\"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\",\n\"originalname\":\"output-onlinepngtools.png\",\n\"caption\":\"Teste Base64 output-onlinepngtools.png\"\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_a139eed056024fa3be77f9acad4fd719",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -1252768780009.4043,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_c721f2defb69430b822c3518c667bd23",
-			"parentId": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
-			"modified": 1643229717473,
-			"created": 1632079892771,
-			"url": "{{ _.Localhost }}/sistema/sendFileToBase64",
-			"name": "sendFileToBase64 - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "multipart/form-data",
-				"params": [
-					{
-						"description": "",
-						"id": "pair_ddf164fe7d3240aa944be5fb3133f6d7",
-						"multiline": false,
-						"name": "AuthorizationToken",
-						"type": "text",
-						"value": "{{ _.AuthorizationToken }}"
-					},
-					{
-						"description": "",
-						"id": "pair_195a631b6b14487d88d4088d8123e355",
-						"multiline": false,
-						"name": "SessionName",
-						"type": "text",
-						"value": "{{ _.SessionName }}"
-					},
-					{
-						"description": "",
-						"id": "pair_307868b08b5b485fb69091085015eaf1",
-						"name": "phonefull",
-						"value": "+55(67)9 9678-7854"
-					},
-					{
-						"description": "",
-						"fileName": "C:\\Scripts\\Check.png",
-						"id": "pair_ff777fff1b8a4519a2567850416a4c44",
-						"name": "file",
-						"type": "file",
-						"value": ""
-					},
-					{
-						"description": "",
-						"id": "pair_927ae895f3c4484b91fa1e92a4073297",
-						"name": "caption",
-						"value": "Teste Base64"
-					}
-				]
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_a139eed056024fa3be77f9acad4fd719",
-					"name": "Content-Type",
-					"value": "multipart/form-data"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -1252768779996.9043,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_d618111332844a009d7195e46d8e1abb",
-			"parentId": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
-			"modified": 1643229727878,
-			"created": 1632079892591,
-			"url": "{{ _.Localhost }}/sistema/sendFileFromBase64",
-			"name": "sendFileFromBase64 - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"phonefull\":\"+55(67)9 9678-7854\",\n\"base64\":\"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\",\n\t\"mimetype\": \"image/png\",\n\t\"originalname\":\"onlinepngtools.png\",\n\t\"caption\":\"Teste image/png Base64 onlinepngtools.png\"\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_a139eed056024fa3be77f9acad4fd719",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -1252768779984.4043,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_681a007d858345d9a1b94c787eda1e1b",
-			"parentId": "fld_ed56f852c9754e85bd49defffb4a48b5",
-			"modified": 1639058050558,
-			"created": 1632079892881,
-			"url": "{{ _.Localhost }}/sistema/getAllContacts",
-			"name": "getAllContacts - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\"\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_db0c91da2c874dcfbca1944b692c42c6",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -25244710640.75,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "fld_ed56f852c9754e85bd49defffb4a48b5",
-			"parentId": "wrk_43f3024baba5440caec06b068fd61b21",
-			"modified": 1639058050515,
-			"created": 1632079892843,
-			"name": "Retrieving Data - ✔️📝",
-			"description": "",
-			"environment": {},
-			"environmentPropertyOrder": null,
-			"metaSortKey": -403915371464.5,
-			"_type": "request_group"
-		},
-		{
-			"_id": "req_a4a8c6a8297b40ef86be0e5b5bf988be",
-			"parentId": "fld_ed56f852c9754e85bd49defffb4a48b5",
-			"modified": 1639058050573,
-			"created": 1632079892930,
-			"url": "{{ _.Localhost }}/sistema/getAllGroups",
-			"name": "getAllGroups - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\"\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_db0c91da2c874dcfbca1944b692c42c6",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -23666916222.578125,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_f3cf5b157b414247992d83733faff5f5",
-			"parentId": "fld_ed56f852c9754e85bd49defffb4a48b5",
-			"modified": 1639058050605,
-			"created": 1632079892890,
-			"url": "{{ _.Localhost }}/sistema/getSessionTokenBrowser",
-			"name": "getSessionTokenBrowser - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\"\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_db0c91da2c874dcfbca1944b692c42c6",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -12622355295.375,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_379a405570394b55bfed76a6d949dc05",
-			"parentId": "fld_ed56f852c9754e85bd49defffb4a48b5",
-			"modified": 1639058050527,
-			"created": 1632079892870,
-			"url": "{{ _.Localhost }}/sistema/getBlockList",
-			"name": "getBlockList - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\"\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_db0c91da2c874dcfbca1944b692c42c6",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -12622355245.375,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_2a9a705dc2df4b42aab2bccbaa435209",
-			"parentId": "fld_ed56f852c9754e85bd49defffb4a48b5",
-			"modified": 1639136896367,
-			"created": 1632079892901,
-			"url": "{{ _.Localhost }}/sistema/getStatus",
-			"name": "getStatus - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"phonefull\":\"+55(67)9 9678-7854\"\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_a139eed056024fa3be77f9acad4fd719",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -6311177572.6875,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_e525360265f94151a7a7e762f8dab247",
-			"parentId": "fld_ed56f852c9754e85bd49defffb4a48b5",
-			"modified": 1639142532505,
-			"created": 1632079892910,
-			"url": "{{ _.Localhost }}/sistema/getNumberProfile",
-			"name": "getNumberProfile - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"phonefull\":\"+55(67)9 9678-7854\"\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_a139eed056024fa3be77f9acad4fd719",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -3155588811.34375,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_af7c1208b5a5421b92a5d649d74d1a05",
-			"parentId": "fld_ed56f852c9754e85bd49defffb4a48b5",
-			"modified": 1639058050579,
-			"created": 1632079892921,
-			"url": "{{ _.Localhost }}/sistema/getProfilePicFromServer",
-			"name": "getProfilePicFromServer - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"phonefull\":\"+55(67)9 9678-7854\"\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_a139eed056024fa3be77f9acad4fd719",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -1972242988.3398438,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_c15752429cdf43459b2eb0088723f024",
-			"parentId": "fld_ed56f852c9754e85bd49defffb4a48b5",
-			"modified": 1644943286857,
-			"created": 1632079892850,
-			"url": "{{ _.Localhost }}/sistema/checkNumberStatus",
-			"name": "checkNumberStatus - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"phonefull\":\"5514991129133\"\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_a139eed056024fa3be77f9acad4fd719",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -788897165.3359375,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_3600af445f2b450ab241a9ded290cbd2",
-			"parentId": "fld_ed56f852c9754e85bd49defffb4a48b5",
-			"modified": 1643229641048,
-			"created": 1632079892860,
-			"url": "{{ _.Localhost }}/sistema/checkNumberStatusMassa",
-			"name": "checkNumberStatusMassa - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "multipart/form-data",
-				"params": [
-					{
-						"description": "",
-						"id": "pair_9cdd980485db4b5582ebc3a8e5bac82c",
-						"name": "AuthorizationToken",
-						"value": "{{ _.AuthorizationToken }}"
-					},
-					{
-						"description": "",
-						"id": "pair_815d07e8171e41bf8f35000b52ca7a88",
-						"name": "SessionName",
-						"value": "{{ _.SessionName }}"
-					},
-					{
-						"description": "",
-						"fileName": "C:\\Scripts\\Contatos.txt",
-						"id": "pair_cc70471defa24b4381bf0bb9a20b5c5d",
-						"name": "file",
-						"type": "file",
-						"value": ""
-					}
-				]
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_a139eed056024fa3be77f9acad4fd719",
-					"name": "Content-Type",
-					"value": "multipart/form-data"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -788897115.3359375,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_72c5e4333dca4c118c86d5be0170924e",
-			"parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
-			"modified": 1643720851513,
-			"created": 1632079892580,
-			"url": "{{ _.Localhost }}/sistema/sendTextGrupo",
-			"name": "sendTextGrupo - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"groupId\":\"120363021433088798\",\n\t\"msg\":\"Teste...\"\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_a139eed056024fa3be77f9acad4fd719",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -1213669053185.5542,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "fld_62966c1e99394b22ae8a80de93e2b0b6",
-			"parentId": "wrk_43f3024baba5440caec06b068fd61b21",
-			"modified": 1639058050512,
-			"created": 1632079893077,
-			"name": "Group Functions - ✔️📝",
-			"description": "",
-			"environment": {},
-			"environmentPropertyOrder": null,
-			"metaSortKey": -302936528470.25,
-			"_type": "request_group"
-		},
-		{
-			"_id": "req_40faa0cc8a6e4443819a6c95b780bba1",
-			"parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
-			"modified": 1643720851512,
-			"created": 1632079892782,
-			"url": "{{ _.Localhost }}/sistema/sendLocationGroup",
-			"name": "sendLocationGroup - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"groupId\":\"120363021433088798\",\n\t\"lat\":\"-20.44278\",\n\t\"long\":\"-54.64639\",\n\t\"local\": \"Campo Grande - Brasil\"\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_ae6ebbb1921745cc9862b3043356bf54",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -1213669053135.5542,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_c2079b72a7114353863dd7faf7480055",
-			"parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
-			"modified": 1643720851513,
-			"created": 1632079892741,
-			"url": "{{ _.Localhost }}/sistema/sendImageGroup",
-			"name": "sendImageGroup - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "multipart/form-data",
-				"params": [
-					{
-						"description": "",
-						"id": "pair_680e7b606e794bc7a92699a1508683de",
-						"name": "AuthorizationToken",
-						"value": "{{ _.AuthorizationToken }}"
-					},
-					{
-						"description": "",
-						"id": "pair_815d07e8171e41bf8f35000b52ca7a88",
-						"name": "SessionName",
-						"value": "{{ _.SessionName }}"
-					},
-					{
-						"description": "",
-						"fileName": "C:\\Scripts\\contatos.txt",
-						"id": "pair_cc70471defa24b4381bf0bb9a20b5c5d",
-						"multiline": false,
-						"name": "groupId",
-						"type": "text",
-						"value": "120363021433088798"
-					},
-					{
-						"description": "",
-						"fileName": "C:\\Scripts\\Check.png",
-						"id": "pair_f3e26b070cc14d9099b89594fdcc8b46",
-						"name": "file",
-						"type": "file",
-						"value": ""
-					},
-					{
-						"description": "",
-						"id": "pair_78d40608e16d49c2a82994beb3d3795e",
-						"name": "caption",
-						"value": "Teste imagem"
-					}
-				]
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_a139eed056024fa3be77f9acad4fd719",
-					"name": "Content-Type",
-					"value": "multipart/form-data"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -1213669053085.5542,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_ec9f2bceb37e41dfb721639659df6466",
-			"parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
-			"modified": 1643720851514,
-			"created": 1632079892800,
-			"url": "{{ _.Localhost }}/sistema/sendFileGroup",
-			"name": "sendFileGroup - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "multipart/form-data",
-				"params": [
-					{
-						"description": "",
-						"id": "pair_4cce9ca2d4ac4a73bccb7569ad0cb774",
-						"name": "AuthorizationToken",
-						"value": "{{ _.AuthorizationToken }}"
-					},
-					{
-						"description": "",
-						"id": "pair_815d07e8171e41bf8f35000b52ca7a88",
-						"name": "SessionName",
-						"value": "{{ _.SessionName }}"
-					},
-					{
-						"description": "",
-						"fileName": "C:\\Scripts\\contatos.txt",
-						"id": "pair_cc70471defa24b4381bf0bb9a20b5c5d",
-						"multiline": false,
-						"name": "groupId",
-						"type": "text",
-						"value": "120363021433088798"
-					},
-					{
-						"description": "",
-						"fileName": "C:\\Scripts\\videoplayback.mp4",
-						"id": "pair_f3e26b070cc14d9099b89594fdcc8b46",
-						"name": "file",
-						"type": "file",
-						"value": ""
-					},
-					{
-						"description": "",
-						"id": "pair_78d40608e16d49c2a82994beb3d3795e",
-						"name": "caption",
-						"value": "Oi..."
-					}
-				]
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_a139eed056024fa3be77f9acad4fd719",
-					"name": "Content-Type",
-					"value": "multipart/form-data"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -1213669053035.5542,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_770bcb68b441447f8ae4b8aa7cb18a0f",
-			"parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
-			"modified": 1643720851513,
-			"created": 1632079892810,
-			"url": "{{ _.Localhost }}/sistema/sendFileBase64Group",
-			"name": "sendFileBase64Group - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\"groupId\":\"120363021433088798\",\n\"base64\":\"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\",\n\"originalname\":\"output-onlinepngtools.png\",\n\"caption\":\"Teste Base64 output-onlinepngtools.png\"\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_a139eed056024fa3be77f9acad4fd719",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -1213669052985.5542,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_e278dec9fb1d4f9b9a362629d30495fc",
-			"parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
-			"modified": 1643720851514,
-			"created": 1632079892820,
-			"url": "{{ _.Localhost }}/sistema/sendFileToBase64Group",
-			"name": "sendFileToBase64Group - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "multipart/form-data",
-				"params": [
-					{
-						"description": "",
-						"id": "pair_5a710a1b0fcb49c484aacae3ee0e362d",
-						"name": "AuthorizationToken",
-						"value": "{{ _.AuthorizationToken }}"
-					},
-					{
-						"description": "",
-						"id": "pair_195a631b6b14487d88d4088d8123e355",
-						"name": "SessionName",
-						"value": "{{ _.SessionName }}"
-					},
-					{
-						"description": "",
-						"id": "pair_307868b08b5b485fb69091085015eaf1",
-						"name": "groupId",
-						"value": "120363021433088798"
-					},
-					{
-						"description": "",
-						"fileName": "C:\\Scripts\\Check.png",
-						"id": "pair_ff777fff1b8a4519a2567850416a4c44",
-						"name": "file",
-						"type": "file",
-						"value": ""
-					},
-					{
-						"description": "",
-						"id": "pair_927ae895f3c4484b91fa1e92a4073297",
-						"name": "caption",
-						"value": "Teste Base64"
-					}
-				]
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_a139eed056024fa3be77f9acad4fd719",
-					"name": "Content-Type",
-					"value": "multipart/form-data"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -1213669052935.5542,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_d7791fe60f6d4950a210c3f777a90818",
-			"parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
-			"modified": 1643720851514,
-			"created": 1632079892830,
-			"url": "{{ _.Localhost }}/sistema/sendFileFromBase64Group",
-			"name": "sendFileFromBase64Group - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"groupId\":\"120363021433088798\",\n\"base64\":\"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\",\n\t\"mimetype\": \"image/png\",\n\t\"originalname\":\"onlinepngtools.png\",\n\t\"caption\":\"Teste image/png Base64 onlinepngtools.png\"\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_a139eed056024fa3be77f9acad4fd719",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -1213669052885.5542,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_0851f638ded54a63aca677208c7bcc67",
-			"parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
-			"modified": 1639058050519,
-			"created": 1632079893082,
-			"url": "{{ _.Localhost }}/sistema/leaveGroup",
-			"name": "leaveGroup - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"groupId\":\"556796787854-1619530226\"\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_a139eed056024fa3be77f9acad4fd719",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -1213523831038.2864,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_ccbd647cf2324b0983a3f23dafda0a97",
-			"parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
-			"modified": 1643130714835,
-			"created": 1632079893119,
-			"url": "{{ _.Localhost }}/sistema/createGroup",
-			"name": "createGroup - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "multipart/form-data",
-				"params": [
-					{
-						"description": "",
-						"id": "pair_5d6ca9f487c84def8559f93555518432",
-						"multiline": false,
-						"name": "AuthorizationToken",
-						"type": "text",
-						"value": "{{ _.AuthorizationToken }}"
-					},
-					{
-						"description": "",
-						"id": "pair_61d76580e5bf4a03b33fec683108fa79",
-						"multiline": false,
-						"name": "SessionName",
-						"type": "text",
-						"value": "{{ _.SessionName }}"
-					},
-					{
-						"description": "",
-						"id": "pair_134c0fd9850c4aa5b913cc533049a410",
-						"name": "title",
-						"value": "Teste - Apague este grupo 1"
-					},
-					{
-						"description": "",
-						"fileName": "C:\\Scripts\\Contatos.txt",
-						"id": "pair_e3752fab916b4812898bc1d1f4597b8e",
-						"name": "participants",
-						"type": "file",
-						"value": ""
-					}
-				]
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_a139eed056024fa3be77f9acad4fd719",
-					"name": "Content-Type",
-					"value": "multipart/form-data"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -1213451220114.6523,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_c6b8cdd8fd3b44388ad911d6eab4fd6a",
-			"parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
-			"modified": 1643720851513,
-			"created": 1632079893092,
-			"url": "{{ _.Localhost }}/sistema/getGroupMembers",
-			"name": "getGroupMembers - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"groupId\":\"120363021433088798\"\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_a139eed056024fa3be77f9acad4fd719",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -1213378609191.0186,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_cf0a8a35234b4fc983c08af26c930ef7",
-			"parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
-			"modified": 1643720851513,
-			"created": 1632079893101,
-			"url": "{{ _.Localhost }}/sistema/getGroupMembersIds",
-			"name": "getGroupMembersIds - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"groupId\":\"120363021433088798\"\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_a139eed056024fa3be77f9acad4fd719",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -1213088165496.483,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_47cc6af350d242af851905469f657a82",
-			"parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
-			"modified": 1643720851512,
-			"created": 1632079893110,
-			"url": "{{ _.Localhost }}/sistema/getGroupInviteLink",
-			"name": "getGroupInviteLink - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"groupId\":\"120363021433088798\"\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_a139eed056024fa3be77f9acad4fd719",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -1213078150197.5334,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_40acdb0d8bbb45b1888a15323a597818",
-			"parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
-			"modified": 1643130714833,
-			"created": 1632079893186,
-			"url": "{{ _.Localhost }}/sistema/createGroupSetAdminMembers",
-			"name": "createGroupSetAdminMembers - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "multipart/form-data",
-				"params": [
-					{
-						"description": "",
-						"id": "pair_424a16916af144cf94abfe562cd1c38c",
-						"name": "AuthorizationToken",
-						"value": "{{ _.AuthorizationToken }}"
-					},
-					{
-						"description": "",
-						"id": "pair_61d76580e5bf4a03b33fec683108fa79",
-						"name": "SessionName",
-						"value": "{{ _.SessionName }}"
-					},
-					{
-						"description": "",
-						"id": "pair_134c0fd9850c4aa5b913cc533049a410",
-						"name": "title",
-						"value": "Teste - Apague este grupo"
-					},
-					{
-						"description": "",
-						"fileName": "C:\\Scripts\\Contatos.txt",
-						"id": "pair_e3752fab916b4812898bc1d1f4597b8e",
-						"name": "participants",
-						"type": "file",
-						"value": ""
-					}
-				]
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_a139eed056024fa3be77f9acad4fd719",
-					"name": "Content-Type",
-					"value": "multipart/form-data"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -1213058119599.6345,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_deab0bf30773481093214824a95f56d4",
-			"parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
-			"modified": 1643130714836,
-			"created": 1632079893196,
-			"url": "{{ _.Localhost }}/sistema/createCountGroupSetAdminMembers",
-			"name": "createCountGroupSetAdminMembers - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "multipart/form-data",
-				"params": [
-					{
-						"description": "",
-						"id": "pair_ff1e19c994f44a4a84d5850e61ec8669",
-						"name": "AuthorizationToken",
-						"value": "{{ _.AuthorizationToken }}"
-					},
-					{
-						"description": "",
-						"id": "pair_61d76580e5bf4a03b33fec683108fa79",
-						"name": "SessionName",
-						"value": "{{ _.SessionName }}"
-					},
-					{
-						"description": "",
-						"id": "pair_134c0fd9850c4aa5b913cc533049a410",
-						"name": "title",
-						"value": "Teste - Apague este grupo"
-					},
-					{
-						"description": "",
-						"fileName": "C:\\Scripts\\Contatos.txt",
-						"id": "pair_e3752fab916b4812898bc1d1f4597b8e",
-						"name": "participants",
-						"type": "file",
-						"value": ""
-					},
-					{
-						"description": "",
-						"id": "pair_088a0c1d9a64404f91821731013dd739",
-						"name": "count",
-						"value": "3"
-					}
-				]
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_a139eed056024fa3be77f9acad4fd719",
-					"name": "Content-Type",
-					"value": "multipart/form-data"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -1213053111950.1597,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_aca2d1dcab9b4bb9bf1d51dfbae6b868",
-			"parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
-			"modified": 1639058050576,
-			"created": 1632079893129,
-			"url": "{{ _.Localhost }}/sistema/removeParticipant",
-			"name": "removeParticipant - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"groupId\":\"556796787854-1625276812\",\n\t\"phonefull\": \"+55(67)9 9197-7682\"\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_a139eed056024fa3be77f9acad4fd719",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -1213048104300.685,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_5f675c24a8474b428fcf9b5c013ff43f",
-			"parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
-			"modified": 1639058050553,
-			"created": 1632079893148,
-			"url": "{{ _.Localhost }}/sistema/addParticipant",
-			"name": "addParticipant - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"groupId\":\"556796787854-1625276812\",\n\t\"phonefull\": \"+55(67)9 9197-7682\"\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_a139eed056024fa3be77f9acad4fd719",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -1213043096651.2104,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_94296d60965545d3ad99e46c42ee00d1",
-			"parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
-			"modified": 1639058050569,
-			"created": 1632079893138,
-			"url": "{{ _.Localhost }}/sistema/promoteParticipant",
-			"name": "promoteParticipant - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"groupId\":\"556796787854-1625276812\",\n\t\"phonefull\": \"+55(67)9 9197-7682\"\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_a139eed056024fa3be77f9acad4fd719",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -1213038089001.7356,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_e32dfb041ee1455fa16c36d0838c5ab8",
-			"parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
-			"modified": 1639058050599,
-			"created": 1632079893157,
-			"url": "{{ _.Localhost }}/sistema/demoteParticipant",
-			"name": "demoteParticipant - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"groupId\":\"556796787854-1619470774\",\n\t\"phonefull\": \"+55(67)9 9197-7682\"\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_a139eed056024fa3be77f9acad4fd719",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -1213033081352.2607,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_0c67134640e54c41a9d932ae968d6091",
-			"parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
-			"modified": 1643130714832,
-			"created": 1632079893167,
-			"url": "{{ _.Localhost }}/sistema/getGroupInfoFromInviteLink",
-			"name": "getGroupInfoFromInviteLink - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"InviteLink\": \"https://chat.whatsapp.com/LlEpn5TTJV9GDDFyAPYN7k\"\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_a139eed056024fa3be77f9acad4fd719",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -1213029325615.1548,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_5f28b1e70781460790f1731882204fe9",
-			"parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
-			"modified": 1643720851512,
-			"created": 1632079893177,
-			"url": "{{ _.Localhost }}/sistema/joinGroup",
-			"name": "joinGroup - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.AuthorizationToken }}\",\n\t\"link\": \"https://chat.whatsapp.com/LlEpn5TTJV9GDDFyAPYN7k\"\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_a139eed056024fa3be77f9acad4fd719",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -1213028699658.9705,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_7f6b0ff16f354d0783871adf5485e834",
-			"parentId": "fld_eb4bab34468d4b7eb45db385b8790977",
-			"modified": 1643130714835,
-			"created": 1632079892949,
-			"url": "{{ _.Localhost }}/sistema/setProfileStatus",
-			"name": "setProfileStatus - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"ProfileStatus\": \"A Inveja é Falta de Capacidade\"\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_db0c91da2c874dcfbca1944b692c42c6",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -100978842481.75,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "fld_eb4bab34468d4b7eb45db385b8790977",
-			"parentId": "wrk_43f3024baba5440caec06b068fd61b21",
-			"modified": 1643130714832,
-			"created": 1632079892944,
-			"name": "Profile Functions - ✔️📝",
-			"description": "",
-			"environment": {},
-			"environmentPropertyOrder": null,
-			"metaSortKey": -201957685476,
-			"_type": "request_group"
-		},
-		{
-			"_id": "req_eb367f2f1be84363848fc692dfedb905",
-			"parentId": "fld_eb4bab34468d4b7eb45db385b8790977",
-			"modified": 1643130714836,
-			"created": 1632079892959,
-			"url": "{{ _.Localhost }}/sistema/setProfileName",
-			"name": "setProfileName - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"ProfileName\": \"Alan Martines\"\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_db0c91da2c874dcfbca1944b692c42c6",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -75734131906.625,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_831c9723cb8343f59cf6eb163f5b402f",
-			"parentId": "fld_eb4bab34468d4b7eb45db385b8790977",
-			"modified": 1643130714835,
-			"created": 1632079892968,
-			"url": "{{ _.Localhost }}/sistema/setProfilePic",
-			"name": "setProfilePic - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "multipart/form-data",
-				"params": [
-					{
-						"description": "",
-						"id": "pair_e94ba4ef6cf04f2aa50d75d85bd1ffaf",
-						"name": "AuthorizationToken",
-						"value": "{{ _.AuthorizationToken }}"
-					},
-					{
-						"id": "pair_2b6bc90192394823a7d5816abe764baa",
-						"name": "SessionName",
-						"value": "{{ _.SessionName }}"
-					},
-					{
-						"description": "",
-						"fileName": "C:\\Scripts\\Check.png",
-						"id": "pair_459e50a248924935bc2f2e9d09dc1c62",
-						"name": "file",
-						"type": "file",
-						"value": ""
-					}
-				]
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_db0c91da2c874dcfbca1944b692c42c6",
-					"name": "Content-Type",
-					"value": "multipart/form-data"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -63111776619.0625,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_12ca585e335746238c43fd38a1a65a94",
-			"parentId": "fld_497055746cf8482b9082aa42dfe1f2b0",
-			"modified": 1643229595735,
-			"created": 1632079893033,
-			"url": "{{ _.Localhost }}/sistema/killServiceWorker",
-			"name": "killServiceWorker - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\"\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_db0c91da2c874dcfbca1944b692c42c6",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -56800598975.28125,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "fld_497055746cf8482b9082aa42dfe1f2b0",
-			"parentId": "wrk_43f3024baba5440caec06b068fd61b21",
-			"modified": 1639058050511,
-			"created": 1632079892981,
-			"name": "Device Functions - ✔️📝",
-			"description": "",
-			"environment": {},
-			"environmentPropertyOrder": null,
-			"metaSortKey": -100978842481.75,
-			"_type": "request_group"
-		},
-		{
-			"_id": "req_5a9112ac9a904fea9d979f20fe563718",
-			"parentId": "fld_497055746cf8482b9082aa42dfe1f2b0",
-			"modified": 1639058050547,
-			"created": 1632079893044,
-			"url": "{{ _.Localhost }}/sistema/restartService",
-			"name": "restartService - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\"\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_db0c91da2c874dcfbca1944b692c42c6",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -53645010153.390625,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_48e2ea7882b747088eff544ed1dd884d",
-			"parentId": "fld_497055746cf8482b9082aa42dfe1f2b0",
-			"modified": 1643229598713,
-			"created": 1632079893064,
-			"url": "{{ _.Localhost }}/sistema/reloadService",
-			"name": "reloadService - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\"\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_db0c91da2c874dcfbca1944b692c42c6",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -53645010128.390625,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_c6c7bee0a3634aa2ac907b4558732a46",
-			"parentId": "fld_497055746cf8482b9082aa42dfe1f2b0",
-			"modified": 1643229599579,
-			"created": 1632079892987,
-			"url": "{{ _.Localhost }}/sistema/getHostDevice",
-			"name": "getHostDevice - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\"\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_db0c91da2c874dcfbca1944b692c42c6",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -53645010103.390625,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_4140010a3f6948a89f0dc28595d9f5bd",
-			"parentId": "fld_497055746cf8482b9082aa42dfe1f2b0",
-			"modified": 1643229600096,
-			"created": 1632079892996,
-			"url": "{{ _.Localhost }}/sistema/getConnectionState",
-			"name": "getConnectionState - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\"\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_db0c91da2c874dcfbca1944b692c42c6",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -53645010053.390625,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_ab2cdbc45d94452fb5257b45b9c27631",
-			"parentId": "fld_497055746cf8482b9082aa42dfe1f2b0",
-			"modified": 1639058050575,
-			"created": 1632079893003,
-			"url": "{{ _.Localhost }}/sistema/getBatteryLevel",
-			"name": "getBatteryLevel - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\"\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_db0c91da2c874dcfbca1944b692c42c6",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -53645010003.390625,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_ae2363876843420893e30f4fc21aff71",
-			"parentId": "fld_497055746cf8482b9082aa42dfe1f2b0",
-			"modified": 1643229604481,
-			"created": 1632079893011,
-			"url": "{{ _.Localhost }}/sistema/isConnected",
-			"name": "isConnected - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\"\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_db0c91da2c874dcfbca1944b692c42c6",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -53645009953.390625,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_99de231e7242493189e7a17719c37c0c",
-			"parentId": "fld_497055746cf8482b9082aa42dfe1f2b0",
-			"modified": 1639058050570,
-			"created": 1632079893021,
-			"url": "{{ _.Localhost }}/sistema/getWAVersion",
-			"name": "getWAVersion - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\"\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_db0c91da2c874dcfbca1944b692c42c6",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -53645009903.390625,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "req_d56db8c9b01d4acd98339935f5feff46",
-			"parentId": "fld_3366b95c9830421aa0c475cb56cdb832",
-			"modified": 1643130714836,
-			"created": 1632080005689,
-			"url": "{{ _.Localhost }}/sistema/startPhoneWatchdog",
-			"name": "startPhoneWatchdog - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"interval\": 30000\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_3e7cbe7e3393438995269001019d14d7",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -1632080005689,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "fld_3366b95c9830421aa0c475cb56cdb832",
-			"parentId": "wrk_43f3024baba5440caec06b068fd61b21",
-			"modified": 1643130714832,
-			"created": 1632079935896,
-			"name": "Phone connection verification - ✔️📝",
-			"description": "",
-			"environment": {},
-			"environmentPropertyOrder": null,
-			"metaSortKey": -100978842431.75,
-			"_type": "request_group"
-		},
-		{
-			"_id": "req_8f1036c12f494c108892a471b89a045c",
-			"parentId": "fld_3366b95c9830421aa0c475cb56cdb832",
-			"modified": 1639058050568,
-			"created": 1632080046625,
-			"url": "{{ _.Localhost }}/sistema/stopPhoneWatchdog",
-			"name": "stopPhoneWatchdog - ✔️📝",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\t\"SessionName\": \"{{ _.SessionName }}\"\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_da18591d310545f0b21f113c8aa16735",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -1632080005639,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
-			"_id": "jar_81749637ae1959588fc760d2e1e5cc3e1b66882a",
-			"parentId": "wrk_43f3024baba5440caec06b068fd61b21",
-			"modified": 1639058052778,
-			"created": 1639058052778,
-			"name": "Default Jar",
-			"cookies": [],
-			"_type": "cookie_jar"
-		},
-		{
-			"_id": "spc_4f9a42e9d2d947aa8c011abe61c3786e",
-			"parentId": "wrk_43f3024baba5440caec06b068fd61b21",
-			"modified": 1639058050608,
-			"created": 1639058050608,
-			"fileName": "API My WhatsApp - WPPConnect v2.0",
-			"contents": "",
-			"contentType": "yaml",
-			"_type": "api_spec"
-		},
-		{
-			"_id": "env_3b4420d303db410785d296e7d20642f7",
-			"parentId": "env_6c08fbf64b094b2a95e78c46dc5be1aa",
-			"modified": 1644956526941,
-			"created": 1632079892400,
-			"name": "Connect API",
-			"data": {
-				"Localhost": "https://localhost",
-				"AuthorizationToken": "2OCSA1GRAFEQVRRVPCKA",
-				"SessionName": "2OCSA1GRAFEQVRRVPCKA"
-			},
-			"dataPropertyOrder": {
-				"&": [
-					"Localhost",
-					"AuthorizationToken",
-					"SessionName"
-				]
-			},
-			"color": null,
-			"isPrivate": false,
-			"metaSortKey": 1620150996022,
-			"_type": "environment"
-		},
-		{
-			"_id": "env_a91aa888ceaa4c79a0f0a638eee28cd4",
-			"parentId": "env_6c08fbf64b094b2a95e78c46dc5be1aa",
-			"modified": 1644956525294,
-			"created": 1637712392376,
-			"name": "Connect API (Homol)",
-			"data": {
-				"Localhost": "http://localhost/2OCSA1GRAFEQVRRVPCKA",
-				"AuthorizationToken": "2OCSA1GRAFEQVRRVPCKA",
-				"SessionName": "2OCSA1GRAFEQVRRVPCKA"
-			},
-			"dataPropertyOrder": {
-				"&": [
-					"Localhost",
-					"AuthorizationToken",
-					"SessionName"
-				]
-			},
-			"color": null,
-			"isPrivate": false,
-			"metaSortKey": 1620424945379.75,
-			"_type": "environment"
-		}
-	]
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2022-02-27T19:09:12.695Z",
+  "__export_source": "insomnia.desktop.app:v2021.7.2",
+  "resources": [{
+    "_id": "req_5e91c166c9f149248750520140b9b364",
+    "parentId": "fld_a1a8e5ed10404b78984573d1756a1179",
+    "modified": 1645988948408,
+    "created": 1632079892455,
+    "url": "{{ _.Localhost }}/sistema/Start",
+    "name": "Start - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"MultiDevice\": true,\n\t\"whatsappVersion\": null\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_db0c91da2c874dcfbca1944b692c42c6",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -1211746115437.25,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "fld_a1a8e5ed10404b78984573d1756a1179",
+    "parentId": "wrk_43f3024baba5440caec06b068fd61b21",
+    "modified": 1644352975476,
+    "created": 1632079892439,
+    "name": "Getting started - ✔️📝",
+    "description": "",
+    "environment": {},
+    "environmentPropertyOrder": null,
+    "metaSortKey": -1615661487283,
+    "_type": "request_group"
+  }, {
+    "_id": "wrk_43f3024baba5440caec06b068fd61b21",
+    "parentId": null,
+    "modified": 1639058050608,
+    "created": 1632079892392,
+    "name": "API My WhatsApp - WPPConnect v2.0",
+    "description": "",
+    "scope": "collection",
+    "_type": "workspace"
+  }, {
+    "_id": "req_4a77c326c6354f74b6f4244e9ba31331",
+    "parentId": "fld_a1a8e5ed10404b78984573d1756a1179",
+    "modified": 1644942204228,
+    "created": 1632079892467,
+    "url": "{{ _.Localhost }}/sistema/Status",
+    "name": "Status - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\"\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_a139eed056024fa3be77f9acad4fd719",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -1211746115387.25,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_561c437873ef4225a7abaa5fe3166c8b",
+    "parentId": "fld_a1a8e5ed10404b78984573d1756a1179",
+    "modified": 1643725181374,
+    "created": 1632079892475,
+    "url": "{{ _.Localhost }}/sistema/Close",
+    "name": "Close - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\"\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_db0c91da2c874dcfbca1944b692c42c6",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -1211746115337.25,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_2b48e437f0744b6f8c9e7390fcf18c11",
+    "parentId": "fld_a1a8e5ed10404b78984573d1756a1179",
+    "modified": 1643226588482,
+    "created": 1632079892508,
+    "url": "{{ _.Localhost }}/sistema/Logout",
+    "name": "Logout - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\"\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_db0c91da2c874dcfbca1944b692c42c6",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -1211746115312.25,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_c05b57af17134feeb26e61c5b69ec67a",
+    "parentId": "fld_a1a8e5ed10404b78984573d1756a1179",
+    "modified": 1644352899404,
+    "created": 1632079892446,
+    "url": "{{ _.Localhost }}/sistema/QRCode",
+    "name": "Read QR-Code - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"View\": true\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_955f230122eb48c7abc44f7b1267b3a6",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -1211746115237.25,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_6a29ce642f2f44d29be028e12ba0b7b2",
+    "parentId": "fld_a1a8e5ed10404b78984573d1756a1179",
+    "modified": 1639058050559,
+    "created": 1632079892486,
+    "url": "{{ _.Localhost }}/sistema/getSessions",
+    "name": "getSessions - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\"\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_a39da786aede4e7e8448cd66b0f352d1",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -1211746115187.25,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_6b36e659ef304e778d977bdbff158b69",
+    "parentId": "fld_a1a8e5ed10404b78984573d1756a1179",
+    "modified": 1639058050561,
+    "created": 1632079892498,
+    "url": "{{ _.Localhost }}/sistema/getHardware",
+    "name": "geHardware - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\"\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_db0c91da2c874dcfbca1944b692c42c6",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -1211746115162.25,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_9f8f06dbf08d4eb29ddbd4ec141b223c",
+    "parentId": "fld_a1a8e5ed10404b78984573d1756a1179",
+    "modified": 1639058050571,
+    "created": 1632079892519,
+    "url": "https://painel.connectzap.com.br/sistema/QRCode.php",
+    "name": "RotaTeste - ✔️✔️",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"View\": true\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_db0c91da2c874dcfbca1944b692c42c6",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -1211746115137.25,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_eb093f347e3348adaca4834b52bcf891",
+    "parentId": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
+    "modified": 1639058050601,
+    "created": 1632079892655,
+    "url": "{{ _.Localhost }}/sistema/sendContactVcard",
+    "name": "sendContactVcard - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"phonefull\": \"+55(67)9 9678-7854\",\n\t\"contact\": \"+55 (67)9 9678-7854\",\n\t\"namecontact\": \"Alan Martines\"\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_4babf707aab14016981eb3dda83fe7c0",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -1312724982337.9375,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
+    "parentId": "wrk_43f3024baba5440caec06b068fd61b21",
+    "modified": 1639058050510,
+    "created": 1632079892546,
+    "name": "Basic Functions (usage) - ✔️📝",
+    "description": "",
+    "environment": {},
+    "environmentPropertyOrder": null,
+    "metaSortKey": -807830743441.5,
+    "_type": "request_group"
+  }, {
+    "_id": "req_fc6e9bfd3475482787e60ba8a27a807c",
+    "parentId": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
+    "modified": 1643130714837,
+    "created": 1632079892667,
+    "url": "{{ _.Localhost }}/sistema/sendContactVcardList",
+    "name": "sendContactVcardList - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "multipart/form-data",
+      "params": [{
+        "description": "",
+        "id": "pair_96b65874693c4b2ba78673830e6bf593",
+        "name": "AuthorizationToken",
+        "value": "{{ _.AuthorizationToken }}"
+      }, {
+        "description": "",
+        "id": "pair_684bfe49dfb74b8c862f23a956937fbc",
+        "name": "SessionName",
+        "value": "{{ _.SessionName }}"
+      }, {
+        "description": "",
+        "id": "pair_afed293fed0c4c378ce4991412cf88ea",
+        "name": "phonefull",
+        "value": "+55(67)9 9678-7854"
+      }, {
+        "description": "",
+        "fileName": "C:\\Scripts\\Contatos.txt",
+        "id": "pair_3ac75b8aac4e43aba1a8bdaaf8928f29",
+        "name": "file",
+        "type": "file",
+        "value": ""
+      }]
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_8d0bda3c793042f7af12a434d8674c56",
+      "name": "Content-Type",
+      "value": "multipart/form-data"
+    }],
+    "authentication": {},
+    "metaSortKey": -1262235548887.5938,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_d048baba45f34c41abd98be0c00c1c40",
+    "parentId": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
+    "modified": 1643720851513,
+    "created": 1632079892555,
+    "url": "{{ _.Localhost }}/sistema/sendText",
+    "name": "sendText - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"phonefull\":\"+55(67)9 9678-7854\",\n\t\"msg\":\"Teste\"\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_a139eed056024fa3be77f9acad4fd719",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -1262235548837.5938,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_db1230dbf9794fa3b1e81c94011e48cd",
+    "parentId": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
+    "modified": 1643130714836,
+    "created": 1632079892624,
+    "url": "{{ _.Localhost }}/sistema/sendTextMassa",
+    "name": "sendTextMassa - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "multipart/form-data",
+      "params": [{
+        "description": "",
+        "id": "pair_2ff7a88e7c4d48769498793a409d2f7b",
+        "name": "AuthorizationToken",
+        "value": "{{ _.AuthorizationToken }}"
+      }, {
+        "description": "",
+        "id": "pair_815d07e8171e41bf8f35000b52ca7a88",
+        "name": "SessionName",
+        "value": "{{ _.SessionName }}"
+      }, {
+        "description": "",
+        "fileName": "C:\\Scripts\\Contatos.txt",
+        "id": "pair_cc70471defa24b4381bf0bb9a20b5c5d",
+        "name": "file",
+        "type": "file",
+        "value": ""
+      }, {
+        "description": "",
+        "id": "pair_78d40608e16d49c2a82994beb3d3795e",
+        "name": "msg",
+        "value": "Teste...."
+      }]
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_a139eed056024fa3be77f9acad4fd719",
+      "name": "Content-Type",
+      "value": "multipart/form-data"
+    }],
+    "authentication": {},
+    "metaSortKey": -1262235548825.0938,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_55cc547268714a57a45024e47f14f045",
+    "parentId": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
+    "modified": 1643229696950,
+    "created": 1632079892679,
+    "url": "{{ _.Localhost }}/sistema/sendLocation",
+    "name": "sendLocation - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"phonefull\":\"+55(67)9 9678-7854\",\n\t\"lat\":\"-20.44278\",\n\t\"long\":\"-54.64639\",\n\t\"local\": \"Campo Grande - Brasil\"\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_ae6ebbb1921745cc9862b3043356bf54",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -1262235548787.5938,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_5f981de403a945ebba3aa4370f449dd2",
+    "parentId": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
+    "modified": 1639058050554,
+    "created": 1632079892689,
+    "url": "{{ _.Localhost }}/sistema/sendLinkPreview",
+    "name": "sendLinkPreview - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"phonefull\":\"+55(67)9 9678-7854\",\n\t\"link\":\"https://www.youtube.com/watch?v=V1bFr2SWP1I\",\n\t\"descricao\": \"Kamakawiwo ole\"\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_d4d63641b4514a8c8970084d6ceb4f29",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -1255924369618.8008,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_56911f003f694c30947c3ff3282f8d85",
+    "parentId": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
+    "modified": 1643130714834,
+    "created": 1632079892567,
+    "url": "{{ _.Localhost }}/sistema/sendImage",
+    "name": "sendImage - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "multipart/form-data",
+      "params": [{
+        "description": "",
+        "id": "pair_f19652fd86e742d3908651494119ad41",
+        "name": "AuthorizationToken",
+        "value": "{{ _.AuthorizationToken }}"
+      }, {
+        "description": "",
+        "id": "pair_815d07e8171e41bf8f35000b52ca7a88",
+        "name": "SessionName",
+        "value": "{{ _.SessionName }}"
+      }, {
+        "description": "",
+        "fileName": "C:\\Scripts\\contatos.txt",
+        "id": "pair_cc70471defa24b4381bf0bb9a20b5c5d",
+        "multiline": false,
+        "name": "phonefull",
+        "type": "text",
+        "value": "+55(67)9 9678-7854"
+      }, {
+        "description": "",
+        "fileName": "C:\\Scripts\\Engrenagens.gif",
+        "id": "pair_f3e26b070cc14d9099b89594fdcc8b46",
+        "name": "file",
+        "type": "file",
+        "value": ""
+      }, {
+        "description": "",
+        "id": "pair_78d40608e16d49c2a82994beb3d3795e",
+        "name": "caption",
+        "value": "Teste imagem"
+      }]
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_a139eed056024fa3be77f9acad4fd719",
+      "name": "Content-Type",
+      "value": "multipart/form-data"
+    }],
+    "authentication": {},
+    "metaSortKey": -1254346574826.6025,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_3c1f4e32ae034831b9f38bca3b531cad",
+    "parentId": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
+    "modified": 1643130714833,
+    "created": 1632079892708,
+    "url": "{{ _.Localhost }}/sistema/sendImageMassa",
+    "name": "sendImageMassa - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "multipart/form-data",
+      "params": [{
+        "description": "",
+        "id": "pair_85f653ba5c9b4aaeb763077755418c0b",
+        "name": "AuthorizationToken",
+        "value": "{{ _.AuthorizationToken }}"
+      }, {
+        "description": "",
+        "id": "pair_815d07e8171e41bf8f35000b52ca7a88",
+        "name": "SessionName",
+        "value": "{{ _.SessionName }}"
+      }, {
+        "description": "",
+        "fileName": "C:\\Scripts\\Contatos.txt",
+        "id": "pair_cc70471defa24b4381bf0bb9a20b5c5d",
+        "name": "phonefull",
+        "type": "file",
+        "value": ""
+      }, {
+        "description": "",
+        "fileName": "C:\\Scripts\\Check.png",
+        "id": "pair_f3e26b070cc14d9099b89594fdcc8b46",
+        "name": "fileimg",
+        "type": "file",
+        "value": ""
+      }, {
+        "description": "",
+        "id": "pair_78d40608e16d49c2a82994beb3d3795e",
+        "name": "caption",
+        "value": "Teste imagem"
+      }]
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_a139eed056024fa3be77f9acad4fd719",
+      "name": "Content-Type",
+      "value": "multipart/form-data"
+    }],
+    "authentication": {},
+    "metaSortKey": -1253557677430.5034,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_6016c7c7905c47ceb10264dd70f6baef",
+    "parentId": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
+    "modified": 1643130714834,
+    "created": 1632079892720,
+    "url": "{{ _.Localhost }}/sistema/sendMultImage",
+    "name": "sendMultImage - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "multipart/form-data",
+      "params": [{
+        "description": "",
+        "id": "pair_b668d916f5f0474cbf51acc05759059b",
+        "name": "AuthorizationToken",
+        "value": "{{ _.AuthorizationToken }}"
+      }, {
+        "description": "",
+        "id": "pair_815d07e8171e41bf8f35000b52ca7a88",
+        "name": "SessionName",
+        "value": "{{ _.SessionName }}"
+      }, {
+        "description": "",
+        "id": "pair_8bfc2267aab34cefb8b42964e60ea5e1",
+        "name": "phonefull",
+        "value": "+55(67)9 9678-7854"
+      }, {
+        "description": "",
+        "fileName": "C:\\Scripts\\Check.png",
+        "id": "pair_f3e26b070cc14d9099b89594fdcc8b46",
+        "name": "file",
+        "type": "file",
+        "value": ""
+      }, {
+        "description": "",
+        "fileName": "C:\\Scripts\\Road Runner.gif",
+        "id": "pair_a5b99771981743d2a7365db6f3f9369b",
+        "name": "file",
+        "type": "file",
+        "value": ""
+      }, {
+        "description": "",
+        "fileName": "C:\\Scripts\\Check.png",
+        "id": "pair_b568f7a9382c4f1f9492e36aff1d66a8",
+        "name": "file",
+        "type": "file",
+        "value": ""
+      }, {
+        "description": "",
+        "fileName": "C:\\Scripts\\Road Runner.gif",
+        "id": "pair_1e192eeab409476d8308669337ea7b9a",
+        "name": "file",
+        "type": "file",
+        "value": ""
+      }, {
+        "description": "",
+        "fileName": "C:\\Scripts\\Check.png",
+        "id": "pair_738eac36b71e405fa2ff8ae30f6f8950",
+        "name": "file",
+        "type": "file",
+        "value": ""
+      }, {
+        "description": "",
+        "fileName": "C:\\Scripts\\Road Runner.gif",
+        "id": "pair_d333a5728b764a489f7369d6bc3d3f01",
+        "name": "file",
+        "type": "file",
+        "value": ""
+      }, {
+        "description": "",
+        "id": "pair_78d40608e16d49c2a82994beb3d3795e",
+        "multiline": false,
+        "name": "caption",
+        "type": "text",
+        "value": "Teste imagens..."
+      }]
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_a139eed056024fa3be77f9acad4fd719",
+      "name": "Content-Type",
+      "value": "multipart/form-data"
+    }],
+    "authentication": {},
+    "metaSortKey": -1253163228732.4539,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_04376144117f4e919db58fb513f9bddf",
+    "parentId": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
+    "modified": 1643130714832,
+    "created": 1632079892731,
+    "url": "{{ _.Localhost }}/sistema/sendMultImageMassa",
+    "name": "sendMultImageMassa - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "multipart/form-data",
+      "params": [{
+        "description": "",
+        "id": "pair_336de89ee7c24781bf4adfda401a1260",
+        "name": "AuthorizationToken",
+        "value": "{{ _.AuthorizationToken }}"
+      }, {
+        "description": "",
+        "id": "pair_815d07e8171e41bf8f35000b52ca7a88",
+        "name": "SessionName",
+        "value": "{{ _.SessionName }}"
+      }, {
+        "description": "",
+        "fileName": "C:\\Scripts\\Contatos.txt",
+        "id": "pair_85ce72f0ae8940e2853d7af63493fbf2",
+        "name": "phonefull",
+        "type": "file",
+        "value": ""
+      }, {
+        "description": "",
+        "fileName": "C:\\Scripts\\Check.png",
+        "id": "pair_f3e26b070cc14d9099b89594fdcc8b46",
+        "name": "file",
+        "type": "file",
+        "value": ""
+      }, {
+        "description": "",
+        "fileName": "C:\\Scripts\\Road Runner.gif",
+        "id": "pair_a5b99771981743d2a7365db6f3f9369b",
+        "name": "file",
+        "type": "file",
+        "value": ""
+      }, {
+        "description": "",
+        "fileName": "C:\\Scripts\\Check.png",
+        "id": "pair_b568f7a9382c4f1f9492e36aff1d66a8",
+        "name": "file",
+        "type": "file",
+        "value": ""
+      }, {
+        "description": "",
+        "fileName": "C:\\Scripts\\Road Runner.gif",
+        "id": "pair_1e192eeab409476d8308669337ea7b9a",
+        "name": "file",
+        "type": "file",
+        "value": ""
+      }, {
+        "description": "",
+        "fileName": "C:\\Scripts\\Check.png",
+        "id": "pair_738eac36b71e405fa2ff8ae30f6f8950",
+        "name": "file",
+        "type": "file",
+        "value": ""
+      }, {
+        "description": "",
+        "fileName": "C:\\Scripts\\Road Runner.gif",
+        "id": "pair_d333a5728b764a489f7369d6bc3d3f01",
+        "name": "file",
+        "type": "file",
+        "value": ""
+      }, {
+        "description": "",
+        "id": "pair_78d40608e16d49c2a82994beb3d3795e",
+        "multiline": false,
+        "name": "caption",
+        "type": "text",
+        "value": "Teste imagens"
+      }]
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_a139eed056024fa3be77f9acad4fd719",
+      "name": "Content-Type",
+      "value": "multipart/form-data"
+    }],
+    "authentication": {},
+    "metaSortKey": -1252966004383.4292,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_5d1f0a3b6d2c4d9f99b0ef6210de4298",
+    "parentId": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
+    "modified": 1643720804183,
+    "created": 1632079892601,
+    "url": "{{ _.Localhost }}/sistema/sendFile",
+    "name": "sendFile - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "multipart/form-data",
+      "params": [{
+        "description": "",
+        "id": "pair_4cce9ca2d4ac4a73bccb7569ad0cb774",
+        "name": "AuthorizationToken",
+        "value": "{{ _.AuthorizationToken }}"
+      }, {
+        "description": "",
+        "id": "pair_815d07e8171e41bf8f35000b52ca7a88",
+        "name": "SessionName",
+        "value": "{{ _.SessionName }}"
+      }, {
+        "description": "",
+        "fileName": "C:\\Scripts\\contatos.txt",
+        "id": "pair_cc70471defa24b4381bf0bb9a20b5c5d",
+        "multiline": false,
+        "name": "phonefull",
+        "type": "text",
+        "value": "+55(67)9 9678-7854"
+      }, {
+        "description": "",
+        "fileName": "C:\\Users\\alan.martines\\Downloads\\rufus-3.17.exe",
+        "id": "pair_f3e26b070cc14d9099b89594fdcc8b46",
+        "name": "file",
+        "type": "file",
+        "value": ""
+      }, {
+        "description": "",
+        "id": "pair_78d40608e16d49c2a82994beb3d3795e",
+        "name": "caption",
+        "value": "Oi..."
+      }]
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_a139eed056024fa3be77f9acad4fd719",
+      "name": "Content-Type",
+      "value": "multipart/form-data"
+    }],
+    "authentication": {},
+    "metaSortKey": -1252768780034.4043,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_ad2674f85a6342529d08d60f434e88a2",
+    "parentId": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
+    "modified": 1643229707738,
+    "created": 1632079892612,
+    "url": "{{ _.Localhost }}/sistema/sendFileBase64",
+    "name": "sendFileBase64 - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\"phonefull\":\"+55(67)9 9678-7854\",\n\"base64\":\"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\",\n\"originalname\":\"output-onlinepngtools.png\",\n\"caption\":\"Teste Base64 output-onlinepngtools.png\"\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_a139eed056024fa3be77f9acad4fd719",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -1252768780009.4043,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_c721f2defb69430b822c3518c667bd23",
+    "parentId": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
+    "modified": 1643229717473,
+    "created": 1632079892771,
+    "url": "{{ _.Localhost }}/sistema/sendFileToBase64",
+    "name": "sendFileToBase64 - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "multipart/form-data",
+      "params": [{
+        "description": "",
+        "id": "pair_ddf164fe7d3240aa944be5fb3133f6d7",
+        "multiline": false,
+        "name": "AuthorizationToken",
+        "type": "text",
+        "value": "{{ _.AuthorizationToken }}"
+      }, {
+        "description": "",
+        "id": "pair_195a631b6b14487d88d4088d8123e355",
+        "multiline": false,
+        "name": "SessionName",
+        "type": "text",
+        "value": "{{ _.SessionName }}"
+      }, {
+        "description": "",
+        "id": "pair_307868b08b5b485fb69091085015eaf1",
+        "name": "phonefull",
+        "value": "+55(67)9 9678-7854"
+      }, {
+        "description": "",
+        "fileName": "C:\\Scripts\\Check.png",
+        "id": "pair_ff777fff1b8a4519a2567850416a4c44",
+        "name": "file",
+        "type": "file",
+        "value": ""
+      }, {
+        "description": "",
+        "id": "pair_927ae895f3c4484b91fa1e92a4073297",
+        "name": "caption",
+        "value": "Teste Base64"
+      }]
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_a139eed056024fa3be77f9acad4fd719",
+      "name": "Content-Type",
+      "value": "multipart/form-data"
+    }],
+    "authentication": {},
+    "metaSortKey": -1252768779996.9043,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_d618111332844a009d7195e46d8e1abb",
+    "parentId": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
+    "modified": 1643229727878,
+    "created": 1632079892591,
+    "url": "{{ _.Localhost }}/sistema/sendFileFromBase64",
+    "name": "sendFileFromBase64 - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"phonefull\":\"+55(67)9 9678-7854\",\n\"base64\":\"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\",\n\t\"mimetype\": \"image/png\",\n\t\"originalname\":\"onlinepngtools.png\",\n\t\"caption\":\"Teste image/png Base64 onlinepngtools.png\"\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_a139eed056024fa3be77f9acad4fd719",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -1252768779984.4043,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_681a007d858345d9a1b94c787eda1e1b",
+    "parentId": "fld_ed56f852c9754e85bd49defffb4a48b5",
+    "modified": 1639058050558,
+    "created": 1632079892881,
+    "url": "{{ _.Localhost }}/sistema/getAllContacts",
+    "name": "getAllContacts - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\"\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_db0c91da2c874dcfbca1944b692c42c6",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -25244710640.75,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "fld_ed56f852c9754e85bd49defffb4a48b5",
+    "parentId": "wrk_43f3024baba5440caec06b068fd61b21",
+    "modified": 1639058050515,
+    "created": 1632079892843,
+    "name": "Retrieving Data - ✔️📝",
+    "description": "",
+    "environment": {},
+    "environmentPropertyOrder": null,
+    "metaSortKey": -403915371464.5,
+    "_type": "request_group"
+  }, {
+    "_id": "req_a4a8c6a8297b40ef86be0e5b5bf988be",
+    "parentId": "fld_ed56f852c9754e85bd49defffb4a48b5",
+    "modified": 1639058050573,
+    "created": 1632079892930,
+    "url": "{{ _.Localhost }}/sistema/getAllGroups",
+    "name": "getAllGroups - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\"\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_db0c91da2c874dcfbca1944b692c42c6",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -23666916222.578125,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_f3cf5b157b414247992d83733faff5f5",
+    "parentId": "fld_ed56f852c9754e85bd49defffb4a48b5",
+    "modified": 1639058050605,
+    "created": 1632079892890,
+    "url": "{{ _.Localhost }}/sistema/getSessionTokenBrowser",
+    "name": "getSessionTokenBrowser - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\"\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_db0c91da2c874dcfbca1944b692c42c6",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -12622355295.375,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_379a405570394b55bfed76a6d949dc05",
+    "parentId": "fld_ed56f852c9754e85bd49defffb4a48b5",
+    "modified": 1639058050527,
+    "created": 1632079892870,
+    "url": "{{ _.Localhost }}/sistema/getBlockList",
+    "name": "getBlockList - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\"\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_db0c91da2c874dcfbca1944b692c42c6",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -12622355245.375,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_2a9a705dc2df4b42aab2bccbaa435209",
+    "parentId": "fld_ed56f852c9754e85bd49defffb4a48b5",
+    "modified": 1639136896367,
+    "created": 1632079892901,
+    "url": "{{ _.Localhost }}/sistema/getStatus",
+    "name": "getStatus - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"phonefull\":\"+55(67)9 9678-7854\"\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_a139eed056024fa3be77f9acad4fd719",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -6311177572.6875,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_e525360265f94151a7a7e762f8dab247",
+    "parentId": "fld_ed56f852c9754e85bd49defffb4a48b5",
+    "modified": 1639142532505,
+    "created": 1632079892910,
+    "url": "{{ _.Localhost }}/sistema/getNumberProfile",
+    "name": "getNumberProfile - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"phonefull\":\"+55(67)9 9678-7854\"\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_a139eed056024fa3be77f9acad4fd719",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -3155588811.34375,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_af7c1208b5a5421b92a5d649d74d1a05",
+    "parentId": "fld_ed56f852c9754e85bd49defffb4a48b5",
+    "modified": 1639058050579,
+    "created": 1632079892921,
+    "url": "{{ _.Localhost }}/sistema/getProfilePicFromServer",
+    "name": "getProfilePicFromServer - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"phonefull\":\"+55(67)9 9678-7854\"\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_a139eed056024fa3be77f9acad4fd719",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -1972242988.3398438,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_c15752429cdf43459b2eb0088723f024",
+    "parentId": "fld_ed56f852c9754e85bd49defffb4a48b5",
+    "modified": 1644943286857,
+    "created": 1632079892850,
+    "url": "{{ _.Localhost }}/sistema/checkNumberStatus",
+    "name": "checkNumberStatus - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"phonefull\":\"5514991129133\"\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_a139eed056024fa3be77f9acad4fd719",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -788897165.3359375,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_3600af445f2b450ab241a9ded290cbd2",
+    "parentId": "fld_ed56f852c9754e85bd49defffb4a48b5",
+    "modified": 1643229641048,
+    "created": 1632079892860,
+    "url": "{{ _.Localhost }}/sistema/checkNumberStatusMassa",
+    "name": "checkNumberStatusMassa - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "multipart/form-data",
+      "params": [{
+        "description": "",
+        "id": "pair_9cdd980485db4b5582ebc3a8e5bac82c",
+        "name": "AuthorizationToken",
+        "value": "{{ _.AuthorizationToken }}"
+      }, {
+        "description": "",
+        "id": "pair_815d07e8171e41bf8f35000b52ca7a88",
+        "name": "SessionName",
+        "value": "{{ _.SessionName }}"
+      }, {
+        "description": "",
+        "fileName": "C:\\Scripts\\Contatos.txt",
+        "id": "pair_cc70471defa24b4381bf0bb9a20b5c5d",
+        "name": "file",
+        "type": "file",
+        "value": ""
+      }]
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_a139eed056024fa3be77f9acad4fd719",
+      "name": "Content-Type",
+      "value": "multipart/form-data"
+    }],
+    "authentication": {},
+    "metaSortKey": -788897115.3359375,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_72c5e4333dca4c118c86d5be0170924e",
+    "parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
+    "modified": 1643720851513,
+    "created": 1632079892580,
+    "url": "{{ _.Localhost }}/sistema/sendTextGrupo",
+    "name": "sendTextGrupo - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"groupId\":\"120363021433088798\",\n\t\"msg\":\"Teste...\"\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_a139eed056024fa3be77f9acad4fd719",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -1213669053185.5542,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "fld_62966c1e99394b22ae8a80de93e2b0b6",
+    "parentId": "wrk_43f3024baba5440caec06b068fd61b21",
+    "modified": 1639058050512,
+    "created": 1632079893077,
+    "name": "Group Functions - ✔️📝",
+    "description": "",
+    "environment": {},
+    "environmentPropertyOrder": null,
+    "metaSortKey": -302936528470.25,
+    "_type": "request_group"
+  }, {
+    "_id": "req_40faa0cc8a6e4443819a6c95b780bba1",
+    "parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
+    "modified": 1643720851512,
+    "created": 1632079892782,
+    "url": "{{ _.Localhost }}/sistema/sendLocationGroup",
+    "name": "sendLocationGroup - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"groupId\":\"120363021433088798\",\n\t\"lat\":\"-20.44278\",\n\t\"long\":\"-54.64639\",\n\t\"local\": \"Campo Grande - Brasil\"\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_ae6ebbb1921745cc9862b3043356bf54",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -1213669053135.5542,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_c2079b72a7114353863dd7faf7480055",
+    "parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
+    "modified": 1643720851513,
+    "created": 1632079892741,
+    "url": "{{ _.Localhost }}/sistema/sendImageGroup",
+    "name": "sendImageGroup - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "multipart/form-data",
+      "params": [{
+        "description": "",
+        "id": "pair_680e7b606e794bc7a92699a1508683de",
+        "name": "AuthorizationToken",
+        "value": "{{ _.AuthorizationToken }}"
+      }, {
+        "description": "",
+        "id": "pair_815d07e8171e41bf8f35000b52ca7a88",
+        "name": "SessionName",
+        "value": "{{ _.SessionName }}"
+      }, {
+        "description": "",
+        "fileName": "C:\\Scripts\\contatos.txt",
+        "id": "pair_cc70471defa24b4381bf0bb9a20b5c5d",
+        "multiline": false,
+        "name": "groupId",
+        "type": "text",
+        "value": "120363021433088798"
+      }, {
+        "description": "",
+        "fileName": "C:\\Scripts\\Check.png",
+        "id": "pair_f3e26b070cc14d9099b89594fdcc8b46",
+        "name": "file",
+        "type": "file",
+        "value": ""
+      }, {
+        "description": "",
+        "id": "pair_78d40608e16d49c2a82994beb3d3795e",
+        "name": "caption",
+        "value": "Teste imagem"
+      }]
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_a139eed056024fa3be77f9acad4fd719",
+      "name": "Content-Type",
+      "value": "multipart/form-data"
+    }],
+    "authentication": {},
+    "metaSortKey": -1213669053085.5542,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_ec9f2bceb37e41dfb721639659df6466",
+    "parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
+    "modified": 1643720851514,
+    "created": 1632079892800,
+    "url": "{{ _.Localhost }}/sistema/sendFileGroup",
+    "name": "sendFileGroup - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "multipart/form-data",
+      "params": [{
+        "description": "",
+        "id": "pair_4cce9ca2d4ac4a73bccb7569ad0cb774",
+        "name": "AuthorizationToken",
+        "value": "{{ _.AuthorizationToken }}"
+      }, {
+        "description": "",
+        "id": "pair_815d07e8171e41bf8f35000b52ca7a88",
+        "name": "SessionName",
+        "value": "{{ _.SessionName }}"
+      }, {
+        "description": "",
+        "fileName": "C:\\Scripts\\contatos.txt",
+        "id": "pair_cc70471defa24b4381bf0bb9a20b5c5d",
+        "multiline": false,
+        "name": "groupId",
+        "type": "text",
+        "value": "120363021433088798"
+      }, {
+        "description": "",
+        "fileName": "C:\\Scripts\\videoplayback.mp4",
+        "id": "pair_f3e26b070cc14d9099b89594fdcc8b46",
+        "name": "file",
+        "type": "file",
+        "value": ""
+      }, {
+        "description": "",
+        "id": "pair_78d40608e16d49c2a82994beb3d3795e",
+        "name": "caption",
+        "value": "Oi..."
+      }]
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_a139eed056024fa3be77f9acad4fd719",
+      "name": "Content-Type",
+      "value": "multipart/form-data"
+    }],
+    "authentication": {},
+    "metaSortKey": -1213669053035.5542,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_770bcb68b441447f8ae4b8aa7cb18a0f",
+    "parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
+    "modified": 1643720851513,
+    "created": 1632079892810,
+    "url": "{{ _.Localhost }}/sistema/sendFileBase64Group",
+    "name": "sendFileBase64Group - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\"groupId\":\"120363021433088798\",\n\"base64\":\"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\",\n\"originalname\":\"output-onlinepngtools.png\",\n\"caption\":\"Teste Base64 output-onlinepngtools.png\"\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_a139eed056024fa3be77f9acad4fd719",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -1213669052985.5542,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_e278dec9fb1d4f9b9a362629d30495fc",
+    "parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
+    "modified": 1643720851514,
+    "created": 1632079892820,
+    "url": "{{ _.Localhost }}/sistema/sendFileToBase64Group",
+    "name": "sendFileToBase64Group - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "multipart/form-data",
+      "params": [{
+        "description": "",
+        "id": "pair_5a710a1b0fcb49c484aacae3ee0e362d",
+        "name": "AuthorizationToken",
+        "value": "{{ _.AuthorizationToken }}"
+      }, {
+        "description": "",
+        "id": "pair_195a631b6b14487d88d4088d8123e355",
+        "name": "SessionName",
+        "value": "{{ _.SessionName }}"
+      }, {
+        "description": "",
+        "id": "pair_307868b08b5b485fb69091085015eaf1",
+        "name": "groupId",
+        "value": "120363021433088798"
+      }, {
+        "description": "",
+        "fileName": "C:\\Scripts\\Check.png",
+        "id": "pair_ff777fff1b8a4519a2567850416a4c44",
+        "name": "file",
+        "type": "file",
+        "value": ""
+      }, {
+        "description": "",
+        "id": "pair_927ae895f3c4484b91fa1e92a4073297",
+        "name": "caption",
+        "value": "Teste Base64"
+      }]
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_a139eed056024fa3be77f9acad4fd719",
+      "name": "Content-Type",
+      "value": "multipart/form-data"
+    }],
+    "authentication": {},
+    "metaSortKey": -1213669052935.5542,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_d7791fe60f6d4950a210c3f777a90818",
+    "parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
+    "modified": 1643720851514,
+    "created": 1632079892830,
+    "url": "{{ _.Localhost }}/sistema/sendFileFromBase64Group",
+    "name": "sendFileFromBase64Group - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"groupId\":\"120363021433088798\",\n\"base64\":\"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\",\n\t\"mimetype\": \"image/png\",\n\t\"originalname\":\"onlinepngtools.png\",\n\t\"caption\":\"Teste image/png Base64 onlinepngtools.png\"\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_a139eed056024fa3be77f9acad4fd719",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -1213669052885.5542,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_0851f638ded54a63aca677208c7bcc67",
+    "parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
+    "modified": 1639058050519,
+    "created": 1632079893082,
+    "url": "{{ _.Localhost }}/sistema/leaveGroup",
+    "name": "leaveGroup - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"groupId\":\"556796787854-1619530226\"\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_a139eed056024fa3be77f9acad4fd719",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -1213523831038.2864,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_ccbd647cf2324b0983a3f23dafda0a97",
+    "parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
+    "modified": 1643130714835,
+    "created": 1632079893119,
+    "url": "{{ _.Localhost }}/sistema/createGroup",
+    "name": "createGroup - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "multipart/form-data",
+      "params": [{
+        "description": "",
+        "id": "pair_5d6ca9f487c84def8559f93555518432",
+        "multiline": false,
+        "name": "AuthorizationToken",
+        "type": "text",
+        "value": "{{ _.AuthorizationToken }}"
+      }, {
+        "description": "",
+        "id": "pair_61d76580e5bf4a03b33fec683108fa79",
+        "multiline": false,
+        "name": "SessionName",
+        "type": "text",
+        "value": "{{ _.SessionName }}"
+      }, {
+        "description": "",
+        "id": "pair_134c0fd9850c4aa5b913cc533049a410",
+        "name": "title",
+        "value": "Teste - Apague este grupo 1"
+      }, {
+        "description": "",
+        "fileName": "C:\\Scripts\\Contatos.txt",
+        "id": "pair_e3752fab916b4812898bc1d1f4597b8e",
+        "name": "participants",
+        "type": "file",
+        "value": ""
+      }]
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_a139eed056024fa3be77f9acad4fd719",
+      "name": "Content-Type",
+      "value": "multipart/form-data"
+    }],
+    "authentication": {},
+    "metaSortKey": -1213451220114.6523,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_c6b8cdd8fd3b44388ad911d6eab4fd6a",
+    "parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
+    "modified": 1643720851513,
+    "created": 1632079893092,
+    "url": "{{ _.Localhost }}/sistema/getGroupMembers",
+    "name": "getGroupMembers - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"groupId\":\"120363021433088798\"\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_a139eed056024fa3be77f9acad4fd719",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -1213378609191.0186,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_cf0a8a35234b4fc983c08af26c930ef7",
+    "parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
+    "modified": 1643720851513,
+    "created": 1632079893101,
+    "url": "{{ _.Localhost }}/sistema/getGroupMembersIds",
+    "name": "getGroupMembersIds - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"groupId\":\"120363021433088798\"\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_a139eed056024fa3be77f9acad4fd719",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -1213088165496.483,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_47cc6af350d242af851905469f657a82",
+    "parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
+    "modified": 1643720851512,
+    "created": 1632079893110,
+    "url": "{{ _.Localhost }}/sistema/getGroupInviteLink",
+    "name": "getGroupInviteLink - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"groupId\":\"120363021433088798\"\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_a139eed056024fa3be77f9acad4fd719",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -1213078150197.5334,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_40acdb0d8bbb45b1888a15323a597818",
+    "parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
+    "modified": 1643130714833,
+    "created": 1632079893186,
+    "url": "{{ _.Localhost }}/sistema/createGroupSetAdminMembers",
+    "name": "createGroupSetAdminMembers - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "multipart/form-data",
+      "params": [{
+        "description": "",
+        "id": "pair_424a16916af144cf94abfe562cd1c38c",
+        "name": "AuthorizationToken",
+        "value": "{{ _.AuthorizationToken }}"
+      }, {
+        "description": "",
+        "id": "pair_61d76580e5bf4a03b33fec683108fa79",
+        "name": "SessionName",
+        "value": "{{ _.SessionName }}"
+      }, {
+        "description": "",
+        "id": "pair_134c0fd9850c4aa5b913cc533049a410",
+        "name": "title",
+        "value": "Teste - Apague este grupo"
+      }, {
+        "description": "",
+        "fileName": "C:\\Scripts\\Contatos.txt",
+        "id": "pair_e3752fab916b4812898bc1d1f4597b8e",
+        "name": "participants",
+        "type": "file",
+        "value": ""
+      }]
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_a139eed056024fa3be77f9acad4fd719",
+      "name": "Content-Type",
+      "value": "multipart/form-data"
+    }],
+    "authentication": {},
+    "metaSortKey": -1213058119599.6345,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_deab0bf30773481093214824a95f56d4",
+    "parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
+    "modified": 1643130714836,
+    "created": 1632079893196,
+    "url": "{{ _.Localhost }}/sistema/createCountGroupSetAdminMembers",
+    "name": "createCountGroupSetAdminMembers - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "multipart/form-data",
+      "params": [{
+        "description": "",
+        "id": "pair_ff1e19c994f44a4a84d5850e61ec8669",
+        "name": "AuthorizationToken",
+        "value": "{{ _.AuthorizationToken }}"
+      }, {
+        "description": "",
+        "id": "pair_61d76580e5bf4a03b33fec683108fa79",
+        "name": "SessionName",
+        "value": "{{ _.SessionName }}"
+      }, {
+        "description": "",
+        "id": "pair_134c0fd9850c4aa5b913cc533049a410",
+        "name": "title",
+        "value": "Teste - Apague este grupo"
+      }, {
+        "description": "",
+        "fileName": "C:\\Scripts\\Contatos.txt",
+        "id": "pair_e3752fab916b4812898bc1d1f4597b8e",
+        "name": "participants",
+        "type": "file",
+        "value": ""
+      }, {
+        "description": "",
+        "id": "pair_088a0c1d9a64404f91821731013dd739",
+        "name": "count",
+        "value": "3"
+      }]
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_a139eed056024fa3be77f9acad4fd719",
+      "name": "Content-Type",
+      "value": "multipart/form-data"
+    }],
+    "authentication": {},
+    "metaSortKey": -1213053111950.1597,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_aca2d1dcab9b4bb9bf1d51dfbae6b868",
+    "parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
+    "modified": 1639058050576,
+    "created": 1632079893129,
+    "url": "{{ _.Localhost }}/sistema/removeParticipant",
+    "name": "removeParticipant - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"groupId\":\"556796787854-1625276812\",\n\t\"phonefull\": \"+55(67)9 9197-7682\"\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_a139eed056024fa3be77f9acad4fd719",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -1213048104300.685,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_5f675c24a8474b428fcf9b5c013ff43f",
+    "parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
+    "modified": 1639058050553,
+    "created": 1632079893148,
+    "url": "{{ _.Localhost }}/sistema/addParticipant",
+    "name": "addParticipant - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"groupId\":\"556796787854-1625276812\",\n\t\"phonefull\": \"+55(67)9 9197-7682\"\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_a139eed056024fa3be77f9acad4fd719",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -1213043096651.2104,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_94296d60965545d3ad99e46c42ee00d1",
+    "parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
+    "modified": 1639058050569,
+    "created": 1632079893138,
+    "url": "{{ _.Localhost }}/sistema/promoteParticipant",
+    "name": "promoteParticipant - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"groupId\":\"556796787854-1625276812\",\n\t\"phonefull\": \"+55(67)9 9197-7682\"\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_a139eed056024fa3be77f9acad4fd719",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -1213038089001.7356,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_e32dfb041ee1455fa16c36d0838c5ab8",
+    "parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
+    "modified": 1639058050599,
+    "created": 1632079893157,
+    "url": "{{ _.Localhost }}/sistema/demoteParticipant",
+    "name": "demoteParticipant - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"groupId\":\"556796787854-1619470774\",\n\t\"phonefull\": \"+55(67)9 9197-7682\"\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_a139eed056024fa3be77f9acad4fd719",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -1213033081352.2607,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_0c67134640e54c41a9d932ae968d6091",
+    "parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
+    "modified": 1643130714832,
+    "created": 1632079893167,
+    "url": "{{ _.Localhost }}/sistema/getGroupInfoFromInviteLink",
+    "name": "getGroupInfoFromInviteLink - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"InviteLink\": \"https://chat.whatsapp.com/LlEpn5TTJV9GDDFyAPYN7k\"\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_a139eed056024fa3be77f9acad4fd719",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -1213029325615.1548,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_5f28b1e70781460790f1731882204fe9",
+    "parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
+    "modified": 1643720851512,
+    "created": 1632079893177,
+    "url": "{{ _.Localhost }}/sistema/joinGroup",
+    "name": "joinGroup - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.AuthorizationToken }}\",\n\t\"link\": \"https://chat.whatsapp.com/LlEpn5TTJV9GDDFyAPYN7k\"\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_a139eed056024fa3be77f9acad4fd719",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -1213028699658.9705,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_7f6b0ff16f354d0783871adf5485e834",
+    "parentId": "fld_eb4bab34468d4b7eb45db385b8790977",
+    "modified": 1643130714835,
+    "created": 1632079892949,
+    "url": "{{ _.Localhost }}/sistema/setProfileStatus",
+    "name": "setProfileStatus - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"ProfileStatus\": \"A Inveja é Falta de Capacidade\"\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_db0c91da2c874dcfbca1944b692c42c6",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -100978842481.75,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "fld_eb4bab34468d4b7eb45db385b8790977",
+    "parentId": "wrk_43f3024baba5440caec06b068fd61b21",
+    "modified": 1643130714832,
+    "created": 1632079892944,
+    "name": "Profile Functions - ✔️📝",
+    "description": "",
+    "environment": {},
+    "environmentPropertyOrder": null,
+    "metaSortKey": -201957685476,
+    "_type": "request_group"
+  }, {
+    "_id": "req_eb367f2f1be84363848fc692dfedb905",
+    "parentId": "fld_eb4bab34468d4b7eb45db385b8790977",
+    "modified": 1643130714836,
+    "created": 1632079892959,
+    "url": "{{ _.Localhost }}/sistema/setProfileName",
+    "name": "setProfileName - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"ProfileName\": \"Alan Martines\"\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_db0c91da2c874dcfbca1944b692c42c6",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -75734131906.625,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_831c9723cb8343f59cf6eb163f5b402f",
+    "parentId": "fld_eb4bab34468d4b7eb45db385b8790977",
+    "modified": 1643130714835,
+    "created": 1632079892968,
+    "url": "{{ _.Localhost }}/sistema/setProfilePic",
+    "name": "setProfilePic - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "multipart/form-data",
+      "params": [{
+        "description": "",
+        "id": "pair_e94ba4ef6cf04f2aa50d75d85bd1ffaf",
+        "name": "AuthorizationToken",
+        "value": "{{ _.AuthorizationToken }}"
+      }, {
+        "id": "pair_2b6bc90192394823a7d5816abe764baa",
+        "name": "SessionName",
+        "value": "{{ _.SessionName }}"
+      }, {
+        "description": "",
+        "fileName": "C:\\Scripts\\Check.png",
+        "id": "pair_459e50a248924935bc2f2e9d09dc1c62",
+        "name": "file",
+        "type": "file",
+        "value": ""
+      }]
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_db0c91da2c874dcfbca1944b692c42c6",
+      "name": "Content-Type",
+      "value": "multipart/form-data"
+    }],
+    "authentication": {},
+    "metaSortKey": -63111776619.0625,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_12ca585e335746238c43fd38a1a65a94",
+    "parentId": "fld_497055746cf8482b9082aa42dfe1f2b0",
+    "modified": 1643229595735,
+    "created": 1632079893033,
+    "url": "{{ _.Localhost }}/sistema/killServiceWorker",
+    "name": "killServiceWorker - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\"\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_db0c91da2c874dcfbca1944b692c42c6",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -56800598975.28125,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "fld_497055746cf8482b9082aa42dfe1f2b0",
+    "parentId": "wrk_43f3024baba5440caec06b068fd61b21",
+    "modified": 1639058050511,
+    "created": 1632079892981,
+    "name": "Device Functions - ✔️📝",
+    "description": "",
+    "environment": {},
+    "environmentPropertyOrder": null,
+    "metaSortKey": -100978842481.75,
+    "_type": "request_group"
+  }, {
+    "_id": "req_5a9112ac9a904fea9d979f20fe563718",
+    "parentId": "fld_497055746cf8482b9082aa42dfe1f2b0",
+    "modified": 1639058050547,
+    "created": 1632079893044,
+    "url": "{{ _.Localhost }}/sistema/restartService",
+    "name": "restartService - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\"\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_db0c91da2c874dcfbca1944b692c42c6",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -53645010153.390625,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_48e2ea7882b747088eff544ed1dd884d",
+    "parentId": "fld_497055746cf8482b9082aa42dfe1f2b0",
+    "modified": 1643229598713,
+    "created": 1632079893064,
+    "url": "{{ _.Localhost }}/sistema/reloadService",
+    "name": "reloadService - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\"\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_db0c91da2c874dcfbca1944b692c42c6",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -53645010128.390625,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_c6c7bee0a3634aa2ac907b4558732a46",
+    "parentId": "fld_497055746cf8482b9082aa42dfe1f2b0",
+    "modified": 1643229599579,
+    "created": 1632079892987,
+    "url": "{{ _.Localhost }}/sistema/getHostDevice",
+    "name": "getHostDevice - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\"\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_db0c91da2c874dcfbca1944b692c42c6",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -53645010103.390625,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_4140010a3f6948a89f0dc28595d9f5bd",
+    "parentId": "fld_497055746cf8482b9082aa42dfe1f2b0",
+    "modified": 1643229600096,
+    "created": 1632079892996,
+    "url": "{{ _.Localhost }}/sistema/getConnectionState",
+    "name": "getConnectionState - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\"\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_db0c91da2c874dcfbca1944b692c42c6",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -53645010053.390625,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_ab2cdbc45d94452fb5257b45b9c27631",
+    "parentId": "fld_497055746cf8482b9082aa42dfe1f2b0",
+    "modified": 1639058050575,
+    "created": 1632079893003,
+    "url": "{{ _.Localhost }}/sistema/getBatteryLevel",
+    "name": "getBatteryLevel - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\"\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_db0c91da2c874dcfbca1944b692c42c6",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -53645010003.390625,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_ae2363876843420893e30f4fc21aff71",
+    "parentId": "fld_497055746cf8482b9082aa42dfe1f2b0",
+    "modified": 1643229604481,
+    "created": 1632079893011,
+    "url": "{{ _.Localhost }}/sistema/isConnected",
+    "name": "isConnected - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\"\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_db0c91da2c874dcfbca1944b692c42c6",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -53645009953.390625,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_99de231e7242493189e7a17719c37c0c",
+    "parentId": "fld_497055746cf8482b9082aa42dfe1f2b0",
+    "modified": 1639058050570,
+    "created": 1632079893021,
+    "url": "{{ _.Localhost }}/sistema/getWAVersion",
+    "name": "getWAVersion - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\"\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_db0c91da2c874dcfbca1944b692c42c6",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -53645009903.390625,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "req_d56db8c9b01d4acd98339935f5feff46",
+    "parentId": "fld_3366b95c9830421aa0c475cb56cdb832",
+    "modified": 1643130714836,
+    "created": 1632080005689,
+    "url": "{{ _.Localhost }}/sistema/startPhoneWatchdog",
+    "name": "startPhoneWatchdog - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"interval\": 30000\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_3e7cbe7e3393438995269001019d14d7",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -1632080005689,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "fld_3366b95c9830421aa0c475cb56cdb832",
+    "parentId": "wrk_43f3024baba5440caec06b068fd61b21",
+    "modified": 1643130714832,
+    "created": 1632079935896,
+    "name": "Phone connection verification - ✔️📝",
+    "description": "",
+    "environment": {},
+    "environmentPropertyOrder": null,
+    "metaSortKey": -100978842431.75,
+    "_type": "request_group"
+  }, {
+    "_id": "req_8f1036c12f494c108892a471b89a045c",
+    "parentId": "fld_3366b95c9830421aa0c475cb56cdb832",
+    "modified": 1639058050568,
+    "created": 1632080046625,
+    "url": "{{ _.Localhost }}/sistema/stopPhoneWatchdog",
+    "name": "stopPhoneWatchdog - ✔️📝",
+    "description": "",
+    "method": "POST",
+    "body": {
+      "mimeType": "application/json",
+      "text": "{\n\t\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\t\"SessionName\": \"{{ _.SessionName }}\"\n}"
+    },
+    "parameters": [],
+    "headers": [{
+      "id": "pair_da18591d310545f0b21f113c8aa16735",
+      "name": "Content-Type",
+      "value": "application/json"
+    }],
+    "authentication": {},
+    "metaSortKey": -1632080005639,
+    "isPrivate": false,
+    "settingStoreCookies": true,
+    "settingSendCookies": true,
+    "settingDisableRenderRequestBody": false,
+    "settingEncodeUrl": true,
+    "settingRebuildPath": true,
+    "settingFollowRedirects": "global",
+    "_type": "request"
+  }, {
+    "_id": "env_81749637ae1959588fc760d2e1e5cc3e1b66882a",
+    "parentId": "wrk_43f3024baba5440caec06b068fd61b21",
+    "modified": 1645988830565,
+    "created": 1645988830565,
+    "name": "Base Environment",
+    "data": {},
+    "dataPropertyOrder": null,
+    "color": null,
+    "isPrivate": false,
+    "metaSortKey": 1645988830566,
+    "_type": "environment"
+  }, {
+    "_id": "jar_81749637ae1959588fc760d2e1e5cc3e1b66882a",
+    "parentId": "wrk_43f3024baba5440caec06b068fd61b21",
+    "modified": 1639058052778,
+    "created": 1639058052778,
+    "name": "Default Jar",
+    "cookies": [],
+    "_type": "cookie_jar"
+  }, {
+    "_id": "spc_4f9a42e9d2d947aa8c011abe61c3786e",
+    "parentId": "wrk_43f3024baba5440caec06b068fd61b21",
+    "modified": 1639058050608,
+    "created": 1639058050608,
+    "fileName": "API My WhatsApp - WPPConnect v2.0",
+    "contents": "",
+    "contentType": "yaml",
+    "_type": "api_spec"
+  }, {
+    "_id": "env_ff7b1e354b944c14ab6631fbd41cd539",
+    "parentId": "env_81749637ae1959588fc760d2e1e5cc3e1b66882a",
+    "modified": 1645988931389,
+    "created": 1645988842532,
+    "name": "Localhost",
+    "data": {
+      "Localhost": "http://localhost:9001",
+      "AuthorizationToken": "Homologacao",
+      "SessionName": "Homologacao"
+    },
+    "dataPropertyOrder": {
+      "&": ["Localhost", "AuthorizationToken", "SessionName"]
+    },
+    "color": null,
+    "isPrivate": false,
+    "metaSortKey": 1645988842532,
+    "_type": "environment"
+  }]
 }
