@@ -1,18 +1,10 @@
-<!--
-    /*
- * @Author: Eduardo Policarpo
- * @contact: +55 43996611437
- * @Date: 2021-05-10 18:09:49
- * @LastEditTime: 2021-06-07 03:18:01
- */
--->
 <!DOCTYPE html>
 <html>
 
 <head>
 	<meta charset='utf-8'>
 	<meta http-equiv='X-UA-Compatible' content='IE=edge'>
-	<title>MyZAP 2.0</title>
+	<title>My Whatsapp</title>
 	<link rel="stylesheet" href="/css/style.css">
 	<link rel="stylesheet" href="/sweetalert2/css/sweetalert2.min.css">
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -27,7 +19,7 @@
 <body>
 	<div class="container">
 		<div class="text-center">
-			<h4>MyZAP 2.0</h4>
+			<h4>My Whatsapp</h4>
 			<!--Grid row-->
 			<div class="row justify-content-center align-items-center">
 				<div class="col-md-6 text-center mx-auto">
@@ -39,48 +31,7 @@
 									placeholder="Nome para identificação da sessão">
 							</div>
 						</div>
-						<div class="form-group">
-							<div class="textOnInput">
-								<label for="apitoken">API Token:</label>
-								<input type="text" class="form-control" id="apitoken" name="apitoken"
-									placeholder="Token da API para autenticação de acesso">
-							</div>
-						</div>
-						<div class="form-group">
-							<div class="textOnInput">
-								<label for="sessionkey">Session KEY:</label>
-								<input type="sessionkey" class="form-control" id="sessionkey" name="sessionkey"
-									placeholder="Chave de autorização para requisições na API.">
-							</div>
-						</div>
-						<div class="form-group">
-							<div class="textOnInput">
-								<label for="wh_status">Webhook Send Messages:</label>
-								<input type="wh_status" class="form-control" id="wh_status" name="wh_status"
-									placeholder="URL que recebe o Webhooks dos status das mensagens enviadas">
-							</div>
-						</div>
-						<div class="form-group">
-							<div class="textOnInput">
-								<label for="wh_message">Webhook Received Messages:</label>
-								<input type="wh_message" class="form-control" id="wh_message" name="wh_message"
-									placeholder="URL que recebe o Webhooks dos status das mensagens recebidas">
-							</div>
-						</div>
-						<div class="form-group">
-							<div class="textOnInput">
-								<label for="wh_connect">Webhook Status Connection:</label>
-								<input type="wh_connect" class="form-control" id="wh_connect" name="wh_connect"
-									placeholder="URL que recebe o status da conexão">
-							</div>
-						</div>
-						<div class="form-group">
-							<div class="textOnInput">
-								<label for="wh_qrcode">Webhook QRCode:</label>
-								<input type="wh_qrcode" class="form-control" id="wh_qrcode" name="wh_qrcode"
-									placeholder="URL que recebe o webhooks do QRCODE do cliente">
-							</div>
-						</div>
+
 						<div class="form-group">
 							<button type="button" class="btn btn-primary" id="send-btn" name="send-btn"
 								onclick="alterSession(document.getElementById('session').value)">Iniciar</button>
@@ -112,10 +63,7 @@
 
 		async function getSession(session) {
 			const config = {
-				headers: {
-					apitoken: document.getElementById("apitoken").value,
-					sessionkey: document.getElementById("sessionkey").value
-				}
+
 			}
 
 			const data = {
