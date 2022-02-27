@@ -22,6 +22,7 @@ const io = require('socket.io')(http, {
 //
 const sistem = require("../controllers/sistem.controller");
 //
+// Body Parser
 app.use(cors());
 app.use(bodyParser.json({
   limit: '50mb',
