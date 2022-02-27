@@ -22,17 +22,17 @@ const io = require('socket.io')(http, {
 const sistem = require("../controllers/sistem.controller");
 //
 app.use(cors());
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '100mb', type: 'application/json'}));
 app.use(bodyParser.urlencoded({ extended: true }));
 //
 // Express Parser
 app.use(express.json({
-	limit: '50mb',
+	limit: '100mb',
 	extended: true
 }));
 //
 app.use(express.urlencoded({
-	limit: '50mb',
+	limit: '100mb',
 	extended: true
 }));
 // Rotas
