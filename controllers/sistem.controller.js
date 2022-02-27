@@ -507,7 +507,7 @@ router.post("/sendContactVcard", upload.none(''), verifyToken.verify, async (req
 					//
 					var sendContactVcard = await Sessions.sendContactVcard(
 						removeWithspace(req.body.SessionName),
-						checkNumberStatus.number + '@c.us',
+						checkNumberStatus.number,
 						soNumeros(req.body.contact) + '@c.us',
 						req.body.namecontact
 					);
@@ -591,7 +591,7 @@ router.post("/sendContactVcardList", upload.single('file'), verifyToken.verify, 
 						//
 						var sendContactVcardList = await Sessions.sendContactVcardList(
 							removeWithspace(req.body.SessionName),
-							checkNumberStatus.number + '@c.us',
+							checkNumberStatus.number,
 							contactlistValid,
 							contactlistInvalid
 						);
@@ -665,7 +665,7 @@ router.post("/sendText", upload.none(''), verifyToken.verify, async (req, res, n
 					//
 					var sendText = await Sessions.sendText(
 						removeWithspace(req.body.SessionName),
-						checkNumberStatus.number + '@c.us',
+						checkNumberStatus.number,
 						req.body.msg
 					);
 
@@ -740,7 +740,7 @@ router.post("/sendTextMassa", upload.single('file'), verifyToken.verify, async (
 								//
 								var sendTextMassaRes = await Sessions.sendText(
 									removeWithspace(req.body.SessionName),
-									checkNumberStatus.number + '@c.us',
+									checkNumberStatus.number,
 									req.body.msg
 								);
 								//
@@ -822,7 +822,7 @@ router.post("/sendLocation", upload.none(''), verifyToken.verify, async (req, re
 					//
 					var sendLocation = await Sessions.sendLocation(
 						removeWithspace(req.body.SessionName),
-						checkNumberStatus.number + '@c.us',
+						checkNumberStatus.number,
 						req.body.lat,
 						req.body.long,
 						req.body.local
@@ -898,7 +898,7 @@ router.post("/sendLinkPreview", upload.none(''), verifyToken.verify, async (req,
 					//
 					var sendLinkPreview = await Sessions.sendLinkPreview(
 						removeWithspace(req.body.SessionName),
-						checkNumberStatus.number + '@c.us',
+						checkNumberStatus.number,
 						req.body.link,
 						req.body.descricao
 					);
@@ -964,7 +964,7 @@ router.post("/sendImage", upload.single('file'), verifyToken.verify, async (req,
 						//
 						var sendImage = await Sessions.sendImage(
 							removeWithspace(req.body.SessionName),
-							checkNumberStatus.number + '@c.us',
+							checkNumberStatus.number,
 							filePath,
 							req.file.originalname,
 							req.body.caption
@@ -1072,7 +1072,7 @@ router.post("/sendImageMassa", sendImageMassa, verifyToken.verify, async (req, r
 								//
 								var sendImageMassaRes = await Sessions.sendImage(
 									removeWithspace(req.body.SessionName),
-									checkNumberStatus.number + '@c.us',
+									checkNumberStatus.number,
 									filePathImagem,
 									req.files['fileimg'][0].originalname,
 									req.body.caption
@@ -1172,7 +1172,7 @@ router.post("/sendMultImage", upload.array('file', 50), verifyToken.verify, asyn
 							//
 							var sendMultImageRes = await Sessions.sendImage(
 								removeWithspace(req.body.SessionName),
-								checkNumberStatus.number + '@c.us',
+								checkNumberStatus.number,
 								filePathImagem,
 								resultfile.originalname,
 								req.body.caption
@@ -1291,7 +1291,7 @@ router.post("/sendMultImageMassa", sendMultImageMassa, verifyToken.verify, async
 										//
 										var sendMultImageMassaRes = await Sessions.sendImage(
 											removeWithspace(req.body.SessionName),
-											checkNumberStatus.number + '@c.us',
+											checkNumberStatus.number,
 											filePathImagem,
 											resultfile.originalname,
 											req.body.caption
@@ -1406,7 +1406,7 @@ router.post("/sendFile", upload.single('file'), verifyToken.verify, async (req, 
 						//
 						var sendFile = await Sessions.sendFile(
 							removeWithspace(req.body.SessionName),
-							checkNumberStatus.number + '@c.us',
+							checkNumberStatus.number,
 							filePath,
 							req.file.originalname,
 							req.body.caption
@@ -1490,7 +1490,7 @@ router.post("/sendFileBase64", upload.none(''), verifyToken.verify, async (req, 
 						//
 						var sendFileBase64 = await Sessions.sendFile(
 							removeWithspace(req.body.SessionName),
-							checkNumberStatus.number + '@c.us',
+							checkNumberStatus.number,
 							filePath,
 							req.body.originalname,
 							req.body.caption
@@ -1567,7 +1567,7 @@ router.post("/sendFileToBase64", upload.single('file'), verifyToken.verify, asyn
 					//
 					var sendFileFromBase64 = await Sessions.sendFileFromBase64(
 						removeWithspace(req.body.SessionName),
-						checkNumberStatus.number + '@c.us',
+						checkNumberStatus.number,
 						req.file.buffer.toString('base64'),
 						req.file.mimetype,
 						req.file.originalname,
@@ -1629,7 +1629,7 @@ router.post("/sendFileFromBase64", upload.none(''), verifyToken.verify, async (r
 					//
 					var sendFileFromBase64 = await Sessions.sendFileFromBase64(
 						removeWithspace(req.body.SessionName),
-						checkNumberStatus.number + '@c.us',
+						checkNumberStatus.number,
 						req.body.base64,
 						req.body.mimetype,
 						req.body.originalname,
