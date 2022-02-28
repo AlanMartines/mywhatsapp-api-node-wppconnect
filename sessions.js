@@ -602,7 +602,7 @@ module.exports = class Sessions {
 						//
 					}
 				},
-				whatsappVersion: whatsappVersion ? `${whatsappVersion}` : '', // whatsappVersion: '2.2142.12',
+				whatsappVersion: whatsappVersion ? `${whatsappVersion}` : '2.2204.13', // whatsappVersion: '22.2204.13',
 				deviceName: `${config.DEVICE_NAME}`,
 				headless: true, // Headless chrome
 				devtools: false, // Open devtools by default
