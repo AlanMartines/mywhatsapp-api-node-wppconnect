@@ -160,7 +160,7 @@ router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next
 						console.log("- Configuração mantida");
 						var getStart = await Wppconnect.Start(confToken.SessionName, confToken.SessionName, confToken.MultiDevice, confToken.whatsappVersion);
 					} else {
-						var getStart = await Sessions.Start(data.SessionName, data.SessionName, data.MultiDevice, data.whatsappVersion);
+						var getStart = await Wppconnect.Start(data.SessionName, data.SessionName, data.MultiDevice, data.whatsappVersion);
 						console.log("- Configuração atualizada");
 						await startAll.confToken(`${config.tokenPatch}`, `${data.SessionName}.auto.json`, data, false);
 					}
