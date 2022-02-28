@@ -1,6 +1,5 @@
 //
 // Configuração dos módulos
-const config = require('./config.global');
 const fs = require('fs-extra');
 const rimraf = require("rimraf");
 const sleep = require('sleep-promise');
@@ -15,7 +14,9 @@ const queue = new PQueue({
 */
 const wppconnect = require('./wppconnect/dist/index');
 //const wppconnect = require('@wppconnect-team/wppconnect');
+const Sessions = require("./controllers/sessions.js");
 const startAll = require("./middleware/startup.js");
+const config = require('./config.global');
 const tokenPatch = config.tokenPatch;
 //
 // ------------------------------------------------------------------------------------------------------- //
@@ -125,7 +126,7 @@ async function deletaCache(filePath, userDataDir) {
 //
 // ------------------------------------------------------------------------------------------------------- //
 //
-module.exports = class Sessions {
+export default class Wppconnect {
 	//
 	static async ApiStatus(SessionName) {
 		console.log("- Status");
@@ -318,8 +319,6 @@ module.exports = class Sessions {
 						};
 						break;
 					default:
-						//
-						//let result = await startAll.startSession(SessionName);
 						//
 						return {
 							result: 'error',
