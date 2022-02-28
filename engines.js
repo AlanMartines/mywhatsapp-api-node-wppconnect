@@ -453,6 +453,35 @@ module.exports = class Sessions {
 	//
 	// ------------------------------------------------------------------------------------------------//
 	//
+	static async deleteSession(SessionName) {
+		console.log("- Adicionando sessão");
+		var newSession = {
+			AuthorizationToken: AuthorizationToken,
+			MultiDevice: MultiDevice,
+			name: SessionName,
+			process: null,
+			qrcode: null,
+			client: false,
+			result: null,
+			tokenPatch: null,
+			state: 'STARTING',
+			status: 'notLogged',
+			message: 'Sistema iniciando e indisponivel para uso',
+			attempts: 0,
+			browserSessionToken: null
+		}
+		Sessions.sessions.push(newSession);
+		console.log("- Nova sessão: " + newSession.state);
+
+		//setup session
+		newSession.client = Sessions.initSession(SessionName, AuthorizationToken, MultiDevice, whatsappVersion);
+		Sessions.setup(SessionName);
+
+		return newSession;
+	} //addSession
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
 	static getSession(SessionName) {
 		var foundSession = false;
 		if (Sessions.sessions)
