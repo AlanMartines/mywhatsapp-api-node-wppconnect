@@ -129,7 +129,7 @@ async function deletaCache(filePath, userDataDir) {
 //
 module.exports = class Wppconnect {
 	//
-	static async Start(socket, SessionName, AuthorizationToken, MultiDevice, whatsappVersion) {
+	static async initSession(socket, SessionName, AuthorizationToken, MultiDevice, whatsappVersion) {
 		//
 		/*
 			╔═╗┌─┐┌┬┐┬┌─┐┌┐┌┌─┐┬    ╔═╗┬─┐┌─┐┌─┐┌┬┐┌─┐  ╔═╗┌─┐┬─┐┌─┐┌┬┐┌─┐┌┬┐┌─┐┬─┐┌─┐
@@ -384,7 +384,7 @@ module.exports = class Wppconnect {
 				message: "Sistema Off-line"
 			});
 			//
-			console.log("- Instância não criada:", error);
+			console.log("- Instância não criada:", error.message);
 		}
 	} //initSession
 	//

@@ -1,15 +1,10 @@
-const urlExists = require("url-exists");
-//
 module.exports = class Sessions {
-
-	static session = new Array();
 	//
 	static async ApiStatus(SessionName) {
 		console.log("- Status");
 		var session = this.getSession(SessionName);
-		console.log(session);
 		//
-		if (session) {
+		if (session) { //só adiciona se não existir
 			if (session.state == "CONNECTED") {
 				return {
 					result: "info",
@@ -197,6 +192,8 @@ module.exports = class Sessions {
 						break;
 					default:
 						//
+						//let result = await startAll.startSession(SessionName);
+						//
 						return {
 							result: 'error',
 							state: 'NOTFOUND',
@@ -216,108 +213,134 @@ module.exports = class Sessions {
 			};
 		}
 	} //status
+	//
+	// ------------------------------------------------------------------------------------------------------- //
+	//
+	static async Start(SessionName) {
+		this.sessions = this.sessions || []; //start array
 
-	static async checkPath(path) {
-		urlExists(path, (error, exists) => {
-			if (exists) {
-				return true
-			}
-			else {
-				return false
-			}
-		})
-	}
-	// checar ou adiciona um usuario na sessão
-	static async checkAddUser(name) {
-		var checkFilter = this.session.filter(order => (order.session === name)), add = null
-		if (!checkFilter.length) {
-			add = {
-				session: name,
-			}
-			this.session.push(add)
-			return true
+		var session = this.getSession(SessionName);
+
+		if (session == false) {
+			//create new session
+			session = await this.addSesssion(SessionName);
+		} else if (["CLOSED"].includes(session.state)) {
+			//restart session
+			console.log("- State: CLOSED");
+			session.state = "CLOSED";
+			session.status = "notLogged";
+			session.qrcode = null;
+			session.attempts = 0;
+			session.message = "Sistema iniciando e indisponivel para uso";
+			session.prossesid = null;
+			//
+			console.log('- Nome da sessão:', session.name);
+			console.log('- State do sistema:', session.state);
+			console.log('- Status da sessão:', session.status);
+			//
+			session.client = this.initSession(SessionName);
+		} else if (["CONFLICT", "UNPAIRED", "UNLAUNCHED", "UNPAIRED_IDLE"].includes(session.state)) {
+			session.state = "CLOSED";
+			session.status = 'notLogged';
+			session.qrcode = null;
+			session.message = 'Sistema desconectado';
+			//
+			console.log('- Nome da sessão:', session.name);
+			console.log('- State do sistema:', session.state);
+			console.log('- Status da sessão:', session.status);
+			//
+			session.client = this.initSession(SessionName);
+		} else if (["DISCONNECTED"].includes(session.state)) {
+			//restart session
+			session.state = "CLOSE";
+			session.status = "notLogged";
+			session.qrcode = null;
+			session.attempts = 0;
+			session.message = 'Sistema desconectado';
+			session.prossesid = null;
+			//
+			console.log('- Nome da sessão:', session.name);
+			console.log('- State do sistema:', session.state);
+			console.log('- Status da sessão:', session.status);
+			//
+			session.client = this.initSession(SessionName);
+		} else if (["NOTFOUND"].includes(session.state)) {
+			//restart session
+			session.state = "CLOSE";
+			session.status = "notLogged";
+			session.qrcode = null;
+			session.attempts = 0;
+			session.message = 'Sistema desconectado';
+			session.prossesid = null;
+			//
+			console.log('- Nome da sessão:', session.name);
+			console.log('- State do sistema:', session.state);
+			console.log('- Status da sessão:', session.status);
+			//
+			session = await this.addSesssion(SessionName);
+		} else {
+			console.log('- Nome da sessão:', session.name);
+			console.log('- State do sistema:', session.state);
+			console.log('- Status da sessão:', session.status);
 		}
-		return false
-	}
-
-	// checar se exite o usuario na sessão
-	static async checkSession(name) {
-		var checkFilter = this.session.filter(order => (order.session === name))
-		if (checkFilter.length) {
-			return checkFilter;
+		//
+		await updateStateDb(session.state, session.status, AuthorizationToken);
+		//
+		return session;
+	} //start
+	//
+	// ------------------------------------------------------------------------------------------------------- //
+	//
+	static async addSesssion(SessionName) {
+		console.log("- Adicionando sessão");
+		var newSession = {
+			AuthorizationToken: AuthorizationToken,
+			MultiDevice: MultiDevice,
+			name: SessionName,
+			process: null,
+			qrcode: null,
+			client: false,
+			result: null,
+			tokenPatch: null,
+			state: 'STARTING',
+			status: 'notLogged',
+			message: 'Sistema iniciando e indisponivel para uso',
+			attempts: 0,
+			browserSessionToken: null
 		}
-		return false
-	}
+		this.sessions.push(newSession);
+		console.log("- Nova sessão: " + newSession.state);
 
-	// pegar index da sessão (chave)
-	static async getSessionKey(name) {
-		if (this.checkSession(name)) {
-			for (var i in this.session) {
-				if (this.session[i].session === name) {
-					return i
+		//setup session
+		newSession.client = this.initSession(SessionName);
+		this.setup(SessionName);
+
+		return newSession;
+	} //addSession
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
+	static getSession(SessionName) {
+		var foundSession = false;
+		if (Sessions.sessions)
+			Sessions.sessions.forEach(session => {
+				if (SessionName == session.name) {
+					foundSession = session;
 				}
-			}
+			});
+		return foundSession;
+	} //getSession
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
+	static getSessions() {
+		if (Sessions.sessions) {
+			return Sessions.sessions;
+		} else {
+			return [];
 		}
-		return false
-	}
-
-	// adicionar informações a sessão 
-	static async addInfoSession(name, extend) {
-
-		if (this.checkSession(name)) {
-			for (var i in this.session) {
-				if (this.session[i].session === name) {
-					Object.assign(this.session[i], extend)
-					return true
-				}
-			}
-		}
-		return false
-	}
-
-	// Remove object na sessão
-	static async removeInfoObjects(name, key) {
-		if (this.checkSession(name)) {
-			for (var i in this.session) {
-				if (this.session[i].session === name) {
-					delete this.session[i][key]
-					return true
-				}
-			}
-		}
-		return false
-	}
-
-	// deletar sessão
-	static async deleteSession(name) {
-		if (this.checkSession(name)) {
-			var key = this.getSessionKey(name)
-			delete this.session[key]
-			return true
-		}
-		return false
-	}
-
-	// retornar sessão
-	static async getSession(name) {
-		if (this.checkSession(name)) {
-			var key = this.getSessionKey(name)
-			return this.session[key]
-		}
-		return false
-	}
-
-	// retornar todas
-	static async getAll() {
-		return this.session
-	}
-
-	// checa o client
-	static async checkClient(name) {
-		if (this.getSession(name) && this.getSession(name).client) {
-			return true
-		}
-		return false
-	}
-
+	} //getSessions
+	//
+	// ------------------------------------------------------------------------------------------------------- //
+	//
 }
