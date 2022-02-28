@@ -147,7 +147,7 @@ module.exports = class Wppconnect {
 			//
 		}
 		//
-		Sessions.addInfoSession(SessionName, {
+		await Sessions.addInfoSession(SessionName, {
 			result: "info",
 			state: "STARTING",
 			status: "notLogged",
@@ -185,7 +185,7 @@ module.exports = class Wppconnect {
 					//
 					webhooks.wh_qrcode(SessionName, base64Qrimg);
 					this.exportQR(socket, base64Qrimg, SessionName);
-					Sessions.addInfoSession(SessionName, {
+					await Sessions.addInfoSession(SessionName, {
 						result: "info",
 						state: "QRCODE",
 						status: "qrRead",
@@ -208,7 +208,7 @@ module.exports = class Wppconnect {
 						case 'inChat':
 						case 'chatsAvailable':
 							//
-							Sessions.addInfoSession(SessionName, {
+							await Sessions.addInfoSession(SessionName, {
 								result: "success",
 								state: "CONNECTED",
 								status: statusSession,
@@ -226,7 +226,7 @@ module.exports = class Wppconnect {
 						case 'serverClose':
 						case 'autocloseCalled':
 							//
-							Sessions.addInfoSession(session, {
+							await Sessions.addInfoSession(session, {
 								result: "info",
 								state: "CLOSED",
 								status: statusSession,
@@ -245,7 +245,7 @@ module.exports = class Wppconnect {
 						case 'desconnectedMobile':
 						case 'deleteToken':
 							//
-							Sessions.addInfoSession(SessionName, {
+							await Sessions.addInfoSession(SessionName, {
 								result: "info",
 								state: "DISCONNECTED",
 								status: statusSession,
@@ -260,7 +260,7 @@ module.exports = class Wppconnect {
 							break;
 						default:
 							//
-							Sessions.addInfoSession(SessionName, {
+							await Sessions.addInfoSession(SessionName, {
 								result: "error",
 								state: "NOTFOUND",
 								status: statusSession,
@@ -352,7 +352,7 @@ module.exports = class Wppconnect {
 			let tokens = await client.getSessionTokenBrowser();
 			let browser = []
 			//
-			Sessions.addInfoSession(SessionName, {
+			await Sessions.addInfoSession(SessionName, {
 				result: "success",
 				state: "CONNECTED",
 				status: 'isLogged',
@@ -362,7 +362,7 @@ module.exports = class Wppconnect {
 				message: "Sistema On-line"
 			});
 			//
-			Sessions.addInfoSession(SessionName, {
+			await Sessions.addInfoSession(SessionName, {
 				client: client,
 				tokens: tokens
 			});
@@ -374,7 +374,7 @@ module.exports = class Wppconnect {
 			return client;
 		} catch (error) {
 			//
-			Sessions.addInfoSession(SessionName, {
+			await Sessions.addInfoSession(SessionName, {
 				result: "error",
 				state: "NOTFOUND",
 				status: 'notLogged',
