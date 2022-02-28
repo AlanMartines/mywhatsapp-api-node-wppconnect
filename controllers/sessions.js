@@ -251,7 +251,7 @@ module.exports = class Sessions {
 
 	// pegar index da sessão (chave)
 	static async getSessionKey(name) {
-		if (this.checkSession(name)) {
+		if (await this.checkSession(name)) {
 			for (var i in this.session) {
 				if (this.session[i].session === name) {
 					return i
@@ -264,11 +264,11 @@ module.exports = class Sessions {
 	// adicionar informações a sessão 
 	static async addInfoSession(name, extend) {
 
-		if (this.checkSession(name)) {
+		if (await  this.checkSession(name)) {
 			for (var i in this.session) {
 				if (this.session[i].session === name) {
 					Object.assign(this.session[i], extend)
-					return true
+					return this.session[i]
 				}
 			}
 		}
@@ -277,7 +277,7 @@ module.exports = class Sessions {
 
 	// Remove object na sessão
 	static async removeInfoObjects(name, key) {
-		if (this.checkSession(name)) {
+		if (await this.checkSession(name)) {
 			for (var i in this.session) {
 				if (this.session[i].session === name) {
 					delete this.session[i][key]
@@ -290,7 +290,7 @@ module.exports = class Sessions {
 
 	// deletar sessão
 	static async deleteSession(name) {
-		if (this.checkSession(name)) {
+		if (await this.checkSession(name)) {
 			var key = this.getSessionKey(name)
 			delete this.session[key]
 			return true
@@ -300,7 +300,7 @@ module.exports = class Sessions {
 
 	// retornar sessão
 	static async getSession(name) {
-		if (this.checkSession(name)) {
+		if (await this.checkSession(name)) {
 			var key = this.getSessionKey(name)
 			return this.session[key]
 		}
@@ -314,7 +314,7 @@ module.exports = class Sessions {
 
 	// checa o client
 	static async checkClient(name) {
-		if (this.getSession(name) && this.getSession(name).client) {
+		if (await this.getSession(name) && await this.getSession(name).client) {
 			return true
 		}
 		return false
