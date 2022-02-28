@@ -14,8 +14,9 @@ const queue = new PQueue({
 */
 const wppconnect = require('./wppconnect/dist/index');
 //const wppconnect = require('@wppconnect-team/wppconnect');
-const Sessions = require("./controllers/sessions.js");
-const startAll = require("./middleware/startup.js");
+const Sessions = require('./controllers/sessions.js');
+const webhooks = require('./controllers/webhooks.js');
+const startAll = require('./middleware/startup.js');
 const config = require('./config.global');
 const tokenPatch = config.tokenPatch;
 //

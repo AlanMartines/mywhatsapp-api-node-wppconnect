@@ -1,7 +1,7 @@
-import Sessions from '../controllers/sessions.js';
-import superagent  from 'superagent';
-import 'superagent-queue';
-import dotenv from 'dotenv'
+const Sessions = require('../controllers/sessions.js');
+const superagent = require('superagent');
+require('superagent-queue');
+const dotenv = require('dotenv');
 dotenv.config();
 //
 export default class Webhooks {
