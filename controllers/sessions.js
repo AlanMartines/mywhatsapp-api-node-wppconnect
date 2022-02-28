@@ -7,7 +7,6 @@ module.exports = class Sessions {
 	static async ApiStatus(SessionName) {
 		const sessionUser = await this.getSession(SessionName);
 		console.log("- Status", sessionUser);
-		console.log(sessionUser);
 		//
 		if (sessionUser) {
 			if (sessionUser.state == "CONNECTED") {
