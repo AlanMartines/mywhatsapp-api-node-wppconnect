@@ -3,7 +3,7 @@ const mime = require('mime-types');
 const webhooks = require('./webhooks.js');
 const config = require('../config.global');
 //
-export default class Events {
+module.exports = class Events {
 
 	static async receiveMessage(session, client) {
 		client.on('message', async (message) => {

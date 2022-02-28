@@ -4,7 +4,7 @@ require('superagent-queue');
 const dotenv = require('dotenv');
 dotenv.config();
 //
-export default class Webhooks {
+module.exports = class Webhooks {
 
     static async wh_messages(session, response) {
         let data = Sessions.getSession(session)
