@@ -174,9 +174,6 @@ module.exports = class Wppconnect {
 						await updateStateDb('QRCODE', 'qrRead', AuthorizationToken);
 					}
 					//
-					var qrCode = base64Qr.replace('data:image/png;base64,', '');
-					const imageBuffer = Buffer.from(qrCode, 'base64');
-					//
 					webhooks.wh_qrcode(SessionName, base64Qrimg);
 					this.exportQR(socket, base64Qrimg, SessionName);
 					Sessions.addInfoSession(SessionName, {
