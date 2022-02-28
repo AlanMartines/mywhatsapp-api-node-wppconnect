@@ -5,158 +5,159 @@ module.exports = class Sessions {
 	static session = new Array();
 	//
 	static async ApiStatus(SessionName) {
-		const session = await this.getSession(SessionName);
-		console.log("- Status", session);
+		const sessionUser = await this.getSession(SessionName);
+		console.log("- Status", sessionUser);
+		console.log(sessionUser);
 		//
-		if (session) {
-			if (session.state == "CONNECTED") {
+		if (sessionUser) {
+			if (sessionUser.state == "CONNECTED") {
 				return {
 					result: "info",
-					state: session.state,
-					status: session.status,
+					state: sessionUser.state,
+					status: sessionUser.status,
 					message: "Sistema iniciado e disponivel para uso"
 				};
-			} else if (session.state == "STARTING") {
+			} else if (sessionUser.state == "STARTING") {
 				return {
 					result: "info",
-					state: session.state,
-					status: session.status,
+					state: sessionUser.state,
+					status: sessionUser.status,
 					message: "Sistema iniciando e indisponivel para uso"
 				};
-			} else if (session.state == "QRCODE") {
+			} else if (sessionUser.state == "QRCODE") {
 				return {
 					result: "warning",
-					state: session.state,
-					status: session.status,
+					state: sessionUser.state,
+					status: sessionUser.status,
 					message: "Sistema aguardando leitura do QR-Code"
 				};
 			} else {
-				switch (session.status) {
+				switch (sessionUser.status) {
 					case 'isLogged':
 						return {
 							result: "success",
-							state: session.state,
-							status: session.status,
+							state: sessionUser.state,
+							status: sessionUser.status,
 							message: "Sistema iniciado e disponivel para uso"
 						};
 						break;
 					case 'notLogged':
 						return {
 							result: "error",
-							state: session.state,
-							status: session.status,
+							state: sessionUser.state,
+							status: sessionUser.status,
 							message: "Sistema indisponivel para uso"
 						};
 						break;
 					case 'browserClose':
 						return {
 							result: "info",
-							state: session.state,
-							status: session.status,
+							state: sessionUser.state,
+							status: sessionUser.status,
 							message: "Navegador interno fechado"
 						};
 						break;
 					case 'qrReadSuccess':
 						return {
 							result: "success",
-							state: session.state,
-							status: session.status,
+							state: sessionUser.state,
+							status: sessionUser.status,
 							message: "Verificação do QR-Code feita com sucesso"
 						};
 						break;
 					case 'qrReadFail':
 						return {
 							result: "warning",
-							state: session.state,
-							status: session.status,
+							state: sessionUser.state,
+							status: sessionUser.status,
 							message: "Falha na verificação do QR-Code"
 						};
 						break;
 					case 'qrRead':
 						return {
 							result: "warning",
-							state: session.state,
-							status: session.status,
+							state: sessionUser.state,
+							status: sessionUser.status,
 							message: "Sistema aguardando leitura do QR-Code"
 						};
 						break;
 					case 'autocloseCalled':
 						return {
 							result: "info",
-							state: session.state,
-							status: session.status,
+							state: sessionUser.state,
+							status: sessionUser.status,
 							message: "Navegador interno fechado"
 						};
 						break;
 					case 'desconnectedMobile':
 						return {
 							result: "info",
-							state: session.state,
-							status: session.status,
+							state: sessionUser.state,
+							status: sessionUser.status,
 							message: "Dispositivo desconectado"
 						};
 						break;
 					case 'deleteToken':
 						return {
 							result: "info",
-							state: session.state,
-							status: session.status,
+							state: sessionUser.state,
+							status: sessionUser.status,
 							message: "Token de sessão removido"
 						};
 						break;
 					case 'chatsAvailable':
 						return {
 							result: "success",
-							state: session.state,
-							status: session.status,
+							state: sessionUser.state,
+							status: sessionUser.status,
 							message: "Sistema iniciado e disponivel para uso"
 						};
 						break;
 					case 'deviceNotConnected':
 						return {
 							result: "info",
-							state: session.state,
-							status: session.status,
+							state: sessionUser.state,
+							status: sessionUser.status,
 							message: "Dispositivo desconectado"
 						};
 						break;
 					case 'serverWssNotConnected':
 						return {
 							result: "info",
-							state: session.state,
-							status: session.status,
+							state: sessionUser.state,
+							status: sessionUser.status,
 							message: "O endereço wss não foi encontrado"
 						};
 						break;
 					case 'noOpenBrowser':
 						return {
 							result: "error",
-							state: session.state,
-							status: session.status,
+							state: sessionUser.state,
+							status: sessionUser.status,
 							message: "Não foi encontrado o navegador ou falta algum comando no args"
 						};
 						break;
 					case 'serverClose':
 						return {
 							result: "info",
-							state: session.state,
-							status: session.status,
+							state: sessionUser.state,
+							status: sessionUser.status,
 							message: "O cliente se desconectou do wss"
 						};
 						break;
 					case 'OPENING':
 						return {
 							result: "warning",
-							state: session.state,
-							status: session.status,
+							state: sessionUser.state,
+							status: sessionUser.status,
 							message: "'Sistema iniciando e indisponivel para uso'"
 						};
 						break;
 					case 'CONFLICT':
 						return {
 							result: "info",
-							state: session.state,
-							status: session.status,
+							state: sessionUser.state,
+							status: sessionUser.status,
 							message: "Dispositivo conectado em outra sessão, reconectando"
 						};
 						break;
@@ -165,32 +166,32 @@ module.exports = class Sessions {
 					case 'UNPAIRED_IDLE':
 						return {
 							result: "warning",
-							state: session.state,
-							status: session.status,
+							state: sessionUser.state,
+							status: sessionUser.status,
 							message: "Dispositivo desconectado"
 						};
 						break;
 					case 'DISCONNECTED':
 						return {
 							result: "info",
-							state: session.state,
-							status: session.status,
+							state: sessionUser.state,
+							status: sessionUser.status,
 							message: "Dispositivo desconectado"
 						};
 						break;
 					case 'SYNCING':
 						return {
 							result: "warning",
-							state: session.state,
-							status: session.status,
+							state: sessionUser.state,
+							status: sessionUser.status,
 							message: "Dispositivo sincronizando"
 						};
 						break;
 					case 'CLOSED':
 						return {
 							result: "info",
-							state: session.state,
-							status: session.status,
+							state: sessionUser.state,
+							status: sessionUser.status,
 							message: "O cliente fechou a sessão ativa"
 						};
 						break;

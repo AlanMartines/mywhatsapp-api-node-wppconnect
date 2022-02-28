@@ -180,7 +180,7 @@ module.exports = class Wppconnect {
 					//console.log(urlCode);
 					//
 					if (attempts <= 2) {
-						await updateStateDb('QRCODE', 'qrRead', SessionName);
+						await updateStateDb('QRCODE', 'qrRead', AuthorizationToken);
 					}
 					//
 					webhooks.wh_qrcode(SessionName, base64Qrimg);
@@ -218,7 +218,7 @@ module.exports = class Wppconnect {
 								message: "Sistema iniciado e disponivel para uso"
 							});
 							//
-							await updateStateDb('CONNECTED', statusSession, SessionName);
+							await updateStateDb('CONNECTED', statusSession, AuthorizationToken);
 							//
 							break;
 						case 'autocloseCalled':
@@ -236,7 +236,7 @@ module.exports = class Wppconnect {
 								message: "Sistema fechado"
 							});
 							//
-							await updateStateDb('CLOSED', statusSession, SessionName);
+							await updateStateDb('CLOSED', statusSession, AuthorizationToken);
 							//
 							break;
 						case 'qrReadFail':
@@ -255,7 +255,7 @@ module.exports = class Wppconnect {
 								message: "Dispositivo desconetado"
 							});
 							//
-							await updateStateDb('DISCONNECTED', statusSession, SessionName);
+							await updateStateDb('DISCONNECTED', statusSession, AuthorizationToken);
 							//
 							break;
 						default:
@@ -270,7 +270,7 @@ module.exports = class Wppconnect {
 								message: "Sistema Off-line"
 							});
 							//
-							await updateStateDb('DISCONNECTED', statusSession, SessionName);
+							await updateStateDb('DISCONNECTED', statusSession, AuthorizationToken);
 						//
 					}
 				},
@@ -396,13 +396,13 @@ module.exports = class Wppconnect {
 		╚═╝└─┘ ┴  ┴ ┴┘└┘└─┘  └─┘ ┴ ┴ ┴┴└─ ┴ └─┘─┴┘
 	*/
 	//
-	static async exportQR(socket, qrCode, session) {
+	static async exportQR(socket, qrCode, SessionName) {
 		qrCode = qrCode.replace('data:image/png;base64,', '');
 		const imageBuffer = Buffer.from(qrCode, 'base64');
 		socket.emit('qrCode',
 			{
 				data: 'data:image/png;base64,' + imageBuffer.toString('base64'),
-				session: session
+				session: SessionName
 			}
 		);
 	}
