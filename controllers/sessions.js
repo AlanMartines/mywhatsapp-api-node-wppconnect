@@ -244,7 +244,7 @@ module.exports = class Sessions {
 	static async checkSession(name) {
 		var checkFilter = this.session.filter(order => (order.session === name))
 		if (checkFilter.length) {
-			return checkFilter;
+			return true
 		}
 		return false
 	}
@@ -264,11 +264,11 @@ module.exports = class Sessions {
 	// adicionar informações a sessão 
 	static async addInfoSession(name, extend) {
 
-		if (await  this.checkSession(name)) {
+		if (await this.checkSession(name)) {
 			for (var i in this.session) {
 				if (this.session[i].session === name) {
 					Object.assign(this.session[i], extend)
-					return this.session[i]
+					return true
 				}
 			}
 		}
@@ -291,7 +291,7 @@ module.exports = class Sessions {
 	// deletar sessão
 	static async deleteSession(name) {
 		if (await this.checkSession(name)) {
-			var key = this.getSessionKey(name)
+			var key = await this.getSessionKey(name)
 			delete this.session[key]
 			return true
 		}

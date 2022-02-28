@@ -173,6 +173,8 @@ router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next
 				//var getStart = await Sessions.Start(removeWithspace(req.body.SessionName), removeWithspace(req.body.SessionName), req.body.MultiDevice, req.body.whatsappVersion);
 				console.log("- AuthorizationToken:", removeWithspace(req.body.SessionName));
 				//
+				await Sessions.checkAddUser(SessionName);
+				//
 				var Start = {
 					result: "info",
 					state: 'STARTING',

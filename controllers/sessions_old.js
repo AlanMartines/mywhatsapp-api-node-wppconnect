@@ -313,7 +313,6 @@ module.exports = class Sessions {
 
 		//setup session
 		newSession.client = this.initSession(SessionName);
-		this.setup(SessionName);
 
 		return newSession;
 	} //addSession
