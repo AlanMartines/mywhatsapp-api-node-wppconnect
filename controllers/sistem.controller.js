@@ -13,7 +13,7 @@ const validUrl = require('valid-url');
 // https://stackoverflow.com/questions/60408575/how-to-validate-file-extension-with-multer-middleware
 const upload = multer({})
 const router = express.Router();
-const Sessions = require("../engines");
+const Sessions = require("../controllers/sessions");
 const verifyToken = require("../middleware/verifyToken");
 const verifyJson = require("../middleware/validateJson");
 const config = require('../config.global');
