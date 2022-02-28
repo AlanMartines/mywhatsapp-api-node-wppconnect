@@ -119,7 +119,7 @@ router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -157,19 +157,19 @@ router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next
 				if (confToken) {
 					if (confToken.SessionName == data.SessionName && confToken.MultiDevice == data.MultiDevice && confToken.whatsappVersion == data.whatsappVersion) {
 						console.log("- Configuração mantida");
-						var getStart = await Wppconnect.Start(confToken.SessionName, confToken.SessionName, confToken.MultiDevice, confToken.whatsappVersion);
+						var getStart = await Sessions.Start(confToken.SessionName, confToken.SessionName, confToken.MultiDevice, confToken.whatsappVersion);
 					} else {
-						var getStart = await Wppconnect.Start(data.SessionName, data.SessionName, data.MultiDevice, data.whatsappVersion);
+						var getStart = await Sessions.Start(data.SessionName, data.SessionName, data.MultiDevice, data.whatsappVersion);
 						console.log("- Configuração atualizada");
 						await startAll.confToken(`${config.tokenPatch}`, `${data.SessionName}.auto.json`, data, false);
 					}
 				} else {
-					var getStart = await Wppconnect.Start(data.SessionName, data.SessionName, data.MultiDevice, data.whatsappVersion);
+					var getStart = await Sessions.Start(data.SessionName, data.SessionName, data.MultiDevice, data.whatsappVersion);
 					console.log("- Configuração criada");
 					await startAll.confToken(`${config.tokenPatch}`, `${data.SessionName}.auto.json`, data, false);
 				}
 				//
-				//var getStart = await Wppconnect.Start(removeWithspace(req.body.SessionName), removeWithspace(req.body.SessionName), req.body.MultiDevice, req.body.whatsappVersion);
+				//var getStart = await Sessions.Start(removeWithspace(req.body.SessionName), removeWithspace(req.body.SessionName), req.body.MultiDevice, req.body.whatsappVersion);
 				var session = Sessions.getSession(removeWithspace(req.body.SessionName));
 				console.log("- AuthorizationToken:", removeWithspace(req.body.SessionName));
 				session.state = 'STARTING';
@@ -216,7 +216,7 @@ router.post("/Status", upload.none(''), verifyToken.verify, async (req, res, nex
 		//
 	} else {
 		//
-		var Status = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var Status = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		res.setHeader('Content-Type', 'application/json');
 		res.status(200).json({
 			Status
@@ -244,7 +244,7 @@ router.post("/Close", upload.none(''), verifyToken.verify, async (req, res, next
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -252,7 +252,7 @@ router.post("/Close", upload.none(''), verifyToken.verify, async (req, res, next
 			case 'chatsAvailable':
 			case 'qrRead':
 				//
-				var closeSession = await Wppconnect.closeSession(removeWithspace(req.body.SessionName));
+				var closeSession = await Sessions.closeSession(removeWithspace(req.body.SessionName));
 				res.setHeader('Content-Type', 'application/json');
 				res.status(200).json({
 					"Status": closeSession
@@ -288,14 +288,14 @@ router.post("/Logout", upload.none(''), verifyToken.verify, async (req, res, nex
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var LogoutSession = await Wppconnect.logoutSession(removeWithspace(req.body.SessionName));
+				var LogoutSession = await Sessions.logoutSession(removeWithspace(req.body.SessionName));
 				res.setHeader('Content-Type', 'application/json');
 				res.status(200).json({
 					"Status": LogoutSession
@@ -331,7 +331,7 @@ router.post("/QRCode", upload.none(''), verifyToken.verify, async (req, res, nex
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		var session = Sessions.getSession(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
@@ -424,7 +424,7 @@ router.post("/getSessions", upload.none(''), verifyToken.verify, async (req, res
 		//
 	} else {
 		//
-		var getSessions = await Wppconnect.getSessions();
+		var getSessions = await Sessions.getSessions();
 		//
 		//console.log(result);
 		res.setHeader('Content-Type', 'application/json');
@@ -491,21 +491,21 @@ router.post("/sendContactVcard", upload.none(''), verifyToken.verify, async (req
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var checkNumberStatus = await Wppconnect.checkNumberStatus(
+				var checkNumberStatus = await Sessions.checkNumberStatus(
 					removeWithspace(req.body.SessionName),
 					soNumeros(req.body.phonefull).trim() + '@c.us'
 				);
 				//
 				if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
 					//
-					var sendContactVcard = await Wppconnect.sendContactVcard(
+					var sendContactVcard = await Sessions.sendContactVcard(
 						removeWithspace(req.body.SessionName),
 						checkNumberStatus.number,
 						soNumeros(req.body.contact) + '@c.us',
@@ -551,7 +551,7 @@ router.post("/sendContactVcardList", upload.single('file'), verifyToken.verify, 
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -559,13 +559,13 @@ router.post("/sendContactVcardList", upload.single('file'), verifyToken.verify, 
 			case 'chatsAvailable':
 				//
 				try {
-					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
+					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'Sessions-' + removeWithspace(req.body.SessionName) + '-'));
 					var filePath = path.join(folderName, req.file.originalname);
 					fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
 					console.log("- File:", filePath);
 					//
 					//
-					var checkNumberStatus = await Wppconnect.checkNumberStatus(
+					var checkNumberStatus = await Sessions.checkNumberStatus(
 						removeWithspace(req.body.SessionName),
 						soNumeros(req.body.phonefull).trim() + '@c.us'
 					);
@@ -589,7 +589,7 @@ router.post("/sendContactVcardList", upload.single('file'), verifyToken.verify, 
 							await sleep(1000);
 						}
 						//
-						var sendContactVcardList = await Wppconnect.sendContactVcardList(
+						var sendContactVcardList = await Sessions.sendContactVcardList(
 							removeWithspace(req.body.SessionName),
 							checkNumberStatus.number,
 							contactlistValid,
@@ -649,21 +649,21 @@ router.post("/sendText", upload.none(''), verifyToken.verify, async (req, res, n
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var checkNumberStatus = await Wppconnect.checkNumberStatus(
+				var checkNumberStatus = await Sessions.checkNumberStatus(
 					removeWithspace(req.body.SessionName),
 					soNumeros(req.body.phonefull).trim() + '@c.us'
 				);
 				//
 				if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
 					//
-					var sendText = await Wppconnect.sendText(
+					var sendText = await Sessions.sendText(
 						removeWithspace(req.body.SessionName),
 						checkNumberStatus.number,
 						req.body.msg
@@ -709,7 +709,7 @@ router.post("/sendTextMassa", upload.single('file'), verifyToken.verify, async (
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -719,7 +719,7 @@ router.post("/sendTextMassa", upload.single('file'), verifyToken.verify, async (
 				var sendTextMassa = [];
 				//
 				try {
-					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
+					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'Sessions-' + removeWithspace(req.body.SessionName) + '-'));
 					var filePath = path.join(folderName, req.file.originalname);
 					fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
 					console.log("- File:", filePath);
@@ -731,14 +731,14 @@ router.post("/sendTextMassa", upload.single('file'), verifyToken.verify, async (
 						//
 						if (numero.length !== 0) {
 							//
-							var checkNumberStatus = await Wppconnect.checkNumberStatus(
+							var checkNumberStatus = await Sessions.checkNumberStatus(
 								removeWithspace(req.body.SessionName),
 								soNumeros(numero) + '@c.us'
 							);
 							//
 							if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
 								//
-								var sendTextMassaRes = await Wppconnect.sendText(
+								var sendTextMassaRes = await Sessions.sendText(
 									removeWithspace(req.body.SessionName),
 									checkNumberStatus.number,
 									req.body.msg
@@ -806,21 +806,21 @@ router.post("/sendLocation", upload.none(''), verifyToken.verify, async (req, re
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var checkNumberStatus = await Wppconnect.checkNumberStatus(
+				var checkNumberStatus = await Sessions.checkNumberStatus(
 					removeWithspace(req.body.SessionName),
 					soNumeros(req.body.phonefull).trim() + '@c.us'
 				);
 				//
 				if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
 					//
-					var sendLocation = await Wppconnect.sendLocation(
+					var sendLocation = await Sessions.sendLocation(
 						removeWithspace(req.body.SessionName),
 						checkNumberStatus.number,
 						req.body.lat,
@@ -867,7 +867,7 @@ router.post("/sendLinkPreview", upload.none(''), verifyToken.verify, async (req,
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -889,14 +889,14 @@ router.post("/sendLinkPreview", upload.none(''), verifyToken.verify, async (req,
 					//
 				}
 				//
-				var checkNumberStatus = await Wppconnect.checkNumberStatus(
+				var checkNumberStatus = await Sessions.checkNumberStatus(
 					removeWithspace(req.body.SessionName),
 					soNumeros(req.body.phonefull).trim() + '@c.us'
 				);
 				//
 				if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
 					//
-					var sendLinkPreview = await Wppconnect.sendLinkPreview(
+					var sendLinkPreview = await Sessions.sendLinkPreview(
 						removeWithspace(req.body.SessionName),
 						checkNumberStatus.number,
 						req.body.link,
@@ -942,7 +942,7 @@ router.post("/sendImage", upload.single('file'), verifyToken.verify, async (req,
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -950,19 +950,19 @@ router.post("/sendImage", upload.single('file'), verifyToken.verify, async (req,
 			case 'chatsAvailable':
 				//
 				try {
-					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
+					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'Sessions-' + removeWithspace(req.body.SessionName) + '-'));
 					var filePath = path.join(folderName, req.file.originalname);
 					fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
 					console.log("- File", filePath);
 					//
-					var checkNumberStatus = await Wppconnect.checkNumberStatus(
+					var checkNumberStatus = await Sessions.checkNumberStatus(
 						removeWithspace(req.body.SessionName),
 						soNumeros(req.body.phonefull).trim() + '@c.us'
 					);
 					//
 					if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
 						//
-						var sendImage = await Wppconnect.sendImage(
+						var sendImage = await Sessions.sendImage(
 							removeWithspace(req.body.SessionName),
 							checkNumberStatus.number,
 							filePath,
@@ -1034,7 +1034,7 @@ router.post("/sendImageMassa", sendImageMassa, verifyToken.verify, async (req, r
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -1043,13 +1043,13 @@ router.post("/sendImageMassa", sendImageMassa, verifyToken.verify, async (req, r
 				//
 				//
 				try {
-					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
+					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'Sessions-' + removeWithspace(req.body.SessionName) + '-'));
 					var filePathContato = path.join(folderName, req.files['phonefull'][0].originalname);
 					fs.writeFileSync(filePathContato, req.files['phonefull'][0].buffer.toString('base64'), 'base64');
 					console.log("- File:", filePathContato);
 					//
 					//
-					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
+					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'Sessions-' + removeWithspace(req.body.SessionName) + '-'));
 					var filePathImagem = path.join(folderName, req.files['fileimg'][0].originalname);
 					fs.writeFileSync(filePathImagem, req.files['fileimg'][0].buffer.toString('base64'), 'base64');
 					console.log("- File:", filePathImagem);
@@ -1063,14 +1063,14 @@ router.post("/sendImageMassa", sendImageMassa, verifyToken.verify, async (req, r
 						//
 						if (numero.length !== 0) {
 							//
-							var checkNumberStatus = await Wppconnect.checkNumberStatus(
+							var checkNumberStatus = await Sessions.checkNumberStatus(
 								removeWithspace(req.body.SessionName),
 								soNumeros(numero) + '@c.us'
 							);
 							//
 							if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
 								//
-								var sendImageMassaRes = await Wppconnect.sendImage(
+								var sendImageMassaRes = await Sessions.sendImage(
 									removeWithspace(req.body.SessionName),
 									checkNumberStatus.number,
 									filePathImagem,
@@ -1143,7 +1143,7 @@ router.post("/sendMultImage", upload.array('file', 50), verifyToken.verify, asyn
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -1155,7 +1155,7 @@ router.post("/sendMultImage", upload.array('file', 50), verifyToken.verify, asyn
 				//
 				var sendMultImage = [];
 				//
-				var checkNumberStatus = await Wppconnect.checkNumberStatus(
+				var checkNumberStatus = await Sessions.checkNumberStatus(
 					removeWithspace(req.body.SessionName),
 					soNumeros(req.body.phonefull).trim() + '@c.us'
 				);
@@ -1165,12 +1165,12 @@ router.post("/sendMultImage", upload.array('file', 50), verifyToken.verify, asyn
 					await forEach(resultsFiles, async (resultfile) => {
 						//
 						try {
-							var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
+							var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'Sessions-' + removeWithspace(req.body.SessionName) + '-'));
 							var filePathImagem = path.join(folderName, resultfile.originalname);
 							fs.writeFileSync(filePathImagem, resultfile.buffer.toString('base64'), 'base64');
 							console.log("- File:", filePathImagem);
 							//
-							var sendMultImageRes = await Wppconnect.sendImage(
+							var sendMultImageRes = await Sessions.sendImage(
 								removeWithspace(req.body.SessionName),
 								checkNumberStatus.number,
 								filePathImagem,
@@ -1249,7 +1249,7 @@ router.post("/sendMultImageMassa", sendMultImageMassa, verifyToken.verify, async
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -1260,7 +1260,7 @@ router.post("/sendMultImageMassa", sendMultImageMassa, verifyToken.verify, async
 				var resultsFilesImg = req.files.file;
 				//
 				try {
-					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
+					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'Sessions-' + removeWithspace(req.body.SessionName) + '-'));
 					var filePathContato = path.join(folderName, req.files['phonefull'][0].originalname);
 					fs.writeFileSync(filePathContato, req.files['phonefull'][0].buffer.toString('base64'), 'base64');
 					console.log("- File Contato:", filePathContato);
@@ -1274,7 +1274,7 @@ router.post("/sendMultImageMassa", sendMultImageMassa, verifyToken.verify, async
 						//
 						if (numero.length !== 0) {
 							//
-							var checkNumberStatus = await Wppconnect.checkNumberStatus(
+							var checkNumberStatus = await Sessions.checkNumberStatus(
 								removeWithspace(req.body.SessionName),
 								soNumeros(numero) + '@c.us'
 							);
@@ -1284,12 +1284,12 @@ router.post("/sendMultImageMassa", sendMultImageMassa, verifyToken.verify, async
 								await forEach(resultsFilesImg, async (resultfile) => {
 									//
 									try {
-										var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
+										var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'Sessions-' + removeWithspace(req.body.SessionName) + '-'));
 										var filePathImagem = path.join(folderName, resultfile.originalname);
 										fs.writeFileSync(filePathImagem, resultfile.buffer.toString('base64'), 'base64');
 										console.log("- File Imagem:", filePathImagem);
 										//
-										var sendMultImageMassaRes = await Wppconnect.sendImage(
+										var sendMultImageMassaRes = await Sessions.sendImage(
 											removeWithspace(req.body.SessionName),
 											checkNumberStatus.number,
 											filePathImagem,
@@ -1384,7 +1384,7 @@ router.post("/sendFile", upload.single('file'), verifyToken.verify, async (req, 
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -1392,19 +1392,19 @@ router.post("/sendFile", upload.single('file'), verifyToken.verify, async (req, 
 			case 'chatsAvailable':
 				//
 				try {
-					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
+					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'Sessions-' + removeWithspace(req.body.SessionName) + '-'));
 					var filePath = path.join(folderName, req.file.originalname);
 					fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
 					console.log("- File", filePath);
 					//
-					var checkNumberStatus = await Wppconnect.checkNumberStatus(
+					var checkNumberStatus = await Sessions.checkNumberStatus(
 						removeWithspace(req.body.SessionName),
 						soNumeros(req.body.phonefull).trim() + '@c.us'
 					);
 					//
 					if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
 						//
-						var sendFile = await Wppconnect.sendFile(
+						var sendFile = await Sessions.sendFile(
 							removeWithspace(req.body.SessionName),
 							checkNumberStatus.number,
 							filePath,
@@ -1468,7 +1468,7 @@ router.post("/sendFileBase64", upload.none(''), verifyToken.verify, async (req, 
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -1476,19 +1476,19 @@ router.post("/sendFileBase64", upload.none(''), verifyToken.verify, async (req, 
 			case 'chatsAvailable':
 				//
 				try {
-					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
+					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'Sessions-' + removeWithspace(req.body.SessionName) + '-'));
 					var filePath = path.join(folderName, req.body.originalname);
 					fs.writeFileSync(filePath, req.body.base64, 'base64');
 					console.log("- File", filePath);
 					//
-					var checkNumberStatus = await Wppconnect.checkNumberStatus(
+					var checkNumberStatus = await Sessions.checkNumberStatus(
 						removeWithspace(req.body.SessionName),
 						soNumeros(req.body.phonefull).trim() + '@c.us'
 					);
 					//
 					if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
 						//
-						var sendFileBase64 = await Wppconnect.sendFile(
+						var sendFileBase64 = await Sessions.sendFile(
 							removeWithspace(req.body.SessionName),
 							checkNumberStatus.number,
 							filePath,
@@ -1551,21 +1551,21 @@ router.post("/sendFileToBase64", upload.single('file'), verifyToken.verify, asyn
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var checkNumberStatus = await Wppconnect.checkNumberStatus(
+				var checkNumberStatus = await Sessions.checkNumberStatus(
 					removeWithspace(req.body.SessionName),
 					soNumeros(req.body.phonefull).trim() + '@c.us'
 				);
 				//
 				if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
 					//
-					var sendFileFromBase64 = await Wppconnect.sendFileFromBase64(
+					var sendFileFromBase64 = await Sessions.sendFileFromBase64(
 						removeWithspace(req.body.SessionName),
 						checkNumberStatus.number,
 						req.file.buffer.toString('base64'),
@@ -1613,21 +1613,21 @@ router.post("/sendFileFromBase64", upload.none(''), verifyToken.verify, async (r
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var checkNumberStatus = await Wppconnect.checkNumberStatus(
+				var checkNumberStatus = await Sessions.checkNumberStatus(
 					removeWithspace(req.body.SessionName),
 					soNumeros(req.body.phonefull).trim() + '@c.us'
 				);
 				//
 				if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
 					//
-					var sendFileFromBase64 = await Wppconnect.sendFileFromBase64(
+					var sendFileFromBase64 = await Sessions.sendFileFromBase64(
 						removeWithspace(req.body.SessionName),
 						checkNumberStatus.number,
 						req.body.base64,
@@ -1681,14 +1681,14 @@ router.post("/getAllContacts", upload.none(''), verifyToken.verify, async (req, 
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var getAllContacts = await Wppconnect.getAllContacts(
+				var getAllContacts = await Sessions.getAllContacts(
 					req.body.SessionName
 				);
 				//
@@ -1725,14 +1725,14 @@ router.post("/getAllGroups", upload.none(''), verifyToken.verify, async (req, re
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var getAllGroups = await Wppconnect.getAllGroups(
+				var getAllGroups = await Sessions.getAllGroups(
 					req.body.SessionName
 				);
 				//
@@ -1769,14 +1769,14 @@ router.post("/getSessionTokenBrowser", upload.none(''), verifyToken.verify, asyn
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var getSessionTokenBrowser = await Wppconnect.getSessionTokenBrowser(
+				var getSessionTokenBrowser = await Sessions.getSessionTokenBrowser(
 					req.body.SessionName
 				);
 				res.setHeader('Content-Type', 'application/json');
@@ -1813,14 +1813,14 @@ router.post("/getBlockList", upload.none(''), verifyToken.verify, async (req, re
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var getBlockList = await Wppconnect.getBlockList(
+				var getBlockList = await Sessions.getBlockList(
 					req.body.SessionName
 				);
 				res.setHeader('Content-Type', 'application/json');
@@ -1857,21 +1857,21 @@ router.post("/getStatus", upload.none(''), verifyToken.verify, async (req, res, 
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var checkNumberStatus = await Wppconnect.checkNumberStatus(
+				var checkNumberStatus = await Sessions.checkNumberStatus(
 					removeWithspace(req.body.SessionName),
 					soNumeros(req.body.phonefull).trim() + '@c.us'
 				);
 				//
 				if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
 					//
-					var getStatus = await Wppconnect.getStatus(
+					var getStatus = await Sessions.getStatus(
 						removeWithspace(req.body.SessionName),
 						soNumeros(req.body.phonefull).trim() + '@c.us'
 					);
@@ -1915,21 +1915,21 @@ router.post("/getNumberProfile", upload.none(''), verifyToken.verify, async (req
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var checkNumberStatus = await Wppconnect.checkNumberStatus(
+				var checkNumberStatus = await Sessions.checkNumberStatus(
 					removeWithspace(req.body.SessionName),
 					soNumeros(req.body.phonefull).trim() + '@c.us'
 				);
 				//
 				if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
 					//
-					var getNumberProfile = await Wppconnect.getNumberProfile(
+					var getNumberProfile = await Sessions.getNumberProfile(
 						removeWithspace(req.body.SessionName),
 						soNumeros(req.body.phonefull).trim() + '@c.us'
 					);
@@ -1973,21 +1973,21 @@ router.post("/getProfilePicFromServer", upload.none(''), verifyToken.verify, asy
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var checkNumberStatus = await Wppconnect.checkNumberStatus(
+				var checkNumberStatus = await Sessions.checkNumberStatus(
 					removeWithspace(req.body.SessionName),
 					soNumeros(req.body.phonefull).trim() + '@c.us'
 				);
 				//
 				if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
 					//
-					var getProfilePicFromServer = await Wppconnect.getProfilePicFromServer(
+					var getProfilePicFromServer = await Sessions.getProfilePicFromServer(
 						removeWithspace(req.body.SessionName),
 						soNumeros(req.body.phonefull).trim() + '@c.us'
 					);
@@ -2031,14 +2031,14 @@ router.post("/checkNumberStatus", upload.none(''), verifyToken.verify, async (re
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var checkNumberStatus = await Wppconnect.checkNumberStatus(
+				var checkNumberStatus = await Sessions.checkNumberStatus(
 					removeWithspace(req.body.SessionName),
 					soNumeros(req.body.phonefull).trim() + '@c.us'
 				);
@@ -2078,14 +2078,14 @@ router.post("/checkNumberStatusMassa", upload.single('file'), verifyToken.verify
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
+				var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'Sessions-' + removeWithspace(req.body.SessionName) + '-'));
 				var filePath = path.join(folderName, req.file.originalname);
 				fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
 				console.log("- File:", filePath);
@@ -2099,7 +2099,7 @@ router.post("/checkNumberStatusMassa", upload.single('file'), verifyToken.verify
 					//
 					if (numero.length !== 0) {
 						//
-						var checkNumberStatus = await Wppconnect.checkNumberStatus(
+						var checkNumberStatus = await Sessions.checkNumberStatus(
 							removeWithspace(req.body.SessionName),
 							soNumeros(numero) + '@c.us'
 						);
@@ -2158,14 +2158,14 @@ router.post("/sendTextGrupo", upload.none(''), verifyToken.verify, async (req, r
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var sendTextGrupo = await Wppconnect.sendText(
+				var sendTextGrupo = await Sessions.sendText(
 					removeWithspace(req.body.SessionName),
 					req.body.groupId.trim() + '@g.us',
 					req.body.msg
@@ -2206,14 +2206,14 @@ router.post("/sendLocationGroup", upload.none(''), verifyToken.verify, async (re
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var sendLocationGroup = await Wppconnect.sendLocation(
+				var sendLocationGroup = await Sessions.sendLocation(
 					removeWithspace(req.body.SessionName),
 					req.body.groupId.trim() + '@g.us',
 					req.body.lat,
@@ -2256,7 +2256,7 @@ router.post("/sendImageGroup", upload.single('file'), verifyToken.verify, async 
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -2264,12 +2264,12 @@ router.post("/sendImageGroup", upload.single('file'), verifyToken.verify, async 
 			case 'chatsAvailable':
 				//
 				try {
-					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
+					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'Sessions-' + removeWithspace(req.body.SessionName) + '-'));
 					var filePath = path.join(folderName, req.file.originalname);
 					fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
 					console.log("- File", filePath);
 					//
-					var sendImageGroup = await Wppconnect.sendImage(
+					var sendImageGroup = await Sessions.sendImage(
 						removeWithspace(req.body.SessionName),
 						req.body.groupId.trim() + '@g.us',
 						filePath,
@@ -2329,7 +2329,7 @@ router.post("/sendFileGroup", upload.single('file'), verifyToken.verify, async (
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -2337,12 +2337,12 @@ router.post("/sendFileGroup", upload.single('file'), verifyToken.verify, async (
 			case 'chatsAvailable':
 				//
 				try {
-					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
+					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'Sessions-' + removeWithspace(req.body.SessionName) + '-'));
 					var filePath = path.join(folderName, req.file.originalname);
 					fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
 					console.log("- File", filePath);
 					//
-					var sendFileGroup = await Wppconnect.sendFile(
+					var sendFileGroup = await Sessions.sendFile(
 						removeWithspace(req.body.SessionName),
 						req.body.groupId.trim() + '@g.us',
 						filePath,
@@ -2401,7 +2401,7 @@ router.post("/sendFileBase64Group", upload.none(''), verifyToken.verify, async (
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -2409,12 +2409,12 @@ router.post("/sendFileBase64Group", upload.none(''), verifyToken.verify, async (
 			case 'chatsAvailable':
 				//
 				try {
-					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
+					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'Sessions-' + removeWithspace(req.body.SessionName) + '-'));
 					var filePath = path.join(folderName, req.body.originalname);
 					fs.writeFileSync(filePath, req.body.base64, 'base64');
 					console.log("- File", filePath);
 					//
-					var sendFileBase64 = await Wppconnect.sendFile(
+					var sendFileBase64 = await Sessions.sendFile(
 						removeWithspace(req.body.SessionName),
 						req.body.groupId + '@g.us',
 						filePath,
@@ -2473,14 +2473,14 @@ router.post("/sendFileToBase64Group", upload.single('file'), verifyToken.verify,
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var sendFileToBase64 = await Wppconnect.sendFileFromBase64(
+				var sendFileToBase64 = await Sessions.sendFileFromBase64(
 					removeWithspace(req.body.SessionName),
 					req.body.groupId.trim() + '@g.us',
 					req.file.buffer.toString('base64'),
@@ -2524,14 +2524,14 @@ router.post("/sendFileFromBase64Group", upload.none(''), verifyToken.verify, asy
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var sendFileFromBase64 = await Wppconnect.sendFileFromBase64(
+				var sendFileFromBase64 = await Sessions.sendFileFromBase64(
 					removeWithspace(req.body.SessionName),
 					req.body.groupId.trim() + '@g.us',
 					req.body.base64,
@@ -2575,14 +2575,14 @@ router.post("/leaveGroup", upload.none(''), verifyToken.verify, async (req, res,
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var leaveGroup = await Wppconnect.leaveGroup(
+				var leaveGroup = await Sessions.leaveGroup(
 					removeWithspace(req.body.SessionName),
 					req.body.groupId + '@g.us'
 				);
@@ -2635,7 +2635,7 @@ router.post("/createGroup", upload.single('file'), verifyToken.verify, async (re
 			//
 		}
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -2643,7 +2643,7 @@ router.post("/createGroup", upload.single('file'), verifyToken.verify, async (re
 			case 'chatsAvailable':
 				//
 				try {
-					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
+					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'Sessions-' + removeWithspace(req.body.SessionName) + '-'));
 					var filePath = path.join(folderName, req.file.originalname);
 					fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
 					console.log("- File:", filePath);
@@ -2659,7 +2659,7 @@ router.post("/createGroup", upload.single('file'), verifyToken.verify, async (re
 						//
 						if (numero.length !== 0) {
 							//
-							var checkNumberStatus = await Wppconnect.checkNumberStatus(
+							var checkNumberStatus = await Sessions.checkNumberStatus(
 								removeWithspace(req.body.SessionName),
 								soNumeros(numero) + '@c.us'
 							);
@@ -2676,7 +2676,7 @@ router.post("/createGroup", upload.single('file'), verifyToken.verify, async (re
 						await sleep(1000);
 					}
 					//
-					var createGroup = await Wppconnect.createGroup(
+					var createGroup = await Sessions.createGroup(
 						removeWithspace(req.body.SessionName),
 						req.body.title,
 						contactlistValid,
@@ -2733,14 +2733,14 @@ router.post("/getGroupMembers", upload.none(''), verifyToken.verify, async (req,
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var getGroupMembers = await Wppconnect.getGroupMembers(
+				var getGroupMembers = await Sessions.getGroupMembers(
 					removeWithspace(req.body.SessionName),
 					req.body.groupId + '@g.us'
 				);
@@ -2778,14 +2778,14 @@ router.post("/getGroupMembersIds", upload.none(''), verifyToken.verify, async (r
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var getGroupMembersIds = await Wppconnect.getGroupMembersIds(
+				var getGroupMembersIds = await Sessions.getGroupMembersIds(
 					removeWithspace(req.body.SessionName),
 					req.body.groupId + '@g.us'
 				);
@@ -2823,14 +2823,14 @@ router.post("/getGroupInviteLink", upload.none(''), verifyToken.verify, async (r
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var GroupInviteLink = await Wppconnect.getGroupInviteLink(
+				var GroupInviteLink = await Sessions.getGroupInviteLink(
 					removeWithspace(req.body.SessionName),
 					req.body.groupId + '@g.us'
 				);
@@ -2883,7 +2883,7 @@ router.post("/createGroupSetAdminMembers", upload.single('file'), verifyToken.ve
 			//
 		}
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -2893,7 +2893,7 @@ router.post("/createGroupSetAdminMembers", upload.single('file'), verifyToken.ve
 				var createGroupSetAdminMembers = [];
 				//
 				try {
-					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
+					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'Sessions-' + removeWithspace(req.body.SessionName) + '-'));
 					var filePath = path.join(folderName, req.file.originalname);
 					fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
 					console.log("- File:", filePath);
@@ -2909,7 +2909,7 @@ router.post("/createGroupSetAdminMembers", upload.single('file'), verifyToken.ve
 						//
 						if (numero.length !== 0) {
 							//
-							var checkNumberStatus = await Wppconnect.checkNumberStatus(
+							var checkNumberStatus = await Sessions.checkNumberStatus(
 								removeWithspace(req.body.SessionName),
 								soNumeros(numero) + '@c.us'
 							);
@@ -2926,7 +2926,7 @@ router.post("/createGroupSetAdminMembers", upload.single('file'), verifyToken.ve
 						await sleep(1000);
 					}
 					//
-					var createGroup = await Wppconnect.createGroup(
+					var createGroup = await Sessions.createGroup(
 						removeWithspace(req.body.SessionName),
 						req.body.title,
 						contactlistValid,
@@ -2941,7 +2941,7 @@ router.post("/createGroupSetAdminMembers", upload.single('file'), verifyToken.ve
 						//
 						await forEach(contactlistValid, async (resultfile) => {
 							//
-							var promoteParticipant = await Wppconnect.promoteParticipant(
+							var promoteParticipant = await Sessions.promoteParticipant(
 								removeWithspace(req.body.SessionName),
 								createGroup.gid + '@g.us',
 								resultfile
@@ -3021,7 +3021,7 @@ router.post("/createCountGroupSetAdminMembers", upload.single('file'), verifyTok
 			//
 		}
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -3032,7 +3032,7 @@ router.post("/createCountGroupSetAdminMembers", upload.single('file'), verifyTok
 				var createGroup = [];
 				//
 				try {
-					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
+					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'Sessions-' + removeWithspace(req.body.SessionName) + '-'));
 					var filePath = path.join(folderName, req.file.originalname);
 					fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
 					console.log("- File:", filePath);
@@ -3048,7 +3048,7 @@ router.post("/createCountGroupSetAdminMembers", upload.single('file'), verifyTok
 						//
 						if (numero.length !== 0) {
 							//
-							var checkNumberStatus = await Wppconnect.checkNumberStatus(
+							var checkNumberStatus = await Sessions.checkNumberStatus(
 								removeWithspace(req.body.SessionName),
 								soNumeros(numero) + '@c.us'
 							);
@@ -3066,7 +3066,7 @@ router.post("/createCountGroupSetAdminMembers", upload.single('file'), verifyTok
 					}
 					//
 					for (count = 1; count <= req.body.count; count++) {
-						var resCreateGroup = await Wppconnect.createGroup(
+						var resCreateGroup = await Sessions.createGroup(
 							removeWithspace(req.body.SessionName),
 							req.body.title + "-" + count,
 							contactlistValid,
@@ -3081,7 +3081,7 @@ router.post("/createCountGroupSetAdminMembers", upload.single('file'), verifyTok
 							//
 							await forEach(contactlistValid, async (resultfile) => {
 								//
-								var promoteParticipant = await Wppconnect.promoteParticipant(
+								var promoteParticipant = await Sessions.promoteParticipant(
 									removeWithspace(req.body.SessionName),
 									resCreateGroup.gid + '@g.us',
 									resultfile
@@ -3152,21 +3152,21 @@ router.post("/removeParticipant", upload.none(''), verifyToken.verify, async (re
 	} else {
 		//
 		// Remove participante
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var checkNumberStatus = await Wppconnect.checkNumberStatus(
+				var checkNumberStatus = await Sessions.checkNumberStatus(
 					removeWithspace(req.body.SessionName),
 					soNumeros(req.body.phonefull).trim() + '@c.us'
 				);
 				//
 				if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
 					//
-					var removeParticipant = await Wppconnect.removeParticipant(
+					var removeParticipant = await Sessions.removeParticipant(
 						removeWithspace(req.body.SessionName),
 						req.body.groupId.trim() + '@g.us',
 						checkNumberStatus.number + '@c.us'
@@ -3210,21 +3210,21 @@ router.post("/addParticipant", upload.none(''), verifyToken.verify, async (req, 
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var checkNumberStatus = await Wppconnect.checkNumberStatus(
+				var checkNumberStatus = await Sessions.checkNumberStatus(
 					removeWithspace(req.body.SessionName),
 					soNumeros(req.body.phonefull).trim() + '@c.us'
 				);
 				//
 				if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
 					//
-					var addParticipant = await Wppconnect.addParticipant(
+					var addParticipant = await Sessions.addParticipant(
 						removeWithspace(req.body.SessionName),
 						req.body.groupId.trim() + '@g.us',
 						checkNumberStatus.number + '@c.us'
@@ -3268,21 +3268,21 @@ router.post("/promoteParticipant", upload.none(''), verifyToken.verify, async (r
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var checkNumberStatus = await Wppconnect.checkNumberStatus(
+				var checkNumberStatus = await Sessions.checkNumberStatus(
 					removeWithspace(req.body.SessionName),
 					soNumeros(req.body.phonefull).trim() + '@c.us'
 				);
 				//
 				if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
 					//
-					var promoteParticipant = await Wppconnect.promoteParticipant(
+					var promoteParticipant = await Sessions.promoteParticipant(
 						removeWithspace(req.body.SessionName),
 						req.body.groupId.trim() + '@g.us',
 						checkNumberStatus.number + '@c.us'
@@ -3326,21 +3326,21 @@ router.post("/demoteParticipant", upload.none(''), verifyToken.verify, async (re
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var checkNumberStatus = await Wppconnect.checkNumberStatus(
+				var checkNumberStatus = await Sessions.checkNumberStatus(
 					removeWithspace(req.body.SessionName),
 					soNumeros(req.body.phonefull).trim() + '@c.us'
 				);
 				//
 				if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
 					//
-					var demoteParticipant = await Wppconnect.demoteParticipant(
+					var demoteParticipant = await Sessions.demoteParticipant(
 						removeWithspace(req.body.SessionName),
 						req.body.groupId.trim() + '@g.us',
 						soNumeros(req.body.phonefull).trim() + '@c.us'
@@ -3383,7 +3383,7 @@ router.post("/getGroupInfoFromInviteLink", upload.none(''), verifyToken.verify, 
 		});
 		//
 	} else {
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -3407,7 +3407,7 @@ router.post("/getGroupInfoFromInviteLink", upload.none(''), verifyToken.verify, 
 				}
 				//
 
-				var getGroupInfoFromInviteLink = await Wppconnect.getGroupInfoFromInviteLink(
+				var getGroupInfoFromInviteLink = await Sessions.getGroupInfoFromInviteLink(
 					removeWithspace(req.body.SessionName),
 					req.body.InviteCode
 				);
@@ -3444,7 +3444,7 @@ router.post("/joinGroup", upload.none(''), verifyToken.verify, async (req, res, 
 		});
 		//
 	} else {
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -3468,7 +3468,7 @@ router.post("/joinGroup", upload.none(''), verifyToken.verify, async (req, res, 
 				}
 				//
 
-				var joinGroup = await Wppconnect.joinGroup(
+				var joinGroup = await Sessions.joinGroup(
 					removeWithspace(req.body.SessionName),
 					req.body.InviteCode
 				);
@@ -3512,14 +3512,14 @@ router.post("/setProfileStatus", upload.none(''), verifyToken.verify, async (req
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var setProfileStatus = await Wppconnect.setProfileStatus(
+				var setProfileStatus = await Sessions.setProfileStatus(
 					removeWithspace(req.body.SessionName),
 					req.body.ProfileStatus
 				);
@@ -3557,14 +3557,14 @@ router.post("/setProfileName", upload.none(''), verifyToken.verify, async (req, 
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var setProfileName = await Wppconnect.setProfileName(
+				var setProfileName = await Sessions.setProfileName(
 					removeWithspace(req.body.SessionName),
 					req.body.ProfileName
 				);
@@ -3601,7 +3601,7 @@ router.post("/setProfilePic", upload.single('file'), verifyToken.verify, async (
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -3609,12 +3609,12 @@ router.post("/setProfilePic", upload.single('file'), verifyToken.verify, async (
 			case 'chatsAvailable':
 				//
 				//
-				var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'wppconnect-' + removeWithspace(req.body.SessionName) + '-'));
+				var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'Sessions-' + removeWithspace(req.body.SessionName) + '-'));
 				var filePath = path.join(folderName, req.file.originalname);
 				fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
 				console.log("- File", filePath);
 				//
-				var setProfilePic = await Wppconnect.setProfilePic(
+				var setProfilePic = await Sessions.setProfilePic(
 					removeWithspace(req.body.SessionName),
 					filePath
 				);
@@ -3659,14 +3659,14 @@ router.post("/killServiceWorker", upload.none(''), verifyToken.verify, async (re
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var killServiceWorker = await Wppconnect.killServiceWorker(removeWithspace(req.body.SessionName));
+				var killServiceWorker = await Sessions.killServiceWorker(removeWithspace(req.body.SessionName));
 				res.setHeader('Content-Type', 'application/json');
 				res.status(200).json({
 					"Status": killServiceWorker
@@ -3702,14 +3702,14 @@ router.post("/restartService", upload.none(''), verifyToken.verify, async (req, 
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var restartService = await Wppconnect.restartService(removeWithspace(req.body.SessionName));
+				var restartService = await Sessions.restartService(removeWithspace(req.body.SessionName));
 				res.setHeader('Content-Type', 'application/json');
 				res.status(200).json({
 					"Status": restartService
@@ -3745,7 +3745,7 @@ router.post("/reloadService", upload.none(''), verifyToken.verify, async (req, r
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -3759,11 +3759,11 @@ router.post("/reloadService", upload.none(''), verifyToken.verify, async (req, r
 			case 'DISCONNECTED':
 				//
 				try {
-					var killServiceWorker = await Wppconnect.killServiceWorker(removeWithspace(req.body.SessionName));
+					var killServiceWorker = await Sessions.killServiceWorker(removeWithspace(req.body.SessionName));
 					//
 					if (killServiceWorker.erro === false && killServiceWorker.status === 200) {
 						//
-						var restartService = await Wppconnect.restartService(removeWithspace(req.body.SessionName));
+						var restartService = await Sessions.restartService(removeWithspace(req.body.SessionName));
 						//
 						if (restartService.erro === false && restartService.status === 200) {
 							//
@@ -3842,14 +3842,14 @@ router.post("/getHostDevice", upload.none(''), verifyToken.verify, async (req, r
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var getHostDevice = await Wppconnect.getHostDevice(removeWithspace(req.body.SessionName));
+				var getHostDevice = await Sessions.getHostDevice(removeWithspace(req.body.SessionName));
 				//
 				//console.log(result);
 				res.setHeader('Content-Type', 'application/json');
@@ -3886,14 +3886,14 @@ router.post("/isMultiDevice", upload.none(''), verifyToken.verify, async (req, r
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var isMultiDevice = await Wppconnect.isMultiDevice(removeWithspace(req.body.SessionName));
+				var isMultiDevice = await Sessions.isMultiDevice(removeWithspace(req.body.SessionName));
 				//
 				//console.log(result);
 				res.setHeader('Content-Type', 'application/json');
@@ -3930,14 +3930,14 @@ router.post("/getConnectionState", upload.none(''), verifyToken.verify, async (r
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var getConnectionState = await Wppconnect.getConnectionState(removeWithspace(req.body.SessionName));
+				var getConnectionState = await Sessions.getConnectionState(removeWithspace(req.body.SessionName));
 				res.setHeader('Content-Type', 'application/json');
 				res.status(200).json({
 					"Status": getConnectionState
@@ -3972,14 +3972,14 @@ router.post("/getBatteryLevel", upload.none(''), verifyToken.verify, async (req,
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var getBatteryLevel = await Wppconnect.getBatteryLevel(removeWithspace(req.body.SessionName));
+				var getBatteryLevel = await Sessions.getBatteryLevel(removeWithspace(req.body.SessionName));
 				//
 				res.setHeader('Content-Type', 'application/json');
 				res.status(200).json({
@@ -3999,14 +3999,14 @@ router.post("/getBatteryLevel", upload.none(''), verifyToken.verify, async (req,
 //
 // Is Connected
 router.post("/isConnected", upload.none(''), verifyToken.verify, async (req, res, next) => {
-	var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 	switch (sessionStatus.status) {
 		case 'inChat':
 		case 'qrReadSuccess':
 		case 'isLogged':
 		case 'chatsAvailable':
 			//
-			var isConnected = await Wppconnect.isConnected(removeWithspace(req.body.SessionName));
+			var isConnected = await Sessions.isConnected(removeWithspace(req.body.SessionName));
 			res.setHeader('Content-Type', 'application/json');
 			res.status(200).json({
 				"Status": isConnected
@@ -4040,14 +4040,14 @@ router.post("/getWAVersion", upload.none(''), verifyToken.verify, async (req, re
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var getWAVersion = await Wppconnect.getWAVersion(removeWithspace(req.body.SessionName));
+				var getWAVersion = await Sessions.getWAVersion(removeWithspace(req.body.SessionName));
 				res.setHeader('Content-Type', 'application/json');
 				res.status(200).json({
 					"Status": getWAVersion
@@ -4082,14 +4082,14 @@ router.post("/getWAVersion", upload.none(''), verifyToken.verify, async (req, re
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var getWAVersion = await Wppconnect.getWAVersion(removeWithspace(req.body.SessionName));
+				var getWAVersion = await Sessions.getWAVersion(removeWithspace(req.body.SessionName));
 				res.setHeader('Content-Type', 'application/json');
 				res.status(200).json({
 					"Status": getWAVersion
@@ -4124,14 +4124,14 @@ router.post("/startPhoneWatchdog", upload.none(''), verifyToken.verify, async (r
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var startPhoneWatchdog = await Wppconnect.startPhoneWatchdog(
+				var startPhoneWatchdog = await Sessions.startPhoneWatchdog(
 					removeWithspace(req.body.SessionName),
 					req.body.interval
 				);
@@ -4169,14 +4169,14 @@ router.post("/stopPhoneWatchdog", upload.none(''), verifyToken.verify, async (re
 		//
 	} else {
 		//
-		var sessionStatus = await Wppconnect.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var stopPhoneWatchdog = await Wppconnect.stopPhoneWatchdog(removeWithspace(req.body.SessionName));
+				var stopPhoneWatchdog = await Sessions.stopPhoneWatchdog(removeWithspace(req.body.SessionName));
 				res.setHeader('Content-Type', 'application/json');
 				res.status(200).json({
 					"Status": stopPhoneWatchdog
