@@ -171,7 +171,7 @@ module.exports = class Wppconnect {
 					//console.log(urlCode);
 					//
 					if (attempts <= 2) {
-						await updateStateDb(session.state, session.status, session.AuthorizationToken);
+						await updateStateDb('QRCODE', 'qrRead', AuthorizationToken);
 					}
 					//
 					var qrCode = base64Qr.replace('data:image/png;base64,', '');

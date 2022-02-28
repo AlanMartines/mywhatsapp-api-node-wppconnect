@@ -13,6 +13,7 @@ const validUrl = require('valid-url');
 // https://stackoverflow.com/questions/60408575/how-to-validate-file-extension-with-multer-middleware
 const upload = multer({})
 const router = express.Router();
+const Wppconnect = require("../engines");
 const Sessions = require("../controllers/sessions");
 const verifyToken = require("../middleware/verifyToken");
 const verifyJson = require("../middleware/validateJson");
@@ -157,14 +158,14 @@ router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next
 				if (confToken) {
 					if (confToken.SessionName == data.SessionName && confToken.MultiDevice == data.MultiDevice && confToken.whatsappVersion == data.whatsappVersion) {
 						console.log("- Configuração mantida");
-						var getStart = await Sessions.Start(confToken.SessionName, confToken.SessionName, confToken.MultiDevice, confToken.whatsappVersion);
+						var getStart = await Wppconnect.Start(confToken.SessionName, confToken.SessionName, confToken.MultiDevice, confToken.whatsappVersion);
 					} else {
 						var getStart = await Sessions.Start(data.SessionName, data.SessionName, data.MultiDevice, data.whatsappVersion);
 						console.log("- Configuração atualizada");
 						await startAll.confToken(`${config.tokenPatch}`, `${data.SessionName}.auto.json`, data, false);
 					}
 				} else {
-					var getStart = await Sessions.Start(data.SessionName, data.SessionName, data.MultiDevice, data.whatsappVersion);
+					var getStart = await Wppconnect.Start(data.SessionName, data.SessionName, data.MultiDevice, data.whatsappVersion);
 					console.log("- Configuração criada");
 					await startAll.confToken(`${config.tokenPatch}`, `${data.SessionName}.auto.json`, data, false);
 				}
@@ -172,8 +173,7 @@ router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next
 				//var getStart = await Sessions.Start(removeWithspace(req.body.SessionName), removeWithspace(req.body.SessionName), req.body.MultiDevice, req.body.whatsappVersion);
 				var session = Sessions.getSession(removeWithspace(req.body.SessionName));
 				console.log("- AuthorizationToken:", removeWithspace(req.body.SessionName));
-				session.state = 'STARTING';
-				session.status = 'notLogged';
+				//
 				var Start = {
 					result: "info",
 					state: 'STARTING',
