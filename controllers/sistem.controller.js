@@ -216,7 +216,7 @@ router.post("/Status", upload.none(''), verifyToken.verify, async (req, res, nex
 		//
 	} else {
 		//
-		var Status = await Sessions.getSession(removeWithspace(req.body.SessionName));
+		var Status = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		res.setHeader('Content-Type', 'application/json');
 		res.status(200).json({
 			Status
