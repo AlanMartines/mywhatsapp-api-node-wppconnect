@@ -8,7 +8,7 @@ module.exports = class Sessions {
 		console.log("- Status");
 		var session = this.getSession(SessionName);
 		//
-		if (session) { //só adiciona se não existir
+		if (session) {
 			if (session.state == "CONNECTED") {
 				return {
 					result: "info",
