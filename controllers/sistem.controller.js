@@ -170,10 +170,9 @@ router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next
 					await startAll.confToken(`${config.tokenPatch}`, `${data.SessionName}.auto.json`, data, false);
 				}
 				//
-				//var getStart = await Sessions.Start(removeWithspace(req.body.SessionName), removeWithspace(req.body.SessionName), req.body.MultiDevice, req.body.whatsappVersion);
 				console.log("- AuthorizationToken:", removeWithspace(req.body.SessionName));
 				//
-				await Sessions.checkAddUser(SessionName);
+				await Sessions.checkAddUser(req.body.SessionName);
 				//
 				var Start = {
 					result: "info",
