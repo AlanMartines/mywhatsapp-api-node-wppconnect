@@ -151,7 +151,7 @@ module.exports = class Wppconnect {
 			const client = await wppconnect.create({
 				session: SessionName,
 				tokenStore: 'memory',
-				catchQR: async (base64Qr, asciiQR, attempts, urlCode) => {
+				catchQR: async (base64Qrimg, asciiQR, attempts, urlCode) => {
 					//
 					console.log("- Saudação:", await saudacao());
 					//
