@@ -382,7 +382,7 @@ module.exports = class Wppconnect {
 				message: "Sistema Off-line"
 			});
 			//
-			console.log("- Instância não criada:", error.message);
+			console.log("- Instância não criada:", error);
 		}
 	} //initSession
 	//
