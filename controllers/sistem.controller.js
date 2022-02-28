@@ -158,29 +158,22 @@ router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next
 				if (confToken) {
 					if (confToken.SessionName == data.SessionName && confToken.MultiDevice == data.MultiDevice && confToken.whatsappVersion == data.whatsappVersion) {
 						console.log("- Configuração mantida");
-						var getStart = await Wppconnect.Start(req.io, confToken.SessionName, confToken.SessionName, confToken.MultiDevice, confToken.whatsappVersion);
+						await Wppconnect.Start(req.io, confToken.SessionName, confToken.SessionName, confToken.MultiDevice, confToken.whatsappVersion);
 					} else {
-						var getStart = await Wppconnect.Start(req.io, data.SessionName, data.SessionName, data.MultiDevice, data.whatsappVersion);
+						await Wppconnect.Start(req.io, data.SessionName, data.SessionName, data.MultiDevice, data.whatsappVersion);
 						console.log("- Configuração atualizada");
 						await startAll.confToken(`${config.tokenPatch}`, `${data.SessionName}.auto.json`, data, false);
 					}
 				} else {
-					var getStart = await Wppconnect.Start(req.io, data.SessionName, data.SessionName, data.MultiDevice, data.whatsappVersion);
+					await Wppconnect.Start(req.io, data.SessionName, data.SessionName, data.MultiDevice, data.whatsappVersion);
 					console.log("- Configuração criada");
 					await startAll.confToken(`${config.tokenPatch}`, `${data.SessionName}.auto.json`, data, false);
 				}
 				//
 				//var getStart = await Sessions.Start(removeWithspace(req.body.SessionName), removeWithspace(req.body.SessionName), req.body.MultiDevice, req.body.whatsappVersion);
-				var session = Sessions.getSession(removeWithspace(req.body.SessionName));
+				var Start = Sessions.getSession(removeWithspace(req.body.SessionName));
 				console.log("- AuthorizationToken:", removeWithspace(req.body.SessionName));
-				//
-				var Start = {
-					result: "info",
-					state: 'STARTING',
-					status: 'notLogged',
-					message: 'Sistema iniciando e indisponivel para uso'
-				};
-				//
+
 				res.setHeader('Content-Type', 'application/json');
 				res.status(200).json({
 					"Status": Start

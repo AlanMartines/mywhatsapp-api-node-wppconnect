@@ -147,6 +147,15 @@ module.exports = class Wppconnect {
 			//
 		}
 		//
+		Sessions.addInfoSession(SessionName, {
+			result: "info",
+			state: "STARTING",
+			status: "notLogged",
+			message: 'Sistema iniciando e indisponivel para uso'
+		});
+		//
+		await updateStateDb('STARTING', 'notLogged', SessionName);
+		//
 		try {
 			const client = await wppconnect.create({
 				session: SessionName,
@@ -171,12 +180,13 @@ module.exports = class Wppconnect {
 					//console.log(urlCode);
 					//
 					if (attempts <= 2) {
-						await updateStateDb('QRCODE', 'qrRead', AuthorizationToken);
+						await updateStateDb('QRCODE', 'qrRead', SessionName);
 					}
 					//
 					webhooks.wh_qrcode(SessionName, base64Qrimg);
 					this.exportQR(socket, base64Qrimg, SessionName);
 					Sessions.addInfoSession(SessionName, {
+						result: "info",
 						state: "QRCODE",
 						status: "qrRead",
 						CodeasciiQR: asciiQR,
@@ -342,9 +352,22 @@ module.exports = class Wppconnect {
 			let tokens = await client.getSessionTokenBrowser();
 			let browser = []
 			//
+			Sessions.addInfoSession(SessionName, {
+				result: "success",
+				state: "CONNECTED",
+				status: 'isLogged',
+				CodeasciiQR: null,
+				CodeurlCode: null,
+				qrCode: null,
+				message: "Sistema On-line"
+			});
+			//
+			Sessions.addInfoSession(SessionName, {
+				client: client,
+				tokens: tokens
+			});
+			//
 			console.log("- Token WPPConnect:\n", JSON.stringify(tokens, null, 2));
-			session.state = "CONNECTED";
-			session.browserSessionToken = browserSessionToken;
 			//
 			return client, tokens;
 		} catch (error) {
