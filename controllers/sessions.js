@@ -1,6 +1,6 @@
 const urlExists = require("url-exists");
 //
-export default class Sessions {
+module.exports = class Sessions {
 
     static session = new Array()
     static checkPath(path) {
