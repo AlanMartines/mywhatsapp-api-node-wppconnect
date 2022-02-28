@@ -369,7 +369,7 @@ module.exports = class Wppconnect {
 			//
 			console.log("- Token WPPConnect:\n", JSON.stringify(tokens, null, 2));
 			//
-			return client, tokens;
+			return client;
 		} catch (error) {
 			//
 			Sessions.addInfoSession(SessionName, {
