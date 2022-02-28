@@ -127,7 +127,7 @@ async function deletaCache(filePath, userDataDir) {
 //
 // ------------------------------------------------------------------------------------------------------- //
 //
-export default class Wppconnect {
+module.exports = class Wppconnect {
 	//
 	static async ApiStatus(SessionName) {
 		console.log("- Status");
