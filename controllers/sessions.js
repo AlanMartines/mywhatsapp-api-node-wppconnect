@@ -6,7 +6,7 @@ module.exports = class Sessions {
 	//
 	static async ApiStatus(SessionName) {
 		console.log("- Status");
-		var session = Sessions.getSession(SessionName);
+		var session = this.getSession(SessionName);
 		//
 		if (session) { //só adiciona se não existir
 			if (session.state == "CONNECTED") {

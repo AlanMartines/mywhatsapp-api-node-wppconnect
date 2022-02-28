@@ -128,8 +128,8 @@ async function deletaCache(filePath, userDataDir) {
 // ------------------------------------------------------------------------------------------------------- //
 //
 module.exports = class Wppconnect {
-//
-	static async Start(SessionName, AuthorizationToken, MultiDevice, whatsappVersion) {
+	//
+	static async Start(socket, SessionName, AuthorizationToken, MultiDevice, whatsappVersion) {
 		//
 		/*
 			╔═╗┌─┐┌┬┐┬┌─┐┌┐┌┌─┐┬    ╔═╗┬─┐┌─┐┌─┐┌┬┐┌─┐  ╔═╗┌─┐┬─┐┌─┐┌┬┐┌─┐┌┬┐┌─┐┬─┐┌─┐
@@ -178,20 +178,21 @@ module.exports = class Wppconnect {
 					const imageBuffer = Buffer.from(qrCode, 'base64');
 					//
 					webhooks.wh_qrcode(SessionName, base64Qrimg);
-					this.exportQR(req, res, base64Qrimg, SessionName);
+					this.exportQR(socket, base64Qrimg, SessionName);
 					Sessions.addInfoSession(SessionName, {
 						state: "QRCODE",
 						status: "qrRead",
 						CodeasciiQR: asciiQR,
 						CodeurlCode: urlCode,
-						qrCode: base64Qrimg
+						qrCode: base64Qrimg,
+						message: "Sistema aguardando leitura do QR-Code"
 					});
 				},
-				statusFind: async (statusSession, session_wppconnect) => {
+				statusFind: async (statusSession, session) => {
 					console.log('- Status da sessão:', statusSession);
 					//return isLogged || notLogged || browserClose || qrReadSuccess || qrReadFail || autocloseCalled || desconnectedMobile || deleteToken
 					//Create session wss return "serverClose" case server for close
-					console.log('- Session name: ', session_wppconnect);
+					console.log('- Session name: ', session);
 					//
 					//
 					switch (statusSession) {
@@ -199,30 +200,36 @@ module.exports = class Wppconnect {
 						case 'qrReadSuccess':
 						case 'inChat':
 						case 'chatsAvailable':
-							session.result = "success";
-							session.state = "CONNECTED";
-							session.status = statusSession
-							session.qrcode = null;
-							session.CodeasciiQR = null;
-							session.CodeurlCode = null;
-							session.message = "Sistema iniciado e disponivel para uso";
 							//
-							await updateStateDb(session.state, session.status, session.AuthorizationToken);
+							Sessions.addInfoSession(SessionName, {
+								result: "success",
+								state: "CONNECTED",
+								status: statusSession,
+								CodeasciiQR: null,
+								CodeurlCode: null,
+								qrCode: null,
+								message: "Sistema iniciado e disponivel para uso"
+							});
+							//
+							await updateStateDb('CONNECTED', statusSession, SessionName);
 							//
 							break;
 						case 'autocloseCalled':
 						case 'browserClose':
 						case 'serverClose':
 						case 'autocloseCalled':
-							session.result = "info";
-							session.state = "CLOSED";
-							session.status = statusSession;
-							session.qrcode = null;
-							session.CodeasciiQR = null;
-							session.CodeurlCode = null;
-							session.message = "Sistema fechado";
 							//
-							await updateStateDb(session.state, session.status, session.AuthorizationToken);
+							Sessions.addInfoSession(session, {
+								result: "info",
+								state: "CLOSED",
+								status: statusSession,
+								CodeasciiQR: null,
+								CodeurlCode: null,
+								qrCode: null,
+								message: "Sistema fechado"
+							});
+							//
+							await updateStateDb('CLOSED', statusSession, SessionName);
 							//
 							break;
 						case 'qrReadFail':
@@ -230,25 +237,33 @@ module.exports = class Wppconnect {
 						case 'deviceNotConnected':
 						case 'desconnectedMobile':
 						case 'deleteToken':
-							//session.client = false;
-							session.result = "info";
-							session.state = "DISCONNECTED";
-							session.status = statusSession;
-							session.qrcode = null;
-							session.message = "Dispositivo desconetado";
 							//
-							await updateStateDb(session.state, session.status, session.AuthorizationToken);
+							Sessions.addInfoSession(SessionName, {
+								result: "info",
+								state: "DISCONNECTED",
+								status: statusSession,
+								CodeasciiQR: null,
+								CodeurlCode: null,
+								qrCode: null,
+								message: "Dispositivo desconetado"
+							});
+							//
+							await updateStateDb('DISCONNECTED', statusSession, SessionName);
 							//
 							break;
 						default:
-							//session.client = false;
-							session.result = "info";
-							session.state = "DISCONNECTED";
-							session.status = statusSession;
-							session.qrcode = null;
-							session.message = "Dispositivo desconetado";
 							//
-							await updateStateDb(session.state, session.status, session.AuthorizationToken);
+							Sessions.addInfoSession(SessionName, {
+								result: "error",
+								state: "NOTFOUND",
+								status: statusSession,
+								CodeasciiQR: null,
+								CodeurlCode: null,
+								qrCode: null,
+								message: "Sistema Off-line"
+							});
+							//
+							await updateStateDb('DISCONNECTED', statusSession, SessionName);
 						//
 					}
 				},
@@ -297,7 +312,6 @@ module.exports = class Wppconnect {
 					'--disable-dev-shm-usage',
 					'--disable-gl-drawing-for-tests',
 					'--incognito',
-					//'--user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.105 Safari/537.36',
 					//Outros
 					'--disable-web-security',
 					'--aggressive-cache-discard',
@@ -327,19 +341,27 @@ module.exports = class Wppconnect {
 			// Levels: 'error', 'warn', 'info', 'http', 'verbose', 'debug', 'silly'
 			// All logs: 'silly'
 			wppconnect.defaultLogger.level = 'silly';
+			let info = await client.getWid();
+			let tokens = await client.getSessionTokenBrowser();
+			let browser = []
 			//
-			var browserSessionToken = await client.getSessionTokenBrowser();
-			console.log("- Token WPPConnect:\n", JSON.stringify(browserSessionToken, null, 2));
+			console.log("- Token WPPConnect:\n", JSON.stringify(tokens, null, 2));
 			session.state = "CONNECTED";
 			session.browserSessionToken = browserSessionToken;
 			//
-			return client;
+			return client, tokens;
 		} catch (error) {
-			session.state = "NOTFOUND";
-			session.status = "notLogged";
-			session.qrcode = null;
-			session.attempts = 0;
-			session.message = 'Sistema desconectado';
+			//
+			Sessions.addInfoSession(SessionName, {
+				result: "error",
+				state: "NOTFOUND",
+				status: 'notLogged',
+				CodeasciiQR: null,
+				CodeurlCode: null,
+				qrCode: null,
+				message: "Sistema Off-line"
+			});
+			//
 			console.log("- Instância não criada:", error.message);
 		}
 	} //initSession
@@ -351,6 +373,17 @@ module.exports = class Wppconnect {
 		║ ╦├┤  │  │ │││││ ┬  └─┐ │ ├─┤├┬┘ │ ├┤  ││
 		╚═╝└─┘ ┴  ┴ ┴┘└┘└─┘  └─┘ ┴ ┴ ┴┴└─ ┴ └─┘─┴┘
 	*/
+	//
+	static async exportQR(socket, qrCode, session) {
+		qrCode = qrCode.replace('data:image/png;base64,', '');
+		const imageBuffer = Buffer.from(qrCode, 'base64');
+		socket.emit('qrCode',
+			{
+				data: 'data:image/png;base64,' + imageBuffer.toString('base64'),
+				session: session
+			}
+		);
+	}
 	//
 	static async setup(SessionName) {
 		var session = Sessions.getSession(SessionName);

@@ -158,14 +158,14 @@ router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next
 				if (confToken) {
 					if (confToken.SessionName == data.SessionName && confToken.MultiDevice == data.MultiDevice && confToken.whatsappVersion == data.whatsappVersion) {
 						console.log("- Configuração mantida");
-						var getStart = await Wppconnect.Start(confToken.SessionName, confToken.SessionName, confToken.MultiDevice, confToken.whatsappVersion);
+						var getStart = await Wppconnect.Start(req.io, confToken.SessionName, confToken.SessionName, confToken.MultiDevice, confToken.whatsappVersion);
 					} else {
-						var getStart = await Wppconnect.Start(data.SessionName, data.SessionName, data.MultiDevice, data.whatsappVersion);
+						var getStart = await Wppconnect.Start(req.io, data.SessionName, data.SessionName, data.MultiDevice, data.whatsappVersion);
 						console.log("- Configuração atualizada");
 						await startAll.confToken(`${config.tokenPatch}`, `${data.SessionName}.auto.json`, data, false);
 					}
 				} else {
-					var getStart = await Wppconnect.Start(data.SessionName, data.SessionName, data.MultiDevice, data.whatsappVersion);
+					var getStart = await Wppconnect.Start(req.io, data.SessionName, data.SessionName, data.MultiDevice, data.whatsappVersion);
 					console.log("- Configuração criada");
 					await startAll.confToken(`${config.tokenPatch}`, `${data.SessionName}.auto.json`, data, false);
 				}
