@@ -57,10 +57,10 @@ export default class Webhooks {
                     .send(object)
                     .queue('connection')
                     .end(function () {
-                        console.log('webhooks connect status....')
+                        console.log('- Webhooks connect status....')
                     });
                 if (data.wh_connect == '') {
-                    console.log('Webhook no defined')
+                    console.log('- Webhook no defined')
                 }
             }
 

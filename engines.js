@@ -344,173 +344,6 @@ export default class Wppconnect {
 	// ------------------------------------------------------------------------------------------------------- //
 	//
 	static async Start(SessionName, AuthorizationToken, MultiDevice, whatsappVersion) {
-		Sessions.sessions = Sessions.sessions || []; //start array
-
-		var session = Sessions.getSession(SessionName);
-
-		if (session == false) {
-			//create new session
-			session = await Sessions.addSesssion(SessionName, AuthorizationToken, MultiDevice, whatsappVersion);
-		} else if (["CLOSED"].includes(session.state)) {
-			//restart session
-			console.log("- State: CLOSED");
-			session.state = "CLOSED";
-			session.status = "notLogged";
-			session.qrcode = null;
-			session.attempts = 0;
-			session.message = "Sistema iniciando e indisponivel para uso";
-			session.prossesid = null;
-			//
-			console.log('- Nome da sessão:', session.name);
-			console.log('- State do sistema:', session.state);
-			console.log('- Status da sessão:', session.status);
-			//
-			session.client = Sessions.initSession(SessionName, AuthorizationToken, MultiDevice, whatsappVersion);
-			Sessions.setup(SessionName);
-		} else if (["CONFLICT", "UNPAIRED", "UNLAUNCHED", "UNPAIRED_IDLE"].includes(session.state)) {
-			session.state = "CLOSED";
-			session.status = 'notLogged';
-			session.qrcode = null;
-			session.message = 'Sistema desconectado';
-			//
-			console.log('- Nome da sessão:', session.name);
-			console.log('- State do sistema:', session.state);
-			console.log('- Status da sessão:', session.status);
-			//
-			session.client.then(client => {
-				console.log("- Client UseHere");
-				client.useHere();
-			});
-			session.client = Sessions.initSession(SessionName, AuthorizationToken, MultiDevice, whatsappVersion);
-		} else if (["DISCONNECTED"].includes(session.state)) {
-			//restart session
-			session.state = "CLOSE";
-			session.status = "notLogged";
-			session.qrcode = null;
-			session.attempts = 0;
-			session.message = 'Sistema desconectado';
-			session.prossesid = null;
-			//
-			console.log('- Nome da sessão:', session.name);
-			console.log('- State do sistema:', session.state);
-			console.log('- Status da sessão:', session.status);
-			//
-			session.client = Sessions.initSession(SessionName, AuthorizationToken, MultiDevice, whatsappVersion);
-			Sessions.setup(SessionName);
-		} else if (["NOTFOUND"].includes(session.state)) {
-			//restart session
-			session.state = "CLOSE";
-			session.status = "notLogged";
-			session.qrcode = null;
-			session.attempts = 0;
-			session.message = 'Sistema desconectado';
-			session.prossesid = null;
-			//
-			console.log('- Nome da sessão:', session.name);
-			console.log('- State do sistema:', session.state);
-			console.log('- Status da sessão:', session.status);
-			//
-			session = await Sessions.addSesssion(SessionName, AuthorizationToken, MultiDevice, whatsappVersion);
-		} else {
-			console.log('- Nome da sessão:', session.name);
-			console.log('- State do sistema:', session.state);
-			console.log('- Status da sessão:', session.status);
-		}
-		//
-		await updateStateDb(session.state, session.status, AuthorizationToken);
-		//
-		return session;
-	} //start
-	//
-	// ------------------------------------------------------------------------------------------------------- //
-	//
-	static async addSesssion(SessionName, AuthorizationToken, MultiDevice, whatsappVersion) {
-		console.log("- Adicionando sessão");
-		var newSession = {
-			AuthorizationToken: AuthorizationToken,
-			MultiDevice: MultiDevice,
-			name: SessionName,
-			process: null,
-			qrcode: null,
-			client: false,
-			result: null,
-			tokenPatch: null,
-			state: 'STARTING',
-			status: 'notLogged',
-			message: 'Sistema iniciando e indisponivel para uso',
-			attempts: 0,
-			browserSessionToken: null
-		}
-		Sessions.sessions.push(newSession);
-		console.log("- Nova sessão: " + newSession.state);
-
-		//setup session
-		newSession.client = Sessions.initSession(SessionName, AuthorizationToken, MultiDevice, whatsappVersion);
-		Sessions.setup(SessionName);
-
-		return newSession;
-	} //addSession
-	//
-	// ------------------------------------------------------------------------------------------------//
-	//
-	static async deleteSession(SessionName) {
-		console.log("- Adicionando sessão");
-		var newSession = {
-			AuthorizationToken: AuthorizationToken,
-			MultiDevice: MultiDevice,
-			name: SessionName,
-			process: null,
-			qrcode: null,
-			client: false,
-			result: null,
-			tokenPatch: null,
-			state: 'STARTING',
-			status: 'notLogged',
-			message: 'Sistema iniciando e indisponivel para uso',
-			attempts: 0,
-			browserSessionToken: null
-		}
-		Sessions.sessions.push(newSession);
-		console.log("- Nova sessão: " + newSession.state);
-
-		//setup session
-		newSession.client = Sessions.initSession(SessionName, AuthorizationToken, MultiDevice, whatsappVersion);
-		Sessions.setup(SessionName);
-
-		return newSession;
-	} //addSession
-	//
-	// ------------------------------------------------------------------------------------------------//
-	//
-	static getSession(SessionName) {
-		var foundSession = false;
-		if (Sessions.sessions)
-			Sessions.sessions.forEach(session => {
-				if (SessionName == session.name) {
-					foundSession = session;
-				}
-			});
-		return foundSession;
-	} //getSession
-	//
-	// ------------------------------------------------------------------------------------------------//
-	//
-	static getSessions() {
-		if (Sessions.sessions) {
-			return Sessions.sessions;
-		} else {
-			return [];
-		}
-	} //getSessions
-	//
-	// ------------------------------------------------------------------------------------------------------- //
-	//
-	static async initSession(SessionName, AuthorizationToken, MultiDevice, whatsappVersion) {
-		console.log("- Iniciando sessão");
-		console.log("- Multi-Device:", MultiDevice);
-		var session = Sessions.getSession(SessionName);
-		session.browserSessionToken = null;
-		session.AuthorizationToken = AuthorizationToken;
 		//
 		/*
 			╔═╗┌─┐┌┬┐┬┌─┐┌┐┌┌─┐┬    ╔═╗┬─┐┌─┐┌─┐┌┬┐┌─┐  ╔═╗┌─┐┬─┐┌─┐┌┬┐┌─┐┌┬┐┌─┐┬─┐┌─┐
@@ -531,32 +364,25 @@ export default class Wppconnect {
 		try {
 			const client = await wppconnect.create({
 				session: SessionName,
+				tokenStore: 'memory',
 				catchQR: async (base64Qr, asciiQR, attempts, urlCode) => {
 					//
 					console.log("- Saudação:", await saudacao());
 					//
 					console.log('- Nome da sessão:', SessionName);
 					//
-					session.state = "QRCODE";
-					session.status = "qrRead";
-					session.message = 'Sistema iniciando e indisponivel para uso';
-					//
 					console.log('- Número de tentativas de ler o qr-code:', attempts);
-					session.attempts = attempts;
 					//
 					console.log("- Captura do QR-Code");
 					//console.log(base64Qrimg);
-					session.qrcode = base64Qr;
 					//
 					console.log("- Captura do asciiQR");
 					// Registrar o QR no terminal
 					//console.log(asciiQR);
-					session.CodeasciiQR = asciiQR;
 					//
 					console.log("- Captura do urlCode");
 					// Registrar o QR no terminal
 					//console.log(urlCode);
-					session.CodeurlCode = urlCode;
 					//
 					if (attempts <= 2) {
 						await updateStateDb(session.state, session.status, session.AuthorizationToken);
@@ -565,6 +391,15 @@ export default class Wppconnect {
 					var qrCode = base64Qr.replace('data:image/png;base64,', '');
 					const imageBuffer = Buffer.from(qrCode, 'base64');
 					//
+					webhooks.wh_qrcode(SessionName, base64Qrimg);
+					this.exportQR(req, res, base64Qrimg, SessionName);
+					Sessions.addInfoSession(SessionName, {
+						state: "QRCODE",
+						status: "qrRead",
+						CodeasciiQR: asciiQR,
+						CodeurlCode: urlCode,
+						qrCode: base64Qrimg
+					});
 				},
 				statusFind: async (statusSession, session_wppconnect) => {
 					console.log('- Status da sessão:', statusSession);
