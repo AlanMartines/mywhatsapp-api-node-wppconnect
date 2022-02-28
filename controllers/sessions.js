@@ -1,4 +1,5 @@
-import urlExists from "url-exists";
+const urlExists = require("url-exists");
+//
 export default class Sessions {
 
     static session = new Array()
