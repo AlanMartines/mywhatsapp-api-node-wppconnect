@@ -64,7 +64,7 @@
 				<div class="row justify-content-center align-items-center">
 
 					<div class="col-md-6 text-center mx-auto">
-						<img class="img-fluid" id="image" src="imagens/body/readqrcode.png" width="500px" alt="qr-code">
+						<img class="img-fluid" id="imageQrcode" name="imageQrcode" src="imagens/body/readqrcode.png" width="500px" alt="qr-code">
 					</div>
 
 					<div class="col-md-6 text-center mx-auto">
@@ -267,9 +267,10 @@
 		}
 		//
 		socket.on('qrCode', (qrCode) => {
-			let session = document.getElementById('session').value;
+			let session = $('#session').val();
 			if (session === qrCode.session) {
-				document.getElementById('image').src = qrCode.data;
+				        // Change src attribute of image
+								$('#imageQrcode').attr("src", qrCode.data);
 			}
 		});
 		//
