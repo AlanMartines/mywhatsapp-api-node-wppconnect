@@ -65,9 +65,9 @@
 					<div class="col-md-6 text-center mx-auto">
 						<img class="img-fluid" id="image" src="imagens/body/readqrcode.jpg" draggable="false" alt="qr-code">
 					</div>
-					
+
 					<div class="col-md-6 text-left mx-auto">
-							<form class="form-signin text-center" id="login-form" method="post" action="javascript:void(0)">
+						<form class="form-signin text-center" id="start-form" method="post" action="javascript:void(0)">
 							<div class="form-group">
 								<div class="textOnInput">
 									<label for="session">Session Name:</label>
@@ -75,10 +75,11 @@
 										placeholder="Nome para identificação da sessão">
 								</div>
 							</div>
-
-							<div class="form-group">
-								<button type="button" class="btn btn-primary" id="send-btn" name="send-btn">Iniciar</button>
+							<div class="col-md-6 text-left mx-auto">
+							<div class="form-group col-md-12">
+								<button type="submit" name="send_form" id="send_form" class="btn btn-primary"><i class="fas fa-paper-plane"></i>&#32;Inikciar</button>
 							</div>
+						</div>
 						</form>
 					</div>
 				</div>
@@ -136,7 +137,7 @@
 	<script type="text/javascript" src="socket/socket.io.js"></script>
 	<script type="text/javascript" src="page/js/custom.js"></script>
 	<script type="text/javascript" src="page/js/start.js"></script>
-	<script type="text/javascript" >
+	<script type="text/javascript">
 		//
 		let url;
 		let host = '<%=host %>';
@@ -144,6 +145,61 @@
 		let port = '<%=port %>';
 		url = host_ssl == '' ? `http://${host}:${port}` : `https://${host_ssl}`;
 		const socket = io(url + '/', { transports: ['websocket'] });
+		//
+		function initSession(data) {
+			$.ajax({
+				type: 'POST',
+				url: url + '/sistema/Start',
+				data: data,
+				dataType: 'json',
+				beforeSend: function () {
+					$("#send_form").html('<i class="fas fa-spinner fa-spin"></i> Logando ...');
+				},
+				success: function (response) {
+					console.log(response);
+					if (response.result === true) {
+						$("#send_form").html('Logar');
+						$("#login-alert").css('display', 'none');
+						window.location.href = "../home/";
+					} else {
+						$("#send_form").html('Logar');
+						console.log('Menssagem: ' + response.mensagem);
+						$("#mensagem").html('<center>' +
+							'<div class="panel-body padding-top-md" >' +
+							'<div id="login-alert" class="alert alert-' + response.alerta + ' col-sm-6">' +
+							response.iconem + '&#32;' + response.mensagem +
+							'</div>' +
+							'</div>' +
+							'</center>');
+						$("#login-alert").css('display', 'block');
+						window.scrollTo(0, 0);
+					}
+				},
+				error: function (XMLHttpRequest, textStatus, errorThrown) {
+					$("#send_form").html('Logar');
+					$("#mensagem").html('<center>' +
+						'<div class="panel-body padding-top-md" >' +
+						'<div id="login-alert" class="alert alert-danger col-sm-6">' +
+						'<i class="fas fa-times"></i>&#32;Error: ' + errorThrown + ', Status: ' + textStatus +
+						'</div>' +
+						'</div>' +
+						'</center>');
+					$("#login-alert").css('display', 'block');
+					window.scrollTo(0, 0);
+				}
+			}).fail(function (jqXHR, textStatus, error) {
+				$("#send_form").html('Logar');
+				$("#mensagem").html('<center>' +
+					'<div class="panel-body padding-top-md" >' +
+					'<div id="login-alert" class="alert alert-danger col-sm-6">' +
+					'<i class="fas fa-times"></i>&#32;Fail: ' + jqXHR.responseText +
+					'</div>' +
+					'</div>' +
+					'</center>');
+				$("#login-alert").css('display', 'block');
+				window.scrollTo(0, 0);
+			});
+		}
 		//
 		socket.on('qrCode', (qrCode) => {
 			let session = document.getElementById('session').value;

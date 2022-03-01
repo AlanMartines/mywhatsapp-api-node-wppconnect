@@ -10,7 +10,7 @@ $('document').ready(function() {
 	return this.optional( element ) || eregex.test( value );
 	});
 
-    $("#login-form").validate({
+    $("#start-form").validate({
         rules: {
             email: {
                 required: true,
@@ -43,59 +43,8 @@ $('document').ready(function() {
         },
         submitHandler: function() {
         	event.preventDefault();
-                var data = $("#login-form").serialize();
-                $.ajax({
-                    type: 'POST',
-                    url: '../../login/login.php',
-                    data: data,
-                    dataType: 'json',
-                    beforeSend: function() {
-                        $("#send_form").html('<i class="fas fa-spinner fa-spin"></i> Logando ...');
-                    },
-                    success: function(response) {
-            			console.log(response);
-                        if (response.result === true) {
-                            $("#send_form").html('Logar');
-                            $("#login-alert").css('display', 'none');
-                            window.location.href = "../home/";
-                        } else {
-                            $("#send_form").html('Logar');
-                            console.log('Menssagem: '+response.mensagem);
-                            $("#mensagem").html('<center>' +
-                                '<div class="panel-body padding-top-md" >' +
-                                '<div id="login-alert" class="alert alert-' + response.alerta + ' col-sm-6">' +
-                                response.iconem + '&#32;' + response.mensagem +
-                                '</div>' +
-                                '</div>' +
-                                '</center>');
-                            $("#login-alert").css('display', 'block');
-                            window.scrollTo(0, 0);
-                        }
-                    },
-				    error: function(XMLHttpRequest, textStatus, errorThrown) { 
-                  $("#send_form").html('Logar');
-                    $("#mensagem").html('<center>' +
-                        '<div class="panel-body padding-top-md" >' +
-                        '<div id="login-alert" class="alert alert-danger col-sm-6">' +
-                        '<i class="fas fa-times"></i>&#32;Error: ' + errorThrown + ', Status: '+ textStatus +
-                        '</div>' +
-                        '</div>' +
-                        '</center>');
-                    $("#login-alert").css('display', 'block');
-                    window.scrollTo(0, 0);
-				    }
-                }).fail(function (jqXHR, textStatus, error) {
-                  $("#send_form").html('Logar');
-                    $("#mensagem").html('<center>' +
-                        '<div class="panel-body padding-top-md" >' +
-                        '<div id="login-alert" class="alert alert-danger col-sm-6">' +
-                        '<i class="fas fa-times"></i>&#32;Fail: ' + jqXHR.responseText +
-                        '</div>' +
-                        '</div>' +
-                        '</center>');
-                    $("#login-alert").css('display', 'block');
-                    window.scrollTo(0, 0);
-				});
+					var data = $("#start-form").serialize();
+					initSession(data);
         }
     });
 
