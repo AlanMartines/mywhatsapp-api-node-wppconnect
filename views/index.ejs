@@ -1,61 +1,149 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 
 <head>
-	<meta charset='utf-8'>
 	<title>My Whatsapp</title>
-	<meta http-equiv='X-UA-Compatible' content='IE=edge'>
-	<link rel="icon" type="image/png" href="imagens/whatsapp-bot.png"/>
-	<link rel="stylesheet" href="/css/style.css">
-	<link rel="stylesheet" href="/sweetalert2/css/sweetalert2.min.css">
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<meta name="viewport" content="width=device-width, user-scalable=no" />
-	<!-- Bootstrap CSS -->
-	<link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
-	<link
-		href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
-		rel="stylesheet">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+	<link rel="icon" type="image/png" sizes="192x192" href="imagens/favicons/android-icon-192x192.png">
+	<link rel="apple-touch-icon" sizes="180x180" href="imagens/favicons/apple-icon-180x180.png">
+	<link rel="icon" type="image/png" sizes="96x96" href="imagens/favicons/favicon-96x96.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="imagens/favicons/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="imagens/favicons/favicon-16x16.png">
+	<link rel="manifest" href="imagens/favicons/manifest.json">
+	<meta name="msapplication-TileColor" content="#ffffff">
+	<meta name="msapplication-TileImage" content="imagens/favicons/ms-icon-144x144.png">
+	<meta name="theme-color" content="#ffffff">
+	<!--- --------------------------------------------------------------------------------------------------------------------------- --->
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta property='og:title' content='Cominidade NSª da Paz' />
+	<meta name="title" content="Cominidade NSª da Paz">
+	<meta name="description" content="Cominidade NSª da Paz" />
+	<meta name="keywords" content="Alan Martines, Cominidade NSª da Paz" />
+	<meta name="robots" content="index, follow">
+	<meta name='content-language' content='pt-br' />
+	<meta name="author" content="Alan Martines">
+	<!--- --------------------------------------------------------------------------------------------------------------------------- --->
+	<!-- CSS -->
+	<link rel="stylesheet" type="text/css" href="page/css/style.css" />
+	<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="fontawesome-free/css/all.min.css" />
+	<link rel="stylesheet" type="text/css" href="lobibox/css/lobibox.min.css" />
+	<!--- --------------------------------------------------------------------------------------------------------------------------- --->
+	<!--- JS --->
 </head>
 
 <body>
-	<div class="container">
-		<div class="text-center">
-			<h4>My Whatsapp</h4>
-			<!--Grid row-->
-			<div class="row justify-content-center align-items-center">
-				<div class="col-md-6 text-center mx-auto">
-					<form class="form-horizontal">
-						<div class="form-group">
-							<div class="textOnInput">
-								<label for="session">Session Name:</label>
-								<input type="text" class="form-control" id="session" name="session"
-									placeholder="Nome para identificação da sessão">
-							</div>
-						</div>
+	<!-- Inicio - Image and text -->
+	<nav class="navbar navbar-dark navbar-expand-lg">
+		<a class="navbar-brand" href="../">
+			<img src="imagens/content/ns_da_paz.png" height="32" class="img-fliud d-inline-block align-top" />
+			My Whatsapp
+		</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+			aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarNav">
 
-						<div class="form-group">
-							<button type="button" class="btn btn-primary" id="send-btn" name="send-btn"
-								onclick="alterSession(document.getElementById('session').value)">Iniciar</button>
-						</div>
-					</form>
-				</div>
-				<div class="col-md-6 text-center mx-auto">
-					<img class="img-fluid" id="image" src="/imagens/readqrcode.jpg" draggable="false" alt="qr-code">
+			<ul class="navbar-nav mr-auto nav-flex-icons">
+
+			</ul>
+			<ul class="navbar-nav mx-auto nav-flex-icons">
+
+			</ul>
+			<ul class="navbar-nav ml-auto nav-flex-icons">
+
+			</ul>
+		</div>
+	</nav>
+	<div class="container-fluid">
+		<div class="content">
+			<div class="text-center">
+				<!--Grid row-->
+				<div class="row justify-content-center align-items-center">
+					<div class="col-md-6 text-center mx-auto">
+						<form class="form-horizontal">
+							<div class="form-group">
+								<div class="textOnInput">
+									<label for="session">Session Name:</label>
+									<input type="text" class="form-control" id="session" name="session"
+										placeholder="Nome para identificação da sessão">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<button type="button" class="btn btn-primary" id="send-btn" name="send-btn"
+									onclick="alterSession(document.getElementById('session').value)">Iniciar</button>
+							</div>
+						</form>
+					</div>
+					<div class="col-md-6 text-center mx-auto">
+						<img class="img-fluid" id="image" src="/imagens/readqrcode.jpg" draggable="false" alt="qr-code">
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 	</div>
-	<!-- jQuery primeiro, depois Popper.js, depois Bootstrap JS -->
-	<script src="/jquery/jquery-3.6.0.min.js"></script>
-	<script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
-	<script src="/bootstrap/js/bootstrap.min.js"></script>
+	</div>
+	</div>
+	<!-- /container -->
+	<!-- Footer -->
+	<footer class="footer-distributed">
+		<div class="footer-left">
+			<center>
+				<img class="img-fluid" src="imagens/content/NSPaz.png" width="120px">
+				</p>
+				<p class="footer-company-name">Copyright &copy; 2022-
+					<?php echo date("Y"); ?> EletroInfo - Desenvolvido por <b>Alan Martines</b>
+				</p>
+			</center>
+		</div>
+		<div class="footer-center">
+			<div>
+				<i class="fas fa-map-marker-alt"></i>
+				<p><span>R. Alcachofra, 42 - Conj. Res. Recanto dos Rouxinois </span>CEP: 79063-190 | Campo Grande - MS</p>
+			</div>
+			<div>
+				<i class="fas fa-phone-alt"></i>
+				<p>(67) 9 9293-5202 </p>
+			</div>
+			<div>
+				<i class="far fa-clock"></i>
+				<p><span>Missa: Domingo das 07h30 às 09h00</span></p>
+			</div>
+		</div>
+		<div class="footer-right">
+			<p class="footer-company-about">
+				<span>Nota!</span>“Sejam todos bem-vindos e que Nossa Senhora da Paz nos abençoe”
+			</p>
+			<div class="footer-icons">
+				<a href="https://api.whatsapp.com/send/?phone=5567992935202&text&app_absent=0" target="_blank"><i
+						class="fab fa-whatsapp"></i></a>
+				<a href="#" target="_blank"><i class="fab fa-facebook-square"></i></a>
+				<a href="https://www.instagram.com/nossa_senhoradapaz/" target=" _blank"><i class="fab fa-instagram"></i></a>
+			</div>
+		</div>
+	</footer>
+	<!-- Footer -->
+	<!--- --------------------------------------------------------------------------------------------------------------------------- --->
+	<!-- Primeiro o jQuery, depois o Popper.js, e depois o Bootstrap JS -->
+	<script type="text/javascript" src="jquery/jquery-3.5.1.js"></script>
+	<script type="text/javascript" src="jquery/popper.min.js"></script>
+	<script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+	<!-- Inclusão do Plugin jQuery Validation-->
+	<script type="text/javascript" src="jquery/jquery.validate.min.js"></script>
+	<script type="text/javascript" src="jquery/jquery.maskedinput.min.js"></script>
+	<script type="text/javascript" src="jquery/additional-methods.min.js"></script>
+	<script type="text/javascript" src="lobibox/js/lobibox.min.js"> </script>
+	<!--- --------------------------------------------------------------------------------------------------------------------------- --->
 	<!-- JavaScript (Opcional) -->
-	<script src="/sweetalert2/js/sweetalert2.min.js"></script>
-	<script src="/axios/axios.min.js"></script>
-	<script src="/socket/socket.io.js"></script>
-	<script>
-
+	<script type="text/javascript" src="/sweetalert2/js/sweetalert2.min.js"></script>
+	<script type="text/javascript" src="/axios/axios.min.js"></script>
+	<script type="text/javascript" src="/socket/socket.io.js"></script>
+	<script type="text/javascript" >
+		//
 		let url;
 		let host = '<%=host %>';
 		let host_ssl = '<%=host_ssl %>';
