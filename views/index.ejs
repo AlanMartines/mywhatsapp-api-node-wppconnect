@@ -68,66 +68,70 @@
 					</div>
 
 					<div class="col-md-6 text-left mx-auto">
-						<form class="form-signin text-center" id="start-form" method="post" action="javascript:void(0)"></form>
+						<form class="form-signin text-center" id="start-form" method="post" action="javascript:void(0)">
 
-						<div class="form-group col-md-6">
-							<label for="AuthorizationToken" class="col-form-label">Authorization Token:</label>
-							<span class="r">*</span>
-							<div class="input-group">
-								<div class="input-group-append">
-									<span class="input-group-text">
-										<i class="fas fa-user-tie"></i>
-									</span>
+							<div class="form-group col-md-6">
+								<label for="AuthorizationToken" class="col-form-label">Authorization Token:</label>
+								<span class="r">*</span>
+								<div class="input-group">
+									<div class="input-group-append">
+										<span class="input-group-text">
+											<i class="fas fa-user-tie"></i>
+										</span>
+									</div>
+									<input type="text" class="rounded form-control" id="AuthorizationToken" name="AuthorizationToken"
+										placeholder="Authorization Token" />
 								</div>
-								<input type="text" class="rounded form-control" id="AuthorizationToken" name="AuthorizationToken" placeholder="Authorization Token"/>
+								<span class="help-block r" id="error"></span>
 							</div>
-							<span class="help-block r" id="error"></span>
-						</div>
 
-						<div class="form-group col-md-6">
-							<label for="SessionName" class="col-form-label">Session Name:</label>
-							<span class="r">*</span>
-							<div class="input-group">
-								<div class="input-group-append">
-									<span class="input-group-text">
-										<i class="fas fa-user-tie"></i>
-									</span>
+							<div class="form-group col-md-6">
+								<label for="SessionName" class="col-form-label">Session Name:</label>
+								<span class="r">*</span>
+								<div class="input-group">
+									<div class="input-group-append">
+										<span class="input-group-text">
+											<i class="fas fa-user-tie"></i>
+										</span>
+									</div>
+									<input type="text" class="rounded form-control" id="SessionName" name="SessionName"
+										placeholder="Nome da sessão" />
 								</div>
-								<input type="text" class="rounded form-control" id="SessionName" name="SessionName" placeholder="Nome da sessão"/>
+								<span class="help-block r" id="error"></span>
 							</div>
-							<span class="help-block r" id="error"></span>
-						</div>
 
-						<div class="form-group col-md-6">
-							<label for="MultiDevice" class="col-form-label">Multi-Device</label>
-							<span class="r">*</span>
-							<select class="form-control" id="MultiDevice">
-								<option value="" selected>-- Escolha --</option>
-								<option value="true">true</option>
-								<option value="false">false</option>
-							</select>
-							<span class="help-block r" id="error"></span>
-						</div>
+							<div class="form-group col-md-6">
+								<label for="MultiDevice" class="col-form-label">Multi-Device</label>
+								<span class="r">*</span>
+								<select class="form-control" id="MultiDevice">
+									<option value="" selected>-- Escolha --</option>
+									<option value="true">true</option>
+									<option value="false">false</option>
+								</select>
+								<span class="help-block r" id="error"></span>
+							</div>
 
-						<div class="form-group col-md-6">
-							<label for="whatsappVersion" class="col-form-label">Authorization Token:</label>
-							<span class="r">*</span>
-							<div class="input-group">
-								<div class="input-group-append">
-									<span class="input-group-text">
-										<i class="fas fa-user-tie"></i>
-									</span>
+							<div class="form-group col-md-6">
+								<label for="whatsappVersion" class="col-form-label">Authorization Token:</label>
+								<span class="r">*</span>
+								<div class="input-group">
+									<div class="input-group-append">
+										<span class="input-group-text">
+											<i class="fas fa-user-tie"></i>
+										</span>
+									</div>
+									<input type="text" class="rounded form-control" id="whatsappVersion" name="whatsappVersion"
+										placeholder="Whatsapp Version" />
 								</div>
-								<input type="text" class="rounded form-control" id="whatsappVersion" name="whatsappVersion" placeholder="Whatsapp Version"/>
+								<span class="help-block r" id="error"></span>
 							</div>
-							<span class="help-block r" id="error"></span>
-						</div>
 
-						<div class="form-group col-md-6">
-							<div class="text-center">
-								<button type="submit" name="send_form" id="send_form" class="btn btn-primary"><i class="fas fa-paper-plane"></i>&#32;Inikciar</button>
+							<div class="form-group col-md-6">
+								<div class="text-center">
+									<button type="submit" name="send_form" id="send_form" class="btn btn-primary"><i
+											class="fas fa-paper-plane"></i>&#32;Inikciar</button>
+								</div>
 							</div>
-						</div>
 
 						</form>
 					</div>
