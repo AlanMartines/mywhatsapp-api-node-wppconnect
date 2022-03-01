@@ -23,10 +23,10 @@ $('document').ready(function () {
 				required: "Por favor, Informe o nome da sessão."
 			},
 			MultiDevice: {
-				required: "Por favor, Selecione uma opção"
+				required: "Por favor, Selecione uma opção."
 			},
 			whatsappVersion: {
-				required: "Por favor, Informe uma versão"
+				required: "Por favor, Informe uma versão."
 			}
 		},
 		errorPlacement: function (error, element) {
