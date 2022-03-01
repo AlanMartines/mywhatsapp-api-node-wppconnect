@@ -1,5 +1,4 @@
-const urlExists = require("url-exists");
-//
+const urlExists = require("url-exists");//
 module.exports = class Sessions {
 
 	static session = new Array();
@@ -299,7 +298,7 @@ module.exports = class Sessions {
 	// retornar sessão
 	static async getSession(name) {
 		if (await this.checkSession(name)) {
-			var key = this.getSessionKey(name)
+			var key = await this.getSessionKey(name)
 			return this.session[key]
 		}
 		return false
