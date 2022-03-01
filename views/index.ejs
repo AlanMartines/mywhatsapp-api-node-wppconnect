@@ -147,6 +147,8 @@
 		let host_ssl = '<%=host_ssl %>';
 		let port = '<%=port %>';
 		url = host_ssl == '' ? `http://${host}:${port}` : `https://${host_ssl}`;
+		let Year = getFullYear();
+		$("#ano").text(Year);
 		const socket = io(url + '/', { transports: ['websocket'] });
 		//
 		function initSession(data) {
