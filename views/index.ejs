@@ -102,7 +102,7 @@
 				<img class="img-fluid" src="imagens/favicons/apple-icon-180x180.png" width="120px">
 				</p>
 				<p class="footer-company-name">Copyright &copy; 2022-
-					<spam id="ano"></spam> EletroInfo - Desenvolvido por <b>Alan Martines</b>
+					<spam id="year"></spam> EletroInfo - Desenvolvido por <b>Alan Martines</b>
 				</p>
 			</div>
 		</div>
@@ -147,8 +147,9 @@
 		let host_ssl = '<%=host_ssl %>';
 		let port = '<%=port %>';
 		url = host_ssl == '' ? `http://${host}:${port}` : `https://${host_ssl}`;
-		let Year = getFullYear();
-		$("#ano").text(Year);
+		let d = new Date();
+		let year = d.getFullYear();
+		$("#year").text(year);
 		const socket = io(url + '/', { transports: ['websocket'] });
 		//
 		function initSession(data) {
