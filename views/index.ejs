@@ -69,34 +69,58 @@
 
 					<div class="col-md-6 text-left mx-auto">
 						<form class="form-signin text-center" id="start-form" method="post" action="javascript:void(0)"></form>
+
 						<div class="form-group col-md-6">
-							<div class="textOnInput">
-								<label for="AuthorizationToken">AuthorizationToken:</label>
-								<input type="text" class="form-control" id="AuthorizationToken" name="AuthorizationToken"
-									placeholder="Token de autorização">
+							<label for="AuthorizationToken" class="col-form-label">Authorization Token:</label>
+							<span class="r">*</span>
+							<div class="input-group">
+								<div class="input-group-append">
+									<span class="input-group-text">
+										<i class="fas fa-user-tie"></i>
+									</span>
+								</div>
+								<input type="text" class="rounded form-control" id="AuthorizationToken" name="AuthorizationToken" placeholder="Authorization Token"/>
 							</div>
+							<span class="help-block r" id="error"></span>
 						</div>
+
 						<div class="form-group col-md-6">
-							<div class="textOnInput">
-								<label for="SessionName">Session Name:</label>
-								<input type="text" class="form-control" id="SessionName" name="SessionName"
-									placeholder="Nome para identificação da sessão">
+							<label for="SessionName" class="col-form-label">Session Name:</label>
+							<span class="r">*</span>
+							<div class="input-group">
+								<div class="input-group-append">
+									<span class="input-group-text">
+										<i class="fas fa-user-tie"></i>
+									</span>
+								</div>
+								<input type="text" class="rounded form-control" id="SessionName" name="SessionName" placeholder="Nome para identificação da sessão"/>
 							</div>
+							<span class="help-block r" id="error"></span>
 						</div>
+
 						<div class="form-group col-md-6">
-							<label for="MultiDevice">Multi-Device</label>
+							<label for="MultiDevice" class="col-form-label">Multi-Device</label>
+							<span class="r">*</span>
 							<select class="form-control" id="MultiDevice">
 								<option value="" selected>-- Escolha --</option>
 								<option value="true">true</option>
 								<option value="false">false</option>
 							</select>
+							<span class="help-block r" id="error"></span>
 						</div>
+
 						<div class="form-group col-md-6">
-							<div class="textOnInput">
-								<label for="whatsappVersion">Whatsapp Version:</label>
-								<input type="text" class="form-control" id="whatsappVersion" name="whatsappVersion"
-									placeholder="Nome para identificação da sessão">
+							<label for="whatsappVersion" class="col-form-label">Authorization Token:</label>
+							<span class="r">*</span>
+							<div class="input-group">
+								<div class="input-group-append">
+									<span class="input-group-text">
+										<i class="fas fa-user-tie"></i>
+									</span>
+								</div>
+								<input type="text" class="rounded form-control" id="whatsappVersion" name="whatsappVersion" placeholder="Whatsapp Version"/>
 							</div>
+							<span class="help-block r" id="error"></span>
 						</div>
 
 						<div class="form-group col-md-6">
@@ -120,7 +144,8 @@
 			<div class="text-center">
 				<img class="img-fluid" src="imagens/favicons/apple-icon-180x180.png" width="120px">
 				</p>
-				<p class="footer-company-name">Copyright &copy; 2022 - <spam id="year"></spam> EletroInfo - Desenvolvido por <b>Alan Martines</b>
+				<p class="footer-company-name">Copyright &copy; 2022 - <spam id="year"></spam> EletroInfo - Desenvolvido por
+					<b>Alan Martines</b>
 				</p>
 			</div>
 		</div>
@@ -135,8 +160,10 @@
 				<span>Nota!</span>"Sejam todos bem-vindos a API My Whatsapp"
 			</p>
 			<div class="footer-icons">
-				<a href="https://api.whatsapp.com/send/?phone=5567996787854&text&app_absent=0" target="_blank"><i class="fab fa-whatsapp"></i></a>
-				<a href="https://github.com/AlanMartines/mywhatsapp-api-node-wppconnect" target="_blank" ><i class="fab fa-github-square"></i></a>
+				<a href="https://api.whatsapp.com/send/?phone=5567996787854&text&app_absent=0" target="_blank"><i
+						class="fab fa-whatsapp"></i></a>
+				<a href="https://github.com/AlanMartines/mywhatsapp-api-node-wppconnect" target="_blank"><i
+						class="fab fa-github-square"></i></a>
 			</div>
 		</div>
 	</footer>
