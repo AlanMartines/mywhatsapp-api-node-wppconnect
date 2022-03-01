@@ -61,13 +61,14 @@
 		<div class="content">
 			<div class="text-center">
 				<!--Grid row-->
-				<div class="row justify-content-center align-items-center">
-					<div class="col-md-6 text-center mx-auto">
-						<img class="img-fluid" id="image" src="imagens/body/readqrcode.jpg" draggable="false" alt="qr-code">
-					</div>
+				<form class="form-signin text-center" id="start-form" method="post" action="javascript:void(0)">
+					<div class="row justify-content-center align-items-center">
+						
+						<div class="col-md-6 text-center mx-auto">
+							<img class="img-fluid" id="image" src="imagens/body/readqrcode.jpg" draggable="false" alt="qr-code">
+						</div>
 
-					<div class="col-md-6 text-left mx-auto">
-						<form class="form-signin text-center" id="start-form" method="post" action="javascript:void(0)">
+						<div class="col-md-6 text-left mx-auto">
 							<div class="form-group">
 								<div class="textOnInput">
 									<label for="session">Session Name:</label>
@@ -75,14 +76,17 @@
 										placeholder="Nome para identificação da sessão">
 								</div>
 							</div>
-							<div class="col-md-6 text-left mx-auto">
+						</div>
+
+						<div class="col-md-12 text-left mx-auto">
 							<div class="form-group col-md-12">
-								<button type="submit" name="send_form" id="send_form" class="btn btn-primary"><i class="fas fa-paper-plane"></i>&#32;Inikciar</button>
+								<button type="submit" name="send_form" id="send_form" class="btn btn-primary"><i
+										class="fas fa-paper-plane"></i>&#32;Inikciar</button>
 							</div>
 						</div>
-						</form>
+
 					</div>
-				</div>
+				</form>
 			</div>
 		</div>
 	</div>
