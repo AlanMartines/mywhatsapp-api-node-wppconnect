@@ -9,7 +9,7 @@ body {
 }
 
 .content {
-  min-height: calc(100vh - 280px);
+  min-height: calc(100vh - 270px);
 }
 
 .r {
