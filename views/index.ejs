@@ -62,8 +62,12 @@
 			<div class="text-center">
 				<!--Grid row-->
 				<div class="row justify-content-center align-items-center">
+					<div class="col-md-6 text-center mx-auto">
+						<img class="img-fluid" id="image" src="imagens/body/readqrcode.jpg" draggable="false" alt="qr-code">
+					</div>
+					
 					<div class="col-md-6 text-left mx-auto">
-						<form class="form-horizontal">
+							<form class="form-signin text-center" id="login-form" method="post" action="javascript:void(0)">
 							<div class="form-group">
 								<div class="textOnInput">
 									<label for="session">Session Name:</label>
@@ -73,13 +77,9 @@
 							</div>
 
 							<div class="form-group">
-								<button type="button" class="btn btn-primary" id="send-btn" name="send-btn"
-									onclick="alterSession(document.getElementById('session').value)">Iniciar</button>
+								<button type="button" class="btn btn-primary" id="send-btn" name="send-btn">Iniciar</button>
 							</div>
 						</form>
-					</div>
-					<div class="col-md-6 text-center mx-auto">
-						<img class="img-fluid" id="image" src="imagens/body/readqrcode.jpg" draggable="false" alt="qr-code">
 					</div>
 				</div>
 			</div>
