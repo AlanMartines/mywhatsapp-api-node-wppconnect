@@ -142,8 +142,7 @@
 										<i>Campos de preenchimento obrigat&oacute;rio</i>
 									</span>
 									</p>
-									<button type="submit" name="send_form" id="send_form" class="btn btn-primary"><i
-											class="fas fa-paper-plane"></i>&#32;Iniciar</button>
+									<button type="submit" name="send_form" id="send_form" class="btn btn-primary">Iniciar</button>
 								</div>
 							</div>
 
@@ -259,11 +258,10 @@
 			submitHandler: function () {
 				event.preventDefault();
 				let data = $("#start-form").serialize();
+				/*
 				let formData = $("#start-form").serializeObject();
 				console.log(formData);
 				console.log(data);
-				//
-				/*
 				try {
 				axios.post(`${url}/sistema/Start`, {
 					firstName: 'Fred',
@@ -286,51 +284,28 @@
 					data: data,
 					dataType: 'json',
 					beforeSend: function () {
-						$("#send_form").html('<i class="fas fa-spinner fa-spin"></i> Logando ...');
+						$("#send_form").html('<i class="fas fa-spinner fa-spin"></i> Iniciando ...');
 						$("#description").html("Por favor aguarde, sistema iniciando.");
 					},
 					success: function (response) {
 						console.log(response);
 						if (response.result == 'info') {
-							$("#send_form").html('Logar');
-							$("#login-alert").css('display', 'none');
-							window.location.href = "../home/";
+							$("#send_form").html('Iniciar');
+
 						} else {
-							$("#send_form").html('Logar');
-							console.log('Menssagem: ' + response.message);
-							$("#mensagem").html('<center>' +
-								'<div class="panel-body padding-top-md" >' +
-								'<div id="login-alert" class="alert alert-' + response.result + ' col-sm-6">' +
-								response.iconem + '&#32;' + response.message +
-								'</div>' +
-								'</div>' +
-								'</center>');
-							$("#login-alert").css('display', 'block');
+							$("#send_form").html('Iniciar');
+
 							window.scrollTo(0, 0);
 						}
 					},
 					error: function (XMLHttpRequest, textStatus, errorThrown) {
-						$("#send_form").html('Logar');
-						$("#mensagem").html('<center>' +
-							'<div class="panel-body padding-top-md" >' +
-							'<div id="login-alert" class="alert alert-danger col-sm-6">' +
-							'<i class="fas fa-times"></i>&#32;Error: ' + errorThrown + ', Status: ' + textStatus +
-							'</div>' +
-							'</div>' +
-							'</center>');
-						$("#login-alert").css('display', 'block');
+						$("#send_form").html('Iniciar');
+
 						window.scrollTo(0, 0);
 					}
 				}).fail(function (jqXHR, textStatus, error) {
-					$("#send_form").html('Logar');
-					$("#mensagem").html('<center>' +
-						'<div class="panel-body padding-top-md" >' +
-						'<div id="login-alert" class="alert alert-danger col-sm-6">' +
-						'<i class="fas fa-times"></i>&#32;Fail: ' + jqXHR.responseText +
-						'</div>' +
-						'</div>' +
-						'</center>');
-					$("#login-alert").css('display', 'block');
+					$("#send_form").html('Iniciar');
+
 					window.scrollTo(0, 0);
 				});
 			}
@@ -346,7 +321,7 @@
 		});
 		//
 		socket.on('state', (state) => {
-			if (state) {
+			if (state == 'isLogged' || state == 'qrReadSuccess' || state == 'chatsAvailable' || state == 'inChats') {
 				Swal.fire({
 					icon: 'success',
 					title: 'Sucesso',
