@@ -316,24 +316,30 @@
 			let SessionName = $('#SessionName').val();
 			if (SessionName === qrCode.SessionName) {
 				$("#description").html("Por favor, efetue a leitura do qr code informado.");
-				// Change src attribute of image
 				$('#imageQrcode').attr("src", qrCode.data);
 			}
 		});
 		//
 		socket.on('state', (state) => {
+			//
 			if (state == 'isLogged' || state == 'qrReadSuccess' || state == 'chatsAvailable' || state == 'inChat') {
+				//
 				Swal.fire({
 					icon: 'success',
 					title: 'Sucesso',
 					text: 'Whatsapp conectado com sucesso'
 				});
+				//
 				$('#imageQrcode').attr("src", 'imagens/body/ok.jpg');
         $("#description").html("Sistema iniciado com sucesso.");
+				//
 			} else if(state == 'qrReadError'){
+				//
 				$('#imageQrcode').attr("src", 'imagens/body/error.png');
         $("#description").html("Sistema iniciado com sucesso.");
+				//
 			}
+			//
 		});
 	</script>
 </body>
