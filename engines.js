@@ -462,7 +462,7 @@ module.exports = class Wppconnect {
 						await deletaToken(`${tokenPatch}`, `${SessionName}.data.json`);
 						await deletaCache(`${tokenPatch}`, `WPP-${SessionName}`);
 						//
-						time = setTimeout(() => {
+						time = setTimeout(async () => {
 							await client.close();
 							// process.exit(); //optional function if you work with only one session
 						}, 80000);
