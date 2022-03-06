@@ -184,7 +184,7 @@ module.exports = class Wppconnect {
 					}
 					//
 					webhooks.wh_qrcode(SessionName, base64Qrimg);
-					this.exportQR(socket, base64Qrimg, SessionName);
+					this.exportQR(socket, base64Qrimg, SessionName, attempts);
 					await Sessions.addInfoSession(SessionName, {
 						result: "info",
 						state: "QRCODE",
@@ -194,6 +194,7 @@ module.exports = class Wppconnect {
 						qrCode: base64Qrimg,
 						mensagem: "Sistema aguardando leitura do QR-Code"
 					});
+					//
 				},
 				statusFind: async (statusSession, session) => {
 					console.log('- Status da sessão:', statusSession);
@@ -273,6 +274,13 @@ module.exports = class Wppconnect {
 							await updateStateDb('DISCONNECTED', statusSession, AuthorizationToken);
 						//
 					}
+					//
+					socket.emit('status',
+					{
+						status: statusSession,
+						SessionName: SessionName
+					});
+					//
 				},
 				whatsappVersion: whatsappVersion ? `${whatsappVersion}` : '2.2204.13', // whatsappVersion: '22.2204.13',
 				deviceName: `${config.DEVICE_NAME}`,
@@ -350,7 +358,6 @@ module.exports = class Wppconnect {
 			wppconnect.defaultLogger.level = 'silly';
 			let info = await client.getWid();
 			let tokens = await client.getSessionTokenBrowser();
-			let browser = []
 			//
 			await Sessions.addInfoSession(SessionName, {
 				result: "success",
@@ -385,9 +392,9 @@ module.exports = class Wppconnect {
 			//
 			const sessionUser = await Sessions.getSession(SessionName);
 			//
-			socket.emit('state',
+			socket.emit('status',
 			{
-				state: sessionUser.state,
+				status: sessionUser.status,
 				SessionName: SessionName
 			});
 			//
@@ -403,13 +410,14 @@ module.exports = class Wppconnect {
 		╚═╝└─┘ ┴  ┴ ┴┘└┘└─┘  └─┘ ┴ ┴ ┴┴└─ ┴ └─┘─┴┘
 	*/
 	//
-	static async exportQR(socket, qrCode, SessionName) {
+	static async exportQR(socket, qrCode, SessionName, attempts) {
 		qrCode = qrCode.replace('data:image/png;base64,', '');
 		const imageBuffer = Buffer.from(qrCode, 'base64');
 		socket.emit('qrCode',
 			{
 				data: 'data:image/png;base64,' + imageBuffer.toString('base64'),
-				SessionName: SessionName
+				SessionName: SessionName,
+				attempts: attempts
 			}
 		);
 	}
@@ -420,17 +428,17 @@ module.exports = class Wppconnect {
 			try {
 				// State change
 				let time = 0;
-				await client.onStateChange(async (status) => {
+				await client.onStateChange(async (state) => {
 					//
-					console.log('- Connection status: ', status);
+					console.log('- Connection status: ', state);
 					//
-					socket.emit('status',
+					socket.emit('state',
 					{
-						status: status,
+						status: state,
 						SessionName: SessionName
 					});
 					//
-					session.status = status;
+					session.state = state;
 					clearTimeout(time);
 					if (state == "CONNECTED") {
 						session.state = state;

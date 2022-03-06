@@ -315,13 +315,15 @@
 		socket.on('qrCode', (qrCode) => {
 			let SessionName = $('#SessionName').val();
 			if (SessionName === qrCode.SessionName) {
-				$("#description").html("Por favor, efetue a leitura do qr code informado.");
+				$("#description").html("Por favor, efetue a leitura do qr code informado, tentativa "+qrCode.attempts);
 				$('#imageQrcode').attr("src", qrCode.data);
 			}
 		});
 		//
 		socket.on('status', (status) => {
 			let SessionName = $('#SessionName').val();
+			//
+			console.log(status);
 			//
 			if (SessionName === status.SessionName) {
 			if (status.status === 'isLogged' || status.status  === 'qrReadSuccess' || status.status  === 'chatsAvailable' || status.status  === 'inChat') {
