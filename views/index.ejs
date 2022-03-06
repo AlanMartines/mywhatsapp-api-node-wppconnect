@@ -290,16 +290,22 @@
 					},
 					success: function (response) {
 						console.log(response);
-						if (response.result == 'info') {
+						if (response.state == 'CONNECTED') {
 							$("#send_form").html('Iniciar');
 							$('#imageQrcode').attr("src", 'imagens/body/ok.png');
 							$("#description").html("Sistema iniciado com sucesso.");
 
 							window.scrollTo(0, 0);
-						} else {
+						} else if(response.state == 'DISCONNECTED'){
 							$("#send_form").html('Iniciar');
 							$('#imageQrcode').attr("src", 'imagens/body/error.png');
-							$("#description").html("Sistema não iniciado");
+							$("#description").html("Sistema desconectado");
+
+							window.scrollTo(0, 0);
+						}else if(response.state == 'STARTING'){
+							$("#send_form").html('Iniciar');
+							$('#imageQrcode').attr("src", 'imagens/body/loading.gif');
+						  $("#description").html("Por favor aguarde, sistema iniciando.");
 
 							window.scrollTo(0, 0);
 						}
@@ -334,8 +340,8 @@
 			//
 			console.log(update);
 			//
-			if (SessionName === update.SessionName) {
-			if (update.status === 'isLogged' || update.status  === 'qrReadSuccess' || update.status  === 'chatsAvailable' || update.status  === 'inChat') {
+			if (SessionName == update.SessionName) {
+			if (update.status == 'isLogged' || update.status  == 'qrReadSuccess' || update.status  == 'chatsAvailable' || update.status  == 'inChat') {
 				//
 				$('#imageQrcode').attr("src", 'imagens/body/ok.png');
         $("#description").html("Sistema iniciado com sucesso.");
@@ -346,15 +352,15 @@
 					text: 'Whatsapp conectado com sucesso'
 				});
 				//
-			} else if(status.status === 'qrReadError'){
+			} else if(status.status == 'qrReadError'){
 				//
 				$('#imageQrcode').attr("src", 'imagens/body/error.png');
         $("#description").html("Erro ao efetuar leitura do qr code ou não lido.");
 				//
-			} else if(status.status === 'qrReadError'){
+			} else if(status.status == 'autocloseCalled' || status.status == 'browserClose'){
 				//
 				$('#imageQrcode').attr("src", 'imagens/body/error.png');
-        $("#description").html("Erro ao efetuar leitura do qr code ou não lido.");
+        $("#description").html("Erro ao efetuar leitura do qr code, navegador fechado.");
 				//
 			}
 		}
