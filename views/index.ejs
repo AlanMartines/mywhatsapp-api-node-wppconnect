@@ -354,7 +354,12 @@
 				$('#imageQrcode').attr("src", 'imagens/body/error.png');
         $("#description").html("Erro ao efetuar leitura do qr code, navegador fechado.");
 				//
-			}
+			} else if(update.status == 'desconnectedMobile'){
+				//
+				$('#imageQrcode').attr("src", 'imagens/body/error.png');
+        $("#description").html("Dispositivo desconectado.");
+				//
+			} 
 		}
 			//
 		});

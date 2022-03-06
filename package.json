@@ -30,6 +30,9 @@
   },
   "homepage": "https://github.com/AlanMartines/mywhatsapp-api-node-wppconnect#readme",
   "dependencies": {
+		"@wppconnect-team/wppconnect": "^1.12.7",
+		"@wppconnect/wa-js": "^1.2.0",
+		"@wppconnect/wa-version": "^1.1.39",
     "axios": "^0.26.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "",
