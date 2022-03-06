@@ -285,6 +285,7 @@
 					dataType: 'json',
 					beforeSend: function () {
 						$("#send_form").html('<i class="fas fa-spinner fa-spin"></i> Iniciando ...');
+						$('#imageQrcode').attr("src", 'imagens/body/loading.gif');
 						$("#description").html("Por favor aguarde, sistema iniciando.");
 					},
 					success: function (response) {
@@ -327,8 +328,11 @@
 					title: 'Sucesso',
 					text: 'Whatsapp conectado com sucesso'
 				});
-			} else {
-
+				$('#imageQrcode').attr("src", 'imagens/body/ok.jpg');
+        $("#description").html("Sistema iniciado com sucesso.");
+			} else if(state == 'qrReadError'){
+				$('#imageQrcode').attr("src", 'imagens/body/error.png');
+        $("#description").html("Sistema iniciado com sucesso.");
 			}
 		});
 	</script>
