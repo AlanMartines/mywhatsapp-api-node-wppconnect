@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./public/imagens/whatsapp-bot.png" width="150" alt="My Whats">
+  <img src="./public/imagens/body/whatsapp-bot.png" width="150" alt="My Whats">
 </p>
 
 # API - My WhatsApp
