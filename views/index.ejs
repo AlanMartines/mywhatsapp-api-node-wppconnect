@@ -64,7 +64,8 @@
 				<div class="row justify-content-center align-items-center">
 
 					<div class="col-md-6 text-center mx-auto">
-						<img class="img-fluid" id="imageQrcode" name="imageQrcode" src="imagens/body/readqrcode.png" width="500px" alt="qr-code">
+						<img class="img-fluid" id="imageQrcode" name="imageQrcode" src="imagens/body/readqrcode.png" width="500px"
+							alt="qr-code">
 					</div>
 
 					<div class="col-md-6 text-center mx-auto">
@@ -109,12 +110,12 @@
 											<i class="fas fa-mobile-alt"></i>
 										</span>
 									</div>
-								<select class="rounded form-control" name="MultiDevice" id="MultiDevice">
-									<option value="" selected="selected">-- Selecione --</option>
-									<option value="true">true</option>
-									<option value="false">false</option>
-								</select>
-							</div>
+									<select class="rounded form-control" name="MultiDevice" id="MultiDevice">
+										<option value="" selected="selected">-- Selecione --</option>
+										<option value="true">true</option>
+										<option value="false">false</option>
+									</select>
+								</div>
 								<span class="help-block r" id="error"></span>
 							</div>
 
@@ -134,13 +135,14 @@
 
 							<div class="form-group col-md-8">
 								<div class="text-center">
-										<span style="font-size: 11px">
-											<span class="r">*</span>
-											<i>Campos de preenchimento obrigat&oacute;rio</i>
-										</span>
-										</p>
-										<button type="submit" name="send_form" id="send_form" class="btn btn-primary"><i class="fas fa-paper-plane"></i>&#32;Iniciar</button>
-									</div>
+									<span style="font-size: 11px">
+										<span class="r">*</span>
+										<i>Campos de preenchimento obrigat&oacute;rio</i>
+									</span>
+									</p>
+									<button type="submit" name="send_form" id="send_form" class="btn btn-primary"><i
+											class="fas fa-paper-plane"></i>&#32;Iniciar</button>
+								</div>
 							</div>
 
 						</form>
@@ -209,66 +211,110 @@
 		$("#year").text(year);
 		const socket = io(url + '/', { transports: ['websocket'] });
 		//
-		function initSession(data) {
-			$.ajax({
-				type: 'POST',
-				url: url + '/sistema/Start',
-				data: data,
-				dataType: 'json',
-				beforeSend: function () {
-					$("#send_form").html('<i class="fas fa-spinner fa-spin"></i> Logando ...');
+		$("#start-form").validate({
+			rules: {
+				AuthorizationToken: {
+					required: true
 				},
-				success: function (response) {
-					console.log(response);
-					if (response.result === true) {
+				SessionName: {
+					required: true
+				},
+				MultiDevice: {
+					required: true
+				},
+				whatsappVersion: {
+					required: false
+				}
+			},
+			messages: {
+				AuthorizationToken: {
+					required: "Por favor, Informe seu token."
+				},
+				SessionName: {
+					required: "Por favor, Informe o nome da sessão."
+				},
+				MultiDevice: {
+					required: "Por favor, Selecione uma opção."
+				},
+				whatsappVersion: {
+					required: "Por favor, Informe uma versão."
+				}
+			},
+			errorPlacement: function (error, element) {
+				$(element).closest('.form-group').find('.help-block').html(error.html());
+			},
+			highlight: function (element) {
+				$(element).closest('.form-control').removeClass('is-valid').addClass('is-invalid');
+				$(element).closest('.custom-select').removeClass('is-valid').addClass('is-invalid');
+			},
+			unhighlight: function (element, errorClass, validClass) {
+				$(element).closest('.form-group').find('.help-block').html('');
+				$(element).closest('.form-control').removeClass('is-invalid').addClass('is-valid');
+				$(element).closest('.custom-select').removeClass('is-invalid').addClass('is-valid');
+			},
+			submitHandler: function () {
+				event.preventDefault();
+				var data = $("#start-form").serialize();
+				$.ajax({
+					type: 'POST',
+					url: url + '/sistema/Start',
+					data: data,
+					dataType: 'json',
+					beforeSend: function () {
+						$("#send_form").html('<i class="fas fa-spinner fa-spin"></i> Logando ...');
+					},
+					success: function (response) {
+						console.log(response);
+						if (response.result === true) {
+							$("#send_form").html('Logar');
+							$("#login-alert").css('display', 'none');
+							window.location.href = "../home/";
+						} else {
+							$("#send_form").html('Logar');
+							console.log('Menssagem: ' + response.mensagem);
+							$("#mensagem").html('<center>' +
+								'<div class="panel-body padding-top-md" >' +
+								'<div id="login-alert" class="alert alert-' + response.alerta + ' col-sm-6">' +
+								response.iconem + '&#32;' + response.mensagem +
+								'</div>' +
+								'</div>' +
+								'</center>');
+							$("#login-alert").css('display', 'block');
+							window.scrollTo(0, 0);
+						}
+					},
+					error: function (XMLHttpRequest, textStatus, errorThrown) {
 						$("#send_form").html('Logar');
-						$("#login-alert").css('display', 'none');
-						window.location.href = "../home/";
-					} else {
-						$("#send_form").html('Logar');
-						console.log('Menssagem: ' + response.mensagem);
 						$("#mensagem").html('<center>' +
 							'<div class="panel-body padding-top-md" >' +
-							'<div id="login-alert" class="alert alert-' + response.alerta + ' col-sm-6">' +
-							response.iconem + '&#32;' + response.mensagem +
+							'<div id="login-alert" class="alert alert-danger col-sm-6">' +
+							'<i class="fas fa-times"></i>&#32;Error: ' + errorThrown + ', Status: ' + textStatus +
 							'</div>' +
 							'</div>' +
 							'</center>');
 						$("#login-alert").css('display', 'block');
 						window.scrollTo(0, 0);
 					}
-				},
-				error: function (XMLHttpRequest, textStatus, errorThrown) {
+				}).fail(function (jqXHR, textStatus, error) {
 					$("#send_form").html('Logar');
 					$("#mensagem").html('<center>' +
 						'<div class="panel-body padding-top-md" >' +
 						'<div id="login-alert" class="alert alert-danger col-sm-6">' +
-						'<i class="fas fa-times"></i>&#32;Error: ' + errorThrown + ', Status: ' + textStatus +
+						'<i class="fas fa-times"></i>&#32;Fail: ' + jqXHR.responseText +
 						'</div>' +
 						'</div>' +
 						'</center>');
 					$("#login-alert").css('display', 'block');
 					window.scrollTo(0, 0);
-				}
-			}).fail(function (jqXHR, textStatus, error) {
-				$("#send_form").html('Logar');
-				$("#mensagem").html('<center>' +
-					'<div class="panel-body padding-top-md" >' +
-					'<div id="login-alert" class="alert alert-danger col-sm-6">' +
-					'<i class="fas fa-times"></i>&#32;Fail: ' + jqXHR.responseText +
-					'</div>' +
-					'</div>' +
-					'</center>');
-				$("#login-alert").css('display', 'block');
-				window.scrollTo(0, 0);
-			});
-		}
+				});
+			}
+		});
 		//
 		socket.on('qrCode', (qrCode) => {
 			let session = $('#session').val();
 			if (session === qrCode.session) {
-				        // Change src attribute of image
-								$('#imageQrcode').attr("src", qrCode.data);
+				// Change src attribute of image
+				$('#imageQrcode').attr("src", qrCode.data);
 			}
 		});
 		//
