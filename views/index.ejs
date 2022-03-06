@@ -65,7 +65,8 @@
 
 					<div class="col-md-6 text-center mx-auto">
 						<img class="img-fluid" id="imageQrcode" name="imageQrcode" src="imagens/body/readqrcode.png" width="250px" 	alt="qr-code">
-						<br>Teste
+						<br>
+						<span id="description"></span>
 					</div>
 
 					<div class="col-md-6 text-center mx-auto">
@@ -210,6 +211,8 @@
 		let year = d.getFullYear();
 		$("#year").text(year);
 		const socket = io(url + '/', { transports: ['websocket'] });
+		//
+		$("#description").html("Sistema não iniciado.");
 		//
 		$("#start-form").validate({
 			rules: {
