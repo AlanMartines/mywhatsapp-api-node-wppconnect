@@ -420,16 +420,17 @@ module.exports = class Wppconnect {
 			try {
 				// State change
 				let time = 0;
-				await client.onStateChange(async (state) => {
+				await client.onStateChange(async (status) => {
 					//
-					socket.emit('state',
+					console.log('- Connection status: ', status);
+					//
+					socket.emit('status',
 					{
-						state: state,
+						status: status,
 						SessionName: SessionName
 					});
 					//
-					session.state = state;
-					console.log('- Connection status: ', state);
+					session.status = status;
 					clearTimeout(time);
 					if (state == "CONNECTED") {
 						session.state = state;
@@ -474,11 +475,10 @@ module.exports = class Wppconnect {
 				});
 			} catch (error) {
 				session.state = "NOTFOUND";
-				session.status = "notLogged";
 				session.qrcode = null;
 				session.attempts = 0;
 				session.message = 'Sistema desconectado';
-				console.log("- Instância não iniciada:", error.message);
+				console.log("- Instância não iniciada:", error);
 			}
 			//
 			// Listen to messages
@@ -496,7 +496,7 @@ module.exports = class Wppconnect {
 					*/
 					//
 					if (message.body === 'Hi' && message.isGroupMsg === false) {
-						client.sendText(message.from, await saudacao() + ",\nWelcome 🕷").then((result) => {
+						await client.sendText(message.from, await saudacao() + ",\nWelcome 🕷").then(async (result) => {
 							//console.log('- Result: ', result); //retorna um objeto de successo
 						}).catch((erro) => {
 							//console.error('- Error: ', erro); //return um objeto de erro
@@ -509,26 +509,26 @@ module.exports = class Wppconnect {
 				session.qrcode = null;
 				session.attempts = 0;
 				session.message = 'Sistema desconectado';
-				console.log("- Error onMessage:", error.message);
+				console.log("- Error onMessage:", error);
 			}
 			//
 			// function to detect incoming call
 			try {
-				client.onIncomingCall(async (call) => {
+				await client.onIncomingCall(async (call) => {
 					await client.rejectCall();
 					await client.sendText(call.peerJid, await saudacao() + ",\nDesculpe-me mas não consigo atender sua chamada, se for urgente manda msg de texto, grato.");
 				});
 			} catch (error) {
-				console.log("- Error onIncomingCall:", error.message);
+				console.log("- Error onIncomingCall:", error);
 			}
 			//
 			try {
 				// Listen when client has been added to a group
-				client.onAddedToGroup(async (chatEvent) => {
+				await client.onAddedToGroup(async (chatEvent) => {
 					console.log('- Listen when client has been added to a group:', chatEvent.name);
 				});
 			} catch (error) {
-				console.log("- Error onAddedToGroup:", error.message);
+				console.log("- Error onAddedToGroup:", error);
 			}
 			//
 			try {
@@ -592,7 +592,7 @@ module.exports = class Wppconnect {
 					}
 				});
 			} catch (error) {
-				console.log("- Error onAck:", error.message);
+				console.log("- Error onAck:", error);
 			}
 		});
 	} //setup

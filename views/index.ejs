@@ -320,9 +320,11 @@
 			}
 		});
 		//
-		socket.on('state', (state) => {
+		socket.on('status', (status) => {
+			let SessionName = $('#SessionName').val();
 			//
-			if (state == 'isLogged' || state == 'qrReadSuccess' || state == 'chatsAvailable' || state == 'inChat') {
+			if (SessionName === status.SessionName) {
+			if (status.status === 'isLogged' || status.status  === 'qrReadSuccess' || status.status  === 'chatsAvailable' || status.status  === 'inChat') {
 				//
 				Swal.fire({
 					icon: 'success',
@@ -333,12 +335,13 @@
 				$('#imageQrcode').attr("src", 'imagens/body/ok.jpg');
         $("#description").html("Sistema iniciado com sucesso.");
 				//
-			} else if(state == 'qrReadError'){
+			} else if(status.status === 'qrReadError'){
 				//
 				$('#imageQrcode').attr("src", 'imagens/body/error.png');
         $("#description").html("Sistema iniciado com sucesso.");
 				//
 			}
+		}
 			//
 		});
 	</script>
