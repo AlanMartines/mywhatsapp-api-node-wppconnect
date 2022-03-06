@@ -414,6 +414,13 @@ module.exports = class Wppconnect {
 				// State change
 				let time = 0;
 				client.onStateChange(async (state) => {
+					//
+					socket.emit('qrCode',
+					{
+						state: state,
+						SessionName: SessionName
+					});
+					//
 					session.state = state;
 					console.log('- Connection status: ', state);
 					clearTimeout(time);
