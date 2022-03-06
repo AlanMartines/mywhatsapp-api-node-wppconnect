@@ -259,7 +259,7 @@
 			submitHandler: function () {
 				event.preventDefault();
 				let data = $("#start-form").serialize();
-				let formData = $("form.login").serializeObject();
+				let formData = $("#start-form").serializeObject();
 				console.log(formData);
 				console.log(data);
 				//
