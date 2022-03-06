@@ -292,20 +292,29 @@
 						console.log(response);
 						if (response.result == 'info') {
 							$("#send_form").html('Iniciar');
+							$('#imageQrcode').attr("src", 'imagens/body/ok.png');
+							$("#description").html("Sistema iniciado com sucesso.");
 
+							window.scrollTo(0, 0);
 						} else {
 							$("#send_form").html('Iniciar');
+							$('#imageQrcode').attr("src", 'imagens/body/error.png');
+							$("#description").html("Sistema não iniciado");
 
 							window.scrollTo(0, 0);
 						}
 					},
 					error: function (XMLHttpRequest, textStatus, errorThrown) {
 						$("#send_form").html('Iniciar');
+						$('#imageQrcode').attr("src", 'imagens/body/error.png');
+						$("#description").html("Sistema não iniciado");
 
 						window.scrollTo(0, 0);
 					}
 				}).fail(function (jqXHR, textStatus, error) {
 					$("#send_form").html('Iniciar');
+					$('#imageQrcode').attr("src", 'imagens/body/error.png');
+					$("#description").html("Sistema não iniciado");
 
 					window.scrollTo(0, 0);
 				});
@@ -320,22 +329,20 @@
 			}
 		});
 		//
-		socket.on('status', (status) => {
+		socket.on('status', (update) => {
 			let SessionName = $('#SessionName').val();
 			//
-			console.log(status);
-			//
-			if (SessionName === status.SessionName) {
-			if (status.status === 'isLogged' || status.status  === 'qrReadSuccess' || status.status  === 'chatsAvailable' || status.status  === 'inChat') {
+			if (SessionName === update.SessionName) {
+			if (update.status === 'isLogged' || update.status  === 'qrReadSuccess' || update.status  === 'chatsAvailable' || update.status  === 'inChat') {
+				//
+				$('#imageQrcode').attr("src", 'imagens/body/ok.png');
+        $("#description").html("Sistema iniciado com sucesso.");
 				//
 				Swal.fire({
 					icon: 'success',
 					title: 'Sucesso',
 					text: 'Whatsapp conectado com sucesso'
 				});
-				//
-				$('#imageQrcode').attr("src", 'imagens/body/ok.png');
-        $("#description").html("Sistema iniciado com sucesso.");
 				//
 			} else if(status.status === 'qrReadError'){
 				//
