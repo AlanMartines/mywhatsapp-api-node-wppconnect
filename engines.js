@@ -377,14 +377,21 @@ module.exports = class Wppconnect {
 			await Sessions.addInfoSession(SessionName, {
 				result: "error",
 				state: "NOTFOUND",
-				status: 'notLogged',
 				CodeasciiQR: null,
 				CodeurlCode: null,
 				qrCode: null,
 				message: "Sistema Off-line"
 			});
 			//
-			console.log("- Instância não criada:", error.message);
+			const sessionUser = await Sessions.getSession(SessionName);
+			//
+			socket.emit('state',
+			{
+				state: sessionUser.state,
+				SessionName: SessionName
+			});
+			//
+			console.log("- Instância não criada:", error);
 		}
 	} //initSession
 	//

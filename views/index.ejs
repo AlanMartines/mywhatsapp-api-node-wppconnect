@@ -321,7 +321,7 @@
 		});
 		//
 		socket.on('state', (state) => {
-			if (state == 'isLogged' || state == 'qrReadSuccess' || state == 'chatsAvailable' || state == 'inChats') {
+			if (state == 'isLogged' || state == 'qrReadSuccess' || state == 'chatsAvailable' || state == 'inChat') {
 				Swal.fire({
 					icon: 'success',
 					title: 'Sucesso',
