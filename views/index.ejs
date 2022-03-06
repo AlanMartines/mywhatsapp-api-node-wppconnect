@@ -259,7 +259,8 @@
 			submitHandler: function () {
 				event.preventDefault();
 				var data = $("#start-form").serialize();
-				console.log(data);
+				let dataJson = $("#start-form").serializeArray();
+				console.log(dataJson);
 				//
 				/*
 				axios.post('/user', {
@@ -332,7 +333,7 @@
 		socket.on('qrCode', (qrCode) => {
 			let SessionName = $('#SessionName').val();
 			if (SessionName === qrCode.SessionName) {
-				console.log("Read qrCode");
+				$("#description").html("Por favor, efetue a leitura do qr code informado.");
 				// Change src attribute of image
 				$('#imageQrcode').attr("src", qrCode.data);
 			}
