@@ -137,11 +137,11 @@ module.exports = class Wppconnect {
 			╚═╝┴   ┴ ┴└─┘┘└┘┴ ┴┴─┘  ╚═╝┴└─└─┘┴ ┴ ┴ └─┘  ╩  ┴ ┴┴└─┴ ┴┴ ┴└─┘ ┴ └─┘┴└─└─┘
 	 */
 		//
-		if (MultiDevice == true) {
+		if (MultiDevice == 'true') {
 			//
 			await deletaToken(`${tokenPatch}`, `${SessionName}.data.json`);
 			//
-		} else if (MultiDevice == false || typeof MultiDevice == 'undefined') {
+		} else if (MultiDevice == 'false' || typeof MultiDevice == 'undefined') {
 			//
 			await deletaCache(`${tokenPatch}`, `WPP-${SessionName}`);
 			//
@@ -276,7 +276,7 @@ module.exports = class Wppconnect {
 					}
 					//
 				},
-				whatsappVersion: whatsappVersion ? `${whatsappVersion}` : '2.2204.13', // whatsappVersion: '22.2204.13',
+				whatsappVersion: whatsappVersion ? `${whatsappVersion}` : '', // whatsappVersion: '2.2204.13',
 				deviceName: `${config.DEVICE_NAME}`,
 				headless: true, // Headless chrome
 				devtools: false, // Open devtools by default
