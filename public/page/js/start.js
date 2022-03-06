@@ -12,7 +12,7 @@ $('document').ready(function () {
 				required: true
 			},
 			whatsappVersion: {
-				required: true
+				required: false
 			}
 		},
 		messages: {
