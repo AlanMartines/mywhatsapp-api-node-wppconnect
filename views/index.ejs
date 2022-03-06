@@ -311,8 +311,9 @@
 		});
 		//
 		socket.on('qrCode', (qrCode) => {
-			let session = $('#session').val();
-			if (session === qrCode.session) {
+			let SessionName = $('#SessionName').val();
+			if (SessionName === qrCode.SessionName) {
+				console.log("Read qrCode");
 				// Change src attribute of image
 				$('#imageQrcode').attr("src", qrCode.data);
 			}
@@ -323,7 +324,7 @@
 				Swal.fire({
 					icon: 'success',
 					title: 'Sucesso',
-					text: 'Whatsapp Aberto com sucesso'
+					text: 'Whatsapp conectado com sucesso'
 				});
 			} else {
 

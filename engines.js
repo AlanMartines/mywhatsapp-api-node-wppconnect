@@ -402,7 +402,7 @@ module.exports = class Wppconnect {
 		socket.emit('qrCode',
 			{
 				data: 'data:image/png;base64,' + imageBuffer.toString('base64'),
-				session: SessionName
+				SessionName: SessionName
 			}
 		);
 	}
