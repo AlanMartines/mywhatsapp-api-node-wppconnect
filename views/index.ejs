@@ -64,9 +64,10 @@
 				<div class="row justify-content-center align-items-center">
 
 					<div class="col-md-6 text-center mx-auto">
-						<img class="img-fluid" id="imageQrcode" name="imageQrcode" src="imagens/body/readqrcode.png" width="250px" 	alt="qr-code">
+						<img class="img-fluid" id="imageQrcode" name="imageQrcode" src="imagens/body/readqrcode.png" width="250px"
+							alt="qr-code">
 						<br>
-						<span id="description"></span>
+						<span id="description">Sistema não iniciado</span>
 					</div>
 
 					<div class="col-md-6 text-center mx-auto">
@@ -212,7 +213,7 @@
 		$("#year").text(year);
 		const socket = io(url + '/', { transports: ['websocket'] });
 		//
-		$("#description").html("Sistema não iniciado.");
+		$("#description").html("Sistema não iniciado");
 		//
 		$("#start-form").validate({
 			rules: {
@@ -258,6 +259,21 @@
 			submitHandler: function () {
 				event.preventDefault();
 				var data = $("#start-form").serialize();
+				console.log(data);
+				//
+				/*
+				axios.post('/user', {
+					firstName: 'Fred',
+					lastName: 'Flintstone'
+				})
+					.then(function (response) {
+						console.log(response);
+					})
+					.catch(function (error) {
+						console.log(error);
+					});
+					*/
+				//
 				$.ajax({
 					type: 'POST',
 					url: url + '/sistema/Start',
