@@ -64,8 +64,8 @@
 				<div class="row justify-content-center align-items-center">
 
 					<div class="col-md-6 text-center mx-auto">
-						<img class="img-fluid" id="imageQrcode" name="imageQrcode" src="imagens/body/readqrcode.png" width="250px"
-							alt="qr-code">
+						<img class="img-fluid" id="imageQrcode" name="imageQrcode" src="imagens/body/readqrcode.png" width="250px" 	alt="qr-code">
+						Teste
 					</div>
 
 					<div class="col-md-6 text-center mx-auto">
@@ -265,17 +265,17 @@
 					},
 					success: function (response) {
 						console.log(response);
-						if (response.result === true) {
+						if (response.result == 'info') {
 							$("#send_form").html('Logar');
 							$("#login-alert").css('display', 'none');
 							window.location.href = "../home/";
 						} else {
 							$("#send_form").html('Logar');
-							console.log('Menssagem: ' + response.mensagem);
+							console.log('Menssagem: ' + response.message);
 							$("#mensagem").html('<center>' +
 								'<div class="panel-body padding-top-md" >' +
-								'<div id="login-alert" class="alert alert-' + response.alerta + ' col-sm-6">' +
-								response.iconem + '&#32;' + response.mensagem +
+								'<div id="login-alert" class="alert alert-' + response.result + ' col-sm-6">' +
+								response.iconem + '&#32;' + response.message +
 								'</div>' +
 								'</div>' +
 								'</center>');
@@ -319,8 +319,8 @@
 			}
 		});
 		//
-		socket.on('whatsapp-status', (status) => {
-			if (status) {
+		socket.on('state', (state) => {
+			if (state) {
 				Swal.fire({
 					icon: 'success',
 					title: 'Sucesso',

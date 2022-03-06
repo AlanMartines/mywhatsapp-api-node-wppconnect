@@ -192,7 +192,7 @@ module.exports = class Wppconnect {
 						CodeasciiQR: asciiQR,
 						CodeurlCode: urlCode,
 						qrCode: base64Qrimg,
-						message: "Sistema aguardando leitura do QR-Code"
+						mensagem: "Sistema aguardando leitura do QR-Code"
 					});
 				},
 				statusFind: async (statusSession, session) => {
@@ -415,7 +415,7 @@ module.exports = class Wppconnect {
 				let time = 0;
 				client.onStateChange(async (state) => {
 					//
-					socket.emit('qrCode',
+					socket.emit('state',
 					{
 						state: state,
 						SessionName: SessionName
