@@ -14,10 +14,10 @@ const queue = new PQueue({
 */
 if (fs.existsSync('./wppconnect/dist/index')) {
 	//
-	const wppconnect = require('./wppconnect/dist/index');
+	var wppconnect = require('./wppconnect/dist/index');
 	//
 } else {
-	const wppconnect = require('@wppconnect-team/wppconnect');
+	var wppconnect = require('@wppconnect-team/wppconnect');
 }
 //
 const Sessions = require('./controllers/sessions.js');
