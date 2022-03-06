@@ -416,11 +416,11 @@ module.exports = class Wppconnect {
 	//
 	static async setup(SessionName) {
 		var session = Sessions.getSession(SessionName);
-		await session.client.then(client => {
+		await session.client.then(async (client) => {
 			try {
 				// State change
 				let time = 0;
-				client.onStateChange(async (state) => {
+				await client.onStateChange(async (state) => {
 					//
 					socket.emit('state',
 					{
@@ -459,8 +459,8 @@ module.exports = class Wppconnect {
 						await deletaToken(`${tokenPatch}`, `${SessionName}.data.json`);
 						await deletaCache(`${tokenPatch}`, `WPP-${SessionName}`);
 						//
-						time = setTimeout(() => {
-							client.close();
+						time = setTimeout(async () => {
+							await client.close();
 							// process.exit(); //optional function if you work with only one session
 						}, 80000);
 					}
@@ -483,7 +483,7 @@ module.exports = class Wppconnect {
 			//
 			// Listen to messages
 			try {
-				client.onMessage(async (message) => {
+				await client.onMessage(async (message) => {
 					console.log("- onMessage")
 					//
 					/*
@@ -548,7 +548,7 @@ module.exports = class Wppconnect {
 				//  3 = READ,
 				//  4 = PLAYED =
 				//
-				client.onAck(async (ack) => {
+				await client.onAck(async (ack) => {
 					console.log("- Listen to ack", ack.ack);
 					switch (ack.ack) {
 						case -7:
