@@ -332,6 +332,8 @@
 		socket.on('status', (update) => {
 			let SessionName = $('#SessionName').val();
 			//
+			console.log(update);
+			//
 			if (SessionName === update.SessionName) {
 			if (update.status === 'isLogged' || update.status  === 'qrReadSuccess' || update.status  === 'chatsAvailable' || update.status  === 'inChat') {
 				//
@@ -343,6 +345,11 @@
 					title: 'Sucesso',
 					text: 'Whatsapp conectado com sucesso'
 				});
+				//
+			} else if(status.status === 'qrReadError'){
+				//
+				$('#imageQrcode').attr("src", 'imagens/body/error.png');
+        $("#description").html("Erro ao efetuar leitura do qr code ou não lido.");
 				//
 			} else if(status.status === 'qrReadError'){
 				//
