@@ -137,11 +137,11 @@ module.exports = class Wppconnect {
 			╚═╝┴   ┴ ┴└─┘┘└┘┴ ┴┴─┘  ╚═╝┴└─└─┘┴ ┴ ┴ └─┘  ╩  ┴ ┴┴└─┴ ┴┴ ┴└─┘ ┴ └─┘┴└─└─┘
 	 */
 		//
-		if (MultiDevice == 'true') {
+		if (MultiDevice == 'true' || MultiDevice == true) {
 			//
 			await deletaToken(`${tokenPatch}`, `${SessionName}.data.json`);
 			//
-		} else if (MultiDevice == 'false' || typeof MultiDevice == 'undefined') {
+		} else if (MultiDevice == 'false' || typeof MultiDevice == 'undefined' || MultiDevice == false) {
 			//
 			await deletaCache(`${tokenPatch}`, `WPP-${SessionName}`);
 			//
