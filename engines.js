@@ -275,12 +275,6 @@ module.exports = class Wppconnect {
 						//
 					}
 					//
-					socket.emit('status',
-					{
-						status: statusSession,
-						SessionName: SessionName
-					});
-					//
 				},
 				whatsappVersion: whatsappVersion ? `${whatsappVersion}` : '2.2204.13', // whatsappVersion: '22.2204.13',
 				deviceName: `${config.DEVICE_NAME}`,
