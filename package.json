@@ -6,7 +6,8 @@
   "private": true,
   "scripts": {
     "start": "node index.js",
-    "test": "echo \"Erro: nenhum teste especificado\" && exit 1"
+    "test": "echo \"Erro: nenhum teste especificado\" && exit 1",
+    "postinstall": "echo \"Teste: postinstall\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -52,6 +53,7 @@
     "nodemon": "^2.0.15",
     "p-iteration": "^1.1.8",
     "p-queue": "7.2.0",
+		"postinstall": "^0.7.4",
     "request": "^2.88.2",
     "rimraf": "^3.0.2",
     "socket.io": "^4.4.1",
