@@ -422,7 +422,7 @@ module.exports = class Wppconnect {
 			try {
 				// State change
 				let time = 0;
-				await client.onStateChange(async (state) => {
+				client.onStateChange(async (state) => {
 					//
 					console.log('- Connection status: ', state);
 					//
@@ -485,7 +485,7 @@ module.exports = class Wppconnect {
 			//
 			// Listen to messages
 			try {
-				await client.onMessage(async (message) => {
+				client.onMessage(async (message) => {
 					console.log("- onMessage")
 					//
 					/*
@@ -516,7 +516,7 @@ module.exports = class Wppconnect {
 			//
 			// function to detect incoming call
 			try {
-				await client.onIncomingCall(async (call) => {
+				client.onIncomingCall(async (call) => {
 					await client.rejectCall();
 					await client.sendText(call.peerJid, await saudacao() + ",\nDesculpe-me mas não consigo atender sua chamada, se for urgente manda msg de texto, grato.");
 				});
@@ -526,7 +526,7 @@ module.exports = class Wppconnect {
 			//
 			try {
 				// Listen when client has been added to a group
-				await client.onAddedToGroup(async (chatEvent) => {
+				client.onAddedToGroup(async (chatEvent) => {
 					console.log('- Listen when client has been added to a group:', chatEvent.name);
 				});
 			} catch (error) {
@@ -550,7 +550,7 @@ module.exports = class Wppconnect {
 				//  3 = READ,
 				//  4 = PLAYED =
 				//
-				await client.onAck(async (ack) => {
+				client.onAck(async (ack) => {
 					console.log("- Listen to ack", ack.ack);
 					switch (ack.ack) {
 						case -7:
