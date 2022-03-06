@@ -12,8 +12,14 @@ const queue = new PQueue({
 	concurrency: 1
 });
 */
-const wppconnect = require('./wppconnect/dist/index');
-//const wppconnect = require('@wppconnect-team/wppconnect');
+if (fs.existsSync('./wppconnect/dist/index')) {
+	//
+	const wppconnect = require('./wppconnect/dist/index');
+	//
+} else {
+	const wppconnect = require('@wppconnect-team/wppconnect');
+}
+//
 const Sessions = require('./controllers/sessions.js');
 const webhooks = require('./controllers/webhooks.js');
 const startAll = require('./middleware/startup.js');
@@ -387,10 +393,10 @@ module.exports = class Wppconnect {
 			const sessionUser = await Sessions.getSession(SessionName);
 			//
 			socket.emit('status',
-			{
-				status: sessionUser.status,
-				SessionName: SessionName
-			});
+				{
+					status: sessionUser.status,
+					SessionName: SessionName
+				});
 			//
 			console.log("- Instância não criada:", error);
 		}
@@ -427,10 +433,10 @@ module.exports = class Wppconnect {
 					console.log('- Connection status: ', state);
 					//
 					socket.emit('state',
-					{
-						status: state,
-						SessionName: SessionName
-					});
+						{
+							status: state,
+							SessionName: SessionName
+						});
 					//
 					session.state = state;
 					clearTimeout(time);
