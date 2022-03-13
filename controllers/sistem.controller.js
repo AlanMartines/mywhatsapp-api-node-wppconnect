@@ -338,7 +338,7 @@ router.post("/QRCode", upload.none(''), verifyToken.verify, async (req, res, nex
 	} else {
 		//
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-		var session = Sessions.getSession(removeWithspace(req.body.SessionName));
+		var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':

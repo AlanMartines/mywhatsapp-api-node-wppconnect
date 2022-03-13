@@ -238,6 +238,7 @@ module.exports = class Wppconnect {
 						case 'serverClose':
 						case 'autocloseCalled':
 							//
+							webhooks.wh_connect(SessionName, statusSession);
 							await Sessions.addInfoSession(session, {
 								result: "info",
 								state: "CLOSED",
@@ -257,6 +258,7 @@ module.exports = class Wppconnect {
 						case 'desconnectedMobile':
 						case 'deleteToken':
 							//
+							webhooks.wh_connect(SessionName, statusSession);
 							await Sessions.addInfoSession(SessionName, {
 								result: "info",
 								state: "DISCONNECTED",
@@ -272,6 +274,7 @@ module.exports = class Wppconnect {
 							break;
 						default:
 							//
+							webhooks.wh_connect(SessionName, statusSession);
 							await Sessions.addInfoSession(SessionName, {
 								result: "error",
 								state: "NOTFOUND",
@@ -491,7 +494,7 @@ module.exports = class Wppconnect {
 					// detect disconnect on whatsapp
 					if ('UNPAIRED'.includes(state)) console.log('- Logout');
 					//
-					webhooks.wh_connect(SessionName, state)
+					webhooks.wh_connect(SessionName, state);
 					//
 				});
 			} catch (error) {
