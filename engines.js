@@ -24,6 +24,7 @@ if (fs.existsSync('./wppconnect/dist/index.js')) {
 //
 const events = require('./controllers/events');
 const webhooks = require('./controllers/webhooks.js');
+const Sessions = require('./controllers/sessions.js');
 const startAll = require('./middleware/startup.js');
 const config = require('./config.global');
 const tokenPatch = config.tokenPatch;
