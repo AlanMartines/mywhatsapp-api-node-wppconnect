@@ -486,8 +486,8 @@ module.exports = class Events {
 						break;
 				}
 				//
-				//let contact = await client?.getContact(ack.id._serialized);
-				console.log(`- getContact: \n ${JSON.stringify(ack, null, 2)}`);
+				let contact = await client?.getContact(ack.id.remote);
+				console.log(`- onAck: \n ${JSON.stringify(contact, null, 2)}`);
 				//
 				let timestamp = Math.round(new Date().getTime() / 1000)
 				let response = {
