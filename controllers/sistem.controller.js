@@ -432,7 +432,7 @@ router.post("/getSessions", upload.none(''), verifyToken.verify, async (req, res
 		//
 	} else {
 		//
-		var getSessions = await Sessions.getSessions();
+		var getSessions = await Sessions.getAll();
 		//
 		//console.log(result);
 		res.setHeader('Content-Type', 'application/json');
