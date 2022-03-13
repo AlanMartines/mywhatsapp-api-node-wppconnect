@@ -368,7 +368,7 @@ module.exports = class Wppconnect {
 			let tokens = await client.getSessionTokenBrowser();
 			let browser = [];
 			//
-			webhooks.wh_connect(session, 'connected', info, browser, tokens)
+			webhooks.wh_connect(session, 'connected', info, browser, tokens);
 			events.receiveMessage(session, client)
 			events.statusMessage(session, client)
 			//
