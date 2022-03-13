@@ -22,13 +22,13 @@ if (fs.existsSync('./wppconnect/dist/index.js')) {
 	var wppconnect = require('@wppconnect-team/wppconnect');
 }
 //
-const events = require('./controllers/events');
+const events = require('./controllers/events').EventEmitter.defaultMaxListeners = 1000;
 const webhooks = require('./controllers/webhooks.js');
 const Sessions = require('./controllers/sessions.js');
 const startAll = require('./middleware/startup.js');
 const config = require('./config.global');
 const tokenPatch = config.tokenPatch;
-events.EventEmitter.prototype._maxListeners = 1000;
+//events.EventEmitter.prototype._maxListeners = 1000;
 //
 // ------------------------------------------------------------------------------------------------------- //
 //
