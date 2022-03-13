@@ -369,8 +369,12 @@ module.exports = class Wppconnect {
 			let browser = [];
 			//
 			webhooks.wh_connect(SessionName, 'connected', info, browser, tokens);
-			events.receiveMessage(SessionName, client)
-			events.statusMessage(SessionName, client)
+			events.receiveMessage(SessionName, client, socket)
+			events.statusMessage(SessionName, client, socket)
+			//
+			if (parseInt(config.useHere) == true) {
+				events.statusConnection(SessionName, client)
+			}
 			//
 			await Sessions.addInfoSession(SessionName, {
 				result: "success",
@@ -458,12 +462,12 @@ module.exports = class Wppconnect {
 					if (state == "CONNECTED") {
 						session.state = state;
 						session.status = 'isLogged';
-						session.qrCode  = null;
+						session.qrCode = null;
 						//
 					} else if (state == "OPENING") {
 						session.state = state;
 						session.status = 'notLogged';
-						session.qrCode  = null;
+						session.qrCode = null;
 						//
 						//await deletaToken(`${tokenPatch}`, `${SessionName}.data.json`);
 						//await deletaCache(`${tokenPatch}`, `WPP-${SessionName}`);
@@ -471,14 +475,14 @@ module.exports = class Wppconnect {
 					} else if (state == "UNPAIRED") {
 						session.state = state;
 						session.status = 'notLogged';
-						session.qrCode  = null;
+						session.qrCode = null;
 						//
 						await deletaToken(`${tokenPatch}`, `${SessionName}.data.json`);
 						await deletaCache(`${tokenPatch}`, `WPP-${SessionName}`);
 						//
 					} else if (state === 'DISCONNECTED' || state === 'SYNCING') {
 						session.state = state;
-						session.qrCode  = null;
+						session.qrCode = null;
 						//
 						await deletaToken(`${tokenPatch}`, `${SessionName}.data.json`);
 						await deletaCache(`${tokenPatch}`, `WPP-${SessionName}`);
@@ -499,7 +503,7 @@ module.exports = class Wppconnect {
 				});
 			} catch (error) {
 				session.state = "NOTFOUND";
-				session.qrCode  = null;
+				session.qrCode = null;
 				session.attempts = 0;
 				session.message = 'Sistema desconectado';
 				console.log("- Instância não iniciada:", error);
@@ -530,7 +534,7 @@ module.exports = class Wppconnect {
 			} catch (error) {
 				session.state = "NOTFOUND";
 				session.status = "notLogged";
-				session.qrCode  = null;
+				session.qrCode = null;
 				session.attempts = 0;
 				session.message = 'Sistema desconectado';
 				console.log("- Error onMessage:", error);
@@ -637,14 +641,14 @@ module.exports = class Wppconnect {
 					session.state = "CLOSED";
 					session.status = "CLOSED";
 					session.client = false;
-					session.qrCode  = null;
+					session.qrCode = null;
 					console.log("- Sessão fechada");
 					//
 					var returnClosed = {
 						result: "success",
 						state: session.state,
 						status: session.status,
-						qrCode: session.qrCode ,
+						qrCode: session.qrCode,
 						message: "Sessão fechada com sucesso"
 					};
 					//
@@ -656,7 +660,7 @@ module.exports = class Wppconnect {
 						result: "error",
 						state: session.state,
 						status: session.status,
-						qrCode: session.qrCode ,
+						qrCode: session.qrCode,
 						message: "Erro ao fechar sessão"
 					};
 					//
@@ -671,7 +675,7 @@ module.exports = class Wppconnect {
 					result: "error",
 					state: session.state,
 					status: session.status,
-					qrCode: session.qrCode ,
+					qrCode: session.qrCode,
 					message: "Erro ao fechar sessão"
 				};
 				//
@@ -696,14 +700,14 @@ module.exports = class Wppconnect {
 					session.state = "DISCONNECTED";
 					session.status = "DISCONNECTED";
 					session.client = false;
-					session.qrCode  = null;
+					session.qrCode = null;
 					console.log("- Sessão desconetada");
 					//
 					var returnLogout = {
 						result: "success",
 						state: session.state,
 						status: session.status,
-						qrCode: session.qrCode ,
+						qrCode: session.qrCode,
 						message: "Sessão desconetada"
 					};
 					//

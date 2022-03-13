@@ -5,32 +5,38 @@ const config = require('../config.global');
 //
 module.exports = class Events {
 
-	static async receiveMessage(session, client) {
-		client.on('message', async (message) => {
-			let type = message.type;
 
-			let response = [];
-			if (message.hasMedia == true || message.type == 'ptt' || message.type == 'document' || message.type == 'video' || message.type == 'image' || message.type == 'sticker') {
-				var buffer = await message.downloadMedia();
-				var string64 = buffer.toString('base64');
+	static async receiveMessage(session, client, socket) {
+
+		await client.onMessage(async message => {
+			let type = message.type
+			if (type == 'chat' && message.subtype == 'url') {
+				type = 'link'
+			} else if (type == 'chat' && !message.subtype) {
+				type = 'text'
+			}
+
+			let response = []
+			if (message.isMedia === true || message.isMMS === true || message.type == 'document' || message.type == 'ptt' || message.type == 'sticker') {
+				var buffer = await client.decryptFile(message);
 				var telefone = ((String(`${message.from}`).split('@')[0]).substr(2));
 				let date_ob = new Date();
 				let date = ("0" + date_ob.getDate()).slice(-2);
 				let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
 				let year = date_ob.getFullYear();
 				let miliseconds = date_ob.getMilliseconds();
-				var fileName = `${telefone}-${year}${month}${date}-${miliseconds}.${mime.extension(buffer.mimetype)}`;
+				var fileName = `${telefone}-${year}${month}${date}-${miliseconds}.${mime.extension(message.mimetype)}`;
 			}
 			//
 			let contact = await client?.getContact(message?.id);
 			//
 			switch (type) {
 
-				case 'chat':
+				case 'text':
 					response = {
 						"wook": 'RECEIVE_MESSAGE',
 						"type": 'text',
-						"id": message.id._serialized,
+						"id": message.id,
 						"session": session,
 						//
 						"name": contact.name ? contact.name : "",
@@ -56,7 +62,7 @@ module.exports = class Events {
 					response = {
 						"wook": 'RECEIVE_MESSAGE',
 						"type": 'image',
-						"id": message.id._serialized,
+						"id": message.id,
 						"session": session,
 						//
 						"name": contact.name ? contact.name : "",
@@ -80,11 +86,13 @@ module.exports = class Events {
 
 					break;
 				case 'sticker':
-
+					fs.writeFileSync(`files-received/${fileName}`, buffer, (err) => {
+						console.log('arquivo baixado!')
+					});
 					response = {
 						"wook": 'RECEIVE_MESSAGE',
 						"type": 'sticker',
-						"id": message.id._serialized,
+						"id": message.id,
 						"session": session,
 						//
 						"name": contact.name ? contact.name : "",
@@ -113,7 +121,7 @@ module.exports = class Events {
 					response = {
 						"wook": 'RECEIVE_MESSAGE',
 						"type": 'audio',
-						"id": message.id._serialized,
+						"id": message.id,
 						"session": session,
 						//
 						"name": contact.name ? contact.name : "",
@@ -140,7 +148,7 @@ module.exports = class Events {
 					response = {
 						"wook": 'RECEIVE_MESSAGE',
 						"type": 'ptt',
-						"id": message.id._serialized,
+						"id": message.id,
 						"session": session,
 						//
 						"name": contact.name ? contact.name : "",
@@ -167,7 +175,7 @@ module.exports = class Events {
 					response = {
 						"wook": 'RECEIVE_MESSAGE',
 						"type": 'video',
-						"id": message.id._serialized,
+						"id": message.id,
 						"session": session,
 						//
 						"name": contact.name ? contact.name : "",
@@ -192,11 +200,10 @@ module.exports = class Events {
 					break;
 
 				case 'location':
-
 					response = {
 						"wook": 'RECEIVE_MESSAGE',
 						"type": 'location',
-						"id": message.id._serialized,
+						"id": message.id,
 						"session": session,
 						//
 						"name": contact.name ? contact.name : "",
@@ -221,20 +228,14 @@ module.exports = class Events {
 					break;
 
 				case 'document':
-
+					fs.writeFileSync(`files-received/${fileName}`, buffer, (err) => {
+						console.log('arquivo baixado!')
+					});
 					response = {
 						"wook": 'RECEIVE_MESSAGE',
 						"type": 'document',
-						"id": message.id._serialized,
+						"id": message.id,
 						"session": session,
-						//
-						"name": contact.name ? contact.name : "",
-						"realName": contact.pushname ? contact.pushname : "",
-						"formattedName": contact.formattedName ? contact.formattedName : "",
-						"business": contact.isBusiness,
-						"verifiedName": contact.verifiedName ? contact.verifiedName : "",
-						"isMyContact": contact.isMyContact,
-						//
 						"isGroupMsg": message.isGroupMsg,
 						"author": message.author ? message.author : null,
 						"sender": message.to.split('@')[0],
@@ -250,11 +251,10 @@ module.exports = class Events {
 					break;
 
 				case 'link':
-
 					response = {
 						"wook": 'RECEIVE_MESSAGE',
 						"type": 'link',
-						"id": message.id._serialized,
+						"id": message.id,
 						"session": session,
 						//
 						"name": contact.name ? contact.name : "",
@@ -278,11 +278,10 @@ module.exports = class Events {
 					break;
 
 				case 'vcard':
-
 					response = {
 						"wook": 'RECEIVE_MESSAGE',
 						"type": 'vcard',
-						"id": message.id._serialized,
+						"id": message.id,
 						"session": session,
 						//
 						"name": contact.name ? contact.name : "",
@@ -305,11 +304,10 @@ module.exports = class Events {
 					break;
 
 				case 'order':
-
 					response = {
 						"wook": 'RECEIVE_MESSAGE',
 						"type": 'order',
-						"id": message.id._serialized,
+						"id": message.id,
 						"session": session,
 						//
 						"name": contact.name ? contact.name : "",
@@ -330,16 +328,23 @@ module.exports = class Events {
 
 					break;
 			}
+
 			await webhooks.wh_messages(session, response)
-		});
+
+		})
 	}
 
-	static statusMessage(session, client) {
-		client.on('message_ack', async (message, ack) => {
-			let type = message.type
+	static statusMessage(session, client, socket) {
 
+		client.onAck(async ack => {
+			let type = ack.type
+			if (type == 'chat' && ack.subtype == 'url') {
+				type = 'link'
+			} else if (type == 'chat' && !ack.subtype) {
+				type = 'text'
+			}
 			let status
-			switch (ack) {
+			switch (ack.ack) {
 				case 0:
 					status = 'CLOCK'
 
@@ -401,12 +406,14 @@ module.exports = class Events {
 
 					break;
 			}
-
+			//
+			let contact = await client?.getContact(ack.id._serialized);
+			//
 			let timestamp = Math.round(new Date().getTime() / 1000)
 			let response = {
 				"wook": 'MESSAGE_STATUS',
 				"status": status,
-				"id": message.id._serialized,
+				"id": ack.id._serialized,
 				"session": session,
 				//
 				"name": contact.name ? contact.name : "",
@@ -416,20 +423,22 @@ module.exports = class Events {
 				"verifiedName": contact.verifiedName ? contact.verifiedName : "",
 				"isMyContact": contact.isMyContact,
 				//
-				"phone": message.id.remote.split("@")[0],
-				"content": message.body,
+				"phone": ack.id.remote.split("@")[0],
+				"content": ack.body,
 				"timestamp": timestamp,
 				"type": type
 			}
 
 			await webhooks.wh_status(session, response)
+
 		});
+
 	}
 
 	static statusConnection(session, client) {
 
 		client.onStateChange((state) => {
-			console.log('- State changed: ', state);
+			console.log('State changed: ', state);
 			// force whatsapp take over
 			if ('CONFLICT'.includes(state)) client.useHere();
 			// detect disconnect on whatsapp
