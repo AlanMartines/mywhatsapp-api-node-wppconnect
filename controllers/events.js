@@ -56,14 +56,16 @@ module.exports = class Events {
 		//
 		try {
 			//
-			await client.onMessage(async message => {
+			await client.onMessage(async (message) => {
 				let type = message.type
 				if (type == 'chat' && message.subtype == 'url') {
 					type = 'link'
 				} else if (type == 'chat' && !message.subtype) {
 					type = 'text'
 				}
-
+				let contact = await client?.getContact(message?.id?._serialized);
+				console.log(`- getContact: \n ${JSON.stringify(message, null, 2)}`);
+				//
 				let response = [];
 				if (message.isMedia === true || message.isMMS === true || message.type == 'document' || message.type == 'ptt' || message.type == 'sticker') {
 					var buffer = await client.decryptFile(message);
@@ -75,9 +77,6 @@ module.exports = class Events {
 					let miliseconds = date_ob.getMilliseconds();
 					var fileName = `${telefone}-${year}${month}${date}-${miliseconds}.${mime.extension(message.mimetype)}`;
 				}
-				//
-				let contact = await client?.getContact(message?.id?._serialized);
-				console.log(`- getContact: \n ${JSON.stringify(contact, null, 2)}`);
 				//
 				switch (type) {
 
