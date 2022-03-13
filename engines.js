@@ -14,9 +14,11 @@ const queue = new PQueue({
 */
 if (fs.existsSync('./wppconnect/dist/index')) {
 	//
+	console.log("- Wppconnect is patch");
 	var wppconnect = require('./wppconnect/dist/index');
 	//
 } else {
+	console.log("- Wppconnect is package");
 	var wppconnect = require('@wppconnect-team/wppconnect');
 }
 //
