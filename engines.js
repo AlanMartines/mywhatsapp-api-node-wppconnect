@@ -490,6 +490,9 @@ module.exports = class Wppconnect {
 					if ('CONFLICT'.includes(state)) client.useHere();
 					// detect disconnect on whatsapp
 					if ('UNPAIRED'.includes(state)) console.log('- Logout');
+					//
+					webhooks.wh_connect(SessionName, state)
+					//
 				});
 			} catch (error) {
 				session.state = "NOTFOUND";

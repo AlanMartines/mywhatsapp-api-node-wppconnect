@@ -23,15 +23,15 @@ module.exports = class Webhooks {
                 }
             }
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
     }
 
     static async wh_connect(session, response, number = null, browserless = null, tokens = []) {
 			console.log('- Webhook connect');
-        let data = Sessions.getSession(session)
+        let data = Sessions.getSession(session);
         if (response == 'autocloseCalled' || response == 'desconnectedMobile') {
-            Sessions.deleteSession(session)
+            Sessions.deleteSession(session);
         }
         try {
             if (response == 'qrReadSuccess' || response == 'connected') {
@@ -67,7 +67,7 @@ module.exports = class Webhooks {
             }
 
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
 
     }
@@ -90,7 +90,7 @@ module.exports = class Webhooks {
             }
 
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
     }
 
@@ -113,7 +113,7 @@ module.exports = class Webhooks {
                         console.log('- Webhooks status message')
                     });
                 if (data.wh_qrcode == '') {
-                    console.log('- Webhook no defined')
+                    console.log('- Webhook no defined');
                 }
             }
 

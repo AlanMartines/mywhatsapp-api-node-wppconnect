@@ -330,7 +330,7 @@ module.exports = class Events {
 	static statusConnection(session, client) {
 
 		client.onStateChange((state) => {
-			console.log('State changed: ', state);
+			console.log('- State changed: ', state);
 			// force whatsapp take over
 			if ('CONFLICT'.includes(state)) client.useHere();
 			// detect disconnect on whatsapp
