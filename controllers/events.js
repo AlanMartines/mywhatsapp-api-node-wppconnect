@@ -7,9 +7,9 @@ module.exports = class Events {
 
 	static async receiveMessage(session, client) {
 		client.on('message', async (message) => {
-			let type = message.type
+			let type = message.type;
 
-			let response = []
+			let response = [];
 			if (message.hasMedia == true || message.type == 'ptt' || message.type == 'document' || message.type == 'video' || message.type == 'image' || message.type == 'sticker') {
 				var buffer = await message.downloadMedia();
 				var string64 = buffer.toString('base64');
@@ -21,6 +21,9 @@ module.exports = class Events {
 				let miliseconds = date_ob.getMilliseconds();
 				var fileName = `${telefone}-${year}${month}${date}-${miliseconds}.${mime.extension(buffer.mimetype)}`;
 			}
+			//
+			let contact = await client?.getContact(message?.id);
+			//
 			switch (type) {
 
 				case 'chat':
@@ -29,6 +32,14 @@ module.exports = class Events {
 						"type": 'text',
 						"id": message.id._serialized,
 						"session": session,
+						//
+						"name": contact.name ? contact.name : "",
+						"realName": contact.pushname ? contact.pushname : "",
+						"formattedName": contact.formattedName ? contact.formattedName : "",
+						"business": contact.isBusiness,
+						"verifiedName": contact.verifiedName ? contact.verifiedName : "",
+						"isMyContact": contact.isMyContact,
+						//
 						"isGroupMsg": message.isGroupMsg,
 						"author": message.author ? message.author : null,
 						"sender": message.to.split('@')[0],
@@ -47,6 +58,14 @@ module.exports = class Events {
 						"type": 'image',
 						"id": message.id._serialized,
 						"session": session,
+						//
+						"name": contact.name ? contact.name : "",
+						"realName": contact.pushname ? contact.pushname : "",
+						"formattedName": contact.formattedName ? contact.formattedName : "",
+						"business": contact.isBusiness,
+						"verifiedName": contact.verifiedName ? contact.verifiedName : "",
+						"isMyContact": contact.isMyContact,
+						//
 						"isGroupMsg": message.isGroupMsg,
 						"author": message.author ? message.author : null,
 						"sender": message.to.split('@')[0],
@@ -67,6 +86,14 @@ module.exports = class Events {
 						"type": 'sticker',
 						"id": message.id._serialized,
 						"session": session,
+						//
+						"name": contact.name ? contact.name : "",
+						"realName": contact.pushname ? contact.pushname : "",
+						"formattedName": contact.formattedName ? contact.formattedName : "",
+						"business": contact.isBusiness,
+						"verifiedName": contact.verifiedName ? contact.verifiedName : "",
+						"isMyContact": contact.isMyContact,
+						//
 						"isGroupMsg": message.isGroupMsg,
 						"author": message.author ? message.author : null,
 						"sender": message.to.split('@')[0],
@@ -88,6 +115,14 @@ module.exports = class Events {
 						"type": 'audio',
 						"id": message.id._serialized,
 						"session": session,
+						//
+						"name": contact.name ? contact.name : "",
+						"realName": contact.pushname ? contact.pushname : "",
+						"formattedName": contact.formattedName ? contact.formattedName : "",
+						"business": contact.isBusiness,
+						"verifiedName": contact.verifiedName ? contact.verifiedName : "",
+						"isMyContact": contact.isMyContact,
+						//
 						"isGroupMsg": message.isGroupMsg,
 						"author": message.author ? message.author : null,
 						"sender": message.to.split('@')[0],
@@ -107,6 +142,14 @@ module.exports = class Events {
 						"type": 'ptt',
 						"id": message.id._serialized,
 						"session": session,
+						//
+						"name": contact.name ? contact.name : "",
+						"realName": contact.pushname ? contact.pushname : "",
+						"formattedName": contact.formattedName ? contact.formattedName : "",
+						"business": contact.isBusiness,
+						"verifiedName": contact.verifiedName ? contact.verifiedName : "",
+						"isMyContact": contact.isMyContact,
+						//
 						"isGroupMsg": message.isGroupMsg,
 						"author": message.author ? message.author : null,
 						"sender": message.to.split('@')[0],
@@ -126,6 +169,14 @@ module.exports = class Events {
 						"type": 'video',
 						"id": message.id._serialized,
 						"session": session,
+						//
+						"name": contact.name ? contact.name : "",
+						"realName": contact.pushname ? contact.pushname : "",
+						"formattedName": contact.formattedName ? contact.formattedName : "",
+						"business": contact.isBusiness,
+						"verifiedName": contact.verifiedName ? contact.verifiedName : "",
+						"isMyContact": contact.isMyContact,
+						//
 						"isGroupMsg": message.isGroupMsg,
 						"author": message.author ? message.author : null,
 						"sender": message.to.split('@')[0],
@@ -147,6 +198,14 @@ module.exports = class Events {
 						"type": 'location',
 						"id": message.id._serialized,
 						"session": session,
+						//
+						"name": contact.name ? contact.name : "",
+						"realName": contact.pushname ? contact.pushname : "",
+						"formattedName": contact.formattedName ? contact.formattedName : "",
+						"business": contact.isBusiness,
+						"verifiedName": contact.verifiedName ? contact.verifiedName : "",
+						"isMyContact": contact.isMyContact,
+						//
 						"isGroupMsg": message.isGroupMsg,
 						"author": message.author ? message.author : null,
 						"sender": message.to.split('@')[0],
@@ -168,6 +227,14 @@ module.exports = class Events {
 						"type": 'document',
 						"id": message.id._serialized,
 						"session": session,
+						//
+						"name": contact.name ? contact.name : "",
+						"realName": contact.pushname ? contact.pushname : "",
+						"formattedName": contact.formattedName ? contact.formattedName : "",
+						"business": contact.isBusiness,
+						"verifiedName": contact.verifiedName ? contact.verifiedName : "",
+						"isMyContact": contact.isMyContact,
+						//
 						"isGroupMsg": message.isGroupMsg,
 						"author": message.author ? message.author : null,
 						"sender": message.to.split('@')[0],
@@ -189,6 +256,14 @@ module.exports = class Events {
 						"type": 'link',
 						"id": message.id._serialized,
 						"session": session,
+						//
+						"name": contact.name ? contact.name : "",
+						"realName": contact.pushname ? contact.pushname : "",
+						"formattedName": contact.formattedName ? contact.formattedName : "",
+						"business": contact.isBusiness,
+						"verifiedName": contact.verifiedName ? contact.verifiedName : "",
+						"isMyContact": contact.isMyContact,
+						//
 						"isGroupMsg": message.isGroupMsg,
 						"author": message.author ? message.author : null,
 						"sender": message.to.split('@')[0],
@@ -209,6 +284,14 @@ module.exports = class Events {
 						"type": 'vcard',
 						"id": message.id._serialized,
 						"session": session,
+						//
+						"name": contact.name ? contact.name : "",
+						"realName": contact.pushname ? contact.pushname : "",
+						"formattedName": contact.formattedName ? contact.formattedName : "",
+						"business": contact.isBusiness,
+						"verifiedName": contact.verifiedName ? contact.verifiedName : "",
+						"isMyContact": contact.isMyContact,
+						//
 						"isGroupMsg": message.isGroupMsg,
 						"author": message.author ? message.author : null,
 						"sender": message.to.split('@')[0],
@@ -228,6 +311,14 @@ module.exports = class Events {
 						"type": 'order',
 						"id": message.id._serialized,
 						"session": session,
+						//
+						"name": contact.name ? contact.name : "",
+						"realName": contact.pushname ? contact.pushname : "",
+						"formattedName": contact.formattedName ? contact.formattedName : "",
+						"business": contact.isBusiness,
+						"verifiedName": contact.verifiedName ? contact.verifiedName : "",
+						"isMyContact": contact.isMyContact,
+						//
 						"isGroupMsg": message.isGroupMsg,
 						"author": message.author ? message.author : null,
 						"sender": message.to.split('@')[0],
@@ -317,6 +408,14 @@ module.exports = class Events {
 				"status": status,
 				"id": message.id._serialized,
 				"session": session,
+				//
+				"name": contact.name ? contact.name : "",
+				"realName": contact.pushname ? contact.pushname : "",
+				"formattedName": contact.formattedName ? contact.formattedName : "",
+				"business": contact.isBusiness,
+				"verifiedName": contact.verifiedName ? contact.verifiedName : "",
+				"isMyContact": contact.isMyContact,
+				//
 				"phone": message.id.remote.split("@")[0],
 				"content": message.body,
 				"timestamp": timestamp,
