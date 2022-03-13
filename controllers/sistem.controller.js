@@ -150,7 +150,7 @@ router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next
 				var data = {
 					SessionName: removeWithspace(req.body.SessionName),
 					MultiDevice: req.body.MultiDevice,
-					whatsappVersion: req.body.whatsappVersion
+					whatsappVersion: req.body.whatsappVersion,
 				};
 				//
 				const confToken = await startAll.confToken(`${config.tokenPatch}`, `${data.SessionName}.auto.json`, null, true);
@@ -177,7 +177,7 @@ router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next
 					wh_status: req.body.wh_status,
 					wh_message: req.body.wh_message,
 					wh_qrcode: req.body.wh_qrcode,
-					wh_connect: req.body.wh_connect
+					wh_connect: req.body.wh_connect,
 				});
 				//
 				var Start = {

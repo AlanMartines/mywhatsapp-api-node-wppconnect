@@ -193,7 +193,7 @@ module.exports = class Wppconnect {
 						await updateStateDb('QRCODE', 'qrRead', AuthorizationToken);
 					}
 					//
-					webhooks.wh_qrcode(SessionName, base64Qrimg);
+					await webhooks.wh_qrcode(SessionName, base64Qrimg);
 					this.exportQR(socket, base64Qrimg, SessionName, attempts);
 					await Sessions.addInfoSession(SessionName, {
 						result: "info",
@@ -219,7 +219,7 @@ module.exports = class Wppconnect {
 						case 'inChat':
 						case 'chatsAvailable':
 							//
-							webhooks.wh_status(SessionName, statusSession);
+							await webhooks.wh_connect(SessionName, statusSession);
 							await Sessions.addInfoSession(SessionName, {
 								result: "success",
 								state: "CONNECTED",
@@ -238,7 +238,7 @@ module.exports = class Wppconnect {
 						case 'serverClose':
 						case 'autocloseCalled':
 							//
-							webhooks.wh_status(SessionName, statusSession);
+							webhooks.wh_connect(SessionName, statusSession);
 							await Sessions.addInfoSession(session, {
 								result: "info",
 								state: "CLOSED",
@@ -258,7 +258,7 @@ module.exports = class Wppconnect {
 						case 'desconnectedMobile':
 						case 'deleteToken':
 							//
-							webhooks.wh_status(SessionName, statusSession);
+							await webhooks.wh_status(SessionName, statusSession);
 							await Sessions.addInfoSession(SessionName, {
 								result: "info",
 								state: "DISCONNECTED",
@@ -274,7 +274,7 @@ module.exports = class Wppconnect {
 							break;
 						default:
 							//
-							webhooks.wh_status(SessionName, statusSession);
+							await webhooks.wh_connect(SessionName, 'notLogged');
 							await Sessions.addInfoSession(SessionName, {
 								result: "error",
 								state: "NOTFOUND",
@@ -368,13 +368,13 @@ module.exports = class Wppconnect {
 			let tokens = await client.getSessionTokenBrowser();
 			let browser = [];
 			//
-			webhooks.wh_connect(SessionName, 'connected', info, browser, tokens);
+			await webhooks.wh_connect(SessionName, 'connected', info, browser, tokens);
 			events.receiveMessage(SessionName, client, socket);
 			events.statusMessage(SessionName, client, socket);
 			events.extraEvents(SessionName, client, socket);
 			//
 			if (parseInt(config.useHere) == true) {
-				events.statusConnection(SessionName, client)
+				events.statusConnection(SessionName, client, socket)
 			}
 			//
 			await Sessions.addInfoSession(SessionName, {
