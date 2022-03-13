@@ -64,7 +64,7 @@ module.exports = class Events {
 					type = 'text'
 				}
 
-				let response = []
+				let response = [];
 				if (message.isMedia === true || message.isMMS === true || message.type == 'document' || message.type == 'ptt' || message.type == 'sticker') {
 					var buffer = await client.decryptFile(message);
 					var telefone = ((String(`${message.from}`).split('@')[0]).substr(2));
@@ -77,6 +77,7 @@ module.exports = class Events {
 				}
 				//
 				let contact = await client?.getContact(message?.id?._serialized);
+				console.log(`- getContact: \n ${JSON.stringify(contact, null, 2)}`);
 				//
 				switch (type) {
 
@@ -484,7 +485,7 @@ module.exports = class Events {
 						break;
 				}
 				//
-				let contact = await client?.getContact(ack.id._serialized);
+				//let contact = await client?.getContact(ack.id._serialized);
 				//
 				let timestamp = Math.round(new Date().getTime() / 1000)
 				let response = {
