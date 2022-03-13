@@ -22,7 +22,6 @@ if (fs.existsSync('./wppconnect/dist/index.js')) {
 	var wppconnect = require('@wppconnect-team/wppconnect');
 }
 //
-const Sessions = require('./controllers/sessions.js');
 const events = require('./controllers/events');
 const webhooks = require('./controllers/webhooks.js');
 const startAll = require('./middleware/startup.js');
@@ -369,8 +368,9 @@ module.exports = class Wppconnect {
 			let browser = [];
 			//
 			webhooks.wh_connect(SessionName, 'connected', info, browser, tokens);
-			events.receiveMessage(SessionName, client, socket)
-			events.statusMessage(SessionName, client, socket)
+			events.receiveMessage(SessionName, client, socket);
+			events.statusMessage(SessionName, client, socket);
+			events.extraEvents(SessionName, client, socket);
 			//
 			if (parseInt(config.useHere) == true) {
 				events.statusConnection(SessionName, client)
@@ -438,192 +438,6 @@ module.exports = class Wppconnect {
 			}
 		);
 	}
-	//
-	static async setup(SessionName) {
-		var session = Sessions.getSession(SessionName);
-		await session.client.then(client => {
-			try {
-				// State change
-				let time = 0;
-				client.onStateChange(async (state) => {
-					//
-					console.log('- Connection status: ', state);
-					//
-					webhooks.wh_status(SessionName, state);
-					//
-					socket.emit('state',
-						{
-							status: state,
-							SessionName: SessionName
-						});
-					//
-					session.state = state;
-					clearTimeout(time);
-					if (state == "CONNECTED") {
-						session.state = state;
-						session.status = 'isLogged';
-						session.qrCode = null;
-						//
-					} else if (state == "OPENING") {
-						session.state = state;
-						session.status = 'notLogged';
-						session.qrCode = null;
-						//
-						//await deletaToken(`${tokenPatch}`, `${SessionName}.data.json`);
-						//await deletaCache(`${tokenPatch}`, `WPP-${SessionName}`);
-						//
-					} else if (state == "UNPAIRED") {
-						session.state = state;
-						session.status = 'notLogged';
-						session.qrCode = null;
-						//
-						await deletaToken(`${tokenPatch}`, `${SessionName}.data.json`);
-						await deletaCache(`${tokenPatch}`, `WPP-${SessionName}`);
-						//
-					} else if (state === 'DISCONNECTED' || state === 'SYNCING') {
-						session.state = state;
-						session.qrCode = null;
-						//
-						await deletaToken(`${tokenPatch}`, `${SessionName}.data.json`);
-						await deletaCache(`${tokenPatch}`, `WPP-${SessionName}`);
-						//
-						time = setTimeout(async () => {
-							await client.close();
-							// process.exit(); //optional function if you work with only one session
-						}, 80000);
-					}
-					//
-					await updateStateDb(session.state, session.status, SessionName);
-					//
-					// force whatsapp take over
-					if ('CONFLICT'.includes(state)) client.useHere();
-					// detect disconnect on whatsapp
-					if ('UNPAIRED'.includes(state)) console.log('- Logout');
-					//
-				});
-			} catch (error) {
-				session.state = "NOTFOUND";
-				session.qrCode = null;
-				session.attempts = 0;
-				session.message = 'Sistema desconectado';
-				console.log("- Instância não iniciada:", error);
-			}
-			//
-			// Listen to messages
-			try {
-				client.onMessage(async (message) => {
-					console.log("- onMessage")
-					//
-					/*
-					console.log("- Type.....:", message.type);
-					console.log("- Body.....:", message.body);
-					console.log("- From.....:", message.from);
-					console.log("- To.......:", message.to);
-					console.log("- Push Name:", message.chat.contact.pushname);
-					console.log("- Is Group.:", message.isGroupMsg);
-					*/
-					//
-					if (message.body === '!Hi' && message.isGroupMsg === false) {
-						await client.sendText(message.from, await saudacao() + ",\nWelcome 🕷").then(async (result) => {
-							//console.log('- Result: ', result); //retorna um objeto de successo
-						}).catch((erro) => {
-							//console.error('- Error: ', erro); //return um objeto de erro
-						});
-					}
-				});
-			} catch (error) {
-				session.state = "NOTFOUND";
-				session.status = "notLogged";
-				session.qrCode = null;
-				session.attempts = 0;
-				session.message = 'Sistema desconectado';
-				console.log("- Error onMessage:", error);
-			}
-			//
-			// function to detect incoming call
-			try {
-				client.onIncomingCall(async (call) => {
-					await client.rejectCall();
-					await client.sendText(call.peerJid, await saudacao() + ",\nDesculpe-me mas não consigo atender sua chamada, se for urgente manda msg de texto, grato.");
-				});
-			} catch (error) {
-				console.log("- Error onIncomingCall:", error);
-			}
-			//
-			try {
-				// Listen when client has been added to a group
-				client.onAddedToGroup(async (chatEvent) => {
-					console.log('- Listen when client has been added to a group:', chatEvent.name);
-				});
-			} catch (error) {
-				console.log("- Error onAddedToGroup:", error);
-			}
-			//
-			try {
-				// Listen to ack's
-				// See the status of the message when sent.
-				// When receiving the confirmation object, "ack" may return a number, look {@link AckType} for details:
-				// -7 = MD_DOWNGRADE,
-				// -6 = INACTIVE,
-				// -5 = CONTENT_UNUPLOADABLE,
-				// -4 = CONTENT_TOO_BIG,
-				// -3 = CONTENT_GONE,
-				// -2 = EXPIRED,
-				// -1 = FAILED,
-				//  0 = CLOCK,
-				//  1 = SENT,
-				//  2 = RECEIVED,
-				//  3 = READ,
-				//  4 = PLAYED =
-				//
-				client.onAck((ack) => {
-					console.log("- Listen to ack", ack.ack);
-					switch (ack.ack) {
-						case -7:
-							console.log("- MD_DOWNGRADE");;
-							break;
-						case -6:
-							console.log("- INACTIVE");;
-							break;
-						case -5:
-							console.log("- CONTENT_UNUPLOADABLE");;
-							break;
-						case -4:
-							console.log("- CONTENT_TOO_BIG");;
-							break;
-						case -3:
-							console.log("- CONTENT_GONE");;
-							break;
-						case -2:
-							console.log("- EXPIRED");;
-							break;
-						case -1:
-							console.log("- FAILED");;
-							break;
-						case 0:
-							console.log("- CLOCK");;
-							break;
-						case 1:
-							console.log("- SENT");;
-							break;
-						case 2:
-							console.log("- RECEIVED");;
-							break;
-						case 3:
-							console.log("- READ");;
-							break;
-						case 4:
-							console.log("- PLAYED");;
-							break;
-						default:
-							console.log("- Listen to ack: N/D");
-					}
-				});
-			} catch (error) {
-				console.log("- Error onAck:", error);
-			}
-		});
-	} //setup
 	//
 	// ------------------------------------------------------------------------------------------------//
 	//
