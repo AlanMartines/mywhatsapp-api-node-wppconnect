@@ -219,7 +219,7 @@ module.exports = class Wppconnect {
 						case 'inChat':
 						case 'chatsAvailable':
 							//
-							webhooks.wh_connect(SessionName, statusSession);
+							webhooks.wh_status(SessionName, statusSession);
 							await Sessions.addInfoSession(SessionName, {
 								result: "success",
 								state: "CONNECTED",
@@ -238,7 +238,7 @@ module.exports = class Wppconnect {
 						case 'serverClose':
 						case 'autocloseCalled':
 							//
-							webhooks.wh_connect(SessionName, statusSession);
+							webhooks.wh_status(SessionName, statusSession);
 							await Sessions.addInfoSession(session, {
 								result: "info",
 								state: "CLOSED",
@@ -258,7 +258,7 @@ module.exports = class Wppconnect {
 						case 'desconnectedMobile':
 						case 'deleteToken':
 							//
-							webhooks.wh_connect(SessionName, statusSession);
+							webhooks.wh_status(SessionName, statusSession);
 							await Sessions.addInfoSession(SessionName, {
 								result: "info",
 								state: "DISCONNECTED",
@@ -274,7 +274,7 @@ module.exports = class Wppconnect {
 							break;
 						default:
 							//
-							webhooks.wh_connect(SessionName, statusSession);
+							webhooks.wh_status(SessionName, statusSession);
 							await Sessions.addInfoSession(SessionName, {
 								result: "error",
 								state: "NOTFOUND",
@@ -445,6 +445,8 @@ module.exports = class Wppconnect {
 					//
 					console.log('- Connection status: ', state);
 					//
+					webhooks.wh_status(SessionName, state);
+					//
 					socket.emit('state',
 						{
 							status: state,
@@ -517,7 +519,7 @@ module.exports = class Wppconnect {
 					console.log("- Is Group.:", message.isGroupMsg);
 					*/
 					//
-					if (message.body === 'Hi' && message.isGroupMsg === false) {
+					if (message.body === '!Hi' && message.isGroupMsg === false) {
 						await client.sendText(message.from, await saudacao() + ",\nWelcome 🕷").then(async (result) => {
 							//console.log('- Result: ', result); //retorna um objeto de successo
 						}).catch((erro) => {
