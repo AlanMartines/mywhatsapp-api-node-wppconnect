@@ -8,7 +8,7 @@ module.exports = class Webhooks {
 
     static async wh_messages(session, response) {
 			console.log('- Webhook messages');
-        let data = Sessions.getSession(session)
+        let data = Sessions.getSession(session);
         try {
             if (data.wh_message != undefined) {
                 await superagent
@@ -96,7 +96,8 @@ module.exports = class Webhooks {
 
     static async wh_qrcode(session, response) {
 			console.log('- Webhook qrcode');
-        let data = Sessions.getSession(session)
+        let data = Sessions.getSession(session);
+				console.log('- Webhook qrcode', data);
         try {
             let object = {
                 "wook": 'QRCODE',

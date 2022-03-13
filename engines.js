@@ -218,6 +218,7 @@ module.exports = class Wppconnect {
 						case 'inChat':
 						case 'chatsAvailable':
 							//
+							webhooks.wh_connect(SessionName, statusSession);
 							await Sessions.addInfoSession(SessionName, {
 								result: "success",
 								state: "CONNECTED",
