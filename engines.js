@@ -494,8 +494,6 @@ module.exports = class Wppconnect {
 					// detect disconnect on whatsapp
 					if ('UNPAIRED'.includes(state)) console.log('- Logout');
 					//
-					webhooks.wh_connect(SessionName, state);
-					//
 				});
 			} catch (error) {
 				session.state = "NOTFOUND";
