@@ -53,331 +53,338 @@ async function deletaToken(filePath, filename) {
 module.exports = class Events {
 
 	static async receiveMessage(SessionName, client, socket) {
-
-		await client.onMessage(async message => {
-			let type = message.type
-			if (type == 'chat' && message.subtype == 'url') {
-				type = 'link'
-			} else if (type == 'chat' && !message.subtype) {
-				type = 'text'
-			}
-
-			let response = []
-			if (message.isMedia === true || message.isMMS === true || message.type == 'document' || message.type == 'ptt' || message.type == 'sticker') {
-				var buffer = await client.decryptFile(message);
-				var telefone = ((String(`${message.from}`).split('@')[0]).substr(2));
-				let date_ob = new Date();
-				let date = ("0" + date_ob.getDate()).slice(-2);
-				let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
-				let year = date_ob.getFullYear();
-				let miliseconds = date_ob.getMilliseconds();
-				var fileName = `${telefone}-${year}${month}${date}-${miliseconds}.${mime.extension(message.mimetype)}`;
-			}
+		//
+		try {
 			//
-			let contact = await client?.getContact(message?.id);
-			//
-			switch (type) {
+			await client.onMessage(async message => {
+				let type = message.type
+				if (type == 'chat' && message.subtype == 'url') {
+					type = 'link'
+				} else if (type == 'chat' && !message.subtype) {
+					type = 'text'
+				}
 
-				case 'text':
-					response = {
-						"wook": 'RECEIVE_MESSAGE',
-						"type": 'text',
-						"id": message.id,
-						"session": SessionName,
-						//
-						"name": contact.name ? contact.name : "",
-						"realName": contact.pushname ? contact.pushname : "",
-						"formattedName": contact.formattedName ? contact.formattedName : "",
-						"business": contact.isBusiness,
-						"verifiedName": contact.verifiedName ? contact.verifiedName : "",
-						"isMyContact": contact.isMyContact,
-						//
-						"isGroupMsg": message.isGroupMsg,
-						"author": message.author ? message.author : null,
-						"sender": message.to.split('@')[0],
-						"phone": message.from.split('@')[0],
-						"content": message.body,
-						"status": "RECEIVED",
-						"timestamp": message.timestamp,
-					}
+				let response = []
+				if (message.isMedia === true || message.isMMS === true || message.type == 'document' || message.type == 'ptt' || message.type == 'sticker') {
+					var buffer = await client.decryptFile(message);
+					var telefone = ((String(`${message.from}`).split('@')[0]).substr(2));
+					let date_ob = new Date();
+					let date = ("0" + date_ob.getDate()).slice(-2);
+					let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+					let year = date_ob.getFullYear();
+					let miliseconds = date_ob.getMilliseconds();
+					var fileName = `${telefone}-${year}${month}${date}-${miliseconds}.${mime.extension(message.mimetype)}`;
+				}
+				//
+				let contact = await client?.getContact(message?.id);
+				//
+				switch (type) {
 
-					break;
+					case 'text':
+						response = {
+							"wook": 'RECEIVE_MESSAGE',
+							"type": 'text',
+							"id": message.id,
+							"session": SessionName,
+							//
+							"name": contact.name ? contact.name : "",
+							"realName": contact.pushname ? contact.pushname : "",
+							"formattedName": contact.formattedName ? contact.formattedName : "",
+							"business": contact.isBusiness,
+							"verifiedName": contact.verifiedName ? contact.verifiedName : "",
+							"isMyContact": contact.isMyContact,
+							//
+							"isGroupMsg": message.isGroupMsg,
+							"author": message.author ? message.author : null,
+							"sender": message.to.split('@')[0],
+							"phone": message.from.split('@')[0],
+							"content": message.body,
+							"status": "RECEIVED",
+							"timestamp": message.timestamp,
+						}
 
-				case 'image':
+						break;
 
-					response = {
-						"wook": 'RECEIVE_MESSAGE',
-						"type": 'image',
-						"id": message.id,
-						"session": SessionName,
-						//
-						"name": contact.name ? contact.name : "",
-						"realName": contact.pushname ? contact.pushname : "",
-						"formattedName": contact.formattedName ? contact.formattedName : "",
-						"business": contact.isBusiness,
-						"verifiedName": contact.verifiedName ? contact.verifiedName : "",
-						"isMyContact": contact.isMyContact,
-						//
-						"isGroupMsg": message.isGroupMsg,
-						"author": message.author ? message.author : null,
-						"sender": message.to.split('@')[0],
-						"phone": message.from.split('@')[0],
-						"content": message.body,
-						"caption": message.caption != undefined ? message.caption : "",
-						"file": fileName,
-						"base64": await client?.downloadMedia(message?.id),
-						"status": "RECEIVED",
-						"timestamp": message.timestamp,
-					}
+					case 'image':
 
-					break;
-				case 'sticker':
-					fs.writeFileSync(`files-received/${fileName}`, buffer, (err) => {
-						console.log('arquivo baixado!')
-					});
-					response = {
-						"wook": 'RECEIVE_MESSAGE',
-						"type": 'sticker',
-						"id": message.id,
-						"session": session,
-						//
-						"name": contact.name ? contact.name : "",
-						"realName": contact.pushname ? contact.pushname : "",
-						"formattedName": contact.formattedName ? contact.formattedName : "",
-						"business": contact.isBusiness,
-						"verifiedName": contact.verifiedName ? contact.verifiedName : "",
-						"isMyContact": contact.isMyContact,
-						//
-						"isGroupMsg": message.isGroupMsg,
-						"author": message.author ? message.author : null,
-						"sender": message.to.split('@')[0],
-						"phone": message.from.split('@')[0],
-						"content": message.body,
-						"caption": message.caption != undefined ? message.caption : "",
-						"file": fileName,
-						"base64": await client?.downloadMedia(message?.id),
-						"status": "RECEIVED",
-						"timestamp": message.timestamp,
-					}
+						response = {
+							"wook": 'RECEIVE_MESSAGE',
+							"type": 'image',
+							"id": message.id,
+							"session": SessionName,
+							//
+							"name": contact.name ? contact.name : "",
+							"realName": contact.pushname ? contact.pushname : "",
+							"formattedName": contact.formattedName ? contact.formattedName : "",
+							"business": contact.isBusiness,
+							"verifiedName": contact.verifiedName ? contact.verifiedName : "",
+							"isMyContact": contact.isMyContact,
+							//
+							"isGroupMsg": message.isGroupMsg,
+							"author": message.author ? message.author : null,
+							"sender": message.to.split('@')[0],
+							"phone": message.from.split('@')[0],
+							"content": message.body,
+							"caption": message.caption != undefined ? message.caption : "",
+							"file": fileName,
+							"base64": await client?.downloadMedia(message?.id),
+							"status": "RECEIVED",
+							"timestamp": message.timestamp,
+						}
 
-					break;
+						break;
+					case 'sticker':
+						fs.writeFileSync(`files-received/${fileName}`, buffer, (err) => {
+							console.log('arquivo baixado!')
+						});
+						response = {
+							"wook": 'RECEIVE_MESSAGE',
+							"type": 'sticker',
+							"id": message.id,
+							"session": session,
+							//
+							"name": contact.name ? contact.name : "",
+							"realName": contact.pushname ? contact.pushname : "",
+							"formattedName": contact.formattedName ? contact.formattedName : "",
+							"business": contact.isBusiness,
+							"verifiedName": contact.verifiedName ? contact.verifiedName : "",
+							"isMyContact": contact.isMyContact,
+							//
+							"isGroupMsg": message.isGroupMsg,
+							"author": message.author ? message.author : null,
+							"sender": message.to.split('@')[0],
+							"phone": message.from.split('@')[0],
+							"content": message.body,
+							"caption": message.caption != undefined ? message.caption : "",
+							"file": fileName,
+							"base64": await client?.downloadMedia(message?.id),
+							"status": "RECEIVED",
+							"timestamp": message.timestamp,
+						}
 
-				case 'audio':
+						break;
 
-					response = {
-						"wook": 'RECEIVE_MESSAGE',
-						"type": 'audio',
-						"id": message.id,
-						"session": SessionName,
-						//
-						"name": contact.name ? contact.name : "",
-						"realName": contact.pushname ? contact.pushname : "",
-						"formattedName": contact.formattedName ? contact.formattedName : "",
-						"business": contact.isBusiness,
-						"verifiedName": contact.verifiedName ? contact.verifiedName : "",
-						"isMyContact": contact.isMyContact,
-						//
-						"isGroupMsg": message.isGroupMsg,
-						"author": message.author ? message.author : null,
-						"sender": message.to.split('@')[0],
-						"phone": message.from.split('@')[0],
-						"mimetype": message.mimetype,
-						"file": fileName,
-						"base64": await client?.downloadMedia(message?.id),
-						"status": "RECEIVED",
-						"timestamp": message.timestamp,
-					}
-					break;
+					case 'audio':
 
-				case 'ptt':
+						response = {
+							"wook": 'RECEIVE_MESSAGE',
+							"type": 'audio',
+							"id": message.id,
+							"session": SessionName,
+							//
+							"name": contact.name ? contact.name : "",
+							"realName": contact.pushname ? contact.pushname : "",
+							"formattedName": contact.formattedName ? contact.formattedName : "",
+							"business": contact.isBusiness,
+							"verifiedName": contact.verifiedName ? contact.verifiedName : "",
+							"isMyContact": contact.isMyContact,
+							//
+							"isGroupMsg": message.isGroupMsg,
+							"author": message.author ? message.author : null,
+							"sender": message.to.split('@')[0],
+							"phone": message.from.split('@')[0],
+							"mimetype": message.mimetype,
+							"file": fileName,
+							"base64": await client?.downloadMedia(message?.id),
+							"status": "RECEIVED",
+							"timestamp": message.timestamp,
+						}
+						break;
 
-					response = {
-						"wook": 'RECEIVE_MESSAGE',
-						"type": 'ptt',
-						"id": message.id,
-						"session": SessionName,
-						//
-						"name": contact.name ? contact.name : "",
-						"realName": contact.pushname ? contact.pushname : "",
-						"formattedName": contact.formattedName ? contact.formattedName : "",
-						"business": contact.isBusiness,
-						"verifiedName": contact.verifiedName ? contact.verifiedName : "",
-						"isMyContact": contact.isMyContact,
-						//
-						"isGroupMsg": message.isGroupMsg,
-						"author": message.author ? message.author : null,
-						"sender": message.to.split('@')[0],
-						"phone": message.from.split('@')[0],
-						"mimetype": message.mimetype,
-						"file": fileName,
-						"base64": await client?.downloadMedia(message?.id),
-						"status": "RECEIVED",
-						"timestamp": message.timestamp,
-					}
-					break;
+					case 'ptt':
 
-				case 'video':
+						response = {
+							"wook": 'RECEIVE_MESSAGE',
+							"type": 'ptt',
+							"id": message.id,
+							"session": SessionName,
+							//
+							"name": contact.name ? contact.name : "",
+							"realName": contact.pushname ? contact.pushname : "",
+							"formattedName": contact.formattedName ? contact.formattedName : "",
+							"business": contact.isBusiness,
+							"verifiedName": contact.verifiedName ? contact.verifiedName : "",
+							"isMyContact": contact.isMyContact,
+							//
+							"isGroupMsg": message.isGroupMsg,
+							"author": message.author ? message.author : null,
+							"sender": message.to.split('@')[0],
+							"phone": message.from.split('@')[0],
+							"mimetype": message.mimetype,
+							"file": fileName,
+							"base64": await client?.downloadMedia(message?.id),
+							"status": "RECEIVED",
+							"timestamp": message.timestamp,
+						}
+						break;
 
-					response = {
-						"wook": 'RECEIVE_MESSAGE',
-						"type": 'video',
-						"id": message.id,
-						"session": SessionName,
-						//
-						"name": contact.name ? contact.name : "",
-						"realName": contact.pushname ? contact.pushname : "",
-						"formattedName": contact.formattedName ? contact.formattedName : "",
-						"business": contact.isBusiness,
-						"verifiedName": contact.verifiedName ? contact.verifiedName : "",
-						"isMyContact": contact.isMyContact,
-						//
-						"isGroupMsg": message.isGroupMsg,
-						"author": message.author ? message.author : null,
-						"sender": message.to.split('@')[0],
-						"phone": message.from.split('@')[0],
-						"content": message.body,
-						"caption": message.caption != undefined ? message.caption : "",
-						"file": fileName,
-						"base64": await client?.downloadMedia(message?.id),
-						"status": "RECEIVED",
-						"timestamp": message.timestamp,
-					}
+					case 'video':
 
-					break;
+						response = {
+							"wook": 'RECEIVE_MESSAGE',
+							"type": 'video',
+							"id": message.id,
+							"session": SessionName,
+							//
+							"name": contact.name ? contact.name : "",
+							"realName": contact.pushname ? contact.pushname : "",
+							"formattedName": contact.formattedName ? contact.formattedName : "",
+							"business": contact.isBusiness,
+							"verifiedName": contact.verifiedName ? contact.verifiedName : "",
+							"isMyContact": contact.isMyContact,
+							//
+							"isGroupMsg": message.isGroupMsg,
+							"author": message.author ? message.author : null,
+							"sender": message.to.split('@')[0],
+							"phone": message.from.split('@')[0],
+							"content": message.body,
+							"caption": message.caption != undefined ? message.caption : "",
+							"file": fileName,
+							"base64": await client?.downloadMedia(message?.id),
+							"status": "RECEIVED",
+							"timestamp": message.timestamp,
+						}
 
-				case 'location':
-					response = {
-						"wook": 'RECEIVE_MESSAGE',
-						"type": 'location',
-						"id": message.id,
-						"session": SessionName,
-						//
-						"name": contact.name ? contact.name : "",
-						"realName": contact.pushname ? contact.pushname : "",
-						"formattedName": contact.formattedName ? contact.formattedName : "",
-						"business": contact.isBusiness,
-						"verifiedName": contact.verifiedName ? contact.verifiedName : "",
-						"isMyContact": contact.isMyContact,
-						//
-						"isGroupMsg": message.isGroupMsg,
-						"author": message.author ? message.author : null,
-						"sender": message.to.split('@')[0],
-						"phone": message.from.split('@')[0],
-						"content": message.body,
-						"loc": message.loc,
-						"lat": message.lat,
-						"lng": message.lng,
-						"status": "RECEIVED",
-						"timestamp": message.timestamp,
-					}
+						break;
 
-					break;
+					case 'location':
+						response = {
+							"wook": 'RECEIVE_MESSAGE',
+							"type": 'location',
+							"id": message.id,
+							"session": SessionName,
+							//
+							"name": contact.name ? contact.name : "",
+							"realName": contact.pushname ? contact.pushname : "",
+							"formattedName": contact.formattedName ? contact.formattedName : "",
+							"business": contact.isBusiness,
+							"verifiedName": contact.verifiedName ? contact.verifiedName : "",
+							"isMyContact": contact.isMyContact,
+							//
+							"isGroupMsg": message.isGroupMsg,
+							"author": message.author ? message.author : null,
+							"sender": message.to.split('@')[0],
+							"phone": message.from.split('@')[0],
+							"content": message.body,
+							"loc": message.loc,
+							"lat": message.lat,
+							"lng": message.lng,
+							"status": "RECEIVED",
+							"timestamp": message.timestamp,
+						}
 
-				case 'document':
-					fs.writeFileSync(`files-received/${fileName}`, buffer, (err) => {
-						console.log('arquivo baixado!')
-					});
-					response = {
-						"wook": 'RECEIVE_MESSAGE',
-						"type": 'document',
-						"id": message.id,
-						"session": session,
-						"isGroupMsg": message.isGroupMsg,
-						"author": message.author ? message.author : null,
-						"sender": message.to.split('@')[0],
-						"phone": message.from.split('@')[0],
-						"mimetype": message.mimetype,
-						"caption": message.caption != undefined ? message.caption : "",
-						"file": fileName,
-						"base64": await client?.downloadMedia(message?.id),
-						"status": "RECEIVED",
-						"timestamp": message.timestamp,
-					}
+						break;
 
-					break;
+					case 'document':
+						fs.writeFileSync(`files-received/${fileName}`, buffer, (err) => {
+							console.log('arquivo baixado!')
+						});
+						response = {
+							"wook": 'RECEIVE_MESSAGE',
+							"type": 'document',
+							"id": message.id,
+							"session": session,
+							"isGroupMsg": message.isGroupMsg,
+							"author": message.author ? message.author : null,
+							"sender": message.to.split('@')[0],
+							"phone": message.from.split('@')[0],
+							"mimetype": message.mimetype,
+							"caption": message.caption != undefined ? message.caption : "",
+							"file": fileName,
+							"base64": await client?.downloadMedia(message?.id),
+							"status": "RECEIVED",
+							"timestamp": message.timestamp,
+						}
 
-				case 'link':
-					response = {
-						"wook": 'RECEIVE_MESSAGE',
-						"type": 'link',
-						"id": message.id,
-						"session": SessionName,
-						//
-						"name": contact.name ? contact.name : "",
-						"realName": contact.pushname ? contact.pushname : "",
-						"formattedName": contact.formattedName ? contact.formattedName : "",
-						"business": contact.isBusiness,
-						"verifiedName": contact.verifiedName ? contact.verifiedName : "",
-						"isMyContact": contact.isMyContact,
-						//
-						"isGroupMsg": message.isGroupMsg,
-						"author": message.author ? message.author : null,
-						"sender": message.to.split('@')[0],
-						"phone": message.from.split('@')[0],
-						"thumbnail": message.thumbnail,
-						"title": message.title,
-						"description": message.description,
-						"url": message.body,
-						"status": "RECEIVED",
-						"timestamp": message.timestamp,
-					}
-					break;
+						break;
 
-				case 'vcard':
-					response = {
-						"wook": 'RECEIVE_MESSAGE',
-						"type": 'vcard',
-						"id": message.id,
-						"session": SessionName,
-						//
-						"name": contact.name ? contact.name : "",
-						"realName": contact.pushname ? contact.pushname : "",
-						"formattedName": contact.formattedName ? contact.formattedName : "",
-						"business": contact.isBusiness,
-						"verifiedName": contact.verifiedName ? contact.verifiedName : "",
-						"isMyContact": contact.isMyContact,
-						//
-						"isGroupMsg": message.isGroupMsg,
-						"author": message.author ? message.author : null,
-						"sender": message.to.split('@')[0],
-						"phone": message.from.split('@')[0],
-						"contactName": message.vcardFormattedName,
-						"contactVcard": message.body,
-						"status": "RECEIVED",
-						"timestamp": message.timestamp,
-					}
+					case 'link':
+						response = {
+							"wook": 'RECEIVE_MESSAGE',
+							"type": 'link',
+							"id": message.id,
+							"session": SessionName,
+							//
+							"name": contact.name ? contact.name : "",
+							"realName": contact.pushname ? contact.pushname : "",
+							"formattedName": contact.formattedName ? contact.formattedName : "",
+							"business": contact.isBusiness,
+							"verifiedName": contact.verifiedName ? contact.verifiedName : "",
+							"isMyContact": contact.isMyContact,
+							//
+							"isGroupMsg": message.isGroupMsg,
+							"author": message.author ? message.author : null,
+							"sender": message.to.split('@')[0],
+							"phone": message.from.split('@')[0],
+							"thumbnail": message.thumbnail,
+							"title": message.title,
+							"description": message.description,
+							"url": message.body,
+							"status": "RECEIVED",
+							"timestamp": message.timestamp,
+						}
+						break;
 
-					break;
+					case 'vcard':
+						response = {
+							"wook": 'RECEIVE_MESSAGE',
+							"type": 'vcard',
+							"id": message.id,
+							"session": SessionName,
+							//
+							"name": contact.name ? contact.name : "",
+							"realName": contact.pushname ? contact.pushname : "",
+							"formattedName": contact.formattedName ? contact.formattedName : "",
+							"business": contact.isBusiness,
+							"verifiedName": contact.verifiedName ? contact.verifiedName : "",
+							"isMyContact": contact.isMyContact,
+							//
+							"isGroupMsg": message.isGroupMsg,
+							"author": message.author ? message.author : null,
+							"sender": message.to.split('@')[0],
+							"phone": message.from.split('@')[0],
+							"contactName": message.vcardFormattedName,
+							"contactVcard": message.body,
+							"status": "RECEIVED",
+							"timestamp": message.timestamp,
+						}
 
-				case 'order':
-					response = {
-						"wook": 'RECEIVE_MESSAGE',
-						"type": 'order',
-						"id": message.id,
-						"session": SessionName,
-						//
-						"name": contact.name ? contact.name : "",
-						"realName": contact.pushname ? contact.pushname : "",
-						"formattedName": contact.formattedName ? contact.formattedName : "",
-						"business": contact.isBusiness,
-						"verifiedName": contact.verifiedName ? contact.verifiedName : "",
-						"isMyContact": contact.isMyContact,
-						//
-						"isGroupMsg": message.isGroupMsg,
-						"author": message.author ? message.author : null,
-						"sender": message.to.split('@')[0],
-						"phone": message.from.split('@')[0],
-						"content": '',
-						"status": "RECEIVED",
-						"timestamp": message.timestamp,
-					}
+						break;
 
-					break;
-			}
+					case 'order':
+						response = {
+							"wook": 'RECEIVE_MESSAGE',
+							"type": 'order',
+							"id": message.id,
+							"session": SessionName,
+							//
+							"name": contact.name ? contact.name : "",
+							"realName": contact.pushname ? contact.pushname : "",
+							"formattedName": contact.formattedName ? contact.formattedName : "",
+							"business": contact.isBusiness,
+							"verifiedName": contact.verifiedName ? contact.verifiedName : "",
+							"isMyContact": contact.isMyContact,
+							//
+							"isGroupMsg": message.isGroupMsg,
+							"author": message.author ? message.author : null,
+							"sender": message.to.split('@')[0],
+							"phone": message.from.split('@')[0],
+							"content": '',
+							"status": "RECEIVED",
+							"timestamp": message.timestamp,
+						}
 
-			await webhooks.wh_messages(SessionName, response)
+						break;
+				}
 
-		})
+				await webhooks.wh_messages(SessionName, response)
+
+			});
+
+		} catch (error) {
+			console.log("- Error onMessage:", error);
+		}
+
 	}
 
 	static statusMessage(SessionName, client, socket) {
