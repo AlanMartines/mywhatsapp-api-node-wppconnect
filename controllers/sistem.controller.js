@@ -358,6 +358,8 @@ router.post("/QRCode", upload.none(''), verifyToken.verify, async (req, res, nex
 			case 'deleteToken':
 			case 'qrRead':
 				//
+				console.log(session);
+				//
 				if (req.body.View === true) {
 					var xSession = session.qrCode;
 					if (xSession) {
