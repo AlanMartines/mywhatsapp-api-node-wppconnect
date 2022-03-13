@@ -84,7 +84,7 @@ module.exports = class Events {
 						response = {
 							"wook": 'RECEIVE_MESSAGE',
 							"type": 'text',
-							"id": message.id,
+							"id": message.id._serialized,
 							"session": SessionName,
 							//
 							"name": contact.name ? contact.name : "",
@@ -110,7 +110,7 @@ module.exports = class Events {
 						response = {
 							"wook": 'RECEIVE_MESSAGE',
 							"type": 'image',
-							"id": message.id,
+							"id": message.id._serialized,
 							"session": SessionName,
 							//
 							"name": contact.name ? contact.name : "",
@@ -140,7 +140,7 @@ module.exports = class Events {
 						response = {
 							"wook": 'RECEIVE_MESSAGE',
 							"type": 'sticker',
-							"id": message.id,
+							"id": message.id._serialized,
 							"session": session,
 							//
 							"name": contact.name ? contact.name : "",
@@ -169,7 +169,7 @@ module.exports = class Events {
 						response = {
 							"wook": 'RECEIVE_MESSAGE',
 							"type": 'audio',
-							"id": message.id,
+							"id": message.id._serialized,
 							"session": SessionName,
 							//
 							"name": contact.name ? contact.name : "",
@@ -196,7 +196,7 @@ module.exports = class Events {
 						response = {
 							"wook": 'RECEIVE_MESSAGE',
 							"type": 'ptt',
-							"id": message.id,
+							"id": message.id._serialized,
 							"session": SessionName,
 							//
 							"name": contact.name ? contact.name : "",
@@ -223,7 +223,7 @@ module.exports = class Events {
 						response = {
 							"wook": 'RECEIVE_MESSAGE',
 							"type": 'video',
-							"id": message.id,
+							"id": message.id._serialized,
 							"session": SessionName,
 							//
 							"name": contact.name ? contact.name : "",
@@ -251,7 +251,7 @@ module.exports = class Events {
 						response = {
 							"wook": 'RECEIVE_MESSAGE',
 							"type": 'location',
-							"id": message.id,
+							"id": message.id._serialized,
 							"session": SessionName,
 							//
 							"name": contact.name ? contact.name : "",
@@ -282,8 +282,16 @@ module.exports = class Events {
 						response = {
 							"wook": 'RECEIVE_MESSAGE',
 							"type": 'document',
-							"id": message.id,
+							"id": message.id._serialized,
 							"session": session,
+							//
+							"name": contact.name ? contact.name : "",
+							"realName": contact.pushname ? contact.pushname : "",
+							"formattedName": contact.formattedName ? contact.formattedName : "",
+							"business": contact.isBusiness,
+							"verifiedName": contact.verifiedName ? contact.verifiedName : "",
+							"isMyContact": contact.isMyContact,
+							//
 							"isGroupMsg": message.isGroupMsg,
 							"author": message.author ? message.author : null,
 							"sender": message.to.split('@')[0],
@@ -302,7 +310,7 @@ module.exports = class Events {
 						response = {
 							"wook": 'RECEIVE_MESSAGE',
 							"type": 'link',
-							"id": message.id,
+							"id": message.id._serialized,
 							"session": SessionName,
 							//
 							"name": contact.name ? contact.name : "",
@@ -329,7 +337,7 @@ module.exports = class Events {
 						response = {
 							"wook": 'RECEIVE_MESSAGE',
 							"type": 'vcard',
-							"id": message.id,
+							"id": message.id._serialized,
 							"session": SessionName,
 							//
 							"name": contact.name ? contact.name : "",
@@ -355,7 +363,7 @@ module.exports = class Events {
 						response = {
 							"wook": 'RECEIVE_MESSAGE',
 							"type": 'order',
-							"id": message.id,
+							"id": message.id._serialized,
 							"session": SessionName,
 							//
 							"name": contact.name ? contact.name : "",
