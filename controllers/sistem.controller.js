@@ -375,7 +375,7 @@ router.post("/QRCode", upload.none(''), verifyToken.verify, async (req, res, nex
 							result: 'error',
 							state: 'NOTFOUND',
 							status: 'notLogged',
-							message: 'Sistema Off-line'
+							message: 'Sistema Off-line, indisponivel no momento'
 						};
 						//
 						res.setHeader('Content-Type', 'application/json');
