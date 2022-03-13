@@ -19,7 +19,7 @@ module.exports = class Webhooks {
                         console.log('- Webhooks receive message')
                     });
                 if (data.wh_message == '') {
-                    console.log('Webhook no defined')
+                    console.log('- Webhook no defined')
                 }
             }
         } catch (error) {
@@ -82,10 +82,10 @@ module.exports = class Webhooks {
                     .send(response)
                     .queue('status')
                     .end(function () {
-                        console.log('webhooks status message....')
+                        console.log('- Webhooks status message')
                     });
                 if (data.wh_status == '') {
-                    console.log('Webhook no defined')
+                    console.log('- Webhook no defined')
                 }
             }
 
@@ -110,10 +110,10 @@ module.exports = class Webhooks {
                     .send(object)
                     .queue('qrcode')
                     .end(function () {
-                        console.log('webhooks status message....')
+                        console.log('- Webhooks status message')
                     });
                 if (data.wh_qrcode == '') {
-                    console.log('Webhook no defined')
+                    console.log('- Webhook no defined')
                 }
             }
 
