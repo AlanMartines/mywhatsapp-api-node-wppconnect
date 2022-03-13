@@ -30,7 +30,7 @@ module.exports = class Webhooks {
     static async wh_connect(session, response, number = null, browserless = null, tokens = []) {
 			console.log('- Webhook connect');
         let data = Sessions.getSession(session);
-        if (response == 'autocloseCalled' || response == 'desconnectedMobile') {
+        if (response == 'autocloseCalled' || response == 'desconnectedMobile' || response == 'browserClose' || response == 'qrReadError') {
             Sessions.deleteSession(session);
         }
         try {
