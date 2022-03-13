@@ -63,10 +63,8 @@ module.exports = class Events {
 				} else if (type == 'chat' && !message.subtype) {
 					type = 'text'
 				}
-				/*
 				let contact = await client?.getContact(message?.sender?.id);
-				console.log(`- getContact: \n ${JSON.stringify(message, null, 2)}`);
-				*/
+				//console.log(`- getContact: \n ${JSON.stringify(message, null, 2)}`);
 				//
 				let response = [];
 				if (message.isMedia === true || message.isMMS === true || message.type == 'document' || message.type == 'ptt' || message.type == 'sticker') {
@@ -487,7 +485,7 @@ module.exports = class Events {
 				}
 				//
 				let contact = await client?.getContact(ack.id.remote);
-				console.log(`- onAck: \n ${JSON.stringify(contact, null, 2)}`);
+				//console.log(`- onAck: \n ${JSON.stringify(contact, null, 2)}`);
 				//
 				let timestamp = Math.round(new Date().getTime() / 1000)
 				let response = {
@@ -500,7 +498,6 @@ module.exports = class Events {
 					"realName": contact.pushname ? contact.pushname : "",
 					"formattedName": contact.formattedName ? contact.formattedName : "",
 					"business": contact.isBusiness,
-					"verifiedName": contact.verifiedName ? contact.verifiedName : "",
 					"isMyContact": contact.isMyContact,
 					//
 					"phone": ack.id.remote.split("@")[0],
@@ -527,7 +524,7 @@ module.exports = class Events {
 				//
 				console.log('- Connection status: ', state);
 				//
-				webhooks.wh_status(SessionName, state);
+				await webhooks.wh_status(SessionName, state);
 				//
 				socket.emit('state',
 					{
@@ -576,7 +573,7 @@ module.exports = class Events {
 				// force whatsapp take over
 				if ('CONFLICT'.includes(state)) client.useHere();
 				// detect disconnect on whatsapp
-				if ('UNPAIRED'.includes(state)) webhooks.wh_connect(session, 'disconnectedMobile');
+				if ('UNPAIRED'.includes(state)) await webhooks.wh_connect(session, 'disconnectedMobile');
 			});
 		} catch (error) {
 			session.state = "NOTFOUND";
