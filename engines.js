@@ -23,12 +23,12 @@ if (fs.existsSync('./wppconnect/dist/index.js')) {
 }
 //
 const Sessions = require('./controllers/sessions.js');
-const events = require('./controllers/events.js');
+const events = require('./controllers/events');
 const webhooks = require('./controllers/webhooks.js');
 const startAll = require('./middleware/startup.js');
 const config = require('./config.global');
 const tokenPatch = config.tokenPatch;
-events.EventEmitter.prototype._maxListeners = 999;
+
 //
 // ------------------------------------------------------------------------------------------------------- //
 //

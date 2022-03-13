@@ -5,11 +5,13 @@ const {
 //
 const config = require('./config.global');
 const startAll = require("./middleware/startup.js");
+const events = require('./controllers/events');
 //
 yo('My-WhatsApp', {
 	color: 'rainbow',
 	spacing: 1,
 });
+events.EventEmitter.prototype._maxListeners = 999;
 //
 // ------------------------------------------------------------------------------------------------//
 //
