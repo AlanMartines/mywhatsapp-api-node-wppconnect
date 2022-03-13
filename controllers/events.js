@@ -573,7 +573,7 @@ module.exports = class Events {
 				// force whatsapp take over
 				if ('CONFLICT'.includes(state)) client.useHere();
 				// detect disconnect on whatsapp
-				if ('UNPAIRED'.includes(state)) await webhooks.wh_connect(session, 'disconnectedMobile');
+				if ('UNPAIRED'.includes(state)) await webhooks.wh_connect(SessionName, 'disconnectedMobile');
 			});
 		} catch (error) {
 			session.state = "NOTFOUND";
