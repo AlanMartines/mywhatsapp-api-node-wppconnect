@@ -12,7 +12,7 @@ const queue = new PQueue({
 	concurrency: 1
 });
 */
-if (fs.existsSync('./wppconnect/dist/index')) {
+if (fs.existsSync('./wppconnect/dist/index.js')) {
 	//
 	console.log("- Wppconnect is patch");
 	var wppconnect = require('./wppconnect/dist/index');
