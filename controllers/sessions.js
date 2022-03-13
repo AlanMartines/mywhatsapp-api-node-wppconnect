@@ -219,10 +219,10 @@ module.exports = class Sessions {
 	static async checkPath(path) {
 		urlExists(path, (error, exists) => {
 			if (exists) {
-				return true
+				return true;
 			}
 			else {
-				return false
+				return false;
 			}
 		})
 	}
@@ -233,10 +233,10 @@ module.exports = class Sessions {
 			add = {
 				session: name,
 			}
-			this.session.push(add)
-			return true
+			this.session.push(add);
+			return true;
 		}
-		return false
+		return false;
 	}
 
 	// checar se exite o usuario na sessão
@@ -253,11 +253,11 @@ module.exports = class Sessions {
 		if (await this.checkSession(name)) {
 			for (var i in this.session) {
 				if (this.session[i].session === name) {
-					return i
+					return i;
 				}
 			}
 		}
-		return false
+		return false;
 	}
 
 	// adicionar informações a sessão 
@@ -265,12 +265,12 @@ module.exports = class Sessions {
 		if (await this.checkSession(name)) {
 			for (var i in this.session) {
 				if (this.session[i].session === name) {
-					Object.assign(this.session[i], extend)
-					return true
+					Object.assign(this.session[i], extend);
+					return true;
 				}
 			}
 		}
-		return false
+		return false;
 	}
 
 	// Remove object na sessão
@@ -278,12 +278,12 @@ module.exports = class Sessions {
 		if (await this.checkSession(name)) {
 			for (var i in this.session) {
 				if (this.session[i].session === name) {
-					delete this.session[i][key]
-					return true
+					delete this.session[i][key];
+					return true;
 				}
 			}
 		}
-		return false
+		return false;
 	}
 
 	// deletar sessão
@@ -299,23 +299,23 @@ module.exports = class Sessions {
 	// retornar sessão
 	static async getSession(name) {
 		if (await this.checkSession(name)) {
-			var key = await this.getSessionKey(name)
-			return this.session[key]
+			var key = await this.getSessionKey(name);
+			return this.session[key];
 		}
-		return false
+		return false;
 	}
 
 	// retornar todas
 	static async getAll() {
-		return this.session
+		return this.session;
 	}
 
 	// checa o client
 	static async checkClient(name) {
 		if (await this.getSession(name) && await this.getSession(name).client) {
-			return true
+			return true;
 		}
-		return false
+		return false;
 	}
 
 }

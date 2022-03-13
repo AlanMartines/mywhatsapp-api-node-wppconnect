@@ -172,7 +172,13 @@ router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next
 				//
 				console.log("- AuthorizationToken:", removeWithspace(req.body.SessionName));
 				//
-				await Sessions.checkAddUser(req.body.SessionName);
+				await Sessions.checkAddUser(removeWithspace(req.body.SessionName));
+				await Sessions.addInfoSession(removeWithspace(req.body.SessionName), {
+					wh_status: req.body.wh_status,
+					wh_message: req.body.wh_message,
+					wh_qrcode: req.body.wh_qrcode,
+					wh_connect: req.body.wh_connect
+				});
 				//
 				var Start = {
 					result: "info",

@@ -21,6 +21,7 @@ if (fs.existsSync('./wppconnect/dist/index')) {
 }
 //
 const Sessions = require('./controllers/sessions.js');
+const events = require('../controllers/events.js');
 const webhooks = require('./controllers/webhooks.js');
 const startAll = require('./middleware/startup.js');
 const config = require('./config.global');
@@ -358,6 +359,11 @@ module.exports = class Wppconnect {
 			wppconnect.defaultLogger.level = 'silly';
 			let info = await client.getWid();
 			let tokens = await client.getSessionTokenBrowser();
+			let browser = [];
+			//
+			webhooks.wh_connect(session, 'connected', info, browser, tokens)
+			events.receiveMessage(session, client)
+			events.statusMessage(session, client)
 			//
 			await Sessions.addInfoSession(SessionName, {
 				result: "success",
