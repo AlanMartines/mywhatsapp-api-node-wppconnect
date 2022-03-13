@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node index.js",
     "test": "echo \"Erro: nenhum teste especificado\" && exit 1",
-    "postinstall": "git clone https://github.com/wppconnect-team/wppconnect.git && cd wppconnect && npm install --allow-root --unsafe-perm=true && npm run build"
+    "postinstall": "git clone https://github.com/wppconnect-team/wppconnect.git; cd wppconnect; npm install --allow-root --unsafe-perm=true && npm run build"
   },
   "repository": {
     "type": "git",
