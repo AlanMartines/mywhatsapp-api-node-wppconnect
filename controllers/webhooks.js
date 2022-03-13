@@ -30,11 +30,11 @@ module.exports = class Webhooks {
     static async wh_connect(session, response, number = null, browserless = null, tokens = []) {
 			console.log('- Webhook connect');
         let data = Sessions.getSession(session);
-        if (response == 'autocloseCalled' || response == 'desconnectedMobile' || response == 'browserClose' || response == 'qrReadError') {
+        if (response == 'autocloseCalled' || response == 'desconnectedMobile' || response == 'qrReadError') {
             Sessions.deleteSession(session);
         }
         try {
-            if (response == 'qrReadSuccess' || response == 'connected') {
+            if (response == 'qrReadSuccess' || response == 'isLogged' || response == 'inChat' || response == 'chatsAvailable' || response == 'connected') {
                 var object = {
                     "wook": 'STATUS_CONNECT',
                     'result': 200,
