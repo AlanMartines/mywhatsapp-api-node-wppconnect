@@ -7,6 +7,7 @@ dotenv.config();
 module.exports = class Webhooks {
 
     static async wh_messages(session, response) {
+			console.log('- Webhook messages');
         let data = Sessions.getSession(session)
         try {
             if (data.wh_message != undefined) {
@@ -15,7 +16,7 @@ module.exports = class Webhooks {
                     .send(response)
                     .queue('messages')
                     .end(function () {
-                        console.log('webhooks receive message....')
+                        console.log('- Webhooks receive message')
                     });
                 if (data.wh_message == '') {
                     console.log('Webhook no defined')
@@ -27,6 +28,7 @@ module.exports = class Webhooks {
     }
 
     static async wh_connect(session, response, number = null, browserless = null, tokens = []) {
+			console.log('- Webhook connect');
         let data = Sessions.getSession(session)
         if (response == 'autocloseCalled' || response == 'desconnectedMobile') {
             Sessions.deleteSession(session)
@@ -57,10 +59,10 @@ module.exports = class Webhooks {
                     .send(object)
                     .queue('connection')
                     .end(function () {
-                        console.log('- Webhooks connect status....')
+                        console.log('- Webhooks connect status')
                     });
                 if (data.wh_connect == '') {
-                    console.log('- Webhook no defined')
+                    console.log('- Webhook no defined');
                 }
             }
 
@@ -71,6 +73,7 @@ module.exports = class Webhooks {
     }
 
     static async wh_status(session, response) {
+			console.log('- Webhook status');
         let data = Sessions.getSession(session)
         try {
             if (data.wh_status != undefined) {
@@ -92,6 +95,7 @@ module.exports = class Webhooks {
     }
 
     static async wh_qrcode(session, response) {
+			console.log('- Webhook qrcode');
         let data = Sessions.getSession(session)
         try {
             let object = {
