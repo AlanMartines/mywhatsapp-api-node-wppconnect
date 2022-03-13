@@ -28,7 +28,7 @@ const webhooks = require('./controllers/webhooks.js');
 const startAll = require('./middleware/startup.js');
 const config = require('./config.global');
 const tokenPatch = config.tokenPatch;
-
+events.EventEmitter.prototype._maxListeners = 999;
 //
 // ------------------------------------------------------------------------------------------------------- //
 //
