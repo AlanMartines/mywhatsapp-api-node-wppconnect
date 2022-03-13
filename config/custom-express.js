@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 const app = express();
 const cors = require('cors');
 const path = require('path');
-const events = require('./controllers/events.js');
+const events = require('../controllers/events.js');
 //
 const http = require('http').Server(app);
 events.EventEmitter.prototype._maxListeners = 999;
