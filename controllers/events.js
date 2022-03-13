@@ -63,8 +63,10 @@ module.exports = class Events {
 				} else if (type == 'chat' && !message.subtype) {
 					type = 'text'
 				}
-				let contact = await client?.getContact(message?.id?._serialized);
+				/*
+				let contact = await client?.getContact(message?.sender?.id);
 				console.log(`- getContact: \n ${JSON.stringify(message, null, 2)}`);
+				*/
 				//
 				let response = [];
 				if (message.isMedia === true || message.isMMS === true || message.type == 'document' || message.type == 'ptt' || message.type == 'sticker') {
@@ -84,15 +86,15 @@ module.exports = class Events {
 						response = {
 							"wook": 'RECEIVE_MESSAGE',
 							"type": 'text',
-							"id": message?.id?._serialized,
+							"id": message.id,
 							"session": SessionName,
 							//
-							"name": contact.name ? contact.name : "",
-							"realName": contact.pushname ? contact.pushname : "",
-							"formattedName": contact.formattedName ? contact.formattedName : "",
-							"business": contact.isBusiness,
-							"verifiedName": contact.verifiedName ? contact.verifiedName : "",
-							"isMyContact": contact.isMyContact,
+							"name": message?.sender?.name ? message?.sender?.name : "",
+							"realName": message?.sender?.pushname ? message?.sender?.pushname : "",
+							"shortName": message?.sender?.shortName ? message?.sender?.shortName : "",
+							"formattedName": message?.sender?.formattedName ? message?.sender?.formattedName : "",
+							"business": message?.sender?.isBusiness,
+							"isMyContact": message?.sender?.isMyContact,
 							//
 							"isGroupMsg": message.isGroupMsg,
 							"author": message.author ? message.author : null,
@@ -110,15 +112,15 @@ module.exports = class Events {
 						response = {
 							"wook": 'RECEIVE_MESSAGE',
 							"type": 'image',
-							"id": message.id._serialized,
+							"id": message.id,
 							"session": SessionName,
 							//
-							"name": contact.name ? contact.name : "",
-							"realName": contact.pushname ? contact.pushname : "",
-							"formattedName": contact.formattedName ? contact.formattedName : "",
-							"business": contact.isBusiness,
-							"verifiedName": contact.verifiedName ? contact.verifiedName : "",
-							"isMyContact": contact.isMyContact,
+							"name": message?.sender?.name ? message?.sender?.name : "",
+							"realName": message?.sender?.pushname ? message?.sender?.pushname : "",
+							"shortName": message?.sender?.shortName ? message?.sender?.shortName : "",
+							"formattedName": message?.sender?.formattedName ? message?.sender?.formattedName : "",
+							"business": message?.sender?.isBusiness,
+							"isMyContact": message?.sender?.isMyContact,
 							//
 							"isGroupMsg": message.isGroupMsg,
 							"author": message.author ? message.author : null,
@@ -140,15 +142,15 @@ module.exports = class Events {
 						response = {
 							"wook": 'RECEIVE_MESSAGE',
 							"type": 'sticker',
-							"id": message.id._serialized,
+							"id": message.id,
 							"session": session,
 							//
-							"name": contact.name ? contact.name : "",
-							"realName": contact.pushname ? contact.pushname : "",
-							"formattedName": contact.formattedName ? contact.formattedName : "",
-							"business": contact.isBusiness,
-							"verifiedName": contact.verifiedName ? contact.verifiedName : "",
-							"isMyContact": contact.isMyContact,
+							"name": message?.sender?.name ? message?.sender?.name : "",
+							"realName": message?.sender?.pushname ? message?.sender?.pushname : "",
+							"shortName": message?.sender?.shortName ? message?.sender?.shortName : "",
+							"formattedName": message?.sender?.formattedName ? message?.sender?.formattedName : "",
+							"business": message?.sender?.isBusiness,
+							"isMyContact": message?.sender?.isMyContact,
 							//
 							"isGroupMsg": message.isGroupMsg,
 							"author": message.author ? message.author : null,
@@ -169,15 +171,15 @@ module.exports = class Events {
 						response = {
 							"wook": 'RECEIVE_MESSAGE',
 							"type": 'audio',
-							"id": message.id._serialized,
+							"id": message.id,
 							"session": SessionName,
 							//
-							"name": contact.name ? contact.name : "",
-							"realName": contact.pushname ? contact.pushname : "",
-							"formattedName": contact.formattedName ? contact.formattedName : "",
-							"business": contact.isBusiness,
-							"verifiedName": contact.verifiedName ? contact.verifiedName : "",
-							"isMyContact": contact.isMyContact,
+							"name": message?.sender?.name ? message?.sender?.name : "",
+							"realName": message?.sender?.pushname ? message?.sender?.pushname : "",
+							"shortName": message?.sender?.shortName ? message?.sender?.shortName : "",
+							"formattedName": message?.sender?.formattedName ? message?.sender?.formattedName : "",
+							"business": message?.sender?.isBusiness,
+							"isMyContact": message?.sender?.isMyContact,
 							//
 							"isGroupMsg": message.isGroupMsg,
 							"author": message.author ? message.author : null,
@@ -196,15 +198,15 @@ module.exports = class Events {
 						response = {
 							"wook": 'RECEIVE_MESSAGE',
 							"type": 'ptt',
-							"id": message.id._serialized,
+							"id": message.id,
 							"session": SessionName,
 							//
-							"name": contact.name ? contact.name : "",
-							"realName": contact.pushname ? contact.pushname : "",
-							"formattedName": contact.formattedName ? contact.formattedName : "",
-							"business": contact.isBusiness,
-							"verifiedName": contact.verifiedName ? contact.verifiedName : "",
-							"isMyContact": contact.isMyContact,
+							"name": message?.sender?.name ? message?.sender?.name : "",
+							"realName": message?.sender?.pushname ? message?.sender?.pushname : "",
+							"shortName": message?.sender?.shortName ? message?.sender?.shortName : "",
+							"formattedName": message?.sender?.formattedName ? message?.sender?.formattedName : "",
+							"business": message?.sender?.isBusiness,
+							"isMyContact": message?.sender?.isMyContact,
 							//
 							"isGroupMsg": message.isGroupMsg,
 							"author": message.author ? message.author : null,
@@ -223,15 +225,15 @@ module.exports = class Events {
 						response = {
 							"wook": 'RECEIVE_MESSAGE',
 							"type": 'video',
-							"id": message.id._serialized,
+							"id": message.id,
 							"session": SessionName,
 							//
-							"name": contact.name ? contact.name : "",
-							"realName": contact.pushname ? contact.pushname : "",
-							"formattedName": contact.formattedName ? contact.formattedName : "",
-							"business": contact.isBusiness,
-							"verifiedName": contact.verifiedName ? contact.verifiedName : "",
-							"isMyContact": contact.isMyContact,
+							"name": message?.sender?.name ? message?.sender?.name : "",
+							"realName": message?.sender?.pushname ? message?.sender?.pushname : "",
+							"shortName": message?.sender?.shortName ? message?.sender?.shortName : "",
+							"formattedName": message?.sender?.formattedName ? message?.sender?.formattedName : "",
+							"business": message?.sender?.isBusiness,
+							"isMyContact": message?.sender?.isMyContact,
 							//
 							"isGroupMsg": message.isGroupMsg,
 							"author": message.author ? message.author : null,
@@ -251,15 +253,15 @@ module.exports = class Events {
 						response = {
 							"wook": 'RECEIVE_MESSAGE',
 							"type": 'location',
-							"id": message.id._serialized,
+							"id": message.id,
 							"session": SessionName,
 							//
-							"name": contact.name ? contact.name : "",
-							"realName": contact.pushname ? contact.pushname : "",
-							"formattedName": contact.formattedName ? contact.formattedName : "",
-							"business": contact.isBusiness,
-							"verifiedName": contact.verifiedName ? contact.verifiedName : "",
-							"isMyContact": contact.isMyContact,
+							"name": message?.sender?.name ? message?.sender?.name : "",
+							"realName": message?.sender?.pushname ? message?.sender?.pushname : "",
+							"shortName": message?.sender?.shortName ? message?.sender?.shortName : "",
+							"formattedName": message?.sender?.formattedName ? message?.sender?.formattedName : "",
+							"business": message?.sender?.isBusiness,
+							"isMyContact": message?.sender?.isMyContact,
 							//
 							"isGroupMsg": message.isGroupMsg,
 							"author": message.author ? message.author : null,
@@ -280,15 +282,15 @@ module.exports = class Events {
 						response = {
 							"wook": 'RECEIVE_MESSAGE',
 							"type": 'document',
-							"id": message.id._serialized,
+							"id": message.id,
 							"session": session,
 							//
-							"name": contact.name ? contact.name : "",
-							"realName": contact.pushname ? contact.pushname : "",
-							"formattedName": contact.formattedName ? contact.formattedName : "",
-							"business": contact.isBusiness,
-							"verifiedName": contact.verifiedName ? contact.verifiedName : "",
-							"isMyContact": contact.isMyContact,
+							"name": message?.sender?.name ? message?.sender?.name : "",
+							"realName": message?.sender?.pushname ? message?.sender?.pushname : "",
+							"shortName": message?.sender?.shortName ? message?.sender?.shortName : "",
+							"formattedName": message?.sender?.formattedName ? message?.sender?.formattedName : "",
+							"business": message?.sender?.isBusiness,
+							"isMyContact": message?.sender?.isMyContact,
 							//
 							"isGroupMsg": message.isGroupMsg,
 							"author": message.author ? message.author : null,
@@ -308,15 +310,15 @@ module.exports = class Events {
 						response = {
 							"wook": 'RECEIVE_MESSAGE',
 							"type": 'link',
-							"id": message.id._serialized,
+							"id": message.id,
 							"session": SessionName,
 							//
-							"name": contact.name ? contact.name : "",
-							"realName": contact.pushname ? contact.pushname : "",
-							"formattedName": contact.formattedName ? contact.formattedName : "",
-							"business": contact.isBusiness,
-							"verifiedName": contact.verifiedName ? contact.verifiedName : "",
-							"isMyContact": contact.isMyContact,
+							"name": message?.sender?.name ? message?.sender?.name : "",
+							"realName": message?.sender?.pushname ? message?.sender?.pushname : "",
+							"shortName": message?.sender?.shortName ? message?.sender?.shortName : "",
+							"formattedName": message?.sender?.formattedName ? message?.sender?.formattedName : "",
+							"business": message?.sender?.isBusiness,
+							"isMyContact": message?.sender?.isMyContact,
 							//
 							"isGroupMsg": message.isGroupMsg,
 							"author": message.author ? message.author : null,
@@ -335,15 +337,15 @@ module.exports = class Events {
 						response = {
 							"wook": 'RECEIVE_MESSAGE',
 							"type": 'vcard',
-							"id": message.id._serialized,
+							"id": message.id,
 							"session": SessionName,
 							//
-							"name": contact.name ? contact.name : "",
-							"realName": contact.pushname ? contact.pushname : "",
-							"formattedName": contact.formattedName ? contact.formattedName : "",
-							"business": contact.isBusiness,
-							"verifiedName": contact.verifiedName ? contact.verifiedName : "",
-							"isMyContact": contact.isMyContact,
+							"name": message?.sender?.name ? message?.sender?.name : "",
+							"realName": message?.sender?.pushname ? message?.sender?.pushname : "",
+							"shortName": message?.sender?.shortName ? message?.sender?.shortName : "",
+							"formattedName": message?.sender?.formattedName ? message?.sender?.formattedName : "",
+							"business": message?.sender?.isBusiness,
+							"isMyContact": message?.sender?.isMyContact,
 							//
 							"isGroupMsg": message.isGroupMsg,
 							"author": message.author ? message.author : null,
@@ -362,15 +364,15 @@ module.exports = class Events {
 						response = {
 							"wook": 'RECEIVE_MESSAGE',
 							"type": 'order',
-							"id": message.id._serialized,
+							"id": message.id,
 							"session": SessionName,
 							//
-							"name": contact.name ? contact.name : "",
-							"realName": contact.pushname ? contact.pushname : "",
-							"formattedName": contact.formattedName ? contact.formattedName : "",
-							"business": contact.isBusiness,
-							"verifiedName": contact.verifiedName ? contact.verifiedName : "",
-							"isMyContact": contact.isMyContact,
+							"name": message?.sender?.name ? message?.sender?.name : "",
+							"realName": message?.sender?.pushname ? message?.sender?.pushname : "",
+							"shortName": message?.sender?.shortName ? message?.sender?.shortName : "",
+							"formattedName": message?.sender?.formattedName ? message?.sender?.formattedName : "",
+							"business": message?.sender?.isBusiness,
+							"isMyContact": message?.sender?.isMyContact,
 							//
 							"isGroupMsg": message.isGroupMsg,
 							"author": message.author ? message.author : null,
@@ -384,7 +386,7 @@ module.exports = class Events {
 						break;
 				}
 
-				await webhooks.wh_messages(SessionName, response)
+				await webhooks.wh_messages(SessionName, response);
 
 			});
 
@@ -413,14 +415,14 @@ module.exports = class Events {
 			//  3 = READ,
 			//  4 = PLAYED =
 			//
-			client.onAck(async ack => {
+			client.onAck(async (ack) => {
 				let type = ack.type
 				if (type == 'chat' && ack.subtype == 'url') {
 					type = 'link'
 				} else if (type == 'chat' && !ack.subtype) {
 					type = 'text'
 				}
-				let status
+				let status;
 				switch (ack.ack) {
 					case 0:
 						status = 'CLOCK'
@@ -485,6 +487,7 @@ module.exports = class Events {
 				}
 				//
 				//let contact = await client?.getContact(ack.id._serialized);
+				console.log(`- getContact: \n ${JSON.stringify(ack, null, 2)}`);
 				//
 				let timestamp = Math.round(new Date().getTime() / 1000)
 				let response = {
@@ -506,7 +509,7 @@ module.exports = class Events {
 					"type": type
 				}
 
-				await webhooks.wh_status(SessionName, response)
+				await webhooks.wh_status(SessionName, response);
 
 			});
 
