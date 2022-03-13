@@ -358,7 +358,9 @@ router.post("/QRCode", upload.none(''), verifyToken.verify, async (req, res, nex
 			case 'deleteToken':
 			case 'qrRead':
 				//
-				if (req.body.View == true) {
+				console.log(req.body.View);
+				//
+				if (req.body.View === true) {
 					var xSession = session.qrcode;
 					if (xSession) {
 						const imageBuffer = Buffer.from(xSession.replace('data:image/png;base64,', ''), 'base64');
