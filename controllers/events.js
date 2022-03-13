@@ -76,7 +76,7 @@ module.exports = class Events {
 					var fileName = `${telefone}-${year}${month}${date}-${miliseconds}.${mime.extension(message.mimetype)}`;
 				}
 				//
-				let contact = await client?.getContact(message?.id);
+				let contact = await client?.getContact(message?.id?._serialized);
 				//
 				switch (type) {
 
@@ -84,7 +84,7 @@ module.exports = class Events {
 						response = {
 							"wook": 'RECEIVE_MESSAGE',
 							"type": 'text',
-							"id": message.id._serialized,
+							"id": message?.id?._serialized,
 							"session": SessionName,
 							//
 							"name": contact.name ? contact.name : "",
@@ -276,9 +276,7 @@ module.exports = class Events {
 						break;
 
 					case 'document':
-						fs.writeFileSync(`files-received/${fileName}`, buffer, (err) => {
-							console.log('arquivo baixado!')
-						});
+
 						response = {
 							"wook": 'RECEIVE_MESSAGE',
 							"type": 'document',
@@ -360,6 +358,7 @@ module.exports = class Events {
 						break;
 
 					case 'order':
+
 						response = {
 							"wook": 'RECEIVE_MESSAGE',
 							"type": 'order',
