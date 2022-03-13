@@ -7,7 +7,7 @@ dotenv.config();
 module.exports = class Webhooks {
 
 	static async wh_messages(session, response) {
-		console.log('- Webhook messages\n', response);
+		console.log('- Webhook messages');
 		let data = Sessions.getSession(session);
 		try {
 			if (data.wh_message != undefined) {
@@ -28,7 +28,7 @@ module.exports = class Webhooks {
 	}
 
 	static async wh_connect(session, response, number = null, browserless = null, tokens = []) {
-		console.log('- Webhook connect\n', response);
+		console.log('- Webhook connect');
 		let data = Sessions.getSession(session);
 		if (response == 'autocloseCalled' || response == 'desconnectedMobile' || response == 'qrReadError') {
 			Sessions.deleteSession(session);
@@ -73,7 +73,7 @@ module.exports = class Webhooks {
 	}
 
 	static async wh_status(session, response) {
-		console.log('- Webhook status\n', response);
+		console.log('- Webhook status');
 		let data = Sessions.getSession(session)
 		try {
 			if (data.wh_status != undefined) {
