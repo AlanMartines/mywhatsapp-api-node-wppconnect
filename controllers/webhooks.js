@@ -14,6 +14,7 @@ module.exports = class Webhooks {
 				await superagent
 					.post(data.wh_message)
 					.send(response)
+					.set('Accept', 'application/json')
 					.queue('messages')
 					.end(function () {
 						console.log('- Webhooks receive message')
@@ -57,6 +58,7 @@ module.exports = class Webhooks {
 				await superagent
 					.post(data.wh_connect)
 					.send(object)
+					.set('Accept', 'application/json')
 					.queue('connection')
 					.end(function () {
 						console.log('- Webhooks connect status')
@@ -80,6 +82,7 @@ module.exports = class Webhooks {
 				await superagent
 					.post(data.wh_status)
 					.send(response)
+					.set('Accept', 'application/json')
 					.queue('status')
 					.end(function () {
 						console.log('- Webhooks status message')
@@ -108,6 +111,7 @@ module.exports = class Webhooks {
 				await superagent
 					.post(data.wh_qrcode)
 					.send(object)
+					.set('Accept', 'application/json')
 					.queue('qrcode')
 					.end(function () {
 						console.log('- Webhooks status message')
