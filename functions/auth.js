@@ -1,4 +1,4 @@
-const Sessions = require('./sessions.js');
+const Sessions = require('../controllers/sessions.js');
 const config = require('../config.global');
 const Wppconnect = require("../engines");
 
@@ -35,7 +35,7 @@ module.exports = class Auth {
 				});
 
 				let response = await Wppconnect.initSession(req, res, SessionName)
-				
+
 				if (response != undefined) {
 					return {
 						"result": 200,
@@ -44,7 +44,7 @@ module.exports = class Auth {
 					};
 				}
 			}
-			
+
 		} catch (error) {
 			return {
 				"result": 500,
@@ -94,52 +94,52 @@ module.exports = class Auth {
 		let sessionkey = req.query.sessionkey;
 		let data = Sessions.getSession(session)
 		if (!session) {
-				return res.status(401).json({
-						"result": 401,
-						"messages": "Não autorizado, verifique se o nome da sessão esta correto"
-				})
+			return res.status(401).json({
+				"result": 401,
+				"messages": "Não autorizado, verifique se o nome da sessão esta correto"
+			})
 		}
 		else
-				if (data.sessionkey != sessionkey) {
-						return res.status(401).json({
-								"result": 401,
-								"messages": "Não autorizado, verifique se o sessionkey esta correto"
-						})
+			if (data.sessionkey != sessionkey) {
+				return res.status(401).json({
+					"result": 401,
+					"messages": "Não autorizado, verifique se o sessionkey esta correto"
+				})
+			}
+			else {
+				try {
+					var img = Buffer.from(data.qrCode.replace(/^data:image\/(png|jpeg|jpg);base64,/, ''), 'base64');
+					res.writeHead(200, {
+						'Content-Type': 'image/png',
+						'Content-Length': img.length
+					});
+					res.end(img);
+				} catch (ex) {
+					return res.status(400).json({
+						response: false,
+						message: "Error ao recuperar QRCode !"
+					});
 				}
-				else {
-						try {
-								var img = Buffer.from(data.qrCode.replace(/^data:image\/(png|jpeg|jpg);base64,/, ''), 'base64');
-								res.writeHead(200, {
-										'Content-Type': 'image/png',
-										'Content-Length': img.length
-								});
-								res.end(img);
-						} catch (ex) {
-								return res.status(400).json({
-										response: false,
-										message: "Error ao recuperar QRCode !"
-								});
-						}
-				}
+			}
 
-}
+	}
 
 	static async getSessionState(req, res, next) {
 		let data = Sessions.getSession(req.body.SessionName)
 		try {
 			const client = data.client
-			if (client == null || data.status == null){
-			res.setHeader('Content-Type', 'application/json');
+			if (client == null || data.status == null) {
+				res.setHeader('Content-Type', 'application/json');
 				res.status(200).json({
 					status: 'CLOSED',
 					qrcode: null
 				});
-			}else{
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				status: data.status
-			});
-		}
+			} else {
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					status: data.status
+				});
+			}
 		} catch (ex) {
 			res.setHeader('Content-Type', 'application/json');
 			res.status(400).json({
