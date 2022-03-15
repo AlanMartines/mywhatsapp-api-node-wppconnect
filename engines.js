@@ -582,7 +582,7 @@ module.exports = class Wppconnect {
 		var session = Sessions.getSession(SessionName);
 		try {
 			// Send contact
-			return await session.client.clientsendContactVcard(
+			return await session.client.sendContactVcard(
 				number,
 				contact,
 				namecontact).then((result) => {
@@ -634,7 +634,7 @@ module.exports = class Wppconnect {
 		var session = Sessions.getSession(SessionName);
 		try {
 			// Send contact
-			return await session.client.clientsendContactVcardList(
+			return await session.client.sendContactVcardList(
 				number,
 				contactlistValid,
 				contactlistInvalid
@@ -691,7 +691,7 @@ module.exports = class Wppconnect {
 		var session = Sessions.getSession(SessionName);
 		try {
 			// Send basic text
-			return await session.client.clientsendText(
+			return await session.client.sendText(
 				number,
 				msg
 			).then((result) => {
@@ -747,7 +747,7 @@ module.exports = class Wppconnect {
 		var session = Sessions.getSession(SessionName);
 		try {
 			// Send basic text
-			return await session.client.clientsendLocation(
+			return await session.client.sendLocation(
 				number,
 				lat,
 				long,
@@ -806,7 +806,7 @@ module.exports = class Wppconnect {
 		var session = Sessions.getSession(SessionName);
 		try {
 			// Send basic text
-			return await session.client.clientsendLinkPreview(
+			return await session.client.sendLinkPreview(
 				number,
 				link,
 				detail
@@ -864,7 +864,7 @@ module.exports = class Wppconnect {
 		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		try {
-			return await session.client.clientsendImage(
+			return await session.client.sendImage(
 				number,
 				filePath,
 				fileName,
@@ -920,7 +920,7 @@ module.exports = class Wppconnect {
 		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		try {
-			return await session.client.clientsendFile(
+			return await session.client.sendFile(
 				number,
 				filePath,
 				originalname,
@@ -977,7 +977,7 @@ module.exports = class Wppconnect {
 		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		try {
-			return await session.client.clientsendFileFromBase64(
+			return await session.client.sendFileFromBase64(
 				number,
 				"data:" + mimetype + ";base64," + base64Data,
 				originalname,
@@ -1035,7 +1035,7 @@ module.exports = class Wppconnect {
 		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		try {
-			return await session.client.clientgetAllContacts().then(async (result) => {
+			return await session.client.getAllContacts().then(async (result) => {
 				//console.log('Result: ', result); //return object success
 				//
 				var getChatGroupNewMsg = [];
@@ -1092,7 +1092,7 @@ module.exports = class Wppconnect {
 		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		try {
-			return await session.client.clientgetAllGroups().then(async (result) => {
+			return await session.client.getAllGroups().then(async (result) => {
 				//console.log('Result: ', result); //return object success
 				//
 				var getAllGroups = [];
@@ -1143,7 +1143,7 @@ module.exports = class Wppconnect {
 		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultgetSessionTokenBrowser = await session.client.then(async client => {
-			return await session.client.clientgetSessionTokenBrowser().then((result) => {
+			return await session.client.getSessionTokenBrowser().then((result) => {
 				//console.log('Result: ', result); //return object success
 				return result;
 			}).catch((erro) => {
@@ -1168,7 +1168,7 @@ module.exports = class Wppconnect {
 		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultgetBlockList = await session.client.then(async client => {
-			return await session.client.clientgetBlockList().then((result) => {
+			return await session.client.getBlockList().then((result) => {
 				//console.log('Result: ', result); //return object success
 				return result;
 			}).catch((erro) => {
@@ -1196,7 +1196,7 @@ module.exports = class Wppconnect {
 		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultgetStatus = await session.client.then(async client => {
-			return await session.client.clientgetStatus(number).then((result) => {
+			return await session.client.getStatus(number).then((result) => {
 				//console.log('Result: ', result); //return object success
 				return result;
 			}).catch((erro) => {
@@ -1224,7 +1224,7 @@ module.exports = class Wppconnect {
 		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultgetNumberProfile = await session.client.then(async client => {
-			return await session.client.clientgetNumberProfile(number).then((result) => {
+			return await session.client.getNumberProfile(number).then((result) => {
 				//console.log('Result: ', result); //return object success
 				return result;
 			}).catch((erro) => {
@@ -1252,7 +1252,7 @@ module.exports = class Wppconnect {
 		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		try {
-			return await session.client.clientcheckNumberStatus(number).then((result) => {
+			return await session.client.checkNumberStatus(number).then((result) => {
 				//console.log('Result: ', result); //return object success
 				//
 				if (result.canReceiveMessage === true) {
@@ -1353,7 +1353,7 @@ module.exports = class Wppconnect {
 		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultleaveGroup = await session.client.then(async client => {
-			return await session.client.clientleaveGroup(groupId).then((result) => {
+			return await session.client.leaveGroup(groupId).then((result) => {
 				//console.log('Result: ', result); //return object success
 				//
 				return {
@@ -1389,7 +1389,7 @@ module.exports = class Wppconnect {
 		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultgetGroupMembers = await session.client.then(async client => {
-			return await session.client.clientgetGroupMembers(groupId).then(async (result) => {
+			return await session.client.getGroupMembers(groupId).then(async (result) => {
 				//console.log('Result: ', result); //return object success
 				//
 				var getGroupMembers = [];
@@ -1437,7 +1437,7 @@ module.exports = class Wppconnect {
 		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultgetGroupMembersIds = await session.client.then(async client => {
-			return await session.client.clientgetGroupMembersIds(groupId).then((result) => {
+			return await session.client.getGroupMembersIds(groupId).then((result) => {
 				//console.log('Result: ', result); //return object success
 				return result;
 			}).catch((erro) => {
@@ -1466,7 +1466,7 @@ module.exports = class Wppconnect {
 		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultgetGroupInviteLink = await session.client.then(async client => {
-			return await session.client.clientgetGroupInviteLink(groupId).then((result) => {
+			return await session.client.getGroupInviteLink(groupId).then((result) => {
 				//console.log('Result: ', result); //return object success
 				return result;
 			}).catch((erro) => {
@@ -1497,7 +1497,7 @@ module.exports = class Wppconnect {
 		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultgetGroupInviteLink = await session.client.then(async client => {
-			return await session.client.clientcreateGroup(title, contactlistValid).then((result) => {
+			return await session.client.createGroup(title, contactlistValid).then((result) => {
 				//console.log('Result: ', result); //return object success
 				//
 				if (result.status === 200) {
@@ -1551,7 +1551,7 @@ module.exports = class Wppconnect {
 		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultremoveParticipant = await session.client.then(async client => {
-			return await session.client.clientremoveParticipant(groupId, phonefull).then((result) => {
+			return await session.client.removeParticipant(groupId, phonefull).then((result) => {
 				//console.log('Result: ', result); //return object success
 				//
 				if (result === true) {
@@ -1599,7 +1599,7 @@ module.exports = class Wppconnect {
 		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultaddParticipant = await session.client.then(async client => {
-			return await session.client.clientaddParticipant(groupId, phonefull).then((result) => {
+			return await session.client.addParticipant(groupId, phonefull).then((result) => {
 				//console.log('Result: ', addParticipant); //return object success
 				//
 				if (result === true) {
@@ -1647,7 +1647,7 @@ module.exports = class Wppconnect {
 		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultpromoteParticipant = await session.client.then(async client => {
-			return await session.client.clientpromoteParticipant(groupId, number).then((result) => {
+			return await session.client.promoteParticipant(groupId, number).then((result) => {
 				//console.log('Result: ', promoteParticipant); //return object success
 				//
 				if (result === true) {
@@ -1695,7 +1695,7 @@ module.exports = class Wppconnect {
 		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultdemoteParticipant = await session.client.then(async client => {
-			return await session.client.clientdemoteParticipant(groupId, phonefull).then((result) => {
+			return await session.client.demoteParticipant(groupId, phonefull).then((result) => {
 				//console.log('Result: ', demoteParticipant); //return object success
 				//
 				if (demoteParticipant === true) {
@@ -1742,7 +1742,7 @@ module.exports = class Wppconnect {
 		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultgetGroupInfoFromInviteLink = await session.client.then(async client => {
-			return await session.client.clientgetGroupInfoFromInviteLink(InviteCode).then((result) => {
+			return await session.client.getGroupInfoFromInviteLink(InviteCode).then((result) => {
 				//console.log('Result: ', result); //return object success
 				return result;
 			}).catch((erro) => {
@@ -1769,7 +1769,7 @@ module.exports = class Wppconnect {
 		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultjoinGroup = await session.client.then(async client => {
-			return await session.client.clientjoinGroup(InviteCode).then((result) => {
+			return await session.client.joinGroup(InviteCode).then((result) => {
 				//console.log('Result: ', result); //return object success
 				//
 				if (result.status === 200) {
@@ -1819,7 +1819,7 @@ module.exports = class Wppconnect {
 		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultsetProfileStatus = await session.client.then(async client => {
-			return await session.client.clientsetProfileStatus(ProfileStatus).then((result) => {
+			return await session.client.setProfileStatus(ProfileStatus).then((result) => {
 				//console.log('Result: ', result); //return object success
 				//
 				return {
@@ -1853,7 +1853,7 @@ module.exports = class Wppconnect {
 		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultsetProfileName = await session.client.then(async client => {
-			return await session.client.clientsetProfileName(ProfileName).then((result) => {
+			return await session.client.setProfileName(ProfileName).then((result) => {
 				//console.log('Result: ', result); //return object success
 				//
 				return {
@@ -1887,7 +1887,7 @@ module.exports = class Wppconnect {
 		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultsetProfilePic = await session.client.then(async client => {
-			return await session.client.clientsetProfilePic(path).then((result) => {
+			return await session.client.setProfilePic(path).then((result) => {
 				//console.log('Result: ', result); //return object success
 				//
 				return {
@@ -1924,7 +1924,7 @@ module.exports = class Wppconnect {
 		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultkillServiceWorker = await session.client.then(async client => {
-			return await session.client.clientkillServiceWorker().then((result) => {
+			return await session.client.killServiceWorker().then((result) => {
 				//console.log('Result: ', result); //return object success
 				//
 				return {
@@ -1956,7 +1956,7 @@ module.exports = class Wppconnect {
 		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultrestartService = await session.client.then(async client => {
-			return await session.client.clientrestartService().then((result) => {
+			return await session.client.restartService().then((result) => {
 				//console.log('Result: ', result); //return object success
 				//
 				return {
@@ -1988,7 +1988,7 @@ module.exports = class Wppconnect {
 		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultgetHostDevice = await session.client.then(async client => {
-			return await session.client.clientgetHostDevice().then((result) => {
+			return await session.client.getHostDevice().then((result) => {
 				//console.log('Result: ', result); //return object success
 				//
 				return {
@@ -2033,7 +2033,7 @@ module.exports = class Wppconnect {
 		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultgetHostDevice = await session.client.then(async client => {
-			return await session.client.clientisMultiDevice().then((result) => {
+			return await session.client.isMultiDevice().then((result) => {
 				//console.log('Result: ', result); //return object success
 				//
 				return {
@@ -2065,7 +2065,7 @@ module.exports = class Wppconnect {
 		console.log("- getConnectionState");
 		var session = Sessions.getSession(SessionName);
 		var resultisConnected = await session.client.then(async client => {
-			return await session.client.clientgetConnectionState().then((result) => {
+			return await session.client.getConnectionState().then((result) => {
 				//console.log('Result: ', result); //return object success
 				//
 				return {
@@ -2098,7 +2098,7 @@ module.exports = class Wppconnect {
 		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultgetBatteryLevel = await session.client.then(async client => {
-			return await session.client.clientgetBatteryLevel().then((result) => {
+			return await session.client.getBatteryLevel().then((result) => {
 				//console.log('Result: ', result); //return object success
 				//
 				return {
@@ -2131,7 +2131,7 @@ module.exports = class Wppconnect {
 		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultisConnected = await session.client.then(async client => {
-			return await session.client.clientisConnected().then((result) => {
+			return await session.client.isConnected().then((result) => {
 				//console.log('Result: ', result); //return object success
 				//
 				return {
@@ -2163,7 +2163,7 @@ module.exports = class Wppconnect {
 		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultgetWAVersion = await session.client.then(async client => {
-			return await session.client.clientgetWAVersion().then((result) => {
+			return await session.client.getWAVersion().then((result) => {
 				//console.log('Result: ', result); //return object success
 				//
 				return {
@@ -2195,7 +2195,7 @@ module.exports = class Wppconnect {
 		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultstartPhoneWatchdog = await session.client.then(async client => {
-			return await session.client.clientstartPhoneWatchdog(interval).then((result) => {
+			return await session.client.startPhoneWatchdog(interval).then((result) => {
 				//console.log('Result: ', result); //return object success
 				//
 				return {
@@ -2227,7 +2227,7 @@ module.exports = class Wppconnect {
 		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
 		var resultstopPhoneWatchdog = await session.client.then(async client => {
-			return await session.client.clientstopPhoneWatchdog().then((result) => {
+			return await session.client.stopPhoneWatchdog().then((result) => {
 				//console.log('Result: ', result); //return object success
 				//
 				return {
