@@ -158,9 +158,15 @@ module.exports = class Wppconnect {
 		}
 		//
 		await Sessions.addInfoSession(SessionName, {
+			SessionName: SessionName,
+			client: null,
+			tokens: null,
 			result: "info",
 			state: "STARTING",
 			status: "notLogged",
+			CodeasciiQR: null,
+			CodeurlCode: null,
+			qrCode: null,
 			message: 'Sistema iniciando e indisponivel para uso',
 		});
 		//
@@ -195,6 +201,17 @@ module.exports = class Wppconnect {
 					//
 					await webhooks.wh_qrcode(SessionName, base64Qrimg);
 					this.exportQR(socket, base64Qrimg, SessionName, attempts);
+					var session = await Sessions.getSession(SessionName);
+					//
+					session.result = "info";
+					session.state = "QRCODE";
+					session.status = "qrRead";
+					session.CodeasciiQR = asciiQR;
+					session.CodeurlCode = urlCode;
+					session.qrCode = base64Qrimg;
+					session.mensagem = "Sistema aguardando leitura do QR-Code";
+					//
+					/*
 					await Sessions.addInfoSession(SessionName, {
 						result: "info",
 						state: "QRCODE",
@@ -204,6 +221,7 @@ module.exports = class Wppconnect {
 						qrCode: base64Qrimg,
 						mensagem: "Sistema aguardando leitura do QR-Code",
 					});
+					*/
 					//
 				},
 				statusFind: async (statusSession, session) => {
@@ -220,17 +238,29 @@ module.exports = class Wppconnect {
 						case 'chatsAvailable':
 							//
 							await webhooks.wh_connect(SessionName, statusSession);
-							await Sessions.addInfoSession(SessionName, {
-								result: "success",
-								state: "CONNECTED",
-								status: statusSession,
-								CodeasciiQR: null,
-								CodeurlCode: null,
-								qrCode: null,
-								message: "Sistema iniciado e disponivel para uso",
-							});
+							var session = await Sessions.getSession(SessionName);
 							//
-							await updateStateDb('CONNECTED', statusSession, AuthorizationToken);
+							session.result = "success";
+							session.state = "CONNECTED";
+							session.status = statusSession;
+							session.CodeasciiQR = null;
+							session.CodeurlCode = null;
+							session.qrCode = null;
+							message: "Sistema iniciado e disponivel para uso",
+								//
+								/*
+								await Sessions.addInfoSession(SessionName, {
+									result: "success",
+									state: "CONNECTED",
+									status: statusSession,
+									CodeasciiQR: null,
+									CodeurlCode: null,
+									qrCode: null,
+									message: "Sistema iniciado e disponivel para uso",
+								});
+								*/
+								//
+								await updateStateDb('CONNECTED', statusSession, AuthorizationToken);
 							//
 							break;
 						case 'autocloseCalled':
