@@ -378,7 +378,7 @@ module.exports = class Wppconnect {
 			}
 			//
 			await Sessions.addInfoSession(SessionName, {
-				//client: client,
+				client: client,
 				tokens: tokens,
 				result: "success",
 				state: "CONNECTED",
