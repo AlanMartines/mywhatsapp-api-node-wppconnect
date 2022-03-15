@@ -413,6 +413,35 @@ router.post("/QRCode", upload.none(''), verifyToken.verify, async (req, res, nex
 //
 // ------------------------------------------------------------------------------------------------//
 //
+router.post("/getSession", upload.none(''), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName)) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
+		var getSession = await Sessions.getSession(removeWithspace(req.body.SessionName));
+		//
+		//console.log(result);
+		res.setHeader('Content-Type', 'application/json');
+		res.status(200).json({
+			getSession
+		});
+	}
+}); //getSessions
+//
+// ------------------------------------------------------------------------------------------------//
+//
 router.post("/getSessions", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName)) {
