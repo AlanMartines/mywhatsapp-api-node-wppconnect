@@ -1251,7 +1251,7 @@ module.exports = class Wppconnect {
 		console.log("- Validando numero");
 		await sleep(3000);
 		var session = Sessions.getSession(SessionName);
-		var resultcheckNumberStatus = await session.client.then(async client => {
+		try {
 			return await session.client.clientcheckNumberStatus(number).then((result) => {
 				//console.log('Result: ', result); //return object success
 				//
@@ -1294,8 +1294,17 @@ module.exports = class Wppconnect {
 				};
 				//
 			});
-		});
-		return resultcheckNumberStatus;
+		} catch (erro) {
+			console.error("Error when:", erro); //return object error
+			//
+			return {
+				"erro": true,
+				"status": 404,
+				"number": number,
+				"message": "Erro ao verificar número informado"
+			};
+			//
+		}
 	} //checkNumberStatus
 	//
 	// ------------------------------------------------------------------------------------------------//
