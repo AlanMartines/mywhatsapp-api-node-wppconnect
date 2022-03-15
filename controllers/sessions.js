@@ -300,14 +300,14 @@ module.exports = class Sessions {
 	static async getSession(name) {
 		if (await this.checkSession(name)) {
 			var key = await this.getSessionKey(name);
-			return JSON.stringify(this.session[key], null, 2);
+			return this.session[key];
 		}
 		return false;
 	}
 
 	// retornar todas
 	static async getAll() {
-		return JSON.stringify(this.session, null, 2);
+		return this.session;
 	}
 
 	// checa o client
