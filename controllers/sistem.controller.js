@@ -432,7 +432,7 @@ router.post("/getSession", upload.none(''), verifyToken.verify, async (req, res,
 		//
 		var getSession = await Sessions.getSession(removeWithspace(req.body.SessionName));
 		//
-		console.log(JSON.parse(getSession));
+		//console.log(result);
 		res.setHeader('Content-Type', 'application/json');
 		res.status(200).json(
 			getSession
