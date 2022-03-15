@@ -161,7 +161,7 @@ module.exports = class Wppconnect {
 			result: "info",
 			state: "STARTING",
 			status: "notLogged",
-			message: 'Sistema iniciando e indisponivel para uso'
+			message: 'Sistema iniciando e indisponivel para uso',
 		});
 		//
 		await updateStateDb('STARTING', 'notLogged', SessionName);
@@ -202,7 +202,7 @@ module.exports = class Wppconnect {
 						CodeasciiQR: asciiQR,
 						CodeurlCode: urlCode,
 						qrCode: base64Qrimg,
-						mensagem: "Sistema aguardando leitura do QR-Code"
+						mensagem: "Sistema aguardando leitura do QR-Code",
 					});
 					//
 				},
@@ -227,7 +227,7 @@ module.exports = class Wppconnect {
 								CodeasciiQR: null,
 								CodeurlCode: null,
 								qrCode: null,
-								message: "Sistema iniciado e disponivel para uso"
+								message: "Sistema iniciado e disponivel para uso",
 							});
 							//
 							await updateStateDb('CONNECTED', statusSession, AuthorizationToken);
@@ -246,7 +246,7 @@ module.exports = class Wppconnect {
 								CodeasciiQR: null,
 								CodeurlCode: null,
 								qrCode: null,
-								message: "Sistema fechado"
+								message: "Sistema fechado",
 							});
 							//
 							await updateStateDb('CLOSED', statusSession, AuthorizationToken);
@@ -266,7 +266,7 @@ module.exports = class Wppconnect {
 								CodeasciiQR: null,
 								CodeurlCode: null,
 								qrCode: null,
-								message: "Dispositivo desconetado"
+								message: "Dispositivo desconetado",
 							});
 							//
 							await updateStateDb('DISCONNECTED', statusSession, AuthorizationToken);
@@ -282,7 +282,7 @@ module.exports = class Wppconnect {
 								CodeasciiQR: null,
 								CodeurlCode: null,
 								qrCode: null,
-								message: "Sistema Off-line"
+								message: "Sistema Off-line",
 							});
 							//
 							await updateStateDb('DISCONNECTED', statusSession, AuthorizationToken);
@@ -384,12 +384,12 @@ module.exports = class Wppconnect {
 				CodeasciiQR: null,
 				CodeurlCode: null,
 				qrCode: null,
-				message: "Sistema On-line"
+				message: "Sistema On-line",
 			});
 			//
 			await Sessions.addInfoSession(SessionName, {
 				client: client,
-				tokens: tokens
+				tokens: tokens,
 			});
 			//
 			console.log("- Token WPPConnect:\n", JSON.stringify(tokens, null, 2));
@@ -403,7 +403,7 @@ module.exports = class Wppconnect {
 				CodeasciiQR: null,
 				CodeurlCode: null,
 				qrCode: null,
-				message: "Sistema Off-line"
+				message: "Sistema Off-line",
 			});
 			//
 			const sessionUser = await Sessions.getSession(SessionName);
