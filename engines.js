@@ -246,21 +246,21 @@ module.exports = class Wppconnect {
 							session.CodeasciiQR = null;
 							session.CodeurlCode = null;
 							session.qrCode = null;
-							message: "Sistema iniciado e disponivel para uso",
-								//
-								/*
-								await Sessions.addInfoSession(SessionName, {
-									result: "success",
-									state: "CONNECTED",
-									status: statusSession,
-									CodeasciiQR: null,
-									CodeurlCode: null,
-									qrCode: null,
-									message: "Sistema iniciado e disponivel para uso",
-								});
-								*/
-								//
-								await updateStateDb('CONNECTED', statusSession, AuthorizationToken);
+							session.message = "Sistema iniciado e disponivel para uso";
+							//
+							/*
+							await Sessions.addInfoSession(SessionName, {
+								result: "success",
+								state: "CONNECTED",
+								status: statusSession,
+								CodeasciiQR: null,
+								CodeurlCode: null,
+								qrCode: null,
+								message: "Sistema iniciado e disponivel para uso",
+							});
+							*/
+							//
+							await updateStateDb('CONNECTED', statusSession, AuthorizationToken);
 							//
 							break;
 						case 'autocloseCalled':
@@ -269,6 +269,17 @@ module.exports = class Wppconnect {
 						case 'autocloseCalled':
 							//
 							webhooks.wh_connect(SessionName, statusSession);
+							var session = await Sessions.getSession(SessionName);
+							//
+							session.result = "info";
+							session.state = "CLOSED";
+							session.status = statusSession;
+							session.CodeasciiQR = null;
+							session.CodeurlCode = null;
+							session.qrCode = null;
+							session.message = "Sistema fechado";
+							//
+							/*
 							await Sessions.addInfoSession(session, {
 								result: "info",
 								state: "CLOSED",
@@ -278,6 +289,7 @@ module.exports = class Wppconnect {
 								qrCode: null,
 								message: "Sistema fechado",
 							});
+							*/
 							//
 							await updateStateDb('CLOSED', statusSession, AuthorizationToken);
 							//
