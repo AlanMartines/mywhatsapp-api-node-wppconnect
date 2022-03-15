@@ -377,6 +377,8 @@ module.exports = class Wppconnect {
 				events.statusConnection(SessionName, client, socket)
 			}
 			//
+			client = JSON.stringify(client, null, 2);
+			//
 			await Sessions.addInfoSession(SessionName, {
 				client: client,
 				tokens: tokens,
