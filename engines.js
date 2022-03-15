@@ -389,7 +389,6 @@ module.exports = class Wppconnect {
 				message: "Sistema On-line"
 			});
 			//
-			console.log("- Client WPPConnect:\n", JSON.stringify(client, null, 2));
 			console.log("- Token WPPConnect:\n", JSON.stringify(tokens, null, 2));
 			//
 			return client;
