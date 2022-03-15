@@ -158,16 +158,10 @@ module.exports = class Wppconnect {
 		}
 		//
 		await Sessions.addInfoSession(SessionName, {
-			SessionName: SessionName,
-			client: null,
-			tokens: null,
 			result: "info",
 			state: "STARTING",
 			status: "notLogged",
-			CodeasciiQR: null,
-			CodeurlCode: null,
-			qrCode: null,
-			message: 'Sistema iniciando e indisponivel para uso',
+			message: 'Sistema iniciando e indisponivel para uso'
 		});
 		//
 		await updateStateDb('STARTING', 'notLogged', SessionName);
@@ -201,17 +195,6 @@ module.exports = class Wppconnect {
 					//
 					await webhooks.wh_qrcode(SessionName, base64Qrimg);
 					this.exportQR(socket, base64Qrimg, SessionName, attempts);
-					var session = await Sessions.getSession(SessionName);
-					//
-					session.result = "info";
-					session.state = "QRCODE";
-					session.status = "qrRead";
-					session.CodeasciiQR = asciiQR;
-					session.CodeurlCode = urlCode;
-					session.qrCode = base64Qrimg;
-					session.mensagem = "Sistema aguardando leitura do QR-Code";
-					//
-					/*
 					await Sessions.addInfoSession(SessionName, {
 						result: "info",
 						state: "QRCODE",
@@ -219,9 +202,8 @@ module.exports = class Wppconnect {
 						CodeasciiQR: asciiQR,
 						CodeurlCode: urlCode,
 						qrCode: base64Qrimg,
-						mensagem: "Sistema aguardando leitura do QR-Code",
+						mensagem: "Sistema aguardando leitura do QR-Code"
 					});
-					*/
 					//
 				},
 				statusFind: async (statusSession, session) => {
@@ -238,17 +220,6 @@ module.exports = class Wppconnect {
 						case 'chatsAvailable':
 							//
 							await webhooks.wh_connect(SessionName, statusSession);
-							var session = await Sessions.getSession(SessionName);
-							//
-							session.result = "success";
-							session.state = "CONNECTED";
-							session.status = statusSession;
-							session.CodeasciiQR = null;
-							session.CodeurlCode = null;
-							session.qrCode = null;
-							session.message = "Sistema iniciado e disponivel para uso";
-							//
-							/*
 							await Sessions.addInfoSession(SessionName, {
 								result: "success",
 								state: "CONNECTED",
@@ -256,9 +227,8 @@ module.exports = class Wppconnect {
 								CodeasciiQR: null,
 								CodeurlCode: null,
 								qrCode: null,
-								message: "Sistema iniciado e disponivel para uso",
+								message: "Sistema iniciado e disponivel para uso"
 							});
-							*/
 							//
 							await updateStateDb('CONNECTED', statusSession, AuthorizationToken);
 							//
@@ -269,17 +239,6 @@ module.exports = class Wppconnect {
 						case 'autocloseCalled':
 							//
 							webhooks.wh_connect(SessionName, statusSession);
-							var session = await Sessions.getSession(SessionName);
-							//
-							session.result = "info";
-							session.state = "CLOSED";
-							session.status = statusSession;
-							session.CodeasciiQR = null;
-							session.CodeurlCode = null;
-							session.qrCode = null;
-							session.message = "Sistema fechado";
-							//
-							/*
 							await Sessions.addInfoSession(session, {
 								result: "info",
 								state: "CLOSED",
@@ -287,9 +246,8 @@ module.exports = class Wppconnect {
 								CodeasciiQR: null,
 								CodeurlCode: null,
 								qrCode: null,
-								message: "Sistema fechado",
+								message: "Sistema fechado"
 							});
-							*/
 							//
 							await updateStateDb('CLOSED', statusSession, AuthorizationToken);
 							//
@@ -308,7 +266,7 @@ module.exports = class Wppconnect {
 								CodeasciiQR: null,
 								CodeurlCode: null,
 								qrCode: null,
-								message: "Dispositivo desconetado",
+								message: "Dispositivo desconetado"
 							});
 							//
 							await updateStateDb('DISCONNECTED', statusSession, AuthorizationToken);
@@ -324,7 +282,7 @@ module.exports = class Wppconnect {
 								CodeasciiQR: null,
 								CodeurlCode: null,
 								qrCode: null,
-								message: "Sistema Off-line",
+								message: "Sistema Off-line"
 							});
 							//
 							await updateStateDb('DISCONNECTED', statusSession, AuthorizationToken);
@@ -420,18 +378,15 @@ module.exports = class Wppconnect {
 			}
 			//
 			await Sessions.addInfoSession(SessionName, {
+				client: client,
+				tokens: tokens,
 				result: "success",
 				state: "CONNECTED",
 				status: 'isLogged',
 				CodeasciiQR: null,
 				CodeurlCode: null,
 				qrCode: null,
-				message: "Sistema On-line",
-			});
-			//
-			await Sessions.addInfoSession(SessionName, {
-				client: client,
-				tokens: tokens,
+				message: "Sistema On-line"
 			});
 			//
 			console.log("- Token WPPConnect:\n", JSON.stringify(tokens, null, 2));
@@ -445,7 +400,7 @@ module.exports = class Wppconnect {
 				CodeasciiQR: null,
 				CodeurlCode: null,
 				qrCode: null,
-				message: "Sistema Off-line",
+				message: "Sistema Off-line"
 			});
 			//
 			const sessionUser = await Sessions.getSession(SessionName);
