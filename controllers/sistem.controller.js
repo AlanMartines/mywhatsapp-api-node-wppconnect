@@ -430,7 +430,7 @@ router.post("/getSession", upload.none(''), verifyToken.verify, async (req, res,
 		//
 	} else {
 		//
-		var getSession = await Sessions.getSession(removeWithspace(req.body.SessionName));
+		var getSession = await Sessions.getSession(removeWithspace(req.body.SessionName).client);
 		//
 		//console.log(result);
 		res.setHeader('Content-Type', 'application/json');
