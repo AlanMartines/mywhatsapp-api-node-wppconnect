@@ -1,7 +1,7 @@
 const urlExists = require("url-exists");//
 module.exports = class Sessions {
 
-	static session = Sessions.session || []; //start array
+	static session = new Array();
 	//
 	static async ApiStatus(SessionName) {
 		const sessionUser = await this.getSession(SessionName);
