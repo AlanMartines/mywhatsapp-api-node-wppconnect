@@ -430,9 +430,10 @@ router.post("/getSession", upload.none(''), verifyToken.verify, async (req, res,
 		//
 	} else {
 		//
-		var getSession = await Sessions.getSession(removeWithspace(req.body.SessionName));
+		var getSession = JSON.stringify(await Sessions.getSession(removeWithspace(req.body.SessionName)));
 		//
 		console.log(getSession);
+		//
 		res.setHeader('Content-Type', 'application/json');
 		res.status(200).json({
 			getSession
@@ -459,9 +460,10 @@ router.post("/getSessions", upload.none(''), verifyToken.verify, async (req, res
 		//
 	} else {
 		//
-		var getSessions = await Sessions.getAll();
+		var getSessions = JSON.stringify(await Sessions.getAll());
 		//
 		console.log(getSessions);
+		//
 		res.setHeader('Content-Type', 'application/json');
 		res.status(200).json({
 			getSessions
