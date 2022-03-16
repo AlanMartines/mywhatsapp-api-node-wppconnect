@@ -126,7 +126,7 @@ FORCE_CONNECTION_USE_HERE=0
 		//
 		try {
 			//
-			const sistem = require("../controllers/sistem.controller");
+			const sistem = require("./controllers/sistem.controller");
 			//
 			// Body Parser
 			app.use(cors());
