@@ -458,4 +458,26 @@ module.exports = class Events {
 
 	}
 
+	static extraEvents(session, client) {
+		//
+		// function to detect incoming call
+		try {
+			client.onIncomingCall(async (call) => {
+				await client?.rejectCall();
+				await client?.sendText(call.peerJid, await saudacao() + ",\nDesculpe-me mas não consigo atender sua chamada, se for urgente manda msg de texto, grato.");
+			});
+		} catch (error) {
+			console.log("- Error onIncomingCall:", error);
+		}
+		//
+		try {
+			// Listen when client has been added to a group
+			client?.onAddedToGroup(async (chatEvent) => {
+				console.log('- Listen when client has been added to a group:', chatEvent.name);
+			});
+		} catch (error) {
+			console.log("- Error onAddedToGroup:", error);
+		}
+		//
+	}
 }
