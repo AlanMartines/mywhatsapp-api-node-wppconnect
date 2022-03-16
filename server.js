@@ -1,7 +1,10 @@
 const fs = require('fs-extra');
 const express = require('express');
 require('express-async-errors');
+const latest = require('latest-version'); // verifica a ultima release no npm
+const { version } = require('./package.json');
 const bodyParser = require('body-parser');
+const logger = require('./util/logger');
 const app = express();
 const cors = require('cors');
 const path = require('path');
@@ -263,25 +266,47 @@ async function exitHandler(options, exitCode) {
 //
 // ------------------------------------------------------------------------------------------------//
 //
-//do something when sistema is closing
-process.on('exit', exitHandler.bind(null, {
-	cleanup: true
-}));
-//catches ctrl+c event
-process.on('SIGINT', exitHandler.bind(null, {
-	exit: true
-}));
-// catches "kill pid" (for example: nodemon restart)
-process.on('SIGUSR1', exitHandler.bind(null, {
-	exit: true
-}));
-process.on('SIGUSR2', exitHandler.bind(null, {
-	exit: true
-}));
-//catches uncaught exceptions
-process.on('uncaughtException', exitHandler.bind(null, {
-	exit: true
-}));
+// Emitido logo antes da saída de um processo do Node
+process.on('beforeExit', code => {
+	setTimeout(() => {
+		logger.info(`Process will exit with code: ${code}`)
+		process.exit(code)
+	}, 100);
+});
+// Emitido na saída de um processo do Node
+process.on('exit', code => {
+	logger.info(`Process exited with code: ${code}`);
+});
+// Evento emitido pelo Sistema Operacional ou gerenciador de processos como PM2 envia sinal para terminar o processo node
+process.on('SIGTERM', signal => {
+	logger.info(`Process ${process.pid} received a SIGTERM signal`);
+	process.exit(0);
+});
+// Evento emitido pelo Sistema Operacional ou gerenciador de processos como PM2 interrompe o processo node
+process.on('SIGINT', signal => {
+	logger.info(`Process ${process.pid} has been interrupted`);
+	process.exit(0);
+});
+// Evento é emitido Quando um erro de JavaScript não é tratado corretamente
+process.on('uncaughtException', err => {
+	logger.error(`Uncaught Exception: ${err.message}`);
+	process.exit(1);
+});
+// Evento é emitido Quando uma Promise é rejeitada ou não é satisfeita
+process.on('unhandledRejection', (reason, promise) => {
+	logger.error('Unhandled rejection at ', promise, `reason: ${err.message}`)
+	process.exit(1);
+});
+
+process.on('<signal or error event>', _ => {
+	server.close(() => {
+		process.exit(0);
+	})
+	// Se o servidor não terminou em 1000ms, desligue o processo
+	setTimeout(() => {
+		process.exit(0);
+	}, 1000).unref(); // Evita que o tempo limite seja registrado no event loop
+});
 //
 // ------------------------------------------------------------------------------------------------//
 //
