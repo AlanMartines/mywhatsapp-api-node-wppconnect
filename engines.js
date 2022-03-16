@@ -63,7 +63,7 @@ module.exports = class Wppconnect {
 
 	static async initSession(socket, SessionName, AuthorizationToken, MultiDevice, whatsappVersion) {
 		let session = SessionName
-		let token = await this.getToken(session);
+		//let token = await this.getToken(session);
 		const funcoesSocket = new fnSocket(socket);
 		try {
 			wppconnect?.create({
