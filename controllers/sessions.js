@@ -1,11 +1,13 @@
 const urlExists = require("url-exists");
 const fs = require('fs');
+const redis = require('redis');
 const cache = redis?.createClient();
 const { fromBuffer } = require('file-type');
 const mimeTypes = require('mime-types');
 const fileType = require('file-type');
 const axios = require('axios');
 const chalk = require('chalk');
+const logger = require('../util/logger');
 const boxen = require('boxen');
 
 module.exports = class Sessions {
