@@ -1,4 +1,23 @@
 const fs = require('fs-extra');
+const express = require('express');
+require('express-async-errors');
+const bodyParser = require('body-parser');
+const app = express();
+const cors = require('cors');
+const path = require('path');
+//
+const http = require('http').Server(app);
+// https://www.scaleway.com/en/docs/tutorials/socket-io/
+const io = require('socket.io')(http, {
+	cors: {
+		origins: ["*"],
+		methods: ["GET", "POST"],
+		transports: ['websocket', 'polling'],
+		credentials: true
+	},
+	allowEIO3: true
+});
+//
 const {
 	yo
 } = require('yoo-hoo');
@@ -105,29 +124,120 @@ FORCE_CONNECTION_USE_HERE=0
 		//
 		// ------------------------------------------------------------------------------------------------//
 		//
-		try{
-		const customExpress = require('./config/custom-express');
-		const http = customExpress();
-		//
-		// ------------------------------------------------------------------------------------------------//
-		//
-		http.listen(config.PORT, config.HOST, async function (err) {
-			if (err) {
-				console.log(err);
-			} else {
-				const host = http.address().address;
-				const port = http.address().port;
-				console.log(`- HTTP Server running on: ${host}:${port}`);
-			}
-			if (parseInt(config.START_ALL_SESSIONS) == true) {
-				let result = await startAll.startAllSessions();
-			}
-		});
-	}catch(error){
-		console.log('- Não foi fossivel iniciar o sistema');
-		console.log(error.message);
-		process.exit(1);
-	}
+		try {
+			//
+			const sistem = require("../controllers/sistem.controller");
+			//
+			// Body Parser
+			app.use(cors());
+			app.use(bodyParser.json({
+				limit: '50mb',
+				type: 'application/json'
+			}));
+			app.use(bodyParser.urlencoded({
+				extended: true
+			}));
+			//
+			// Express Parser
+			app.use(express.json({
+				limit: '50mb',
+				extended: true
+			}));
+			//
+			app.use(express.urlencoded({
+				limit: '50mb',
+				extended: true,
+				parameterLimit: 50000
+			}));
+			// Rotas
+			app.set('view engine', 'ejs');
+			app.set('views', path.join(__dirname, '../views'));
+			app.set('json spaces', 2);
+			app.use(express.static('public'));
+			express.static(path.join(__dirname, '../public'));
+			//
+			app.use((req, res, next) => {
+				req.io = io;
+				next();
+			});
+			//
+			app.use((err, req, res, next) => {
+				res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
+				res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+				//
+				if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
+					//
+					//console.error(err);
+					res.setHeader('Content-Type', 'application/json');
+					return res.status(404).json({
+						"Status": {
+							"result": "error",
+							"state": "FAILURE",
+							"status": "notProvided",
+							"message": "Json gerado de forma incorreta, efetue a correção e tente novamente"
+						}
+					});
+				}
+				//
+				next();
+			});
+			//
+			//
+			app.get('/', function (req, res) {
+				//res.status(200).send('Server WPPConnect is running API. https://github.com/AlanMartines/mywhatsapp-api-node-wppconnect');
+				res.sendFile(path.join(__dirname, '/index.html'));
+			});
+			//
+			app.use("/sistema", sistem);
+			//
+			//
+			const sockets = {};
+			//socket
+			//
+			//cria um callback para quando alguém conectar
+			io.on('connection', (socket) => {
+				//adiciona todas os id's do socket na variavel sockets
+				sockets[socket.id] = socket;
+				console.log('- Abriu conexão');
+				console.log('- Socketid ' + socket.id);
+			});
+			//
+			//socket
+			io.on('connection', (socket) => {
+				socket.on('disconnect', function () {
+					console.log('- Fechou conexão');
+					console.log('- Socketid ' + socket.id);
+				});
+			});
+			//
+			app.get('/Start', function (req, res, next) {
+				res.render('index', {
+					port: config.PORT,
+					host: config.HOST,
+					host_ssl: config.DOMAIN_SSL
+				})
+			});
+			//
+			//
+			// ------------------------------------------------------------------------------------------------//
+			//
+			http.listen(config.PORT, config.HOST, async function (err) {
+				if (err) {
+					console.log(err);
+				} else {
+					const host = http.address().address;
+					const port = http.address().port;
+					console.log(`- HTTP Server running on: ${host}:${port}`);
+				}
+				if (parseInt(config.START_ALL_SESSIONS) == true) {
+					let result = await startAll.startAllSessions();
+				}
+			});
+		} catch (error) {
+			console.log('- Não foi fossivel iniciar o sistema');
+			console.log(error.message);
+			process.exit(1);
+		}
 		//
 		// ------------------------------------------------------------------------------------------------//
 		//
@@ -137,14 +247,11 @@ FORCE_CONNECTION_USE_HERE=0
 process.stdin.resume(); //so the program will not close instantly
 //
 async function exitHandler(options, exitCode) {
-	/*
+
 	if (options.cleanup) {
 		console.log("- Cleanup");
-		await Sessions.getSessions().forEach(async session => {
-			await Sessions.closeSession(session.sessionName);
-		});
 	}
-	*/
+
 	if (exitCode || exitCode === 0) {
 		console.log(exitCode);
 	}
