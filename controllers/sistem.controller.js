@@ -16,7 +16,11 @@ const router = express.Router();
 const Wppconnect = require("../engines");
 const Sessions = require("../controllers/sessions");
 const verifyToken = require("../middleware/verifyToken");
-const verifyJson = require("../middleware/validateJson");
+const device = require("../functions/device");
+const groups = require("../functions/groups");
+const mensagens = require("../functions/mensagens");
+const profile = require("../functions/profile");
+const retrieving = require("../functions/retrieving");
 const config = require('../config.global');
 const startAll = require("../middleware/startup.js");
 //
@@ -158,14 +162,14 @@ router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next
 				if (confToken) {
 					if (confToken.SessionName == data.SessionName && confToken.MultiDevice == data.MultiDevice && confToken.whatsappVersion == data.whatsappVersion) {
 						console.log("- Configuração mantida");
-						Wppconnect.start(req.io, confToken.SessionName, confToken.SessionName, confToken.MultiDevice, confToken.whatsappVersion);
+						Wppconnect.Start(req.io, confToken.SessionName, confToken.SessionName, confToken.MultiDevice, confToken.whatsappVersion);
 					} else {
-						Wppconnect.start(req.io, data.SessionName, data.SessionName, data.MultiDevice, data.whatsappVersion);
+						Wppconnect.Start(req.io, data.SessionName, data.SessionName, data.MultiDevice, data.whatsappVersion);
 						console.log("- Configuração atualizada");
 						await startAll.confToken(`${config.tokenPatch}`, `${data.SessionName}.auto.json`, data, false);
 					}
 				} else {
-					Wppconnect.start(req.io, data.SessionName, data.SessionName, data.MultiDevice, data.whatsappVersion);
+					Wppconnect.Start(req.io, data.SessionName, data.SessionName, data.MultiDevice, data.whatsappVersion);
 					console.log("- Configuração criada");
 					await startAll.confToken(`${config.tokenPatch}`, `${data.SessionName}.auto.json`, data, false);
 				}
@@ -177,7 +181,7 @@ router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next
 					wh_status: req.body.wh_status,
 					wh_message: req.body.wh_message,
 					wh_qrcode: req.body.wh_qrcode,
-					wh_connect: req.body.wh_connect,
+					wh_connect: req.body.wh_connect
 				});
 				//
 				var Start = {

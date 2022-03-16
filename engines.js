@@ -137,7 +137,7 @@ async function deletaCache(filePath, userDataDir) {
 //
 module.exports = class Wppconnect {
 
-	static async start(socket, SessionName, AuthorizationToken, MultiDevice, whatsappVersion) {
+	static async Start(socket, SessionName, AuthorizationToken, MultiDevice, whatsappVersion) {
 
 		var data = Sessions?.getSession(SessionName);
 
