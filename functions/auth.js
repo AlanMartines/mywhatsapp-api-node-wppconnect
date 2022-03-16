@@ -17,14 +17,14 @@ module.exports = class Auth {
 			//
 			exec(`rm -rf ${config.tokenPatch}/${session}.data.json`, (error, stdout, stderr) => {
 				if (error) {
-					console.log(`error: ${error.message}`);
+					console.log(`Error: ${error.message}`);
 					return;
 				}
 				if (stderr) {
-					console.log(`stderr: ${stderr}`);
+					console.log(`Stderr: ${stderr}`);
 					return;
 				}
-				console.log(`stdout: ${stdout}`);
+				console.log(`Stdout: ${stdout}`);
 			});
 			//
 			exec(`rm -rf ${config.tokenPatch}/WPP-${session}`, (error, stdout, stderr) => {
