@@ -1,7 +1,7 @@
 const fs = require('fs-extra');
 const express = require('express');
 require('express-async-errors');
-const latest = require('latest-version'); // verifica a ultima release no npm
+//const latest = require('latest-version'); // verifica a ultima release no npm
 const { version } = require('./package.json');
 const bodyParser = require('body-parser');
 const app = express();
