@@ -142,7 +142,7 @@ module.exports = class Wppconnect {
 
 		var data = Sessions?.getSession(SessionName);
 
-		const funcoesSocket = new fnSocket(req.io);
+		const funcoesSocket = new fnSocket(socket);
 		funcoesSocket.events(SessionName, {
 			message: 'Iniciando WhatsApp. Aguarde...',
 			state: 'STARTING',
