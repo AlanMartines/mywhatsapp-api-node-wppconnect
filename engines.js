@@ -3,6 +3,7 @@
 const fs = require('fs-extra');
 const rimraf = require("rimraf");
 const sleep = require('sleep-promise');
+const fnSocket = require('./controllers/fnSockets');
 const {
 	forEach
 } = require('p-iteration');
