@@ -1,4 +1,3 @@
-
 const Sessions = require('../controllers/sessions');
 
 module.exports = class Commands {

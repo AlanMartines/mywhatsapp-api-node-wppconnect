@@ -1,12 +1,4 @@
-/*
- * @Author: Eduardo Policarpo
- * @contact: +55 43996611437
- * @Date: 2021-05-10 18:09:49
- * @LastEditTime: 2021-06-07 03:18:01
- */
-const Sessions = require('../../controllers/sessions');
-const util = require('util');
-const urlExists = util?.promisify(require('url-exists'));
+const Sessions = require('../controllers/sessions');
 
 module.exports = class Group {
 	/*
