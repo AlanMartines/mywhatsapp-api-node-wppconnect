@@ -200,7 +200,7 @@ module.exports = class Wppconnect {
 					"result": 200,
 					"status": "CONNECTED",
 					"response": `Sessão ${SessionName} gravada com sucesso no Firebase`
-				})
+				});
 
 			}).catch(async (error) => {
 				//exec(`rm -R tokens/${session}/`);
