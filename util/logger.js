@@ -13,7 +13,7 @@ const prettyStream = pinoms.prettyStream(
 );
 
 const streams = [
-	//{ stream: fs.createWriteStream(`${process.cwd()}/logs/info.log`, { flags: 'a' }) },
+	{ stream: fs.createWriteStream(`${process.cwd()}/logs/info.log`, { flags: 'a' }) },
 	{ stream: prettyStream },
 	{ level: 'debug', stream: fs.createWriteStream(`${process.cwd()}/logs/debug.log`, { flags: 'a' }) },
 	{ level: 'fatal', stream: fs.createWriteStream(`${process.cwd()}/logs/fatal.log`, { flags: 'a' }) }
