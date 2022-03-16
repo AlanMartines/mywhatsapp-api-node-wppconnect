@@ -4,7 +4,30 @@ const { fromBuffer } = require('file-type');
 const moment = require('moment');
 moment()?.format('DD-MM-YYYY hh:mm:ss');
 moment?.locale('pt-br');
-
+//
+// ------------------------------------------------------------------------------------------------------- //
+//
+async function saudacao() {
+	//
+	var data = new Date();
+	var hr = data.getHours();
+	//
+	if (hr >= 0 && hr < 12) {
+		var saudacao = "Bom dia";
+		//
+	} else if (hr >= 12 && hr < 18) {
+		var saudacao = "Boa tarde";
+		//
+	} else if (hr >= 18 && hr < 23) {
+		var saudacao = "Boa noite";
+		//
+	} else {
+		var saudacao = "---";
+		//
+	}
+	return saudacao;
+}
+//
 module.exports = class Events {
 
 	static async receiveMessage(session, client, socket) {
@@ -441,9 +464,9 @@ module.exports = class Events {
 		});
 	}
 
-	static statusConnection(session, client) {
+	static statusConnection(session, client, socket) {
 
-		client?.onStateChange((state) => {
+		client?.onStateChange(async (state) => {
 			console?.log('State changed: ', state);
 			// force whatsapp take over
 			if ('CONFLICT'?.includes(state)) client?.useHere();
@@ -458,7 +481,7 @@ module.exports = class Events {
 
 	}
 
-	static extraEvents(session, client) {
+	static extraEvents(session, client, socket) {
 		//
 		// function to detect incoming call
 		try {
