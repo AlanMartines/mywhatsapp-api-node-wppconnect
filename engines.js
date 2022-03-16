@@ -90,7 +90,7 @@ module.exports = class Wppconnect {
 							message: 'Leitura do QRCode feita com sucesso...',
 							status: statusSession,
 							session: session
-						})
+						});
 
 					}
 					if (statusSession == 'qrReadError' || statusSession == 'qrReadFail') {
@@ -99,7 +99,7 @@ module.exports = class Wppconnect {
 							status: statusSession,
 							state: 'DISCONNECTED',
 							session: session
-						})
+						});
 					}
 					if (statusSession === 'browserClose' ||
 						statusSession === 'desconnectedMobile' ||
@@ -111,7 +111,7 @@ module.exports = class Wppconnect {
 							state: 'DISCONNECTED',
 							status: statusSession,
 							session: session
-						})
+						});
 
 					}
 					if (statusSession === 'isLogged' ||
@@ -122,7 +122,7 @@ module.exports = class Wppconnect {
 							state: 'CONNECTED',
 							status: statusSession,
 							session: session
-						})
+						});
 					}
 				},
 				headless: true,
