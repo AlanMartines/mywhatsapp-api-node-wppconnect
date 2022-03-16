@@ -4,7 +4,6 @@ require('express-async-errors');
 const latest = require('latest-version'); // verifica a ultima release no npm
 const { version } = require('./package.json');
 const bodyParser = require('body-parser');
-const logger = require('./util/logger');
 const app = express();
 const cors = require('cors');
 const path = require('path');
@@ -269,32 +268,32 @@ async function exitHandler(options, exitCode) {
 // Emitido logo antes da saída de um processo do Node
 process.on('beforeExit', code => {
 	setTimeout(() => {
-		logger.info(`Process will exit with code: ${code}`)
+		console.info(`Process will exit with code: ${code}`)
 		process.exit(code)
 	}, 100);
 });
 // Emitido na saída de um processo do Node
 process.on('exit', code => {
-	logger.info(`Process exited with code: ${code}`);
+	console.info(`Process exited with code: ${code}`);
 });
 // Evento emitido pelo Sistema Operacional ou gerenciador de processos como PM2 envia sinal para terminar o processo node
 process.on('SIGTERM', signal => {
-	logger.info(`Process ${process.pid} received a SIGTERM signal`);
+	console.info(`Process ${process.pid} received a SIGTERM signal`);
 	process.exit(0);
 });
 // Evento emitido pelo Sistema Operacional ou gerenciador de processos como PM2 interrompe o processo node
 process.on('SIGINT', signal => {
-	logger.info(`Process ${process.pid} has been interrupted`);
+	console.info(`Process ${process.pid} has been interrupted`);
 	process.exit(0);
 });
 // Evento é emitido Quando um erro de JavaScript não é tratado corretamente
 process.on('uncaughtException', err => {
-	logger.error(`Uncaught Exception: ${err.message}`);
+	console.error(`Uncaught Exception: ${err.message}`);
 	process.exit(1);
 });
 // Evento é emitido Quando uma Promise é rejeitada ou não é satisfeita
 process.on('unhandledRejection', (reason, promise) => {
-	logger.error('Unhandled rejection at ', promise, `reason: ${err.message}`)
+	console.error('Unhandled rejection at ', promise, `reason: ${err.message}`)
 	process.exit(1);
 });
 
