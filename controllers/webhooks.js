@@ -1,128 +1,108 @@
-const Sessions = require('../controllers/sessions.js');
+const Sessions = require('../controllers/sessions');
 const superagent = require('superagent');
 require('superagent-queue');
-const dotenv = require('dotenv');
-dotenv.config();
-//
+require('dotenv').config();
+
 module.exports = class Webhooks {
 
 	static async wh_messages(session, response) {
-		console.log('- Webhook messages');
-		let data = Sessions.getSession(session);
+		let data = Sessions?.getSession(session)
 		try {
-			if (data.wh_message != undefined) {
+			if (data?.wh_message != undefined) {
 				await superagent
-					.post(data.wh_message)
+					.post(data?.wh_message)
 					.send(response)
 					.set('Accept', 'application/json')
 					.queue('messages')
 					.end(function () {
-						console.log('- Webhooks receive message')
+						console?.log('webhooks receive message....')
 					});
-				if (data.wh_message == '') {
-					console.log('- Webhook no defined')
+				if (data?.wh_message == '') {
+					console?.log('Webhook no defined')
 				}
 			}
 		} catch (error) {
-			console.log(error);
+			console?.log(error)
 		}
 	}
 
-	static async wh_connect(session, response, number = null, browserless = null, tokens = []) {
-		console.log('- Webhook connect');
-		let data = Sessions.getSession(session);
-		if (response == 'autocloseCalled' || response == 'desconnectedMobile' || response == 'qrReadError') {
-			Sessions.deleteSession(session);
-		}
+	static async wh_connect(session, response, phone = null) {
+		let data = Sessions?.getSession(session)
 		try {
-			if (response == 'qrReadSuccess' || response == 'isLogged' || response == 'inChat' || response == 'chatsAvailable' || response == 'connected') {
-				var object = {
-					"wook": 'STATUS_CONNECT',
-					'result': 200,
-					'session': session,
-					'status': response,
-					'number': number,
-					'browserless': browserless,
-					'tokens': tokens
-				}
-			} else {
-
-				var object = {
-					"wook": 'STATUS_CONNECT',
-					'result': 200,
-					'session': session,
-					'status': response
-				}
+			var object = {
+				"wook": 'STATUS_CONNECT',
+				'result': 200,
+				'session': session,
+				'state': response,
+				'status': data.status,
+				'number': phone
 			}
-			if (data.wh_connect != undefined) {
+
+			if (data?.wh_connect != undefined) {
 				await superagent
-					.post(data.wh_connect)
+					.post(data?.wh_connect)
 					.send(object)
-					.set('Accept', 'application/json')
 					.queue('connection')
 					.end(function () {
-						console.log('- Webhooks connect status')
+						console?.log('webhooks connect status....')
 					});
-				if (data.wh_connect == '') {
-					console.log('- Webhook no defined');
+				if (data?.wh_connect == '') {
+					console?.log('Webhook no defined')
 				}
 			}
 
 		} catch (error) {
-			console.log(error);
+			console?.log(error)
 		}
 
 	}
 
 	static async wh_status(session, response) {
-		console.log('- Webhook status');
-		let data = Sessions.getSession(session)
+		let data = Sessions?.getSession(session)
 		try {
-			if (data.wh_status != undefined) {
+			if (data?.wh_status != undefined) {
 				await superagent
-					.post(data.wh_status)
+					.post(data?.wh_status)
 					.send(response)
-					.set('Accept', 'application/json')
 					.queue('status')
 					.end(function () {
-						console.log('- Webhooks status message')
+						console?.log('webhooks status message....')
 					});
-				if (data.wh_status == '') {
-					console.log('- Webhook no defined')
+				if (data?.wh_status == '') {
+					console?.log('Webhook no defined')
 				}
 			}
 
 		} catch (error) {
-			console.log(error);
+			console?.log(error)
 		}
 	}
 
-	static async wh_qrcode(session, response) {
-		console.log('- Webhook qrcode');
-		let data = await Sessions.getSession(session);
+	static async wh_qrcode(session, response, urlCode) {
+		let data = Sessions?.getSession(session)
 		try {
 			let object = {
 				"wook": 'QRCODE',
 				'result': 200,
 				'session': session,
-				'qrcode': response
+				'qrcode': response,
+				'urlCode': urlCode
 			}
-			if (data.wh_qrcode != undefined) {
+			if (data?.wh_qrcode != undefined) {
 				await superagent
-					.post(data.wh_qrcode)
+					.post(data?.wh_qrcode)
 					.send(object)
-					.set('Accept', 'application/json')
 					.queue('qrcode')
 					.end(function () {
-						console.log('- Webhooks status message')
+						console?.log('webhooks status message....')
 					});
-				if (data.wh_qrcode == '') {
-					console.log('- Webhook no defined');
+				if (data?.wh_qrcode == '') {
+					console?.log('Webhook no defined')
 				}
 			}
 
 		} catch (error) {
-			console.log(error)
+			console?.log(error)
 		}
 	}
 }

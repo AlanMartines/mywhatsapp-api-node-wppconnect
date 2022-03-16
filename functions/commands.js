@@ -1,421 +1,346 @@
 
-/*
- * @Author: Eduardo Policarpo
- * @contact: +55 43996611437
- * @Date: 2021-05-10 18:09:49
- * @LastEditTime: 2021-06-07 03:18:01
- */
-import Sessions from '../../controllers/sessions.js';
-import moment from 'moment';
-moment().format('DD-MM-YYYY hh:mm:ss');
-moment.locale('pt-br')
-export default class Commands {
+const Sessions = require('../controllers/sessions');
 
-  static async getBatteryLevel(req, res) {
-    try {
-      let data = Sessions.getSession(req.body.session)
-      let response = await data.client.getBatteryLevel()
-      return res.status(200).json({
-        "result": 200,
-        "messages": "SUCCESS",
-        "batterylevel": response
-      })
-    } catch (error) {
-      return res.status(400).json({
-        "result": 400,
-        "status": "FAIL",
-        "error": error
-      })
-    }
-  }
-  static async getConnectionState(req, res) {
-    try {
-      let data = Sessions.getSession(req.body.session)
-      let response = await data.client.getConnectionState()
-      return res.status(200).json({
-        "result": 200,
-        "status": response
-      })
-    } catch (error) {
-      return res.status(400).json({
-        "result": 400,
-        "status": "FAIL",
-        "error": error
-      })
-    }
-  }
+module.exports = class Commands {
+	/*
+	╔╦╗┌─┐┬  ┬┬┌─┐┌─┐  ╔═╗┬ ┬┌┐┌┌─┐┌┬┐┬┌─┐┌┐┌┌─┐
+	 ║║├┤ └┐┌┘││  ├┤   ╠╣ │ │││││   │ ││ ││││└─┐
+	═╩╝└─┘ └┘ ┴└─┘└─┘  ╚  └─┘┘└┘└─┘ ┴ ┴└─┘┘└┘└─┘
+	*/
+	//
+	// Delete the Service Worker
+	static async killServiceWorker(SessionName) {
+		console.log("- Delete the Service Worker");
+		await sleep(3000);
+		var session = Sessions.getSession(SessionName);
+		var resultkillServiceWorker = await session.client.then(async client => {
+			return await session.client.killServiceWorker().then((result) => {
+				//console.log('Result: ', result); //return object success
+				//
+				return {
+					"erro": false,
+					"status": 200,
+					"message": "Serviço parado com sucesso.",
+					"killService": result
+				};
+				//
+			}).catch((erro) => {
+				console.error("Error when:", erro); //return object error
+				//
+				return {
+					"erro": true,
+					"status": 404,
+					"message": "Erro ao parar serviço."
+				};
+				//
+			});
+		});
+		return resultkillServiceWorker;
+	} //killServiceWorker
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
+	// Load the service again
+	static async restartService(SessionName) {
+		console.log("- Reload the service again");
+		await sleep(3000);
+		var session = Sessions.getSession(SessionName);
+		var resultrestartService = await session.client.then(async client => {
+			return await session.client.restartService().then((result) => {
+				//console.log('Result: ', result); //return object success
+				//
+				return {
+					"erro": false,
+					"status": 200,
+					"message": "Serviço reiniciado com sucesso.",
+					"restartService": result
+				};
+				//
+			}).catch((erro) => {
+				console.error("Error when:", erro); //return object error
+				//
+				return {
+					"erro": true,
+					"status": 404,
+					"message": "Erro ao reiniciar serviço."
+				};
+				//
+			});
+		});
+		return resultrestartService;
+	} //restartService
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
+	// Get device info
+	static async getHostDevice(SessionName) {
+		console.log("- Obtendo informações do dispositivo");
+		await sleep(3000);
+		var session = Sessions.getSession(SessionName);
+		var resultgetHostDevice = await session.client.then(async client => {
+			return await session.client.getHostDevice().then((result) => {
+				//console.log('Result: ', result); //return object success
+				//
+				return {
+					"erro": false,
+					"status": 200,
+					"message": "Dados do dispositivo obtido com sucesso",
+					"HostDevice": {
+						"user": result.wid.user,
+						"connected": result.connected,
+						"isResponse": result.isResponse,
+						"battery": result.battery,
+						"plugged": result.plugged,
+						"locales": result.locales,
+						"is24h": result.is24h,
+						"device_manufacturer": result.phone.device_manufacturer,
+						"platform": result.platform,
+						"os_version": result.phone.os_version,
+						"wa_version": result.phone.wa_version,
+						"pushname": result.pushname
+					}
+				};
+				//
+			}).catch((erro) => {
+				console.error("Error when:", erro); //return object error
+				//
+				return {
+					"erro": true,
+					"status": 404,
+					"message": "Erro ao obter dados do dispositivo"
+				};
+				//
+			});
+		});
+		return resultgetHostDevice;
+	} //getHostDevice
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
+	// Get is multi device info
+	static async isMultiDevice(SessionName) {
+		console.log("- Obendo informações do multi-device");
+		await sleep(3000);
+		var session = Sessions.getSession(SessionName);
+		var resultgetHostDevice = await session.client.then(async client => {
+			return await session.client.isMultiDevice().then((result) => {
+				//console.log('Result: ', result); //return object success
+				//
+				return {
+					"erro": false,
+					"status": 200,
+					"message": "Estado do MultiDevice obtido com sucesso",
+					"isMultiDevice": result
 
-  static async getHostDevice(req, res) {
-    try {
-      let data = Sessions.getSession(req.body.session)
-      let response = await data.client.getHostDevice()
-      console.log(response)
-      return res.status(200).json({
-        "result": 200,
-        "number": response.wid.user,
-        "connected": response.connected,
-        "phone": response.phone,
-        "plataform": response.plataform,
-        "locales": response.locales,
-        "batery": response.batery,
-        "pushname": response.pushname
-      })
-    } catch (error) {
-      return res.status(400).json({
-        "result": 400,
-        "status": "FAIL",
-        "error": error
-      })
-    }
-  }
+				};
+				//
+			}).catch((erro) => {
+				console.error("Error when:", erro); //return object error
+				//
+				return {
+					"erro": true,
+					"status": 404,
+					"message": "Erro ao obter estatus do MultiDevice"
+				};
+				//
+			});
+		});
+		return resultgetHostDevice;
+	} //isMultiDevice
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
+	// Get connection state
+	static async getConnectionState(SessionName) {
+		console.log("- getConnectionState");
+		var session = Sessions.getSession(SessionName);
+		var resultisConnected = await session.client.then(async client => {
+			return await session.client.getConnectionState().then((result) => {
+				//console.log('Result: ', result); //return object success
+				//
+				return {
+					"erro": false,
+					"status": 200,
+					"message": "Estado do dispositivo obtido com sucesso",
+					"ConnectionState": result
 
+				};
+				//
+			}).catch((erro) => {
+				console.error("Error when:", erro); //return object error
+				//
+				return {
+					"erro": true,
+					"status": 404,
+					"message": "Erro ao obter o estado da conexão"
+				};
+				//
+			});
+		});
+		return resultisConnected;
+	} //getConnectionState
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
+	// Get battery level
+	static async getBatteryLevel(SessionName) {
+		console.log("- Obtendo nivel de bateria");
+		await sleep(3000);
+		var session = Sessions.getSession(SessionName);
+		var resultgetBatteryLevel = await session.client.then(async client => {
+			return await session.client.getBatteryLevel().then((result) => {
+				//console.log('Result: ', result); //return object success
+				//
+				return {
+					"erro": false,
+					"status": 200,
+					"message": "Nivel da bateria obtido com sucesso",
+					"BatteryLevel": result
 
-  static async getAllContacts(req, res) {
-    try {
-      let data = Sessions.getSession(req.body.session)
-      let response = await data.client.getAllContacts()
-      let contacts = response.map(function (data) {
-        return {
-          'name': data.name ? data.name : '',
-          'realName': data.pushname ? data.pushname : '',
-          'formattedName': data.formattedName ? data.formattedName : '',
-          'phone': data.id.user,
-          'business': data.isBusiness,
-          'verifiedName': data.verifiedName ? data.verifiedName : '',
-          'isMyContact': data.isMyContact
-        }
-      })
-      return res.status(200).json({
-        "result": 200,
-        "messages": "SUCCESS",
-        "contacts": contacts
-      })
-    } catch (error) {
-      return res.status(400).json({
-        "result": 400,
-        "status": "FAIL",
-        "error": error
-      })
-    }
-  }
-
-  static async getAllChats(req, res) {
-    try {
-      let data = Sessions.getSession(req.body.session)
-      let response = await data.client.getAllChats()
-
-      return res.status(200).json({
-        "result": 200,
-        "messages": "SUCCESS",
-        "contacts": response
-      })
-    } catch (error) {
-      return res.status(400).json({
-        "result": 400,
-        "status": "FAIL",
-        "error": error
-      })
-    }
-  }
-
-  static async getAllChatsWithMessages(req, res) {
-    try {
-      let data = Sessions.getSession(req.body.session)
-      let response = await data.client.getAllChatsWithMessages()
-
-      return res.status(200).json({
-        "result": 200,
-        "messages": "SUCCESS",
-        "contacts": response
-      })
-    } catch (error) {
-      return res.status(400).json({
-        "result": 400,
-        "status": "FAIL",
-        "error": error
-      })
-    }
-  }
-
-  static async getAllNewMessages(req, res) {
-    try {
-      let data = Sessions.getSession(req.body.session)
-      let response = await data.client.getAllNewMessages()
-
-      return res.status(200).json({
-        "result": 200,
-        "messages": "SUCCESS",
-        "contacts": response
-      })
-    } catch (error) {
-      return res.status(400).json({
-        "result": 400,
-        "status": "FAIL",
-        "error": error
-      })
-    }
-  }
-
-  static async getAllUnreadMessages(req, res) {
-    try {
-      let data = Sessions.getSession(req.body.session)
-      let response = await data.client.getAllUnreadMessages()
-
-      return res.status(200).json({
-        "result": 200,
-        "messages": "SUCCESS",
-        "contacts": response
-      })
-    } catch (error) {
-      return res.status(400).json({
-        "result": 400,
-        "status": "FAIL",
-        "error": error
-      })
-    }
-  }
-
-  static async getBlockList(req, res) {
-    try {
-      let data = Sessions.getSession(req.body.session)
-      let response = await data.client.getBlockList()
-      let blkcontacts = response.map(function (data) {
-        return {
-          'phone': data ? data.split('@')[0] : '',
-        }
-      })
-      return res.status(200).json({
-        "result": 200,
-        "messages": "SUCCESS",
-        "contacts": blkcontacts
-      })
-    } catch (error) {
-      return res.status(400).json({
-        "result": 400,
-        "status": "FAIL",
-        "error": error
-      })
-    }
-  }
-
-  static async getMessagesChat(req, res) {
-    let data = Sessions.getSession(req.body.session)
-    let number = req.body.number + '@c.us';
-    try {
-      let response = await data.client.loadAndGetAllMessagesInChat(number, true)
-      let messages = response.map(function (data) {
-        console.log(data)
-        return {
-          "type": data.type,
-          "author": data.verifiedName,
-          "from": data.from,
-          "to": data.to,
-          "mensagem": data.body,
-          "enviada em": moment.unix(data.t).format('DD-MM-YYYY hh:mm:ss')
-        }
-      })
-      return res.status(200).json({
-        "result": 200,
-        "data": messages
-      })
-    } catch (error) {
-      return res.status(400).json({
-        "result": 400,
-        "status": "FAIL",
-        "error": error
-      })
-    }
-  }
-
-  static async getProfilePic(req, res) {
-    let data = Sessions.getSession(req.body.session)
-    let number = req.body.number + '@c.us';
-    try {
-      let response = await data.client.getProfilePicFromServer(number)
-      return res.status(200).json({
-        "result": 200,
-        "messages": "SUCCESS",
-        "pic_profile": response
-      })
-    } catch (error) {
-      return res.status(400).json({
-        "result": 400,
-        "status": "FAIL",
-        "error": error
-      })
-    }
-  }
-
-  static async verifyNumber(req, res) {
-    let data = Sessions.getSession(req.body.session)
-    try {
-      let number = req.body.number + '@c.us';
-      let profile = await data.client.getNumberProfile(number)
-      if (profile.numberExists) {
-        return res.status(200).json({
-          "result": 200,
-          "messages": "SUCCESS",
-          "profile": profile
-        })
-      }
-    } catch (error) {
-      return res.status(400).json({
-        "result": 400,
-        "status": "FAIL",
-        "profile": error
-      })
-    }
-  }
-
-  static async deleteChat(req, res) {
-    let data = Sessions.getSession(req.body.session)
-    let number = req.body.number + '@c.us';
-    try {
-      await data.client.deleteChat(number);
-      return res.status(200).json({
-        "result": 200,
-        "messages": "SUCCESS"
-      })
-    } catch (error) {
-      return res.status(400).json({
-        "result": 400,
-        "status": "FAIL",
-        "error": error
-      })
-    }
-  }
-
-  static async clearChat(req, res) {
-    let data = Sessions.getSession(req.body.session)
-    let number = req.body.number + '@c.us';
-    try {
-      await data.client.clearChatMessages(number);
-      return res.status(200).json({
-        "result": 200,
-        "messages": "SUCCESS"
-      })
-    } catch (error) {
-      return res.status(400).json({
-        "result": 400,
-        "status": "FAIL",
-        "error": error
-      })
-    }
-  }
-
-  static async archiveChat(req, res) {
-    let data = Sessions.getSession(req.body.session)
-    let number = req.body.number + '@c.us';
-    try {
-      await data.client.archiveChat(number, true);
-      return res.status(200).json({
-        "result": 200,
-        "messages": "SUCCESS"
-      })
-    } catch (error) {
-      return res.status(400).json({
-        "result": 400,
-        "status": "FAIL",
-        "error": error
-      })
-    }
-  }
-
-  static async deleteMessage(req, res) {
-    let data = Sessions.getSession(req.body.session)
-    let number = req.body.number + '@c.us';
-    if (!req.body.messageid) {
-      return res.status(400).json({
-        status: 400,
-        error: "MessageID não foi informada, é obrigatorio"
-      })
-    }
-    else {
-      try {
-        await data.client.deleteMessage(number, [req.body.messageid], true);
-        return res.status(200).json({
-          "result": 200,
-          "messages": "SUCCESS"
-        })
-      } catch (error) {
-        return res.status(400).json({
-          "result": 400,
-          "status": "FAIL",
-          "error": error
-        })
-      }
-    }
-  }
-
-  static async markUnseenMessage(req, res) {
-    let data = Sessions.getSession(req.body.session)
-    let number = req.body.number + '@c.us';
-    try {
-      await data.client.markUnseenMessage(number);
-      return res.status(200).json({
-        "result": 200,
-        "messages": "SUCCESS"
-      })
-    } catch (error) {
-      return res.status(400).json({
-        "result": 400,
-        "status": "FAIL"
-      })
-    }
-  }
-
-  static async blockContact(req, res) {
-    let data = Sessions.getSession(req.body.session)
-    let number = req.body.number + '@c.us';
-    try {
-      await data.client.blockContact(number);
-      return res.status(200).json({
-        "result": 200,
-        "messages": "SUCCESS"
-      })
-    } catch (error) {
-      return res.status(400).json({
-        "result": 400,
-        "status": "FAIL"
-      })
-    }
-  }
-
-  static async unblockContact(req, res) {
-    let data = Sessions.getSession(req.body.session)
-    let number = req.body.number + '@c.us';
-    try {
-      await data.client.unblockContact(number);
-      return res.status(200).json({
-        "result": 200,
-        "messages": "SUCCESS"
-      })
-    } catch (error) {
-      return res.status(400).json({
-        "result": 400,
-        "status": "FAIL",
-        "error": error
-      })
-    }
-  }
-
-  static async getNumberProfile(req, res) {
-    let data = Sessions.getSession(req.body.session)
-    let number = req.body.number + '@c.us';
-    try {
-      const response = await data.client.getNumberProfile(number);
-      return res.status(200).json({
-        "result": 200,
-        "messages": "SUCCESS",
-        "phone": response.id.user,
-        "isBusiness": response.isBusiness
-      })
-    } catch (error) {
-      return res.status(400).json({
-        "result": 400,
-        "status": "FAIL",
-        "error": error
-      })
-    }
-  }
+				};
+				//
+			}).catch((erro) => {
+				console.error("Error when:", erro); //return object error
+				//
+				return {
+					"erro": true,
+					"status": 404,
+					"message": "Erro ao obter o nivel da bateria"
+				};
+				//
+			});
+		});
+		return resultgetBatteryLevel;
+	} //getBatteryLevel
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
+	// Is Connected
+	static async isConnected(SessionName) {
+		console.log("- Obtendo se esta conectado");
+		await sleep(3000);
+		var session = Sessions.getSession(SessionName);
+		var resultisConnected = await session.client.then(async client => {
+			return await session.client.isConnected().then((result) => {
+				//console.log('Result: ', result); //return object success
+				//
+				return {
+					"erro": false,
+					"status": 200,
+					"message": "Estatus obtido com sucesso",
+					"Connected": result
+				};
+				//
+			}).catch((erro) => {
+				console.error("Error when:", erro); //return object error
+				//
+				return {
+					"erro": true,
+					"status": 404,
+					"message": "Erro ao obter estatus"
+				};
+				//
+			});
+		});
+		return resultisConnected;
+	} //isConnected
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
+	// Obter versão do WhatsappWeb
+	static async getWAVersion(SessionName) {
+		console.log("- Obtendo versão do WhatsappWeb");
+		await sleep(3000);
+		var session = Sessions.getSession(SessionName);
+		var resultgetWAVersion = await session.client.then(async client => {
+			return await session.client.getWAVersion().then((result) => {
+				//console.log('Result: ', result); //return object success
+				//
+				return {
+					"erro": false,
+					"status": 200,
+					"message": "Versão do WhatsappWeb obtido com sucesso",
+					"WAVersion": result
+				};
+				//
+			}).catch((erro) => {
+				console.error("Error when:", erro); //return object error
+				//
+				return {
+					"erro": true,
+					"status": 404,
+					"message": "Erro ao obter versão do WhatsappWeb"
+				};
+				//
+			});
+		});
+		return resultgetWAVersion;
+	} //getWAVersion
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
+	// Inicia a verificação de conexão do telefone
+	static async startPhoneWatchdog(SessionName, interval) {
+		console.log("- Iniciando a verificação de conexão do telefone");
+		await sleep(3000);
+		var session = Sessions.getSession(SessionName);
+		var resultstartPhoneWatchdog = await session.client.then(async client => {
+			return await session.client.startPhoneWatchdog(interval).then((result) => {
+				//console.log('Result: ', result); //return object success
+				//
+				return {
+					"erro": false,
+					"status": 200,
+					"message": "Verificação de conexão do telefone iniciada com sucesso",
+					"PhoneWatchdog": result
+				};
+				//
+			}).catch((erro) => {
+				console.error("Error when:", erro); //return object error
+				//
+				return {
+					"erro": true,
+					"status": 404,
+					"message": "Erro ao inicia a verificação de conexão do telefone"
+				};
+				//
+			});
+		});
+		return resultstartPhoneWatchdog;
+	} //startPhoneWatchdog
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
+	// Para a verificação de conexão do telefone
+	static async stopPhoneWatchdog(SessionName) {
+		console.log("- Parando a verificação de conexão do telefone");
+		await sleep(3000);
+		var session = Sessions.getSession(SessionName);
+		var resultstopPhoneWatchdog = await session.client.then(async client => {
+			return await session.client.stopPhoneWatchdog().then((result) => {
+				//console.log('Result: ', result); //return object success
+				//
+				return {
+					"erro": false,
+					"status": 200,
+					"message": "Verificação de conexão parada iniciada com sucesso",
+					"PhoneWatchdog": result
+				};
+				//
+			}).catch((erro) => {
+				console.error("Error when:", erro); //return object error
+				//
+				return {
+					"erro": true,
+					"status": 404,
+					"message": "Erro ao parar a verificação de conexão do telefone"
+				};
+				//
+			});
+		});
+		return resultstopPhoneWatchdog;
+	} //stopPhoneWatchdog
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
 }

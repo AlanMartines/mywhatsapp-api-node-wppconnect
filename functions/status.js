@@ -1,96 +1,345 @@
-/*
- * @Author: Eduardo Policarpo
- * @contact: +55 43996611437
- * @Date: 2021-05-10 18:09:49
- * @LastEditTime: 2021-06-07 03:18:01
- */
-import Sessions from '../../controllers/sessions.js';
-import get from "async-get-file";
-import path from 'path';
-import fs from 'fs';
-import util from 'util';
-import urlExistsImport from 'url-exists';
-const urlExists = util.promisify(urlExistsImport);
+const Sessions = require('../controllers/sessions')
 
-export default class Status {
+module.exports = class Status {
+	/*
+	╔╦╗┌─┐┬  ┬┬┌─┐┌─┐  ╔═╗┬ ┬┌┐┌┌─┐┌┬┐┬┌─┐┌┐┌┌─┐
+	 ║║├┤ └┐┌┘││  ├┤   ╠╣ │ │││││   │ ││ ││││└─┐
+	═╩╝└─┘ └┘ ┴└─┘└─┘  ╚  └─┘┘└┘└─┘ ┴ ┴└─┘┘└┘└─┘
+	*/
+	//
+	// Delete the Service Worker
+	static async killServiceWorker(SessionName) {
+		console.log("- Delete the Service Worker");
+		await sleep(3000);
+		var session = Sessions.getSession(SessionName);
+		var resultkillServiceWorker = await session.client.then(async client => {
+			return await session.client.killServiceWorker().then((result) => {
+				//console.log('Result: ', result); //return object success
+				//
+				return {
+					"erro": false,
+					"status": 200,
+					"message": "Serviço parado com sucesso.",
+					"killService": result
+				};
+				//
+			}).catch((erro) => {
+				console.error("Error when:", erro); //return object error
+				//
+				return {
+					"erro": true,
+					"status": 404,
+					"message": "Erro ao parar serviço."
+				};
+				//
+			});
+		});
+		return resultkillServiceWorker;
+	} //killServiceWorker
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
+	// Load the service again
+	static async restartService(SessionName) {
+		console.log("- Reload the service again");
+		await sleep(3000);
+		var session = Sessions.getSession(SessionName);
+		var resultrestartService = await session.client.then(async client => {
+			return await session.client.restartService().then((result) => {
+				//console.log('Result: ', result); //return object success
+				//
+				return {
+					"erro": false,
+					"status": 200,
+					"message": "Serviço reiniciado com sucesso.",
+					"restartService": result
+				};
+				//
+			}).catch((erro) => {
+				console.error("Error when:", erro); //return object error
+				//
+				return {
+					"erro": true,
+					"status": 404,
+					"message": "Erro ao reiniciar serviço."
+				};
+				//
+			});
+		});
+		return resultrestartService;
+	} //restartService
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
+	// Get device info
+	static async getHostDevice(SessionName) {
+		console.log("- Obtendo informações do dispositivo");
+		await sleep(3000);
+		var session = Sessions.getSession(SessionName);
+		var resultgetHostDevice = await session.client.then(async client => {
+			return await session.client.getHostDevice().then((result) => {
+				//console.log('Result: ', result); //return object success
+				//
+				return {
+					"erro": false,
+					"status": 200,
+					"message": "Dados do dispositivo obtido com sucesso",
+					"HostDevice": {
+						"user": result.wid.user,
+						"connected": result.connected,
+						"isResponse": result.isResponse,
+						"battery": result.battery,
+						"plugged": result.plugged,
+						"locales": result.locales,
+						"is24h": result.is24h,
+						"device_manufacturer": result.phone.device_manufacturer,
+						"platform": result.platform,
+						"os_version": result.phone.os_version,
+						"wa_version": result.phone.wa_version,
+						"pushname": result.pushname
+					}
+				};
+				//
+			}).catch((erro) => {
+				console.error("Error when:", erro); //return object error
+				//
+				return {
+					"erro": true,
+					"status": 404,
+					"message": "Erro ao obter dados do dispositivo"
+				};
+				//
+			});
+		});
+		return resultgetHostDevice;
+	} //getHostDevice
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
+	// Get is multi device info
+	static async isMultiDevice(SessionName) {
+		console.log("- Obendo informações do multi-device");
+		await sleep(3000);
+		var session = Sessions.getSession(SessionName);
+		var resultgetHostDevice = await session.client.then(async client => {
+			return await session.client.isMultiDevice().then((result) => {
+				//console.log('Result: ', result); //return object success
+				//
+				return {
+					"erro": false,
+					"status": 200,
+					"message": "Estado do MultiDevice obtido com sucesso",
+					"isMultiDevice": result
 
-    static async sendTextToStorie(req, res) {
-        let data = Sessions.getSession(req.body.session)
-        if (!req.body.text) {
-            return res.status(400).json({
-                status: 400,
-                error: "Text não foi informado"
-            })
-        }
-        else {
-            await data.client.sendText('status@broadcast', req.body.text)
-            return res.status(200).json({
-                result: 200,
-                status: 'SUCCESS',
-            })
-        }
-    }
+				};
+				//
+			}).catch((erro) => {
+				console.error("Error when:", erro); //return object error
+				//
+				return {
+					"erro": true,
+					"status": 404,
+					"message": "Erro ao obter estatus do MultiDevice"
+				};
+				//
+			});
+		});
+		return resultgetHostDevice;
+	} //isMultiDevice
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
+	// Get connection state
+	static async getConnectionState(SessionName) {
+		console.log("- getConnectionState");
+		var session = Sessions.getSession(SessionName);
+		var resultisConnected = await session.client.then(async client => {
+			return await session.client.getConnectionState().then((result) => {
+				//console.log('Result: ', result); //return object success
+				//
+				return {
+					"erro": false,
+					"status": 200,
+					"message": "Estado do dispositivo obtido com sucesso",
+					"ConnectionState": result
 
-    static async sendImageToStorie(req, res) {
-        try {
-            const { caption, path } = req.body;
-            let data = Sessions.getSession(req.body.session)
-            if (!path) {
-                return res.status(400).send({
-                    status: 400,
-                    error: "Path não informado",
-                    message: "Informe o caminho da imagem. Exemplo: C:\\folder\\image.jpg caso a imagem esteja local ou uma URL caso a imagem a ser enviada esteja na internet"
-                });
-            }
-            await data.client.sendImage('status@broadcast', path, 'imagem', caption)
-            return res.status(200).json({
-                result: 200,
-                status: 'SUCCESS',
-            })
-        } catch (error) {
-            return res.status(500).json({
-                result: 500,
-                error: error
-            })
-        }
-    }
+				};
+				//
+			}).catch((erro) => {
+				console.error("Error when:", erro); //return object error
+				//
+				return {
+					"erro": true,
+					"status": 404,
+					"message": "Erro ao obter o estado da conexão"
+				};
+				//
+			});
+		});
+		return resultisConnected;
+	} //getConnectionState
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
+	// Get battery level
+	static async getBatteryLevel(SessionName) {
+		console.log("- Obtendo nivel de bateria");
+		await sleep(3000);
+		var session = Sessions.getSession(SessionName);
+		var resultgetBatteryLevel = await session.client.then(async client => {
+			return await session.client.getBatteryLevel().then((result) => {
+				//console.log('Result: ', result); //return object success
+				//
+				return {
+					"erro": false,
+					"status": 200,
+					"message": "Nivel da bateria obtido com sucesso",
+					"BatteryLevel": result
 
-    static async sendVideoToStorie(req, res) {
-        if (!req.body.path) {
-            return res.status(400).send({
-                status: 400,
-                error: "Path não informado",
-                message: "Informe o path. Exemplo: C:\\folder\\video.mp4 para arquivo local ou URL caso o arquivo a ser enviado esteja na internet"
-            });
-        }
-        let data = Sessions.getSession(req.body.session)
-        let isURL = await urlExists(req.body.path);
-        let name = req.body.path.split(/[\/\\]/).pop();
-        try {
-            if (isURL) {
-                let dir = 'files-received/'
-                await get(req.body.path, {
-                    directory: 'files-received'
-                });
-                await data.client.sendFile('status@broadcast', dir + name, 'Video', req.body.caption)
-                fs.unlink(path.basename("/files-received") + "/" + name, erro => console.log(""))
-                return res.status(200).json({
-                    result: 200,
-                    status: 'SUCCESS',
-                })
-            }
-            if (!isURL) {
-                await data.client.sendFile('status@broadcast', req.body.path, 'Video', req.body.caption)
-                return res.status(200).json({
-                    result: 200,
-                    status: 'SUCCESS',
-                })
-            }
-        } catch (error) {
-            return res.status(500).json({
-                result: 500,
-                error: error
-            })
-        }
-    }
+				};
+				//
+			}).catch((erro) => {
+				console.error("Error when:", erro); //return object error
+				//
+				return {
+					"erro": true,
+					"status": 404,
+					"message": "Erro ao obter o nivel da bateria"
+				};
+				//
+			});
+		});
+		return resultgetBatteryLevel;
+	} //getBatteryLevel
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
+	// Is Connected
+	static async isConnected(SessionName) {
+		console.log("- Obtendo se esta conectado");
+		await sleep(3000);
+		var session = Sessions.getSession(SessionName);
+		var resultisConnected = await session.client.then(async client => {
+			return await session.client.isConnected().then((result) => {
+				//console.log('Result: ', result); //return object success
+				//
+				return {
+					"erro": false,
+					"status": 200,
+					"message": "Estatus obtido com sucesso",
+					"Connected": result
+				};
+				//
+			}).catch((erro) => {
+				console.error("Error when:", erro); //return object error
+				//
+				return {
+					"erro": true,
+					"status": 404,
+					"message": "Erro ao obter estatus"
+				};
+				//
+			});
+		});
+		return resultisConnected;
+	} //isConnected
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
+	// Obter versão do WhatsappWeb
+	static async getWAVersion(SessionName) {
+		console.log("- Obtendo versão do WhatsappWeb");
+		await sleep(3000);
+		var session = Sessions.getSession(SessionName);
+		var resultgetWAVersion = await session.client.then(async client => {
+			return await session.client.getWAVersion().then((result) => {
+				//console.log('Result: ', result); //return object success
+				//
+				return {
+					"erro": false,
+					"status": 200,
+					"message": "Versão do WhatsappWeb obtido com sucesso",
+					"WAVersion": result
+				};
+				//
+			}).catch((erro) => {
+				console.error("Error when:", erro); //return object error
+				//
+				return {
+					"erro": true,
+					"status": 404,
+					"message": "Erro ao obter versão do WhatsappWeb"
+				};
+				//
+			});
+		});
+		return resultgetWAVersion;
+	} //getWAVersion
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
+	// Inicia a verificação de conexão do telefone
+	static async startPhoneWatchdog(SessionName, interval) {
+		console.log("- Iniciando a verificação de conexão do telefone");
+		await sleep(3000);
+		var session = Sessions.getSession(SessionName);
+		var resultstartPhoneWatchdog = await session.client.then(async client => {
+			return await session.client.startPhoneWatchdog(interval).then((result) => {
+				//console.log('Result: ', result); //return object success
+				//
+				return {
+					"erro": false,
+					"status": 200,
+					"message": "Verificação de conexão do telefone iniciada com sucesso",
+					"PhoneWatchdog": result
+				};
+				//
+			}).catch((erro) => {
+				console.error("Error when:", erro); //return object error
+				//
+				return {
+					"erro": true,
+					"status": 404,
+					"message": "Erro ao inicia a verificação de conexão do telefone"
+				};
+				//
+			});
+		});
+		return resultstartPhoneWatchdog;
+	} //startPhoneWatchdog
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
+	// Para a verificação de conexão do telefone
+	static async stopPhoneWatchdog(SessionName) {
+		console.log("- Parando a verificação de conexão do telefone");
+		await sleep(3000);
+		var session = Sessions.getSession(SessionName);
+		var resultstopPhoneWatchdog = await session.client.then(async client => {
+			return await session.client.stopPhoneWatchdog().then((result) => {
+				//console.log('Result: ', result); //return object success
+				//
+				return {
+					"erro": false,
+					"status": 200,
+					"message": "Verificação de conexão parada iniciada com sucesso",
+					"PhoneWatchdog": result
+				};
+				//
+			}).catch((erro) => {
+				console.error("Error when:", erro); //return object error
+				//
+				return {
+					"erro": true,
+					"status": 404,
+					"message": "Erro ao parar a verificação de conexão do telefone"
+				};
+				//
+			});
+		});
+		return resultstopPhoneWatchdog;
+	} //stopPhoneWatchdog
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
 }

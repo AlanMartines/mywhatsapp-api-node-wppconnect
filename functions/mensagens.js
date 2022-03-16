@@ -1,597 +1,785 @@
-/*
- * @Author: Eduardo Policarpo
- * @contact: +55 43996611437
- * @Date: 2021-05-10 18:09:49
- * @LastEditTime: 2021-06-07 03:18:01
- */
-import Sessions from '../../controllers/sessions.js';
-import get from "async-get-file";
-import path from 'path';
-import fs from 'fs';
-import util from 'util';
-import urlExistsImport from 'url-exists';
-const urlExists = util.promisify(urlExistsImport);
-
-export default class Mensagens {
-
-    static async sendText(req, res) {
-        let data = Sessions.getSession(req.body.session)
-        let isGroup = req.body.isGroup;
-        let number = isGroup === true ? req.body.number + '@g.us' : req.body.number + '@c.us';
-
-        if (!req.body.text) {
-            return res.status(400).json({
-                status: 400,
-                error: "Text não foi informado"
-            })
-        }
-        else {
-            try {
-                let response = await data.client.sendText(number, req.body.text)
-                return res.status(200).json({
-                    result: 200,
-                    type: 'text',
-                    session: req.body.session,
-                    messageId: response.id,
-                    from: response.from.split('@')[0],
-                    to: response.chatId.user,
-                    content: response.content
-                })
-            } catch (error) {
-                return res.status(500).json({
-                    result: 500,
-                    error: error
-                })
-            }
-        }
-    }
-
-    static async sendImage(req, res) {
-        try {
-            const { caption, path } = req.body;
-            let data = Sessions.getSession(req.body.session)
-            let number = req.body.number + '@c.us';
-            if (!path) {
-                return res.status(400).send({
-                    status: 400,
-                    error: "Path não informado",
-                    message: "Informe o caminho da imagem. Exemplo: C:\\folder\\image.jpg caso a imagem esteja local ou uma URL caso a imagem a ser enviada esteja na internet"
-                });
-            }
-
-            let response = await data.client.sendImage(number, path, 'imagem', caption)
-            console.log(response)
-            return res.status(200).json({
-                result: 200,
-                type: 'image',
-                messageId: response._serialized,
-                session: req.body.session,
-                from: response.me.wid._serialized.split('@')[0],
-                to: response.to.remote.user,
-                file: req.body.url,
-                mimetype: response.mimeType,//ok
-
-            })
-        } catch (error) {
-            return res.status(500).json({
-                result: 500,
-                error: error
-            })
-        }
-    }
-
-    static async sendVideo(req, res) {
-        if (!req.body.path) {
-            return res.status(400).send({
-                status: 400,
-                error: "Path não informado",
-                message: "Informe o path. Exemplo: C:\\folder\\video.mp4 para arquivo local ou URL caso o arquivo a ser enviado esteja na internet"
-            });
-        }
-        let data = Sessions.getSession(req.body.session)
-        let number = req.body.number + '@c.us';
-        let isURL = await urlExists(req.body.path);
-        let name = req.body.path.split(/[\/\\]/).pop();
-        try {
-            if (isURL) {
-                let dir = 'files-received/'
-                await get(req.body.path, {
-                    directory: 'files-received'
-                });
-                let response = await data.client.sendFile(number, dir + name, 'Video', req.body.caption)
-                fs.unlink(path.basename("/files-received") + "/" + name, erro => console.log(""))
-                return res.status(200).json({
-                    result: 200,
-                    type: 'video',
-                    session: req.body.session,
-                    file: name,
-                    data: response
-                })
-            }
-            if (!isURL) {
-
-                let response = await data.client.sendFile(number, req.body.path, 'Video', req.body.caption)
-
-                return res.status(200).json({
-                    result: 200,
-                    type: 'video',
-                    session: req.body.session,
-                    file: name,
-                    data: response
-                })
-            }
-
-        } catch (error) {
-            return res.status(500).json({
-                result: 500,
-                error: error
-            })
-        }
-    }
-
-    static async sendSticker(req, res) {
-        if (!req.body.path) {
-            return res.status(400).send({
-                status: 400,
-                error: "Path não informado",
-                message: "Informe o path. Exemplo: C:\\folder\\imagem.jpg para arquivo local ou URL caso o arquivo a ser enviado esteja na internet"
-            });
-        }
-        let data = Sessions.getSession(req.body.session)
-        let number = req.body.number + '@c.us';
-        let isURL = await urlExists(req.body.path);
-        let name = req.body.path.split(/[\/\\]/).pop();
-        try {
-            if (isURL) {
-                await get(req.body.path, {
-                    directory: 'files-received'
-                });
-                let response = await data.client.sendImageAsSticker(number, `./files-received/${name}`)
-                fs.unlink(path.basename("/files-received") + "/" + name, erro => console.log(""))
-                return res.status(200).json({
-                    result: 200,
-                    type: 'sticker',
-                    messageId: response.id,
-                    session: req.body.session,
-                    file: name,
-                    data: response
-                })
-            }
-            if (!isURL) {
-                let response = await data.client.sendImageAsSticker(number, req.body.path)
-                return res.status(200).json({
-                    result: 200,
-                    type: 'sticker',
-                    messageId: response.id,
-                    session: req.body.session,
-                    file: name,
-                    data: response
-                })
-            }
-        } catch (error) {
-            return res.status(500).json({
-                result: 500,
-                error: error
-            })
-        }
-
-    }
-
-    static async sendFile(req, res) {
-        if (!req.body.path) {
-            return res.status(400).send({
-                status: 400,
-                error: "Path não informado",
-                message: "Informe o path. Exemplo: C:\\folder\\arquivo.xlsx para arquivo local ou URL caso o arquivo a ser enviado esteja na internet"
-            });
-        }
-        let data = Sessions.getSession(req?.body?.session)
-        let number = `${req.body.number}@c.us`;
-        let isURL = await urlExists(req?.body?.path);
-        let name = req.body.path.split(/[\/\\]/).pop();
-
-        try {
-            if (isURL) {
-                let dir = 'files-received/'
-                await get(req.body.path, {
-                    directory: 'files-received'
-                });
-                let response = await data.client.sendFile(number, `${dir}${name}`, req?.body?.fileName, req?.body?.caption)
-                fs.unlink(path.basename("/files-received") + "/" + name, erro => console.log(""))
-                return res.status(200).json({
-                    result: 200,
-                    type: 'file',
-                    session: req.body.session,
-                    file: name,
-                    data: response
-                })
-            }
-            if (!isURL) {
-                let response = await data.client.sendFile(number, req?.body?.path, req?.body?.fileName, req?.body?.caption)
-                return res.status(200).json({
-                    result: 200,
-                    type: 'file',
-                    session: req.body.session,
-                    file: name,
-                    data: response
-                })
-            }
-        } catch (error) {
-            return res.status(400).json({
-                result: 400,
-                "status": "FAIL",
-                "log": error
-            })
-        }
-    }
-    static async sendFile64(req, res) {
-        if (!req.body.path) {
-            return res.status(400).send({
-                status: 400,
-                error: "Path não informado",
-                message: "Informe o path em formato Base64"
-            });
-        }
-        let data = Sessions.getSession(req?.body?.session)
-        let number = `${req?.body?.number}@c.us`;
-        let name = req?.body?.path.split(/[\/\\]/).pop();
-        try {
-            let response = await data.client.sendFileFromBase64(number, req?.body?.path, req?.body?.fileName, req?.body?.caption)
-            return res.status(200).json({
-                result: 200,
-                type: 'file',
-                session: req?.body?.session,
-                file: name,
-                data: response
-            })
-
-        } catch (error) {
-            return res.status(400).json({
-                result: 400,
-                "status": "FAIL",
-                "log": error
-            })
-        }
-    }
-
-    static async sendAudio(req, res) {
-        if (!req.body.path) {
-            return res.status(400).send({
-                status: 400,
-                error: "Path não informado",
-                message: "Informe o path. Exemplo: C:\\folder\\arquivo.mp3 para arquivo local ou URL caso o arquivo a ser enviado esteja na internet"
-            });
-        }
-        let data = Sessions.getSession(req.body.session)
-        let number = req.body.number + '@c.us';
-        let isURL = await urlExists(req.body.path);
-
-        if (isURL) {
-            await get(req.body.path, {
-                directory: 'files-received'
-            });
-            let file = req.body.path.split(/[\/\\]/).pop();
-            let name = file.split('.')[0];
-            let dir = 'files-received/'
-            let ext = file.split('.').pop();
-
-            if (ext === 'mp3' || ext === 'ogg' || ext === 'webm') {
-                try {
-
-                    let response = await data.client.sendPtt(number, dir + file)
-                    fs.unlink(path.basename("/files-received") + "/" + name, erro => console.log(""))
-                    return res.status(200).json({
-                        result: 200,
-                        type: 'ptt',
-                        session: req.body.session,
-                        file: name,
-                        data: response
-                    })
-
-                } catch (e) {
-                    return res.status(400).json({
-                        result: 400,
-                        "status": "FAIL",
-                        "log": e
-                    })
-                }
-            }
-            else {
-                return res.status(400).json({
-                    result: 400,
-                    "status": "FAIL",
-                    "log": 'Envio de áudio permitido apenas com arquivos .mp3 ou .ogg ou .webm'
-                })
-            }
-        }
-        if (!isURL) {
-            let file = req.body.path.split(/[\/\\]/).pop();
-            let name = file.split('.')[0];
-            let ext = file.split('.').pop();
-            if (ext === 'mp3' || ext === 'ogg' || ext === 'webm') {
-                try {
-                    let response = await data.client.sendPtt(number, req.body.path)
-                    return res.status(200).json({
-                        result: 200,
-                        type: 'ptt',
-                        session: req.body.session,
-                        file: name,
-                        data: response
-                    })
-
-                } catch (e) {
-                    return res.status(400).json({
-                        result: 400,
-                        "status": "FAIL",
-                        "log": e
-                    })
-                }
-            }
-            else {
-                return res.status(400).json({
-                    result: 400,
-                    "status": "FAIL",
-                    "log": 'Envio de áudio permitido apenas com arquivos .mp3 ou .ogg ou .webm'
-                })
-            }
-        }
-    }
 
 
-    static async sendVoiceBase64(req, res) {
-        let data = Sessions.getSession(req.body.session)
-        let number = req.body.number;
-        let base64 = req.body.path;
-        if (!req.body.path) {
-            return res.status(400).send({
-                status: 400,
-                error: "Path não informado",
-                message: "Informe o path em formato Base64"
-            });
-        }
-        else {
-            try {
-                let response = await data.client.sendPttFromBase64(number, base64).then((value) => {
-                    console.log(value)
-                }).catch((err) => {
-                    console.log(err)
-                })
-                return res.status(200).json({
-                    result: 200,
-                    type: 'audio',
-                    messageId: response.id,
-                    session: req.body.session,
-                    data: response
-                })
+const Sessions = require('../controllers/sessions');
 
-            } catch (error) {
-                return res.status(400).json({
-                    result: 400,
-                    "status": "FAIL",
-                    "log": error
-                })
-            }
-        }
-    }
+module.exports = class Mensagens {
 
-    static async sendLink(req, res) {
-        let data = Sessions.getSession(req.body.session)
-        let isURL = await urlExists(req.body.url);
-        let isGroup = req.body.isGroup;
-        let number = isGroup === true ? req.body.number + '@g.us' : req.body.number + '@c.us';
-        
-        if (!req.body.url) {
-            return res.status(400).json({
-                status: 400,
-                error: "URL não foi informada, é obrigatorio"
-            })
-        }
-        else
-            if (!isURL) {
-                return res.status(400).json({
-                    status: 400,
-                    error: "Link informado é invalido"
-                })
-            }
-            else {
-                try {
-                    let response = await data.client.sendLinkPreview(number, req.body.url, req.body.text)
+	//
+	// ------------------------------------------------------------------------------------------------------- //
+	//
+	/*
+	╔╗ ┌─┐┌─┐┬┌─┐  ╔═╗┬ ┬┌┐┌┌─┐┌┬┐┬┌─┐┌┐┌┌─┐  ┬ ┬┌─┐┌─┐┌─┐┌─┐
+	╠╩╗├─┤└─┐││    ╠╣ │ │││││   │ ││ ││││└─┐  │ │└─┐├─┤│ ┬├┤
+	╚═╝┴ ┴└─┘┴└─┘  ╚  └─┘┘└┘└─┘ ┴ ┴└─┘┘└┘└─┘  └─┘└─┘┴ ┴└─┘└─┘
+	*/
+	//
+	// Enviar Contato
+	static async sendContactVcard(
+		SessionName,
+		number,
+		contact,
+		namecontact
+	) {
+		console.log("- Enviando contato.");
+		await sleep(3000);
+		var session = Sessions.getSession(SessionName);
+		try {
+			// Send contact
+			return await session.client.sendContactVcard(
+				number,
+				contact,
+				namecontact).then((result) => {
+					//console.log('Result: ', result); //return object success
+					//
+					return {
+						"erro": false,
+						"status": 200,
+						"number": number,
+						"message": "Contato envido com sucesso."
+					};
+					//
+				}).catch((erro) => {
+					console.error("Error when:", erro); //return object error
+					//
+					return {
+						"erro": true,
+						"status": 404,
+						"number": number,
+						"message": "Erro ao enviar contato"
+					};
+					//
+				});
+		} catch (erro) {
+			console.error("Error when:", erro); //return object error
+			//
+			return {
+				"erro": true,
+				"status": 404,
+				"number": number,
+				"message": "Erro ao enviar contato"
+			};
+			//
+		};
+	} //sendContactVcard
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
+	// Enviar Lista Contato
+	static async sendContactVcardList(
+		SessionName,
+		number,
+		contactlistValid,
+		contactlistInvalid
 
-                    return res.status(200).json({
-                        result: 200,
-                        type: 'link',
-                        messageId: response.id,
-                        session: req.body.session,
-                        data: response
-                    })
-                } catch (error) {
-                    return res.status(400).json({
-                        result: 400,
-                        "status": "FAIL",
-                        "log": error
-                    })
-                }
-            }
-    }
+	) {
+		console.log("- Enviando lista de contato.");
+		await sleep(3000);
+		var session = Sessions.getSession(SessionName);
+		try {
+			// Send contact
+			return await session.client.sendContactVcardList(
+				number,
+				contactlistValid,
+				contactlistInvalid
+			).then((result) => {
+				//console.log('Result: ', result); //return object success
+				//
+				return {
+					"erro": false,
+					"status": 200,
+					"canReceiveMessage": true,
+					"contactlistValid": contactlistValid,
+					"contactlistInvalid": contactlistInvalid,
+					"message": "Lista de contatos validos envida com sucesso."
+				};
+				//
+			}).catch((erro) => {
+				console.error("Error when:", erro); //return object error
+				//
+				return {
+					"erro": true,
+					"status": 404,
+					"canReceiveMessage": false,
+					"contactlistValid": contactlistValid,
+					"contactlistInvalid": contactlistInvalid,
+					"message": "Erro ao enviar lista de contatos validos"
+				};
+				//
+			});
+		} catch (erro) {
+			console.error("Error when:", erro); //return object error
+			//
+			return {
+				"erro": true,
+				"status": 404,
+				"canReceiveMessage": false,
+				"contactlistValid": contactlistValid,
+				"contactlistInvalid": contactlistInvalid,
+				"message": "Erro ao enviar lista de contatos validos"
+			};
+			//
+		};
+	} //sendContactVcardList
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
+	//Enviar Texto
+	static async sendText(
+		SessionName,
+		number,
+		msg
+	) {
+		console.log("- Enviando menssagem de texto.");
+		await sleep(3000);
+		var session = Sessions.getSession(SessionName);
+		try {
+			// Send basic text
+			return await session.client.sendText(
+				number,
+				msg
+			).then((result) => {
+				//console.log("Result: ", result); //return object success
+				//
+				return {
+					"erro": false,
+					"status": 200,
+					"number": number,
+					"message": "Menssagem envida com sucesso."
+				};
+				//
+			}).catch((erro) => {
+				console.error("Error when:", erro); //return object error
+				//return { result: 'error', state: session.state, message: "Erro ao enviar menssagem" };
+				//return (erro);
+				//
+				return {
+					"erro": true,
+					"status": 404,
+					"number": number,
+					"message": "Erro ao enviar menssagem"
+				};
+				//
+			});
+		} catch (erro) {
+			console.error("Error when:", erro); //return object error
+			//return { result: 'error', state: session.state, message: "Erro ao enviar menssagem" };
+			//return (erro);
+			//
+			return {
+				"erro": true,
+				"status": 404,
+				"number": number,
+				"message": "Erro ao enviar menssagem"
+			};
+			//
+		};
+	} //sendText
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
+	//Enviar localização
+	static async sendLocation(
+		SessionName,
+		number,
+		lat,
+		long,
+		local
+	) {
+		console.log("- Enviando localização.");
+		await sleep(3000);
+		var session = Sessions.getSession(SessionName);
+		try {
+			// Send basic text
+			return await session.client.sendLocation(
+				number,
+				lat,
+				long,
+				local
+			).then((result) => {
+				//console.log("Result: ", result); //return object success
+				//return { result: "success", state: session.state, message: "Sucesso ao enviar menssagem" };
+				//return (result);
+				//
+				return {
+					"erro": false,
+					"status": 200,
+					"number": number,
+					"message": "Localização envida com sucesso."
+				};
+				//
+			}).catch((erro) => {
+				console.error("Error when:", erro); //return object error
+				//return { result: 'error', state: session.state, message: "Erro ao enviar menssagem" };
+				//return (erro);
+				//
+				return {
+					"erro": true,
+					"status": 404,
+					"number": number,
+					"message": "Erro ao enviar localização."
+				};
+				//
+			});
+		} catch (erro) {
+			console.error("Error when:", erro); //return object error
+			//return { result: 'error', state: session.state, message: "Erro ao enviar menssagem" };
+			//return (erro);
+			//
+			return {
+				"erro": true,
+				"status": 404,
+				"number": number,
+				"message": "Erro ao enviar localização."
+			};
+			//
+		};
+	} //sendLocation
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
+	//Enviar links com preview
+	static async sendLinkPreview(
+		SessionName,
+		number,
+		link,
+		detail
+	) {
+		console.log("- Enviando link.");
+		await sleep(3000);
+		var session = Sessions.getSession(SessionName);
+		try {
+			// Send basic text
+			return await session.client.sendLinkPreview(
+				number,
+				link,
+				detail
+			).then((result) => {
+				//console.log("Result: ", result); //return object success
+				//return { result: "success", state: session.state, message: "Sucesso ao enviar menssagem" };
+				//return (result);
+				//
+				return {
+					"erro": false,
+					"status": 200,
+					"number": number,
+					"message": "Link envido com sucesso."
+				};
+				//
+			}).catch((erro) => {
+				console.error("Error when:", erro); //return object error
+				//return { result: 'error', state: session.state, message: "Erro ao enviar menssagem" };
+				//return (erro);
+				//
+				return {
+					"erro": true,
+					"status": 404,
+					"number": number,
+					"message": "Erro ao enviar link."
+				};
+				//
+			});
+		} catch (erro) {
+			console.error("Error when:", erro); //return object error
+			//return { result: 'error', state: session.state, message: "Erro ao enviar menssagem" };
+			//return (erro);
+			//
+			return {
+				"erro": true,
+				"status": 404,
+				"number": number,
+				"message": "Erro ao enviar link."
+			};
+			//
+		};
+	} //sendLinkPreview
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
+	//Enviar Imagem
+	static async sendImage(
+		SessionName,
+		number,
+		filePath,
+		fileName,
+		caption
+	) {
+		console.log("- Enviando menssagem com imagem.");
+		await sleep(3000);
+		var session = Sessions.getSession(SessionName);
+		try {
+			return await session.client.sendImage(
+				number,
+				filePath,
+				fileName,
+				caption
+			).then((result) => {
+				//console.log('Result: ', result); //return object success
+				//return (result);
+				//
+				return {
+					"erro": false,
+					"status": 200,
+					"number": number,
+					"message": "Menssagem envida com sucesso."
+				};
+				//
+			}).catch((erro) => {
+				console.error("Error when:", erro); //return object error
+				//return (erro);
+				//
+				return {
+					"erro": true,
+					"status": 404,
+					"number": number,
+					"message": "Erro ao enviar menssagem"
+				};
+				//
+			});
+		} catch (erro) {
+			console.error("Error when:", erro); //return object error
+			//return (erro);
+			//
+			return {
+				"erro": true,
+				"status": 404,
+				"number": number,
+				"message": "Erro ao enviar menssagem"
+			};
+			//
+		};
+	} //sendImage
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
+	//Enviar arquivo
+	static async sendFile(
+		SessionName,
+		number,
+		filePath,
+		originalname,
+		caption
+	) {
+		console.log("- Enviando arquivo.");
+		await sleep(3000);
+		var session = Sessions.getSession(SessionName);
+		try {
+			return await session.client.sendFile(
+				number,
+				filePath,
+				originalname,
+				caption
+			).then((result) => {
+				//console.log('Result: ', result); //return object success
+				//return (result);
+				//
+				return {
+					"erro": false,
+					"status": 200,
+					"number": number,
+					"message": "Arquivo envido com sucesso."
+				};
+				//
+			}).catch((erro) => {
+				console.error("Error when:", erro); //return object error
+				//return (erro);
+				//
+				return {
+					"erro": true,
+					"status": 404,
+					"number": number,
+					"message": "Erro ao enviar arquivo"
+				};
+				//
+			});
+		} catch (erro) {
+			console.error("Error when:", erro); //return object error
+			//return (erro);
+			//
+			return {
+				"erro": true,
+				"status": 404,
+				"number": number,
+				"message": "Erro ao enviar arquivo"
+			};
+			//
+		};
+	} //sendFile
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
+	//Enviar Arquivo em Base64
+	static async sendFileFromBase64(
+		SessionName,
+		number,
+		base64Data,
+		mimetype,
+		originalname,
+		caption
+	) {
+		console.log("- Enviando arquivo em Base64Data");
+		await sleep(3000);
+		var session = Sessions.getSession(SessionName);
+		try {
+			return await session.client.sendFileFromBase64(
+				number,
+				"data:" + mimetype + ";base64," + base64Data,
+				originalname,
+				caption
+			).then((result) => {
+				//console.log('Result: ', result); //return object success
+				//return (result);
+				//
+				return {
+					"erro": false,
+					"status": 200,
+					"number": number,
+					"message": "Arquivo envida com sucesso."
+				};
+				//
+			}).catch((erro) => {
+				console.error("Error when:", erro); //return object error
+				//return (erro);
+				//
+				return {
+					"erro": true,
+					"status": 404,
+					"number": number,
+					"message": "Erro ao enviar arquivo"
+				};
+				//
+			});
+		} catch (erro) {
+			console.error("Error when:", erro); //return object error
+			//return (erro);
+			//
+			return {
+				"erro": true,
+				"status": 404,
+				"number": number,
+				"message": "Erro ao enviar arquivo"
+			};
+			//
+		};
+	} //sendFileFromBase64
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
+	/*
+	╦═╗┌─┐┌┬┐┬─┐┬┌─┐┬  ┬┬┌┐┌┌─┐  ╔╦╗┌─┐┌┬┐┌─┐
+	╠╦╝├┤  │ ├┬┘│├┤ └┐┌┘│││││ ┬   ║║├─┤ │ ├─┤
+	╩╚═└─┘ ┴ ┴└─┴└─┘ └┘ ┴┘└┘└─┘  ═╩╝┴ ┴ ┴ ┴ ┴
+	*/
+	//
+	// Recuperar contatos
+	static async getAllContacts(
+		SessionName
+	) {
+		console.log("- Obtendo todos os contatos!");
+		await sleep(3000);
+		var session = Sessions.getSession(SessionName);
+		try {
+			return await session.client.getAllContacts().then(async (result) => {
+				//console.log('Result: ', result); //return object success
+				//
+				var getChatGroupNewMsg = [];
+				//
+				await forEach(result, async (resultAllContacts) => {
+					//
+					if (resultAllContacts.isMyContact === true || resultAllContacts.isMyContact === false) {
+						//
+						getChatGroupNewMsg.push({
+							"user": resultAllContacts.id.user,
+							"name": resultAllContacts.name,
+							"shortName": resultAllContacts.shortName,
+							"pushname": resultAllContacts.pushname,
+							"formattedName": resultAllContacts.formattedName,
+							"isMyContact": resultAllContacts.isMyContact,
+							"isWAContact": resultAllContacts.isWAContact
+						});
+					}
+					//
+				});
+				//
+				return getChatGroupNewMsg;
+				//
+			}).catch((erro) => {
+				console.error("Error when:", erro); //return object error
+				//
+				return {
+					"erro": true,
+					"status": 404,
+					"message": "Erro ao recuperar contatos"
+				};
+				//
+			});
+			//
+		} catch (erro) {
+			console.error("Error when:", erro); //return object error
+			//
+			return {
+				"erro": true,
+				"status": 404,
+				"message": "Erro ao recuperar contatos"
+			};
+			//
+		};
+	} //getAllContacts
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
+	// Recuperar grupos
+	static async getAllGroups(
+		SessionName
+	) {
+		console.log("- Obtendo todos os grupos!");
+		await sleep(3000);
+		var session = Sessions.getSession(SessionName);
+		try {
+			return await session.client.getAllGroups().then(async (result) => {
+				//console.log('Result: ', result); //return object success
+				//
+				var getAllGroups = [];
+				//
+				await forEach(result, async (resultAllContacts) => {
+					//
+					if (resultAllContacts.isGroup === true) {
+						//
+						getAllGroups.push({
+							"user": resultAllContacts.id.user,
+							"name": resultAllContacts.name,
+							"formattedName": resultAllContacts.contact.formattedName
+						});
+					}
+					//
+				});
+				//
+				return getAllGroups;
+				//
+			}).catch((erro) => {
+				console.error('Error when sending: ', erro); //return object error
+				//
+				return {
+					"erro": true,
+					"status": 404,
+					"message": "Erro ao recuperar grupos"
+				};
+				//
+			});
+			//
+		} catch (erro) {
+			console.error('Error when sending: ', erro); //return object error
+			//
+			return {
+				"erro": true,
+				"status": 404,
+				"message": "Erro ao recuperar grupos"
+			};
+			//
+		};
+	} //getAllGroups
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
+	// Returns browser session token
+	static async getSessionTokenBrowser(SessionName) {
+		console.log("- Obtendo  Session Token Browser.");
+		await sleep(3000);
+		var session = Sessions.getSession(SessionName);
+		var resultgetSessionTokenBrowser = await session.client.then(async client => {
+			return await session.client.getSessionTokenBrowser().then((result) => {
+				//console.log('Result: ', result); //return object success
+				return result;
+			}).catch((erro) => {
+				console.error("Error when:", erro); //return object error
+				//
+				return {
+					"erro": true,
+					"status": 404,
+					"message": "Erro ao recuperar token browser"
+				};
+				//
+			});
+		});
+		return resultgetSessionTokenBrowser;
+	} //getSessionTokenBrowser
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
+	// Chama sua lista de contatos bloqueados
+	static async getBlockList(SessionName) {
+		console.log("- Obtendo lista de contatos bloqueados");
+		await sleep(3000);
+		var session = Sessions.getSession(SessionName);
+		var resultgetBlockList = await session.client.then(async client => {
+			return await session.client.getBlockList().then((result) => {
+				//console.log('Result: ', result); //return object success
+				return result;
+			}).catch((erro) => {
+				console.error("Error when:", erro); //return object error
+				//
+				return {
+					"erro": true,
+					"status": 404,
+					"message": "Erro ao recuperar lista de contatos bloqueados"
+				};
+				//
+			});
+		});
+		return resultgetBlockList;
+	} //getBlockList
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
+	// Recuperar status
+	static async getStatus(
+		SessionName,
+		number
+	) {
+		console.log("- Obtendo status!");
+		await sleep(3000);
+		var session = Sessions.getSession(SessionName);
+		var resultgetStatus = await session.client.then(async client => {
+			return await session.client.getStatus(number).then((result) => {
+				//console.log('Result: ', result); //return object success
+				return result;
+			}).catch((erro) => {
+				console.error("Error when:", erro); //return object error
+				//
+				return {
+					"erro": true,
+					"status": 404,
+					"message": "Erro ao recuperar status de contato"
+				};
+				//
+			});
+		});
+		return resultgetStatus;
+	} //getStatus
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
+	// Recuperar status do contato
+	static async getNumberProfile(
+		SessionName,
+		number
+	) {
+		console.log("- Obtendo status do contato!");
+		await sleep(3000);
+		var session = Sessions.getSession(SessionName);
+		var resultgetNumberProfile = await session.client.then(async client => {
+			return await session.client.getNumberProfile(number).then((result) => {
+				//console.log('Result: ', result); //return object success
+				return result;
+			}).catch((erro) => {
+				console.error("Error when:", erro); //return object error
+				//
+				return {
+					"erro": true,
+					"status": 404,
+					"message": "Erro ao recuperar profile"
+				};
+				//
+			});
+		});
+		return resultgetNumberProfile;
+	} //getStatus
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
+	// Verificar o status do número
+	static async checkNumberStatus(
+		SessionName,
+		number
+	) {
+		console.log("- Validando numero");
+		await sleep(3000);
+		var session = Sessions.getSession(SessionName);
+		try {
+			return await session.client.checkNumberStatus(number).then((result) => {
+				//console.log('Result: ', result); //return object success
+				//
+				if (result.canReceiveMessage === true) {
+					//
+					return {
+						"erro": false,
+						"status": result.status,
+						"number": result.id._serialized,
+						"message": "O número informado pode receber mensagens via whatsapp"
+					};
+					//
+				} else if (result.status === 404 && result.canReceiveMessage === false) {
+					//
+					return {
+						"erro": true,
+						"status": result.status,
+						"number": result.id._serialized,
+						"message": "O número informado não pode receber mensagens via whatsapp"
+					};
+					//
+				} else {
+					//
+					return {
+						"erro": true,
+						"status": 404,
+						"number": number,
+						"message": "Erro ao verificar número informado"
+					};
+					//
+				}
+			}).catch((erro) => {
+				console.error("Error when:", erro); //return object error
+				//
+				return {
+					"erro": true,
+					"status": 404,
+					"number": number,
+					"message": "Erro ao verificar número informado"
+				};
+				//
+			});
+		} catch (erro) {
+			console.error("Error when:", erro); //return object error
+			//
+			return {
+				"erro": true,
+				"status": 404,
+				"number": number,
+				"message": "Erro ao verificar número informado"
+			};
+			//
+		}
+	} //checkNumberStatus
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
+	// Obter a foto do perfil do servidor
+	static async getProfilePicFromServer(
+		SessionName,
+		number
+	) {
+		console.log("- Obtendo a foto do perfil do servidor!");
+		await sleep(3000);
+		var session = Sessions.getSession(SessionName);
+		var resultgetProfilePicFromServer = await session.client.then(async client => {
+			try {
+				const url = await client.getProfilePicFromServer(number);
+				//console.log('Result: ', result); //return object success
+				return url;
+			} catch (erro) {
+				console.error("Error when:", erro); //return object error
+				//
+				return {
+					"erro": true,
+					"status": 404,
+					"message": "Erro ao obtendo a foto do perfil no servidor"
+				};
+				//
+			};
+		});
+		return resultgetProfilePicFromServer;
+	} //getProfilePicFromServer
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
 
-    static async sendContact(req, res) {
-        let data = Sessions.getSession(req.body.session)
-        let number = req.body.number + '@c.us';
-        if (!req.body.contact) {
-            return res.status(400).json({
-                status: 400,
-                error: "Contact não foi informado"
-            })
-        }
-        else if (!req.body.name) {
-            return res.status(400).json({
-                status: 400,
-                error: "Nome do Contato não foi informado"
-            })
-        }
-        else {
-            try {
-                let response = await data.client.sendContactVcard(number, req.body.contact + '@c.us', req.body.name)
-                return res.status(200).json({
-                    result: 200,
-                    type: 'contact',
-                    messageId: response.id,
-                    session: req.body.session,
-                    data: response
-                })
-            } catch (error) {
-                return res.status(400).json({
-                    result: 400,
-                    "status": "FAIL",
-                    "log": error
-                })
-            }
-        }
-    }
-
-    static async sendLocation(req, res) {
-        let data = Sessions.getSession(req.body.session)
-        let number = req.body.number + '@c.us';
-        if (!req.body.lat) {
-            return res.status(400).json({
-                status: 400,
-                error: "Latitude não foi informada"
-            })
-        }
-        else if (!req.body.log) {
-            return res.status(400).json({
-                status: 400,
-                error: "Longitude não foi informada"
-            })
-        }
-        if (!req.body.title) {
-            return res.status(400).json({
-                status: 400,
-                error: "Title do endereço não foi informado"
-            })
-        }
-        else if (!req.body.description) {
-            return res.status(400).json({
-                status: 400,
-                error: "Descrição do endereço não foi informado"
-            })
-        }
-        else {
-            try {
-                let response = await data.client.sendLocation(number, req.body.lat, req.body.log, `${req.body.title}\n${req.body.description}`)
-                return res.status(200).json({
-                    result: 200,
-                    type: 'locate',
-                    messageId: response.id,
-                    session: req.body.session,
-                    data: response
-                })
-            } catch (error) {
-                return res.status(400).json({
-                    result: 400,
-                    "status": "FAIL",
-                    "log": error
-                })
-            }
-        }
-    }
-
-    static async reply(req, res) {
-        let data = Sessions.getSession(req.body.session)
-        let number = req.body.number + '@c.us';
-        if (!req.body.text) {
-            return res.status(400).json({
-                status: 400,
-                error: "Text não foi informado"
-            })
-        }
-        else if (!req.body.messageid) {
-            return res.status(400).json({
-                status: 400,
-                error: "MessageID não foi informada, é obrigatorio"
-            })
-        }
-        else {
-            try {
-                let response = await data.client.reply(number, req.body.text, req.body.messageid);
-                return res.status(200).json({
-                    result: 200,
-                    type: 'text',
-                    session: req.body.session,
-                    messageId: response.id,
-                    data: response
-                })
-            } catch (error) {
-                return res.status(400).json({
-                    result: 400,
-                    "status": "FAIL",
-                    "log": error
-                })
-            }
-        }
-    }
-
-    static async forwardMessages(req, res) {
-        let data = Sessions.getSession(req.body.session)
-        let number = req.body.number + '@c.us';
-        if (!req.body.text) {
-            return res.status(400).json({
-                status: 400,
-                error: "Text não foi informado"
-            })
-        }
-        else if (!req.body.messageid) {
-            return res.status(400).json({
-                status: 400,
-                error: "MessageID não foi informado, é obrigatorio"
-            })
-        }
-        else {
-            try {
-                let response = await data.client.forwardMessages(number, [req.body.messageid]);
-                return res.status(200).json({
-                    result: 200,
-                    type: 'forward',
-                    messageId: response.id,
-                    session: req.body.session,
-                    data: response
-                })
-
-            } catch (error) {
-                return res.status(200).json({
-                    "result": 400,
-                    "status": "FAIL",
-                    "error": error
-                })
-            }
-        }
-    }
-
-    static async getOrderbyMsg(req, res) {
-        let data = Sessions.getSession(req.body.session)
-        if (!req.body.messageid) {
-            return res.status(400).json({
-                status: 400,
-                error: "MessageID não foi informado, é obrigatorio"
-            })
-        }
-        else {
-            try {
-                let response = await data.client.getOrderbyMsg(req.body.messageid);
-                return res.status(200).json({
-                    result: 200,
-                    type: 'order',
-                    session: req.body.session,
-                    data: response
-                })
-
-            } catch (error) {
-                return res.status(200).json({
-                    "result": 400,
-                    "status": "FAIL",
-                    "error": error
-                })
-            }
-        }
-    }
 }

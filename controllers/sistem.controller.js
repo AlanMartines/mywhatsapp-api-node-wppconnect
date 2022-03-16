@@ -158,14 +158,14 @@ router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next
 				if (confToken) {
 					if (confToken.SessionName == data.SessionName && confToken.MultiDevice == data.MultiDevice && confToken.whatsappVersion == data.whatsappVersion) {
 						console.log("- Configuração mantida");
-						Wppconnect.initSession(req.io, confToken.SessionName, confToken.SessionName, confToken.MultiDevice, confToken.whatsappVersion);
+						Wppconnect.start(req.io, confToken.SessionName, confToken.SessionName, confToken.MultiDevice, confToken.whatsappVersion);
 					} else {
-						Wppconnect.initSession(req.io, data.SessionName, data.SessionName, data.MultiDevice, data.whatsappVersion);
+						Wppconnect.start(req.io, data.SessionName, data.SessionName, data.MultiDevice, data.whatsappVersion);
 						console.log("- Configuração atualizada");
 						await startAll.confToken(`${config.tokenPatch}`, `${data.SessionName}.auto.json`, data, false);
 					}
 				} else {
-					Wppconnect.initSession(req.io, data.SessionName, data.SessionName, data.MultiDevice, data.whatsappVersion);
+					Wppconnect.start(req.io, data.SessionName, data.SessionName, data.MultiDevice, data.whatsappVersion);
 					console.log("- Configuração criada");
 					await startAll.confToken(`${config.tokenPatch}`, `${data.SessionName}.auto.json`, data, false);
 				}
