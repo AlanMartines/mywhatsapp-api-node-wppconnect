@@ -83,7 +83,7 @@ const convertBytes = function (bytes) {
 		return "n/a"
 	}
 
-	const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)))
+	const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
 
 	if (i == 0) {
 		return bytes + " " + sizes[i]
