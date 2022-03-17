@@ -50,7 +50,7 @@
     "editor.autoIndent": "advanced"
   },
   "[javascript]": {
-    "editor.defaultFormatter": "vscode.typescript-language-features"
+    "editor.defaultFormatter": "HookyQR.beautify"
   },
   "sync.autoUpload": true,
   "[json]": {
