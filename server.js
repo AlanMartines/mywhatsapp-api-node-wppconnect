@@ -23,7 +23,7 @@ const {
 } = require('yoo-hoo');
 //
 const config = require('./config.global');
-const startAll = require("./middleware/startup.js");
+//const startAll = require("./middleware/startup.js");
 //
 yo('My-WhatsApp', {
 	color: 'rainbow',
@@ -232,8 +232,9 @@ FORCE_CONNECTION_USE_HERE=0
 					const port = http.address().port;
 					console.log(`- HTTP Server running on: ${host}:${port}`);
 				}
+
 				if (parseInt(config.START_ALL_SESSIONS) == true) {
-					let result = await startAll.startAllSessions();
+					//let result = await startAll.startAllSessions();
 				}
 			});
 		} catch (error) {
