@@ -13,8 +13,16 @@ const queue = new PQueue({
   concurrency: 1
 });
 */
-//const wppconnect = require('./wppconnect/dist/index');
-const wppconnect = require('@wppconnect-team/wppconnect');
+if (fs.existsSync('./wppconnect/dist/index.js')) {
+	//
+	console.log("- Wppconnect is patch");
+	var wppconnect = require('./wppconnect/dist/index');
+	//
+} else {
+	console.log("- Wppconnect is package");
+	var wppconnect = require('@wppconnect-team/wppconnect');
+}
+//
 const tokenPatch = "/usr/local/tokens";
 //
 // ------------------------------------------------------------------------------------------------------- //
