@@ -709,10 +709,10 @@ module.exports = class Sessions {
 				session.state = "CONNECTED";
 				session.browserSessionToken = browserSessionToken;
 				//
-				webhooks?.wh_connect(Sessions.getSession(SessionName), 'CONNECTED', phone)
-				events?.receiveMessage(Sessions.getSession(SessionName), client, req)
-				events?.statusMessage(Sessions.getSession(SessionName), client)
-				events?.statusConnection(Sessions.getSession(SessionName), client)
+				webhooks?.wh_connect(Sessions.getSession(SessionName), 'CONNECTED', phone);
+				events?.receiveMessage(Sessions.getSession(SessionName), client, socket);
+				events?.statusMessage(Sessions.getSession(SessionName), client, socket);
+				events?.statusConnection(Sessions.getSession(SessionName), client, socket);
 				//
 				console?.log({
 					"result": 200,
