@@ -34,7 +34,7 @@ module.exports = class Webhooks {
                 'result': 200,
                 'session': data.name,
                 'state': data.state,
-                'status': response,
+                'status': data.status,
                 'number': phone
             }
 
