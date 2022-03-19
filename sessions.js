@@ -719,22 +719,13 @@ module.exports = class Sessions {
 					"status": "CONNECTED",
 					"response": `Sessão criada com sucesso`
 				});
-
+				return client;
 			}).catch(async (error) => {
 				session.state = "NOTFOUND";
 				session.status = "notLogged";
 				session.qrcode = null;
 				session.attempts = 0;
 				session.message = 'Sistema desconectado';
-				//
-				var Start = {
-					result: 'error',
-					state: 'NOTFOUND',
-					status: 'notLogged',
-					message: 'Sistema Off-line'
-				};
-				//
-				return Start;
 				//
 			});
 			// Levels: 'error', 'warn', 'info', 'http', 'verbose', 'debug', 'silly'
