@@ -1,10 +1,4 @@
-/*
- * @Author: Eduardo Policarpo
- * @contact: +55 43996611437
- * @Date: 2021-05-10 18:09:49
- * @LastEditTime: 2021-06-07 03:18:01
- */
-const Sessions = require('../controllers/sessions');
+const Sessions = require('../sessions');
 const superagent = require('superagent');
 require('superagent-queue');
 require('dotenv').config();
@@ -12,7 +6,7 @@ require('dotenv').config();
 module.exports = class Webhooks {
 
     static async wh_messages(session, response) {
-        let data = Sessions?.getSession(session)
+        let data = Sessions?.getSession(session);
         try {
             if (data?.wh_message != undefined) {
                 await superagent

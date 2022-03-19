@@ -459,7 +459,11 @@ module.exports = class Sessions {
       message: 'Sistema iniciando e indisponivel para uso',
       attempts: 0,
       browserSessionToken: null,
-			funcoesSocket: null
+			funcoesSocket: null,
+			wh_status: null,
+			wh_message: null,
+			wh_qrcode: null,
+			wh_connect: null,
     }
     Sessions.sessions.push(newSession);
     console.log("- Nova sessão: " + newSession.state);

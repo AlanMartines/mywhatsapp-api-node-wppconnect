@@ -149,6 +149,10 @@ router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next
 				console.log("- AuthorizationToken:", removeWithspace(req.body.SessionName));
 				session.state = 'STARTING';
 				session.status = 'notLogged';
+				session.wh_status = req.body.wh_status;
+				session.wh_message = req.body.wh_message;
+				session.wh_qrcode = req.body.wh_qrcode;
+				session.wh_connect = req.body.wh_connect;
 				var Start = {
 					result: "info",
 					state: 'STARTING',
