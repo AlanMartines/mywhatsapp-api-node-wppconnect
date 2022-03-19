@@ -693,7 +693,7 @@ module.exports = class Sessions {
 					'--safebrowsing-disable-auto-update',
 				],
 				puppeteerOptions: {
-					userDataDir: MultiDevice ? `${tokenPatch}/WPP-${SessionName}` : undefined, // or your custom directory
+					userDataDir: MultiDevice == true ? `${tokenPatch}/WPP-${SessionName}` : undefined, // or your custom directory
 					browserWSEndpoint: `${config.BROWSER_WSENDPOINT}`,
 				},
 				disableWelcome: false, // Option to disable the welcoming message which appears in the beginning
