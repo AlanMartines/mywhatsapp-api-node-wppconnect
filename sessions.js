@@ -568,7 +568,7 @@ module.exports = class Sessions {
 					//return isLogged || notLogged || browserClose || qrReadSuccess || qrReadFail || autocloseCalled || desconnectedMobile || deleteToken
 					//Create session wss return "serverClose" case server for close
 					console.log('- Session name: ', session_wppconnect);
-					webhooks?.wh_connect(SessionName, statusSession)
+					webhooks?.wh_connect(Sessions.getSession(SessionName), statusSession)
 					//
 					//
 					switch (statusSession) {
@@ -706,10 +706,10 @@ module.exports = class Sessions {
 				let tokens = await client?.getSessionTokenBrowser();
 				let phone = await client?.getWid();
 				//
-				webhooks?.wh_connect(session, 'CONNECTED', phone)
-				events?.receiveMessage(session, client, req)
-				events?.statusMessage(session, client)
-				events?.statusConnection(session, client)
+				webhooks?.wh_connect(Sessions.getSession(SessionName), 'CONNECTED', phone)
+				events?.receiveMessage(Sessions.getSession(SessionName), client, req)
+				events?.statusMessage(Sessions.getSession(SessionName), client)
+				events?.statusConnection(Sessions.getSession(SessionName), client)
 				//
 				console?.log({
 					"result": 200,
@@ -765,12 +765,13 @@ module.exports = class Sessions {
 	static async setup(socket, SessionName) {
 		var session = Sessions.getSession(SessionName);
 		await session.client.then(async (client) => {
+			/*
 			try {
 				//
-				events?.receiveMessage(SessionName, client, socket);
-				events?.statusMessage(SessionName, client, socket);
-				events?.statusConnection(SessionName, client, socket);
-				events?.extraEvents(SessionName, client, socket);
+				events?.receiveMessage(session, client, socket);
+				events?.statusMessage(session, client, socket);
+				events?.statusConnection(session, client, socket);
+				events?.extraEvents(session, client, socket);
 				//
 			} catch (error) {
 				session.state = "NOTFOUND";
@@ -780,7 +781,7 @@ module.exports = class Sessions {
 				session.message = 'Sistema desconectado';
 				console.log("- Instância não iniciada:", error.message);
 			}
-			//
+			*/
 		});
 	} //setup
 	//

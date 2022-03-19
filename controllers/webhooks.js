@@ -5,8 +5,8 @@ require('dotenv').config();
 
 module.exports = class Webhooks {
 
-    static async wh_messages(session, response) {
-        let data = Sessions?.getSession(session);
+    static async wh_messages(data, response) {
+        //let data = Sessions?.getSession(session);
         try {
             if (data?.wh_message != undefined) {
                 await superagent
@@ -26,13 +26,13 @@ module.exports = class Webhooks {
         }
     }
 
-    static async wh_connect(session, response, phone = null) {
-        let data = Sessions?.getSession(session)
+    static async wh_connect(data, response, phone = null) {
+        //let data = Sessions?.getSession(session)
         try {
             var object = {
                 "wook": 'STATUS_CONNECT',
                 'result': 200,
-                'session': session,
+                'session': data.name,
                 'state': response,
                 'status': data.status,
                 'number': phone
@@ -57,8 +57,8 @@ module.exports = class Webhooks {
 
     }
 
-    static async wh_status(session, response) {
-        let data = Sessions?.getSession(session)
+    static async wh_status(data, response) {
+        //let data = Sessions?.getSession(session)
         try {
             if (data?.wh_status != undefined) {
                 await superagent
@@ -84,7 +84,7 @@ module.exports = class Webhooks {
             let object = {
                 "wook": 'QRCODE',
                 'result': 200,
-                'session': session.name,
+                'session': data.name,
                 'qrcode': response,
                 'urlCode': urlCode
             }
