@@ -527,7 +527,6 @@ module.exports = class Sessions {
 			const client = await wppconnect.create({
 				session: SessionName,
 				catchQR: async (base64Qrimg, asciiQR, attempts, urlCode) => {
-					webhooks?.wh_qrcode(SessionName, base64Qrimg, urlCode)
 					//
 					console.log("- Saudação:", await saudacao());
 					//
@@ -560,6 +559,8 @@ module.exports = class Sessions {
 					//
 					var qrCode = base64Qrimg.replace('data:image/png;base64,', '');
 					const imageBuffer = Buffer.from(qrCode, 'base64');
+					//
+					webhooks?.wh_qrcode(Sessions.getSession(SessionName), base64Qrimg, urlCode)
 					//
 				},
 				statusFind: async (statusSession, session_wppconnect) => {
@@ -704,11 +705,12 @@ module.exports = class Sessions {
 
 				let tokens = await client?.getSessionTokenBrowser();
 				let phone = await client?.getWid();
+				//
 				webhooks?.wh_connect(session, 'CONNECTED', phone)
 				events?.receiveMessage(session, client, req)
 				events?.statusMessage(session, client)
 				events?.statusConnection(session, client)
-
+				//
 				console?.log({
 					"result": 200,
 					"status": "CONNECTED",

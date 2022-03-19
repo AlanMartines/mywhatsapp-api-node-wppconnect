@@ -1,4 +1,4 @@
-const Sessions = require('../sessions');
+const Sessions = require("../sessions.js");
 const superagent = require('superagent');
 require('superagent-queue');
 require('dotenv').config();
@@ -78,8 +78,8 @@ module.exports = class Webhooks {
         }
     }
 
-    static async wh_qrcode(session, response, urlCode) {
-        let data = Sessions?.getSession(session)
+    static async wh_qrcode(data, response, urlCode) {
+        //let data = Sessions?.getSession(session)
         try {
             let object = {
                 "wook": 'QRCODE',
