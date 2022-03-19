@@ -84,7 +84,7 @@ module.exports = class Webhooks {
             let object = {
                 "wook": 'QRCODE',
                 'result': 200,
-                'session': session,
+                'session': session.name,
                 'qrcode': response,
                 'urlCode': urlCode
             }
