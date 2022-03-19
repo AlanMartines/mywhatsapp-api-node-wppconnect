@@ -726,14 +726,15 @@ module.exports = class Sessions {
   	╚═╝└─┘ ┴  ┴ ┴┘└┘└─┘  └─┘ ┴ ┴ ┴┴└─ ┴ └─┘─┴┘
   */
   //
-  static async setup(SessionName) {
+  static async setup(socket, SessionName) {
     var session = Sessions.getSession(SessionName);
-    await session.client.then(async (client) => {
+    await session.client.then(client => {
       try {
 				//
 				let tokens = await client?.getSessionTokenBrowser();
 				let phone = await client?.getWid();
 				webhooks?.wh_connect(SessionName, 'CONNECTED', phone);
+				//
 				events?.receiveMessage(SessionName, client, socket);
 				events?.statusMessage(SessionName, client, socket);
 				events?.statusConnection(SessionName, client, socket);
@@ -748,112 +749,6 @@ module.exports = class Sessions {
         console.log("- Instância não iniciada:", error.message);
       }
       //
-      // Listen to messages
-      try {
-        client.onMessage(async (message) => {
-          console.log("- onMessage")
-          //
-          /*
-          console.log("- Type.....:", message.type);
-          console.log("- Body.....:", message.body);
-          console.log("- From.....:", message.from);
-          console.log("- To.......:", message.to);
-          console.log("- Push Name:", message.chat.contact.pushname);
-          console.log("- Is Group.:", message.isGroupMsg);
-          */
-          //
-        });
-      } catch (error) {
-        session.state = "NOTFOUND";
-        session.status = "notLogged";
-        session.qrcode = null;
-        session.attempts = 0;
-        session.message = 'Sistema desconectado';
-        console.log("- Error onMessage:", error.message);
-      }
-      //
-      // function to detect incoming call
-      try {
-        client.onIncomingCall(async (call) => {
-          await client.rejectCall();
-          await client.sendText(call.peerJid, await saudacao() + ",\nDesculpe-me mas não consigo atender sua chamada, se for urgente manda msg de texto, grato.");
-        });
-      } catch (error) {
-        console.log("- Error onIncomingCall:", error.message);
-      }
-      //
-      try {
-        // Listen when client has been added to a group
-        client.onAddedToGroup(async (chatEvent) => {
-          console.log('- Listen when client has been added to a group:', chatEvent.name);
-        });
-      } catch (error) {
-        console.log("- Error onAddedToGroup:", error.message);
-      }
-      //
-      try {
-        // Listen to ack's
-        // See the status of the message when sent.
-        // When receiving the confirmation object, "ack" may return a number, look {@link AckType} for details:
-        // -7 = MD_DOWNGRADE,
-        // -6 = INACTIVE,
-        // -5 = CONTENT_UNUPLOADABLE,
-        // -4 = CONTENT_TOO_BIG,
-        // -3 = CONTENT_GONE,
-        // -2 = EXPIRED,
-        // -1 = FAILED,
-        //  0 = CLOCK,
-        //  1 = SENT,
-        //  2 = RECEIVED,
-        //  3 = READ,
-        //  4 = PLAYED =
-        //
-        client.onAck(async (ack) => {
-          console.log("- Listen to ack", ack.ack);
-          switch (ack.ack) {
-            case -7:
-              console.log("- MD_DOWNGRADE");;
-              break;
-            case -6:
-              console.log("- INACTIVE");;
-              break;
-            case -5:
-              console.log("- CONTENT_UNUPLOADABLE");;
-              break;
-            case -4:
-              console.log("- CONTENT_TOO_BIG");;
-              break;
-            case -3:
-              console.log("- CONTENT_GONE");;
-              break;
-            case -2:
-              console.log("- EXPIRED");;
-              break;
-            case -1:
-              console.log("- FAILED");;
-              break;
-            case 0:
-              console.log("- CLOCK");;
-              break;
-            case 1:
-              console.log("- SENT");;
-              break;
-            case 2:
-              console.log("- RECEIVED");;
-              break;
-            case 3:
-              console.log("- READ");;
-              break;
-            case 4:
-              console.log("- PLAYED");;
-              break;
-            default:
-              console.log("- Listen to ack: N/D");
-          }
-        });
-      } catch (error) {
-        console.log("- Error onAck:", error.message);
-      }
     });
   } //setup
   //
