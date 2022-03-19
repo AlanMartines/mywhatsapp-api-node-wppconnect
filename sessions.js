@@ -1,6 +1,9 @@
 //
 // Configuração dos módulos
 const config = require('./config.global');
+const events = require('./controllers/events');
+const webhooks = require('./controllers/webhooks.js');
+const fnSocket = require('./controllers/fnSockets');
 const fs = require('fs-extra');
 const rimraf = require("rimraf");
 const sleep = require('sleep-promise');
@@ -347,14 +350,16 @@ module.exports = class Sessions {
   //
   // ------------------------------------------------------------------------------------------------------- //
   //
-  static async Start(SessionName, AuthorizationToken, MultiDevice, whatsappVersion) {
+  static async Start(socket, SessionName, AuthorizationToken, MultiDevice, whatsappVersion) {
     Sessions.sessions = Sessions.sessions || []; //start array
 
     var session = Sessions.getSession(SessionName);
 
+		//
     if (session == false) {
       //create new session
-      session = await Sessions.addSesssion(SessionName, AuthorizationToken, MultiDevice, whatsappVersion);
+      session = await Sessions.addSesssion(socket, SessionName, AuthorizationToken, MultiDevice, whatsappVersion);
+			//
     } else if (["CLOSED"].includes(session.state)) {
       //restart session
       console.log("- State: CLOSED");
@@ -369,9 +374,11 @@ module.exports = class Sessions {
       console.log('- State do sistema:', session.state);
       console.log('- Status da sessão:', session.status);
       //
-      session.client = Sessions.initSession(SessionName, AuthorizationToken, MultiDevice, whatsappVersion);
-      Sessions.setup(SessionName);
+      session.client = Sessions.initSession(socket, SessionName, AuthorizationToken, MultiDevice, whatsappVersion);
+      Sessions.setup(socket, SessionName);
+			//
     } else if (["CONFLICT", "UNPAIRED", "UNLAUNCHED", "UNPAIRED_IDLE"].includes(session.state)) {
+			//
       session.state = "CLOSED";
       session.status = 'notLogged';
       session.qrcode = null;
@@ -385,8 +392,11 @@ module.exports = class Sessions {
         console.log("- Client UseHere");
         client.useHere();
       });
-      session.client = Sessions.initSession(SessionName, AuthorizationToken, MultiDevice, whatsappVersion);
+			//
+      session.client = Sessions.initSession(socket, SessionName, AuthorizationToken, MultiDevice, whatsappVersion);
+			//
     } else if (["DISCONNECTED"].includes(session.state)) {
+			//
       //restart session
       session.state = "CLOSE";
       session.status = "notLogged";
@@ -399,9 +409,11 @@ module.exports = class Sessions {
       console.log('- State do sistema:', session.state);
       console.log('- Status da sessão:', session.status);
       //
-      session.client = Sessions.initSession(SessionName, AuthorizationToken, MultiDevice, whatsappVersion);
-      Sessions.setup(SessionName);
+      session.client = Sessions.initSession(socket, SessionName, AuthorizationToken, MultiDevice, whatsappVersion);
+      Sessions.setup(socket, SessionName);
+			//
     } else if (["NOTFOUND"].includes(session.state)) {
+			//
       //restart session
       session.state = "CLOSE";
       session.status = "notLogged";
@@ -414,11 +426,14 @@ module.exports = class Sessions {
       console.log('- State do sistema:', session.state);
       console.log('- Status da sessão:', session.status);
       //
-      session = await Sessions.addSesssion(SessionName, AuthorizationToken, MultiDevice, whatsappVersion);
+      session = await Sessions.addSesssion(socket, SessionName, AuthorizationToken, MultiDevice, whatsappVersion);
+			//
     } else {
+			//
       console.log('- Nome da sessão:', session.name);
       console.log('- State do sistema:', session.state);
       console.log('- Status da sessão:', session.status);
+			//
     }
     //
     await updateStateDb(session.state, session.status, AuthorizationToken);
@@ -428,7 +443,7 @@ module.exports = class Sessions {
   //
   // ------------------------------------------------------------------------------------------------------- //
   //
-  static async addSesssion(SessionName, AuthorizationToken, MultiDevice, whatsappVersion) {
+  static async addSesssion(socket, SessionName, AuthorizationToken, MultiDevice, whatsappVersion) {
     console.log("- Adicionando sessão");
     var newSession = {
       AuthorizationToken: AuthorizationToken,
@@ -443,14 +458,15 @@ module.exports = class Sessions {
       status: 'notLogged',
       message: 'Sistema iniciando e indisponivel para uso',
       attempts: 0,
-      browserSessionToken: null
+      browserSessionToken: null,
+			funcoesSocket: null
     }
     Sessions.sessions.push(newSession);
     console.log("- Nova sessão: " + newSession.state);
 
     //setup session
-    newSession.client = Sessions.initSession(SessionName, AuthorizationToken, MultiDevice, whatsappVersion);
-    Sessions.setup(SessionName);
+    newSession.client = Sessions.initSession(socket, SessionName, AuthorizationToken, MultiDevice, whatsappVersion);
+    Sessions.setup(socket, SessionName);
 
     return newSession;
   } //addSession
@@ -480,7 +496,7 @@ module.exports = class Sessions {
   //
   // ------------------------------------------------------------------------------------------------------- //
   //
-  static async initSession(SessionName, AuthorizationToken, MultiDevice, whatsappVersion) {
+  static async initSession(socket, SessionName, AuthorizationToken, MultiDevice, whatsappVersion) {
     console.log("- Iniciando sessão");
     console.log("- Multi-Device:", MultiDevice);
     var session = Sessions.getSession(SessionName);
@@ -710,53 +726,15 @@ module.exports = class Sessions {
     var session = Sessions.getSession(SessionName);
     await session.client.then(async (client) => {
       try {
-        // State change
-        let time = 0;
-        client.onStateChange(async (state) => {
-          session.state = state;
-          console.log('- Connection status: ', state);
-          clearTimeout(time);
-          if (state == "CONNECTED") {
-            session.state = state;
-            session.status = 'isLogged';
-            session.qrcode = null;
-            //
-          } else if (state == "OPENING") {
-            session.state = state;
-            session.status = 'notLogged';
-            session.qrcode = null;
-            //
-            //await deletaToken(`${tokenPatch}`, `${SessionName}.data.json`);
-            //await deletaCache(`${tokenPatch}`, `WPP-${SessionName}`);
-            //
-          } else if (state == "UNPAIRED") {
-            session.state = state;
-            session.status = 'notLogged';
-            session.qrcode = null;
-            //
-            await deletaToken(`${tokenPatch}`, `${SessionName}.data.json`);
-            await deletaCache(`${tokenPatch}`, `WPP-${SessionName}`);
-            //
-          } else if (state === 'DISCONNECTED' || state === 'SYNCING') {
-            session.state = state;
-            session.qrcode = null;
-            //
-            await deletaToken(`${tokenPatch}`, `${SessionName}.data.json`);
-            await deletaCache(`${tokenPatch}`, `WPP-${SessionName}`);
-            //
-            time = setTimeout(() => {
-              client.close();
-              // process.exit(); //optional function if you work with only one session
-            }, 80000);
-          }
-          //
-          await updateStateDb(session.state, session.status, SessionName);
-          //
-          // force whatsapp take over
-          if ('CONFLICT'.includes(state)) client.useHere();
-          // detect disconnect on whatsapp
-          if ('UNPAIRED'.includes(state)) console.log('- Logout');
-        });
+				//
+				let tokens = await client?.getSessionTokenBrowser();
+				let phone = await client?.getWid();
+				webhooks?.wh_connect(SessionName, 'CONNECTED', phone);
+				events?.receiveMessage(SessionName, client, socket);
+				events?.statusMessage(SessionName, client, socket);
+				events?.statusConnection(SessionName, client, socket);
+				events?.extraEvents(SessionName, client, socket);
+				//
       } catch (error) {
         session.state = "NOTFOUND";
         session.status = "notLogged";

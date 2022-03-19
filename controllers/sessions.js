@@ -1,9 +1,3 @@
-/*
- * @Author: Eduardo Policarpo
- * @contact: +55 43996611437
- * @Date: 2021-05-10 18:09:49
- * @LastEditTime: 2021-06-07 03:18:01
- */
 const urlExists = require("url-exists");
 const fs = require('fs');
 const redis = require('redis');
@@ -13,14 +7,13 @@ const mimeTypes = require('mime-types');
 const fileType = require('file-type');
 const axios = require('axios');
 const chalk = require('chalk');
-const logger = require('../util/logger');
 const boxen = require('boxen');
 
 module.exports = class Sessions {
 
     static session = new Array()
 
-    static isURL(str) {
+    static async isURL(str) {
         var pattern = new RegExp(
             '^(https?:\\/\\/)?' +
             '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|' +
@@ -33,7 +26,218 @@ module.exports = class Sessions {
         return pattern.test(str);
     }
 
-    static checkPath(path) {
+		static async ApiStatus(SessionName) {
+			console.log("- Status");
+			var session = Sessions.getSession(SessionName);
+	
+			if (session) { //só adiciona se não existir
+				if (session.state == "CONNECTED") {
+					return {
+						result: "info",
+						state: session.state,
+						status: session.status,
+						message: "Sistema iniciado e disponivel para uso"
+					};
+				} else if (session.state == "STARTING") {
+					return {
+						result: "info",
+						state: session.state,
+						status: session.status,
+						message: "Sistema iniciando e indisponivel para uso"
+					};
+				} else if (session.state == "QRCODE") {
+					return {
+						result: "warning",
+						state: session.state,
+						status: session.status,
+						message: "Sistema aguardando leitura do QR-Code"
+					};
+				} else {
+					switch (session.status) {
+						case 'isLogged':
+							return {
+								result: "success",
+									state: session.state,
+									status: session.status,
+									message: "Sistema iniciado e disponivel para uso"
+							};
+							break;
+						case 'notLogged':
+							return {
+								result: "error",
+									state: session.state,
+									status: session.status,
+									message: "Sistema indisponivel para uso"
+							};
+							break;
+						case 'browserClose':
+							return {
+								result: "info",
+									state: session.state,
+									status: session.status,
+									message: "Navegador interno fechado"
+							};
+							break;
+						case 'qrReadSuccess':
+							return {
+								result: "success",
+									state: session.state,
+									status: session.status,
+									message: "Verificação do QR-Code feita com sucesso"
+							};
+							break;
+						case 'qrReadFail':
+							return {
+								result: "warning",
+									state: session.state,
+									status: session.status,
+									message: "Falha na verificação do QR-Code"
+							};
+							break;
+						case 'qrRead':
+							return {
+								result: "warning",
+									state: session.state,
+									status: session.status,
+									message: "Sistema aguardando leitura do QR-Code"
+							};
+							break;
+						case 'autocloseCalled':
+							return {
+								result: "info",
+									state: session.state,
+									status: session.status,
+									message: "Navegador interno fechado"
+							};
+							break;
+						case 'desconnectedMobile':
+							return {
+								result: "info",
+									state: session.state,
+									status: session.status,
+									message: "Dispositivo desconectado"
+							};
+							break;
+						case 'deleteToken':
+							return {
+								result: "info",
+									state: session.state,
+									status: session.status,
+									message: "Token de sessão removido"
+							};
+							break;
+						case 'chatsAvailable':
+							return {
+								result: "success",
+									state: session.state,
+									status: session.status,
+									message: "Sistema iniciado e disponivel para uso"
+							};
+							break;
+						case 'deviceNotConnected':
+							return {
+								result: "info",
+									state: session.state,
+									status: session.status,
+									message: "Dispositivo desconectado"
+							};
+							break;
+						case 'serverWssNotConnected':
+							return {
+								result: "info",
+									state: session.state,
+									status: session.status,
+									message: "O endereço wss não foi encontrado"
+							};
+							break;
+						case 'noOpenBrowser':
+							return {
+								result: "error",
+									state: session.state,
+									status: session.status,
+									message: "Não foi encontrado o navegador ou falta algum comando no args"
+							};
+							break;
+						case 'serverClose':
+							return {
+								result: "info",
+									state: session.state,
+									status: session.status,
+									message: "O cliente se desconectou do wss"
+							};
+							break;
+						case 'OPENING':
+							return {
+								result: "warning",
+									state: session.state,
+									status: session.status,
+									message: "'Sistema iniciando e indisponivel para uso'"
+							};
+							break;
+						case 'CONFLICT':
+							return {
+								result: "info",
+									state: session.state,
+									status: session.status,
+									message: "Dispositivo conectado em outra sessão, reconectando"
+							};
+							break;
+						case 'UNPAIRED':
+						case 'UNLAUNCHED':
+						case 'UNPAIRED_IDLE':
+							return {
+								result: "warning",
+									state: session.state,
+									status: session.status,
+									message: "Dispositivo desconectado"
+							};
+							break;
+						case 'DISCONNECTED':
+							return {
+								result: "info",
+									state: session.state,
+									status: session.status,
+									message: "Dispositivo desconectado"
+							};
+							break;
+						case 'SYNCING':
+							return {
+								result: "warning",
+									state: session.state,
+									status: session.status,
+									message: "Dispositivo sincronizando"
+							};
+							break;
+						case 'CLOSED':
+							return {
+								result: "info",
+									state: session.state,
+									status: session.status,
+									message: "O cliente fechou a sessão ativa"
+							};
+							break;
+						default:
+							//
+							return {
+								result: 'error',
+									state: 'NOTFOUND',
+									status: 'notLogged',
+									message: 'Sistema Off-line'
+							};
+							//
+					}
+				}
+			} else {
+				return {
+					result: 'error',
+					state: 'NOTFOUND',
+					status: 'notLogged',
+					message: 'Sistema Off-line'
+				};
+			}
+		} //status
+
+    static async checkPath(path) {
         urlExists(path, (error, exists) => {
             if (exists) {
                 return true
@@ -44,7 +248,7 @@ module.exports = class Sessions {
         })
     }
     // checar ou adiciona um usuario na sessão
-    static checkAddUser(name) {
+    static async checkAddUser(name) {
         var checkFilter = this.session?.filter(order => (order?.session === name)), add = null
         if (!checkFilter?.length) {
             add = {
@@ -57,7 +261,7 @@ module.exports = class Sessions {
     }
 
     // checar se exite o usuario na sessão
-    static checkSession(name) {
+    static async checkSession(name) {
         var checkFilter = this.session?.filter(order => (order?.session === name))
         if (checkFilter?.length) {
             return true
@@ -66,7 +270,7 @@ module.exports = class Sessions {
     }
 
     // pegar index da sessão (chave)
-    static getSessionKey(name) {
+    static async getSessionKey(name) {
         if (this.checkSession(name)) {
             for (var i in this.session) {
                 if (this.session[i]?.session === name) {
@@ -78,7 +282,7 @@ module.exports = class Sessions {
     }
 
     // adicionar informações a sessão 
-    static addInfoSession(name, extend) {
+    static async addInfoSession(name, extend) {
 
         if (this.checkSession(name)) {
             for (var i in this.session) {
@@ -92,7 +296,7 @@ module.exports = class Sessions {
     }
 
     // Remove object na sessão
-    static removeInfoObjects(name, key) {
+    static async removeInfoObjects(name, key) {
         if (this.checkSession(name)) {
             for (var i in this.session) {
                 if (this.session[i]?.session === name) {
@@ -105,7 +309,7 @@ module.exports = class Sessions {
     }
 
     // deletar sessão
-    static deleteSession(name) {
+    static async deleteSession(name) {
         if (this.checkSession(name)) {
             var key = this.getSessionKey(name)
             delete this.session[key]
@@ -115,7 +319,7 @@ module.exports = class Sessions {
     }
 
     // retornar sessão
-    static getSession(name) {
+    static async getSession(name) {
         if (this.checkSession(name)) {
             var key = this.getSessionKey(name)
             return this.session[key]
@@ -124,19 +328,19 @@ module.exports = class Sessions {
     }
 
     // retornar todas
-    static getAll() {
+    static async getAll() {
         return this.session
     }
 
     // checa o client
-    static checkClient(name) {
+    static async checkClient(name) {
         if (this.getSession(name) && this.getSession(name)?.client) {
             return true
         }
         return false
     }
 
-    static getCache(key) {
+    static async getCache(key) {
         return new Promise((resolve, reject) => {
             cache?.get(key, function (err, result) {
                 if (err) {
@@ -147,7 +351,7 @@ module.exports = class Sessions {
         });
     }
 
-    static setCache(key, value) {
+    static async setCache(key, value) {
         return new Promise((resolve, reject) => {
             cache?.set(key, value, 'EX', 3600, (error) => {
                 if (error) {
@@ -207,7 +411,7 @@ module.exports = class Sessions {
         })
     }
 
-    static upToDate(local, remote) {
+    static async upToDate(local, remote) {
         const VPAT = /^\d+(\.\d+){0,2}$/;
         if (!local || !remote || local.length === 0 || remote.length === 0)
             return false;
@@ -229,7 +433,7 @@ module.exports = class Sessions {
         }
     }
 
-    static logUpdateAvailable(current, latest) {
+    static async logUpdateAvailable(current, latest) {
         const newVersionLog =
             `Há uma nova versão da ${chalk.bold(`API MyZAP-Premium`)} ${chalk.gray(current)} ➜  ${chalk.bold.green(latest)}\n` +
             `Atualize sua API executando:\n\n` +
