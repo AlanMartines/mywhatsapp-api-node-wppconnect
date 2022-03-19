@@ -704,6 +704,10 @@ module.exports = class Sessions {
 			}).then(async (client) => {
 
 				let phone = await client?.getWid();
+				let browserSessionToken = await client.getSessionTokenBrowser();
+				console.log("- Token WPPConnect:\n", JSON.parse(JSON.stringify(browserSessionToken)));
+				session.state = "CONNECTED";
+				session.browserSessionToken = browserSessionToken;
 				//
 				webhooks?.wh_connect(Sessions.getSession(SessionName), 'CONNECTED', phone)
 				events?.receiveMessage(Sessions.getSession(SessionName), client, req)
@@ -736,11 +740,6 @@ module.exports = class Sessions {
 			// Levels: 'error', 'warn', 'info', 'http', 'verbose', 'debug', 'silly'
 			// All logs: 'silly'
 			wppconnect.defaultLogger.level = 'silly';
-			//
-			var browserSessionToken = await client.getSessionTokenBrowser();
-			console.log("- Token WPPConnect:\n", JSON.parse(JSON.stringify(browserSessionToken)));
-			session.state = "CONNECTED";
-			session.browserSessionToken = browserSessionToken;
 			//
 			return client;
 		} catch (error) {
