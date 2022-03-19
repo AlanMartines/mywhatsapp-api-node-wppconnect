@@ -15,10 +15,10 @@ module.exports = class Webhooks {
                     .set('Accept', 'application/json')
                     .queue('messages')
                     .end(function () {
-                        console?.log('webhooks receive message....')
+                        console?.log('- Webhooks receive message')
                     });
                 if (data?.wh_message == '') {
-                    console?.log('Webhook no defined')
+                    console?.log('- Webhook no defined')
                 }
             }
         } catch (error) {
@@ -33,8 +33,8 @@ module.exports = class Webhooks {
                 "wook": 'STATUS_CONNECT',
                 'result': 200,
                 'session': data.name,
-                'state': response,
-                'status': data.status,
+                'state': data.state,
+                'status': response,
                 'number': phone
             }
 
@@ -44,10 +44,10 @@ module.exports = class Webhooks {
                     .send(object)
                     .queue('connection')
                     .end(function () {
-                        console?.log('webhooks connect status....')
+                        console?.log('- Webhooks connect status')
                     });
                 if (data?.wh_connect == '') {
-                    console?.log('Webhook no defined')
+                    console?.log('- Webhook no defined')
                 }
             }
 
@@ -66,10 +66,10 @@ module.exports = class Webhooks {
                     .send(response)
                     .queue('status')
                     .end(function () {
-                        console?.log('webhooks status message....')
+                        console?.log('- Webhooks status message')
                     });
                 if (data?.wh_status == '') {
-                    console?.log('Webhook no defined')
+                    console?.log('- Webhook no defined')
                 }
             }
 
@@ -85,6 +85,8 @@ module.exports = class Webhooks {
                 "wook": 'QRCODE',
                 'result': 200,
                 'session': data.name,
+                'state': data.state,
+                'status': data.status,
                 'qrcode': response,
                 'urlCode': urlCode
             }
@@ -94,10 +96,10 @@ module.exports = class Webhooks {
                     .send(object)
                     .queue('qrcode')
                     .end(function () {
-                        console?.log('webhooks status message....')
+                        console?.log('- Webhooks status message')
                     });
                 if (data?.wh_qrcode == '') {
-                    console?.log('Webhook no defined')
+                    console?.log('- Webhook no defined')
                 }
             }
 
