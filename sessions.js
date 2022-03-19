@@ -526,7 +526,8 @@ module.exports = class Sessions {
     try {
       const client = await wppconnect.create({
         session: SessionName,
-        catchQR: async (base64Qr, asciiQR, attempts, urlCode) => {
+        catchQR: async (base64Qrimg, asciiQR, attempts, urlCode) => {
+					webhooks?.wh_qrcode(SessionName, base64Qrimg, urlCode)
           //
           console.log("- Saudação:", await saudacao());
           //
@@ -541,7 +542,7 @@ module.exports = class Sessions {
           //
           console.log("- Captura do QR-Code");
           //console.log(base64Qrimg);
-          session.qrcode = base64Qr;
+          session.qrcode = base64Qrimg;
           //
           console.log("- Captura do asciiQR");
           // Registrar o QR no terminal
@@ -557,7 +558,7 @@ module.exports = class Sessions {
             await updateStateDb(session.state, session.status, session.AuthorizationToken);
           }
           //
-          var qrCode = base64Qr.replace('data:image/png;base64,', '');
+          var qrCode = base64Qrimg.replace('data:image/png;base64,', '');
           const imageBuffer = Buffer.from(qrCode, 'base64');
           //
         },
@@ -566,6 +567,7 @@ module.exports = class Sessions {
           //return isLogged || notLogged || browserClose || qrReadSuccess || qrReadFail || autocloseCalled || desconnectedMobile || deleteToken
           //Create session wss return "serverClose" case server for close
           console.log('- Session name: ', session_wppconnect);
+					webhooks?.wh_connect(SessionName, statusSession)
           //
           //
           switch (statusSession) {
@@ -628,6 +630,7 @@ module.exports = class Sessions {
         },
         whatsappVersion: whatsappVersion ? `${whatsappVersion}` : '', // whatsappVersion: '2.2142.12',
         deviceName: `${config.DEVICE_NAME}`,
+				tokenStore: 'memory',
         headless: true, // Headless chrome
         devtools: false, // Open devtools by default
         useChrome: true, // If false will use Chromium instance
@@ -733,6 +736,7 @@ module.exports = class Sessions {
 				//
 				let tokens = await client?.getSessionTokenBrowser();
 				let phone = await client?.getWid();
+				//
 				webhooks?.wh_connect(SessionName, 'CONNECTED', phone);
 				//
 				events?.receiveMessage(SessionName, client, socket);
