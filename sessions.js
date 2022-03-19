@@ -703,7 +703,6 @@ module.exports = class Sessions {
 				folderNameToken: `${tokenPatch}`, //folder name when saving tokens
 			}).then(async (client) => {
 
-				let tokens = await client?.getSessionTokenBrowser();
 				let phone = await client?.getWid();
 				//
 				webhooks?.wh_connect(Sessions.getSession(SessionName), 'CONNECTED', phone)
