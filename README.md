@@ -455,7 +455,7 @@ cd ApiWPPConnect
 cp .env-example .env
 
 # Criar um contêiner
-docker-compose up --build -d
+docker-compose -f docker-compose.wppconnect.yml up --build -d
 ```
 
 ## Dockerfile

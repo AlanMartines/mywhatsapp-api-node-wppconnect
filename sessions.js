@@ -708,7 +708,7 @@ module.exports = class Sessions {
   //
   static async setup(SessionName) {
     var session = Sessions.getSession(SessionName);
-    await session.client.then(client => {
+    await session.client.then(async (client) => {
       try {
         // State change
         let time = 0;
@@ -780,13 +780,6 @@ module.exports = class Sessions {
           console.log("- Is Group.:", message.isGroupMsg);
           */
           //
-          if (message.body === 'Hi' && message.isGroupMsg === false) {
-            client.sendText(message.from, await saudacao() + ",\nWelcome 🕷").then((result) => {
-              //console.log('- Result: ', result); //retorna um objeto de successo
-            }).catch((erro) => {
-              //console.error('- Error: ', erro); //return um objeto de erro
-            });
-          }
         });
       } catch (error) {
         session.state = "NOTFOUND";
