@@ -1,16 +1,16 @@
 //
 // Configuração dos módulos
-const config = require('./config.global');
-const events = require('./controllers/events');
-const webhooks = require('./controllers/webhooks.js');
-const fnSocket = require('./controllers/fnSockets');
-const fs = require('fs-extra');
-const rimraf = require("rimraf");
-const sleep = require('sleep-promise');
-const {
+import config from './config.global';
+import events from './controllers/events';
+import webhooks from './controllers/webhooks.js';
+import fnSocket from './controllers/fnSockets';
+import fs from 'fs-extra';
+import rimraf from "rimraf";
+import sleep from 'sleep-promise';
+import {
 	forEach
-} = require('p-iteration');
-const PQueue = require("p-queue");
+} from 'p-iteration';
+//const PQueue = require("p-queue");
 if (fs.existsSync('./wppconnect/dist/index.js')) {
 	//
 	console.log("- Wppconnect is patch");
@@ -449,9 +449,9 @@ module.exports = class Sessions {
 			client: false,
 			result: null,
 			tokenPatch: null,
-			state: 'STARTING',
-			status: 'notLogged',
-			message: 'Sistema iniciando e indisponivel para uso',
+			state: null,
+			status: null,
+			message: null,
 			attempts: 0,
 			browserSessionToken: null,
 			funcoesSocket: null,
