@@ -10,7 +10,7 @@ const sleep = require('sleep-promise');
 const {
 	forEach
 } = require('p-iteration');
-const PQueue = require("p-queue");
+import PQueue from "p-queue";
 if (fs.existsSync('./wppconnect/dist/index.js')) {
 	//
 	console.log("- Wppconnect is patch");
