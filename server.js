@@ -188,7 +188,7 @@ FORCE_CONNECTION_USE_HERE=0
 			//
 			app.get('/', function (req, res) {
 				//res.status(200).send('Server WPPConnect is running API. https://github.com/AlanMartines/mywhatsapp-api-node-wppconnect');
-				res.sendFile(path.join(__dirname, '/index.html'));
+				res.sendFile(path.join(__dirname, './views/index.html'));
 			});
 			//
 			app.use("/sistema", sistem);
