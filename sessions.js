@@ -1,15 +1,15 @@
 //
 // Configuração dos módulos
-import config from './config.global';
-import events from './controllers/events';
-import webhooks from './controllers/webhooks.js';
-import fnSocket from './controllers/fnSockets';
-import fs from 'fs-extra';
-import rimraf from "rimraf";
-import sleep from 'sleep-promise';
-import {
+const config = require('./config.global');
+const events = require('./controllers/events');
+const webhooks = require('./controllers/webhooks.js');
+const fnSocket = require('./controllers/fnSockets');
+const fs = require('fs-extra');
+const rimraf = require("rimraf");
+const sleep = require('sleep-promise');
+const {
 	forEach
-} from 'p-iteration';
+} = require('p-iteration');
 //const PQueue = require("p-queue");
 if (fs.existsSync('./wppconnect/dist/index.js')) {
 	//
