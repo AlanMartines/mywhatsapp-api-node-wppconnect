@@ -194,6 +194,15 @@ FORCE_CONNECTION_USE_HERE=0
 			app.use("/sistema", sistem);
 			//
 			//
+			app.get('/Start', function (req, res, next) {
+				res.render('index', {
+					port: config.PORT,
+					host: config.HOST,
+					host_ssl: config.DOMAIN_SSL
+				})
+			});
+			//
+			//
 			const sockets = {};
 			//socket
 			//
