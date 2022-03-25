@@ -10,12 +10,7 @@ const sleep = require('sleep-promise');
 const {
 	forEach
 } = require('p-iteration');
-/*
 const PQueue = require("p-queue");
-const queue = new PQueue({
-	concurrency: 1
-});
-*/
 if (fs.existsSync('./wppconnect/dist/index.js')) {
 	//
 	console.log("- Wppconnect is patch");
@@ -465,6 +460,7 @@ module.exports = class Sessions {
 			wh_qrcode: null,
 			wh_connect: null,
 		}
+		//
 		Sessions.sessions.push(newSession);
 		console.log("- Nova sessão: " + newSession.state);
 
@@ -506,6 +502,11 @@ module.exports = class Sessions {
 		var session = Sessions.getSession(SessionName);
 		session.browserSessionToken = null;
 		session.AuthorizationToken = AuthorizationToken;
+		//
+		session.process = new PQueue({
+			concurrency: 1
+		});
+		//
 		//
 		/*
 			╔═╗┌─┐┌┬┐┬┌─┐┌┐┌┌─┐┬    ╔═╗┬─┐┌─┐┌─┐┌┬┐┌─┐  ╔═╗┌─┐┬─┐┌─┐┌┬┐┌─┐┌┬┐┌─┐┬─┐┌─┐
@@ -560,7 +561,8 @@ module.exports = class Sessions {
 					var qrCode = base64Qrimg.replace('data:image/png;base64,', '');
 					const imageBuffer = Buffer.from(qrCode, 'base64');
 					//
-					webhooks?.wh_qrcode(Sessions.getSession(SessionName), base64Qrimg, urlCode)
+					webhooks?.wh_qrcode(Sessions.getSession(SessionName), base64Qrimg, urlCode);
+					this.exportQR(socket, base64Qrimg, SessionName, attempts);
 					//
 				},
 				statusFind: async (statusSession, session_wppconnect) => {
@@ -742,6 +744,19 @@ module.exports = class Sessions {
 			console.log("- Instância não criada:", error.message);
 		}
 	} //initSession
+	//
+	static async exportQR(socket, qrCode, SessionName, attempts) {
+		qrCode = qrCode.replace('data:image/png;base64,', '');
+		const imageBuffer = Buffer.from(qrCode, 'base64');
+		socket.emit('qrCode',
+			{
+				data: 'data:image/png;base64,' + imageBuffer.toString('base64'),
+				SessionName: SessionName,
+				attempts: attempts,
+				message: 'QRCode Iniciando, Escanei por favor...'
+			}
+		);
+	};
 	//
 	// ------------------------------------------------------------------------------------------------//
 	//
