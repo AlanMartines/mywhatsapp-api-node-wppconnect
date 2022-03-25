@@ -234,7 +234,7 @@ FORCE_CONNECTION_USE_HERE=0
 				}
 
 				if (parseInt(config.START_ALL_SESSIONS) == true) {
-					//let result = await startAll.startAllSessions();
+					let result = await startAll.startAllSessions();
 				}
 			});
 		} catch (error) {
