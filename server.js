@@ -23,7 +23,7 @@ const {
 } = require('yoo-hoo');
 //
 const config = require('./config.global');
-//const startAll = require("./middleware/startup.js");
+const startAll = require("./middleware/startup.js");
 //
 yo('My-WhatsApp', {
 	color: 'rainbow',

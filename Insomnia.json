@@ -1,13 +1,13 @@
 {
 	"_type": "export",
 	"__export_format": 4,
-	"__export_date": "2022-02-15T20:22:59.234Z",
-	"__export_source": "insomnia.desktop.app:v2021.7.2",
+	"__export_date": "2022-03-25T21:22:20.711Z",
+	"__export_source": "insomnia.desktop.app:v2022.2.1",
 	"resources": [
 		{
 			"_id": "req_5e91c166c9f149248750520140b9b364",
 			"parentId": "fld_a1a8e5ed10404b78984573d1756a1179",
-			"modified": 1644956559502,
+			"modified": 1648243319556,
 			"created": 1632079892455,
 			"url": "{{ _.Localhost }}/sistema/Start",
 			"name": "Start - ✔️📝",
@@ -15,7 +15,7 @@
 			"method": "POST",
 			"body": {
 				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"MultiDevice\": true,\n\t\"whatsappVersion\": null\n}"
+				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"MultiDevice\": false,\n\t\"whatsappVersion\": \"\",\n\t\"wh_status\": \"{{ _.WebHook }}\",\n\t\"wh_message\": \"{{ _.WebHook }}\",\n\t\"wh_qrcode\": \"{{ _.WebHook }}\",\n\t\"wh_connect\": \"{{ _.WebHook }}\"\n}"
 			},
 			"parameters": [],
 			"headers": [
@@ -61,7 +61,7 @@
 		{
 			"_id": "req_4a77c326c6354f74b6f4244e9ba31331",
 			"parentId": "fld_a1a8e5ed10404b78984573d1756a1179",
-			"modified": 1644942204228,
+			"modified": 1647374903763,
 			"created": 1632079892467,
 			"url": "{{ _.Localhost }}/sistema/Status",
 			"name": "Status - ✔️📝",
@@ -93,7 +93,7 @@
 		{
 			"_id": "req_561c437873ef4225a7abaa5fe3166c8b",
 			"parentId": "fld_a1a8e5ed10404b78984573d1756a1179",
-			"modified": 1643725181374,
+			"modified": 1647537937606,
 			"created": 1632079892475,
 			"url": "{{ _.Localhost }}/sistema/Close",
 			"name": "Close - ✔️📝",
@@ -125,7 +125,7 @@
 		{
 			"_id": "req_2b48e437f0744b6f8c9e7390fcf18c11",
 			"parentId": "fld_a1a8e5ed10404b78984573d1756a1179",
-			"modified": 1643226588482,
+			"modified": 1647362199295,
 			"created": 1632079892508,
 			"url": "{{ _.Localhost }}/sistema/Logout",
 			"name": "Logout - ✔️📝",
@@ -157,7 +157,7 @@
 		{
 			"_id": "req_c05b57af17134feeb26e61c5b69ec67a",
 			"parentId": "fld_a1a8e5ed10404b78984573d1756a1179",
-			"modified": 1644352899404,
+			"modified": 1647364397332,
 			"created": 1632079892446,
 			"url": "{{ _.Localhost }}/sistema/QRCode",
 			"name": "Read QR-Code - ✔️📝",
@@ -187,9 +187,41 @@
 			"_type": "request"
 		},
 		{
+			"_id": "req_e2861fcbc3c349c6914a3dd0dbb879bd",
+			"parentId": "fld_a1a8e5ed10404b78984573d1756a1179",
+			"modified": 1647540350802,
+			"created": 1647369043144,
+			"url": "{{ _.Localhost }}/sistema/getSession",
+			"name": "getSession - ✔️📝",
+			"description": "",
+			"method": "POST",
+			"body": {
+				"mimeType": "application/json",
+				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\"\n}"
+			},
+			"parameters": [],
+			"headers": [
+				{
+					"id": "pair_a39da786aede4e7e8448cd66b0f352d1",
+					"name": "Content-Type",
+					"value": "application/json"
+				}
+			],
+			"authentication": {},
+			"metaSortKey": -1211746115212.25,
+			"isPrivate": false,
+			"settingStoreCookies": true,
+			"settingSendCookies": true,
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"settingRebuildPath": true,
+			"settingFollowRedirects": "global",
+			"_type": "request"
+		},
+		{
 			"_id": "req_6a29ce642f2f44d29be028e12ba0b7b2",
 			"parentId": "fld_a1a8e5ed10404b78984573d1756a1179",
-			"modified": 1639058050559,
+			"modified": 1647538268908,
 			"created": 1632079892486,
 			"url": "{{ _.Localhost }}/sistema/getSessions",
 			"name": "getSessions - ✔️📝",
@@ -253,9 +285,9 @@
 		{
 			"_id": "req_9f8f06dbf08d4eb29ddbd4ec141b223c",
 			"parentId": "fld_a1a8e5ed10404b78984573d1756a1179",
-			"modified": 1639058050571,
+			"modified": 1648044250647,
 			"created": 1632079892519,
-			"url": "https://painel.connectzap.com.br/sistema/QRCode.php",
+			"url": "https://painel.connectzap.com.br/sistema/tst.php",
 			"name": "RotaTeste - ✔️✔️",
 			"description": "",
 			"method": "POST",
@@ -285,7 +317,7 @@
 		{
 			"_id": "req_eb093f347e3348adaca4834b52bcf891",
 			"parentId": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
-			"modified": 1639058050601,
+			"modified": 1647366515440,
 			"created": 1632079892655,
 			"url": "{{ _.Localhost }}/sistema/sendContactVcard",
 			"name": "sendContactVcard - ✔️📝",
@@ -329,7 +361,7 @@
 		{
 			"_id": "req_fc6e9bfd3475482787e60ba8a27a807c",
 			"parentId": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
-			"modified": 1643130714837,
+			"modified": 1647364460156,
 			"created": 1632079892667,
 			"url": "{{ _.Localhost }}/sistema/sendContactVcardList",
 			"name": "sendContactVcardList - ✔️📝",
@@ -388,7 +420,7 @@
 		{
 			"_id": "req_d048baba45f34c41abd98be0c00c1c40",
 			"parentId": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
-			"modified": 1643720851513,
+			"modified": 1647368671049,
 			"created": 1632079892555,
 			"url": "{{ _.Localhost }}/sistema/sendText",
 			"name": "sendText - ✔️📝",
@@ -1095,7 +1127,7 @@
 		{
 			"_id": "req_681a007d858345d9a1b94c787eda1e1b",
 			"parentId": "fld_ed56f852c9754e85bd49defffb4a48b5",
-			"modified": 1639058050558,
+			"modified": 1647364408575,
 			"created": 1632079892881,
 			"url": "{{ _.Localhost }}/sistema/getAllContacts",
 			"name": "getAllContacts - ✔️📝",
@@ -2734,6 +2766,29 @@
 			"_type": "request"
 		},
 		{
+			"_id": "env_6c08fbf64b094b2a95e78c46dc5be1aa",
+			"parentId": "wrk_43f3024baba5440caec06b068fd61b21",
+			"modified": 1646228842640,
+			"created": 1632079892396,
+			"name": "Base Environment",
+			"data": {
+				"Localhost": "http://localhost:9001",
+				"AuthorizationToken": "jghgsgjkdgasjdgjasg",
+				"SessionName": "BotWhats"
+			},
+			"dataPropertyOrder": {
+				"&": [
+					"Localhost",
+					"AuthorizationToken",
+					"SessionName"
+				]
+			},
+			"color": null,
+			"isPrivate": false,
+			"metaSortKey": 1602158640367,
+			"_type": "environment"
+		},
+		{
 			"_id": "jar_81749637ae1959588fc760d2e1e5cc3e1b66882a",
 			"parentId": "wrk_43f3024baba5440caec06b068fd61b21",
 			"modified": 1639058052778,
@@ -2755,22 +2810,30 @@
 		{
 			"_id": "env_3b4420d303db410785d296e7d20642f7",
 			"parentId": "env_6c08fbf64b094b2a95e78c46dc5be1aa",
-			"modified": 1644956526941,
+			"modified": 1648243319068,
 			"created": 1632079892400,
 			"name": "Connect API",
 			"data": {
-				"Localhost": "https://localhost",
-				"AuthorizationToken": "2OCSA1GRAFEQVRRVPCKA",
-				"SessionName": "2OCSA1GRAFEQVRRVPCKA"
+				"encript": "http://",
+				"domain": "localhost",
+				"port": "9001",
+				"Localhost": "{{ _.encript }}{{ _.domain }}:{{ _.port }}",
+				"WebHook": "",
+				"AuthorizationToken": "786486865",
+				"SessionName": "Name"
 			},
 			"dataPropertyOrder": {
 				"&": [
+					"encript",
+					"domain",
+					"port",
 					"Localhost",
+					"WebHook",
 					"AuthorizationToken",
 					"SessionName"
 				]
 			},
-			"color": null,
+			"color": "#05ff16",
 			"isPrivate": false,
 			"metaSortKey": 1620150996022,
 			"_type": "environment"
@@ -2778,22 +2841,30 @@
 		{
 			"_id": "env_a91aa888ceaa4c79a0f0a638eee28cd4",
 			"parentId": "env_6c08fbf64b094b2a95e78c46dc5be1aa",
-			"modified": 1644956525294,
+			"modified": 1648243312391,
 			"created": 1637712392376,
 			"name": "Connect API (Homol)",
 			"data": {
-				"Localhost": "http://localhost/2OCSA1GRAFEQVRRVPCKA",
-				"AuthorizationToken": "2OCSA1GRAFEQVRRVPCKA",
-				"SessionName": "2OCSA1GRAFEQVRRVPCKA"
+				"encript": "http://",
+				"domain": "localhost",
+				"port": "9001",
+				"Localhost": "{{ _.encript }}{{ _.domain }}:{{ _.port }}",
+				"WebHook": "",
+				"AuthorizationToken": "786486865",
+				"SessionName": "Name"
 			},
 			"dataPropertyOrder": {
 				"&": [
+					"encript",
+					"domain",
+					"port",
 					"Localhost",
+					"WebHook",
 					"AuthorizationToken",
 					"SessionName"
 				]
 			},
-			"color": null,
+			"color": "#ff0000",
 			"isPrivate": false,
 			"metaSortKey": 1620424945379.75,
 			"_type": "environment"
