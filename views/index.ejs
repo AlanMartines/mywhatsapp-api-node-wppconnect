@@ -29,7 +29,7 @@
 	<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css" />
 	<link rel="stylesheet" type="text/css" href="fontawesome-free/css/all.min.css" />
 	<link rel="stylesheet" type="text/css" href="lobibox/css/lobibox.min.css" />
-	<link rel="stylesheet" type="text/css" href="sweetalert2/css/sweetalert2.min.css"/>
+	<link rel="stylesheet" type="text/css" href="sweetalert2/css/sweetalert2.min.css" />
 	<!--- --------------------------------------------------------------------------------------------------------------------------- --->
 </head>
 
@@ -70,17 +70,11 @@
 						<span id="description">Sistema não iniciado</span>
 					</div>
 				</div>
+
 				<div class="row justify-content-center align-items-center">
+					<form class="form-signin text-center" id="start-form" method="post" action="javascript:void(0)">
+						<div class="col-md-6 text-center mx-auto">
 
-					<div class="col-md-6 text-center mx-auto">
-						<img class="img-fluid" id="imageQrcode" name="imageQrcode" src="imagens/body/readqrcode.png" width="250px"
-							alt="qr-code">
-						<br></p>
-						<span id="description">Sistema não iniciado</span>
-					</div>
-
-					<div class="col-md-6 text-center mx-auto">
-						<form class="form-signin text-center" id="start-form" method="post" action="javascript:void(0)">
 
 							<div class="form-group col-md-8">
 								<label for="AuthorizationToken" class="col-form-label">Authorization Token:</label>
@@ -223,10 +217,10 @@
 									<button type="submit" name="send_form" id="send_form" class="btn btn-primary">Iniciar</button>
 								</div>
 							</div>
-							
-						</form>
-					</div>
 
+
+						</div>
+					</form>
 				</div>
 			</div>
 		</div>
@@ -374,14 +368,14 @@
 							$("#description").html("Sistema iniciado com sucesso.");
 
 							window.scrollTo(0, 0);
-						} else if(response.state == 'DISCONNECTED'){
+						} else if (response.state == 'DISCONNECTED') {
 							$('#imageQrcode').attr("src", 'imagens/body/error.png');
 							$("#description").html("Sistema desconectado");
 
 							window.scrollTo(0, 0);
-						}else if(response.state == 'STARTING'){
+						} else if (response.state == 'STARTING') {
 							$('#imageQrcode').attr("src", 'imagens/body/loading.gif');
-						  $("#description").html("Por favor aguarde, sistema iniciando.");
+							$("#description").html("Por favor aguarde, sistema iniciando.");
 
 							window.scrollTo(0, 0);
 						}
@@ -406,7 +400,7 @@
 		socket.on('qrCode', (qrCode) => {
 			let SessionName = $('#SessionName').val();
 			if (SessionName === qrCode.SessionName) {
-				$("#description").html("Por favor, efetue a leitura do qr code informado, tentativa "+qrCode.attempts);
+				$("#description").html("Por favor, efetue a leitura do qr code informado, tentativa " + qrCode.attempts);
 				$('#imageQrcode').attr("src", qrCode.data);
 			}
 		});
@@ -417,28 +411,28 @@
 			console.log(update);
 			//
 			if (SessionName == update.SessionName) {
-			if (update.status == 'isLogged' || update.status  == 'qrReadSuccess' || update.status  == 'chatsAvailable' || update.status  == 'inChat') {
-				//
-				$('#imageQrcode').attr("src", 'imagens/body/ok.png');
-        $("#description").html("Sistema iniciado com sucesso.");
-				//
-			} else if(update.status == 'qrReadError'){
-				//
-				$('#imageQrcode').attr("src", 'imagens/body/error.png');
-        $("#description").html("Erro ao efetuar leitura do qr code ou não lido.");
-				//
-			} else if(update.status == 'autocloseCalled' || update.status == 'browserClose'){
-				//
-				$('#imageQrcode').attr("src", 'imagens/body/error.png');
-        $("#description").html("Erro ao efetuar leitura do qr code, navegador fechado.");
-				//
-			} else if(update.status == 'desconnectedMobile'){
-				//
-				$('#imageQrcode').attr("src", 'imagens/body/error.png');
-        $("#description").html("Dispositivo desconectado.");
-				//
-			} 
-		}
+				if (update.status == 'isLogged' || update.status == 'qrReadSuccess' || update.status == 'chatsAvailable' || update.status == 'inChat') {
+					//
+					$('#imageQrcode').attr("src", 'imagens/body/ok.png');
+					$("#description").html("Sistema iniciado com sucesso.");
+					//
+				} else if (update.status == 'qrReadError') {
+					//
+					$('#imageQrcode').attr("src", 'imagens/body/error.png');
+					$("#description").html("Erro ao efetuar leitura do qr code ou não lido.");
+					//
+				} else if (update.status == 'autocloseCalled' || update.status == 'browserClose') {
+					//
+					$('#imageQrcode').attr("src", 'imagens/body/error.png');
+					$("#description").html("Erro ao efetuar leitura do qr code, navegador fechado.");
+					//
+				} else if (update.status == 'desconnectedMobile') {
+					//
+					$('#imageQrcode').attr("src", 'imagens/body/error.png');
+					$("#description").html("Dispositivo desconectado.");
+					//
+				}
+			}
 			//
 		});
 	</script>
