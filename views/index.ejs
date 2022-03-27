@@ -76,17 +76,15 @@
 
 					<div class="col-md-6 text-center mx-auto">
 						<div class="form-group col-md-8">
-							<label for="AuthorizationToken" class="col-form-label">Authorization Token</label>
-							<span class="r">*</span>
-							<div class="input-group">
-								<div class="input-group-append">
-									<span class="input-group-text">
-										<i class="fas fa-shield-alt"></i>
-									</span>
-								</div>
-								<input type="text" class="rounded form-control" id="AuthorizationToken" name="AuthorizationToken"
+								<div class="form-group input-group">
+								<span class="input-group-addon"><i class="fas fa-shield-alt"></i></span>
+								<label class="has-float-label">
+									<input type="text" class="rounded form-control" id="AuthorizationToken" name="AuthorizationToken"
 									placeholder="Authorization Token" />
+									<span>Authorization Token <span class="r">*</span></span>
+								</label>
 							</div>
+
 							<span class="help-block r" id="error"></span>
 						</div>
 
