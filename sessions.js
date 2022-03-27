@@ -516,7 +516,7 @@ module.exports = class Sessions {
 			╚═╝┴   ┴ ┴└─┘┘└┘┴ ┴┴─┘  ╚═╝┴└─└─┘┴ ┴ ┴ └─┘  ╩  ┴ ┴┴└─┴ ┴┴ ┴└─┘ ┴ └─┘┴└─└─┘
 	 */
 		//
-		if (MultiDevice == true) {
+		if (MultiDevice == true || MultiDevice == 'true') {
 			//
 			await deletaToken(`${tokenPatch}`, `${SessionName}.data.json`);
 			//
