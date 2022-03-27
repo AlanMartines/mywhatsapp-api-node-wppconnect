@@ -718,11 +718,15 @@ module.exports = class Sessions {
 				events?.statusMessage(Sessions.getSession(SessionName), client, socket);
 				events?.statusConnection(Sessions.getSession(SessionName), client, socket);
 				//
-				console?.log({
-					"result": 200,
-					"status": "CONNECTED",
-					"response": `Sessão criada com sucesso`
-				});
+				console.log(`Sessão criada com sucesso`);
+				//
+				socket.emit('status',
+					{
+						status: session.status,
+						SessionName: SessionName
+					}
+				);
+				//
 				return client;
 			}).catch(async (error) => {
 				session.state = "NOTFOUND";
@@ -730,6 +734,14 @@ module.exports = class Sessions {
 				session.qrcode = null;
 				session.attempts = 0;
 				session.message = 'Sistema desconectado';
+				console.log("- Instância não criada");
+				//
+				socket.emit('status',
+					{
+						status: session.status,
+						SessionName: SessionName
+					}
+				);
 				//
 			});
 			// Levels: 'error', 'warn', 'info', 'http', 'verbose', 'debug', 'silly'
@@ -744,6 +756,13 @@ module.exports = class Sessions {
 			session.attempts = 0;
 			session.message = 'Sistema desconectado';
 			console.log("- Instância não criada:", error.message);
+			//
+			socket.emit('status',
+				{
+					status: session.state,
+					SessionName: SessionName
+				}
+			);
 		}
 	} //initSession
 	//
@@ -755,7 +774,7 @@ module.exports = class Sessions {
 				data: 'data:image/png;base64,' + imageBuffer.toString('base64'),
 				SessionName: SessionName,
 				attempts: attempts,
-				message: 'QRCode Iniciando, Escanei por favor...'
+				message: 'QRCode Iniciado, Escanei por favor...'
 			}
 		);
 	};
