@@ -497,7 +497,7 @@ docker run -d -p 9001:9001 --name ApiWPPconnect \
 	-e MYSQL_TIMEZONE='-04:00' \
 	-e BROWSER_WSENDPOINT= \
 	-e START_ALL_SESSIONS=0 \
-	-e FORCE_CONNECTION_USE_HERE=0
+	-e FORCE_CONNECTION_USE_HERE=0 \
   alanmartines/mywhatsapp-api-node-wppconnect:1.0.0
 ```
 
