@@ -1,88 +1,54 @@
-.form-control[readonly] {
-  background-color: #fff;
-}
-
-.textOnInput {
+.label-float {
   position: relative;
+  padding-top: 13px;
 }
 
-.textOnInput label {
-  position: absolute;
-  top: -15px;
-  left: 13px;
-  padding: 2px;
-  z-index: 1;
-}
-
-.textOnInput label:after {
-  content: " ";
-  background-color: #fff;
-  width: 100%;
-  height: 13px;
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  z-index: -1;
-}
-
-label {
-  font-size: 16px;
-  font-weight: 500;
-  display: inline-block;
-  margin-bottom: 0.5rem;
-}
-
-.form-control {
-  box-shadow: none !important;
-}
-
-fieldset.scheduler-border {
+.label-float input {
   border: 1px solid lightgrey;
-  /*border: 1px groove #ddd !important;*/
-  padding: 0 1.4em 1.4em 1.4em !important;
-  margin: 0 0 1.5em 0 !important;
-  -webkit-box-shadow: 0px 0px 0px 0px #000;
-  box-shadow: 0px 0px 0px 0px #000;
   border-radius: 5px;
+  outline: none;
+  min-width: 250px;
+  padding: 15px 20px;
+  font-size: 16px;
+  transition: all 0.1s linear;
+  -webkit-transition: all 0.1s linear;
+  -moz-transition: all 0.1s linear;
+  -webkit-appearance: none;
 }
 
-legend.scheduler-border {
-  font-size: 1.2em !important;
-  font-weight: bold !important;
-  text-align: left !important;
-  width: auto;
-  padding: 0 10px;
-  border-bottom: none;
+.label-float input:focus {
+  border: 2px solid #3951b2;
 }
 
-form button {
-  background: #4666f7;
-  padding: 10px;
-  border: 0;
-  margin-top: 20px;
-  color: #fff;
-  border-radius: 5px;
-  outline: 0;
-  cursor: pointer;
-  transition-duration: 200ms;
-  box-shadow: 0 2.8px 2.2px rgba(70, 102, 247, 0.034),
-    0 6.7px 5.3px rgba(70, 102, 247, 0.048),
-    0 12.5px 10px rgba(70, 102, 247, 0.06),
-    0 22.3px 17.9px rgba(70, 102, 247, 0.072),
-    0 41.8px 33.4px rgba(70, 102, 247, 0.086),
-    0 100px 80px rgba(70, 102, 247, 0.12);
+.label-float input::placeholder {
+  color: transparent;
 }
 
-form button:hover {
-  background: #263fb1;
-  transition-duration: 200ms;
+.label-float label {
+  pointer-events: none;
+  position: absolute;
+  top: calc(50% - 8px);
+  left: 15px;
+  transition: all 0.1s linear;
+  -webkit-transition: all 0.1s linear;
+  -moz-transition: all 0.1s linear;
+  background-color: white;
+  padding: 5px;
+  box-sizing: border-box;
 }
 
-form button:disabled {
-  background: #5b5e78;
-  cursor: not-allowed;
+.label-float input:required:invalid + label {
+  color: red;
 }
-
-:placeholder-shown {
-  font-size: small;
+.label-float input:focus:required:invalid {
+  border: 2px solid red;
+}
+.label-float input:required:invalid + label:before {
+  content: "*";
+}
+.label-float input:focus + label,
+.label-float input:not(:placeholder-shown) + label {
+  font-size: 13px;
+  top: 0;
+  color: #3951b2;
 }

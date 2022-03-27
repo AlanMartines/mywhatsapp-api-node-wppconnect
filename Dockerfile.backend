@@ -80,14 +80,14 @@ RUN cd /home/ && \
 RUN cd /home/ApiWPPConnect/ && \
 	npm install --allow-root --unsafe-perm=true
 
-#RUN cd /home/ApiWPPConnect/ && \
-#	git clone https://github.com/wppconnect-team/wppconnect.git
+RUN cd /home/ApiWPPConnect/ && \
+	git clone https://github.com/wppconnect-team/wppconnect.git
 
-#RUN cd /home/ApiWPPConnect/wppconnect && \
-#	npm install --allow-root --unsafe-perm=true
+RUN cd /home/ApiWPPConnect/wppconnect && \
+	npm install --allow-root --unsafe-perm=true
 
-#RUN cd /home/ApiWPPConnect/wppconnect && \
-#	npm run build
+RUN cd /home/ApiWPPConnect/wppconnect && \
+	npm run build
 
 WORKDIR /home/ApiWPPConnect
 
