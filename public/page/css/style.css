@@ -77,12 +77,15 @@ body {
 .label-float input:required:invalid + label {
   color: red;
 }
+
 .label-float input:focus:required:invalid {
   border: 2px solid red;
 }
+
 .label-float input:required:invalid + label:before {
   content: "*";
 }
+
 .label-float input:focus + label,
 .label-float input:not(:placeholder-shown) + label {
   font-size: 13px;
