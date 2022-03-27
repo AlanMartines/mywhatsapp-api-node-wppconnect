@@ -734,7 +734,7 @@ module.exports = class Sessions {
 				session.qrcode = null;
 				session.attempts = 0;
 				session.message = 'Sistema desconectado';
-				console.log("- Instância não criada");
+				console.log("- Sessão não criada");
 				//
 				socket.emit('status',
 					{
