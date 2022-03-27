@@ -718,7 +718,7 @@ module.exports = class Sessions {
 				events?.statusMessage(Sessions.getSession(SessionName), client, socket);
 				events?.statusConnection(Sessions.getSession(SessionName), client, socket);
 				//
-				console.log(`Sessão criada com sucesso`);
+				console.log("- Sessão criada com sucesso");
 				//
 				socket.emit('status',
 					{
