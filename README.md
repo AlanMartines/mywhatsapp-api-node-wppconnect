@@ -482,8 +482,9 @@ docker run -d -p 9001:9001 --name ApiWPPconnect \
 	-e NODE_EN=production \
 	-e HOST=0.0.0.0 \
 	-e PORT=9001 \
+	-e DOMAIN_SSL= \
 	-e VIEW_QRCODE_TERMINAL=0 \
-	-e DEVICE_NAME='My Whatsapp' \
+	-e DEVICE_NAME='My-Whatsapp' \
 	-e AUTO_CLOSE=60000 \
 	-e JWT_SECRET=09f26e402586e2faa8da4c98a35f1b20d6b033c60 \
 	-e VALIDATE_MYSQL=0 \
@@ -495,6 +496,8 @@ docker run -d -p 9001:9001 --name ApiWPPconnect \
 	-e MYSQL_DIALECT=mysql \
 	-e MYSQL_TIMEZONE='-04:00' \
 	-e BROWSER_WSENDPOINT= \
+	-e START_ALL_SESSIONS=0 \
+	-e FORCE_CONNECTION_USE_HERE=0
   alanmartines/mywhatsapp-api-node-wppconnect:1.0.0
 ```
 
