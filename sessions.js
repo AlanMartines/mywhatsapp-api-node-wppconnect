@@ -679,7 +679,7 @@ module.exports = class Sessions {
 					'--disable-dev-shm-usage',
 					'--disable-gl-drawing-for-tests',
 					'--incognito',
-					'--user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.105 Safari/537.36',
+					//'--user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.105 Safari/537.36',
 					//Outros
 					'--disable-web-security',
 					'--aggressive-cache-discard',
@@ -697,8 +697,8 @@ module.exports = class Sessions {
 					'--safebrowsing-disable-auto-update',
 				],
 				puppeteerOptions: {
-					userDataDir: MultiDevice == true ? `${tokenPatch}/WPP-${SessionName}` : undefined, // or your custom directory
-					browserWSEndpoint: `${config.BROWSER_WSENDPOINT}`,
+					userDataDir: `${tokenPatch}/WPP-${SessionName}`, // or your custom directory
+					browserWSEndpoint: config.BROWSER_WSENDPOINT ? `${config.BROWSER_WSENDPOINT}` : undefined,
 				},
 				disableWelcome: false, // Option to disable the welcoming message which appears in the beginning
 				updatesLog: true, // Logs info updates automatically in terminal
