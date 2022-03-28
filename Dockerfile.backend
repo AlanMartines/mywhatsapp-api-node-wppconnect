@@ -89,6 +89,8 @@ RUN cd /home/ApiWPPConnect/wppconnect && \
 RUN cd /home/ApiWPPConnect/wppconnect && \
 	npm run build
 
+RUN touch /home/ApiWPPConnect/.env
+
 WORKDIR /home/ApiWPPConnect
 
 EXPOSE 9001/tcp
