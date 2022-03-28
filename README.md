@@ -146,7 +146,7 @@ apk add chromium chromium-chromedriver
 cd ~
 
 # Recuperar o script de instalação para sua versão de preferência
-curl -sL https://deb.nodesource.com/setup_14.x | sudo bash -
+curl -sL https://deb.nodesource.com/setup_16.x | sudo bash -
 
 # Instalar o pacote Node.js
 sudo apt install -y git nodejs yarn gcc g++ make vim curl python python3
@@ -164,7 +164,7 @@ sudo apt autoremove -y
 cd ~
 
 # Recuperar o script de instalação para sua versão de preferência
-curl -sL https://rpm.nodesource.com/setup_14.x | sudo -E bash -
+curl -sL https://rpm.nodesource.com/setup_16.x | sudo -E bash -
 
 # Instalar o pacote Node.js
 sudo yum install -y git nodejs yarn gcc g++ tar make vim curl python python3
