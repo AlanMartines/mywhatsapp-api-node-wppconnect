@@ -230,6 +230,7 @@ router.post("/Close", upload.none(''), verifyToken.verify, async (req, res, next
 			case 'isLogged':
 			case 'chatsAvailable':
 			case 'qrRead':
+			case 'notLogged':
 				//
 				var closeSession = await Sessions.closeSession(removeWithspace(req.body.SessionName));
 				res.setHeader('Content-Type', 'application/json');
