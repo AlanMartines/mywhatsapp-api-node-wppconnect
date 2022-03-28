@@ -29,7 +29,7 @@
 	<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css" />
 	<link rel="stylesheet" type="text/css" href="fontawesome-free/css/all.min.css" />
 	<link rel="stylesheet" type="text/css" href="lobibox/css/lobibox.min.css" />
-	<link rel="stylesheet" type="text/css" href="sweetalert2/css/sweetalert2.min.css"/>
+	<link rel="stylesheet" type="text/css" href="sweetalert2/css/sweetalert2.min.css" />
 	<!--- --------------------------------------------------------------------------------------------------------------------------- --->
 </head>
 
@@ -64,81 +64,82 @@
 				<div class="row justify-content-center align-items-center">
 
 					<div class="col-md-6 text-center mx-auto">
-						<img class="img-fluid" id="imageQrcode" name="imageQrcode" src="imagens/body/readqrcode.png" width="264px" height="264px" alt="qr-code">
+						<img class="img-fluid" id="imageQrcode" name="imageQrcode" src="imagens/body/readqrcode.png" width="264px"
+							height="264px" alt="qr-code">
 						<br></p>
 						<span id="description">Sistema não iniciado</span>
 					</div>
 				</div>
 				<hr class="solid">
 				<form class="form-signin text-center" id="start-form" method="post" action="javascript:void(0)">
-				<div class="row justify-content-center align-items-center">
+					<div class="row justify-content-center align-items-center">
 
-					<div class="col-md-6 text-center mx-auto">
-						<div class="form-group col-md-12">
-							<label for="AuthorizationToken" class="col-form-label">Authorization Token</label>
-							<span class="r">*</span>
-							<div class="input-group">
-								<div class="input-group-append">
-									<span class="input-group-text">
-										<i class="fas fa-shield-alt"></i>
-									</span>
+						<div class="col-md-6 text-center mx-auto">
+							<div class="form-group col-md-12">
+								<label for="AuthorizationToken" class="col-form-label">Authorization Token</label>
+								<span class="r">*</span>
+								<div class="input-group">
+									<div class="input-group-append">
+										<span class="input-group-text">
+											<i class="fas fa-shield-alt"></i>
+										</span>
+									</div>
+									<input type="text" class="rounded form-control" id="AuthorizationToken" name="AuthorizationToken"
+										placeholder="Authorization Token" />
 								</div>
-								<input type="text" class="rounded form-control" id="AuthorizationToken" name="AuthorizationToken"
-									placeholder="Authorization Token" />
+
 							</div>
-							
+
+							<div class="form-group col-md-12">
+								<label for="SessionName" class="col-form-label">Session Name</label>
+								<span class="r">*</span>
+								<div class="input-group">
+									<div class="input-group-append">
+										<span class="input-group-text">
+											<i class="fas fa-user-tie"></i>
+										</span>
+									</div>
+									<input type="text" class="rounded form-control" id="SessionName" name="SessionName"
+										placeholder="Session Name" />
+								</div>
+
+							</div>
+
+							<div class="form-group col-md-12">
+								<label for="MultiDevice" class="col-form-label">Multi-Device</label>
+								<span class="r">*</span>
+								<div class="input-group">
+									<div class="input-group-append">
+										<span class="input-group-text">
+											<i class="fas fa-mobile-alt"></i>
+										</span>
+									</div>
+									<select class="rounded form-control" name="MultiDevice" id="MultiDevice">
+										<option value="" selected="selected">-- Selecione --</option>
+										<option value="true">true</option>
+										<option value="false">false</option>
+									</select>
+								</div>
+
+							</div>
+
+							<div class="form-group col-md-12">
+								<label for="whatsappVersion" class="col-form-label">Whatsapp Version</label>
+								<div class="input-group">
+									<div class="input-group-append">
+										<span class="input-group-text">
+											<i class="fas fa-code-branch"></i>
+										</span>
+									</div>
+									<input type="text" class="rounded form-control" id="whatsappVersion" name="whatsappVersion"
+										placeholder="Whatsapp Version Ex.: 2.2204.13" />
+								</div>
+
+							</div>
+
 						</div>
 
-						<div class="form-group col-md-12">
-							<label for="SessionName" class="col-form-label">Session Name</label>
-							<span class="r">*</span>
-							<div class="input-group">
-								<div class="input-group-append">
-									<span class="input-group-text">
-										<i class="fas fa-user-tie"></i>
-									</span>
-								</div>
-								<input type="text" class="rounded form-control" id="SessionName" name="SessionName"
-									placeholder="Session Name" />
-							</div>
-							
-						</div>
-
-						<div class="form-group col-md-12">
-							<label for="MultiDevice" class="col-form-label">Multi-Device</label>
-							<span class="r">*</span>
-							<div class="input-group">
-								<div class="input-group-append">
-									<span class="input-group-text">
-										<i class="fas fa-mobile-alt"></i>
-									</span>
-								</div>
-								<select class="rounded form-control" name="MultiDevice" id="MultiDevice">
-									<option value="" selected="selected">-- Selecione --</option>
-									<option value="true">true</option>
-									<option value="false">false</option>
-								</select>
-							</div>
-							
-						</div>
-
-						<div class="form-group col-md-12">
-							<label for="whatsappVersion" class="col-form-label">Whatsapp Version</label>
-							<div class="input-group">
-								<div class="input-group-append">
-									<span class="input-group-text">
-										<i class="fas fa-code-branch"></i>
-									</span>
-								</div>
-								<input type="text" class="rounded form-control" id="whatsappVersion" name="whatsappVersion"
-									placeholder="Whatsapp Version Ex.: 2.2204.13" />
-							</div>
-							
-						</div>			
-
-				</div>
-
-					<div class="col-md-6 text-center mx-auto">
+						<div class="col-md-6 text-center mx-auto">
 
 							<div class="form-group col-md-12">
 								<label for="wh_status" class="col-form-label">Web Hook Status</label>
@@ -151,7 +152,7 @@
 									<input type="text" class="rounded form-control" id="wh_status" name="wh_status"
 										placeholder="Web Hook Status" />
 								</div>
-								
+
 							</div>
 
 							<div class="form-group col-md-12">
@@ -165,7 +166,7 @@
 									<input type="text" class="rounded form-control" id="wh_message" name="wh_message"
 										placeholder="Web Hook Message" />
 								</div>
-								
+
 							</div>
 
 							<div class="form-group col-md-12">
@@ -179,7 +180,7 @@
 									<input type="text" class="rounded form-control" id="wh_qrcode" name="wh_qrcode"
 										placeholder="Web Hook Qr-code" />
 								</div>
-								
+
 							</div>
 
 							<div class="form-group col-md-12">
@@ -193,26 +194,26 @@
 									<input type="text" class="rounded form-control" id="wh_connect" name="wh_connect"
 										placeholder="Web Hook Connect" />
 								</div>
-								
-							</div>
-					</div>
-				</div>
-				<hr class="solid">
-				<div class="row justify-content-center align-items-center">
-					<div class="col-md-12 text-center mx-auto">
-						<div class="form-group col-md-12">
-							<div class="text-center">
-								<span style="font-size: 11px">
-									<span class="r">*</span>
-									<i>Campos de preenchimento obrigat&oacute;rio</i>
-								</span>
-								</p>
-								<button type="submit" name="send_form" id="send_form" class="btn btn-primary">Iniciar</button>
+
 							</div>
 						</div>
 					</div>
-				</div>
-			</form>
+					<hr class="solid">
+					<div class="row justify-content-center align-items-center">
+						<div class="col-md-12 text-center mx-auto">
+							<div class="form-group col-md-12">
+								<div class="text-center">
+									<span style="font-size: 11px">
+										<span class="r">*</span>
+										<i>Campos de preenchimento obrigat&oacute;rio</i>
+									</span>
+									</p>
+									<button type="submit" name="send_form" id="send_form" class="btn btn-primary">Iniciar</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
 			</div>
 		</div>
 	</div>
@@ -270,166 +271,182 @@
 		let host_ssl = '<%=host_ssl %>';
 		let port = '<%=port %>';
 		url = host_ssl == '' ? `http://${host}:${port}` : `https://${host_ssl}`;
+		let validate_mysql = '<%=validate_mysql %>';
 		let d = new Date();
 		let year = d.getFullYear();
 		$("#year").text(year);
-		const socket = io(url + '/', { transports: ['websocket'] });
 		//
-		$("#description").html("Sistema não iniciado");
-		//
-		$("#start-form").validate({
-			rules: {
-				AuthorizationToken: {
-					required: true
-				},
-				SessionName: {
-					required: true
-				},
-				MultiDevice: {
-					required: true
-				},
-				whatsappVersion: {
-					required: false
-				}
-			},
-			messages: {
-				AuthorizationToken: {
-					required: "Por favor, Informe seu token."
-				},
-				SessionName: {
-					required: "Por favor, Informe o nome da sessão."
-				},
-				MultiDevice: {
-					required: "Por favor, Selecione uma opção."
-				},
-				whatsappVersion: {
-					required: "Por favor, Informe uma versão."
-				}
-			},
-			errorPlacement: function (error, element) {
-				$(element).closest('.form-group').find('.help-block').html(error.html());
-			},
-			highlight: function (element) {
-				$(element).closest('.form-control').removeClass('is-valid').addClass('is-invalid');
-				$(element).closest('.custom-select').removeClass('is-valid').addClass('is-invalid');
-			},
-			unhighlight: function (element, errorClass, validClass) {
-				$(element).closest('.form-group').find('.help-block').html('');
-				$(element).closest('.form-control').removeClass('is-invalid').addClass('is-valid');
-				$(element).closest('.custom-select').removeClass('is-invalid').addClass('is-valid');
-			},
-			submitHandler: function () {
-				event.preventDefault();
-				let data = $("#start-form").serialize();
-				/*
-				let formData = $("#start-form").serializeObject();
-				console.log(formData);
-				console.log(data);
-				try {
-				axios.post(`${url}/sistema/Start`, {
-					firstName: 'Fred',
-					lastName: 'Flintstone'
-				})
-					.then(function (response) {
-						console.log(response);
-					})
-					.catch(function (error) {
-						console.log(error);
-					});
-					} catch (error) {
-						// handle error
-					}
-				*/
-				//
-				$.ajax({
-					type: 'POST',
-					url: url + '/sistema/Start',
-					data: data,
-					dataType: 'json',
-					beforeSend: function () {
-						$("#send_form").html('<i class="fas fa-spinner fa-spin"></i> Iniciando ...');
-						$('#imageQrcode').attr("src", 'imagens/body/loading.gif');
-						$("#description").html("Por favor aguarde, sistema iniciando.");
+		$(document).ready(function () {
+			//
+			if(validate_mysql){
+				$('#SessionName').prop('readonly', true);
+			}
+			//
+    $('#AuthorizationToken').keyup(function() {   
+			if(validate_mysql){
+        let inputValue = $('#AuthorizationToken').val();
+				$('#SessionName').val(inputValue);
+			}
+    });
+			//
+			const socket = io(url + '/', { transports: ['websocket'] });
+			//
+			$("#description").html("Sistema não iniciado");
+			//
+			$("#start-form").validate({
+				rules: {
+					AuthorizationToken: {
+						required: true
 					},
-					success: function (response) {
-						console.log(response);
-						$("#send_form").html('Iniciar');
-						if (response.state == 'CONNECTED') {
-							$('#imageQrcode').attr("src", 'imagens/body/ok.png');
-							$("#description").html("Sistema iniciado com sucesso.");
-
-							window.scrollTo(0, 0);
-						} else if(response.state == 'DISCONNECTED'){
-							$('#imageQrcode').attr("src", 'imagens/body/error.png');
-							$("#description").html("Sistema desconectado");
-
-							window.scrollTo(0, 0);
-						}else if(response.state == 'STARTING'){
+					SessionName: {
+						required: true
+					},
+					MultiDevice: {
+						required: true
+					},
+					whatsappVersion: {
+						required: false
+					}
+				},
+				messages: {
+					AuthorizationToken: {
+						required: "Por favor, Informe seu token."
+					},
+					SessionName: {
+						required: "Por favor, Informe o nome da sessão."
+					},
+					MultiDevice: {
+						required: "Por favor, Selecione uma opção."
+					},
+					whatsappVersion: {
+						required: "Por favor, Informe uma versão."
+					}
+				},
+				errorPlacement: function (error, element) {
+					$(element).closest('.form-group').find('.help-block').html(error.html());
+				},
+				highlight: function (element) {
+					$(element).closest('.form-control').removeClass('is-valid').addClass('is-invalid');
+					$(element).closest('.custom-select').removeClass('is-valid').addClass('is-invalid');
+				},
+				unhighlight: function (element, errorClass, validClass) {
+					$(element).closest('.form-group').find('.help-block').html('');
+					$(element).closest('.form-control').removeClass('is-invalid').addClass('is-valid');
+					$(element).closest('.custom-select').removeClass('is-invalid').addClass('is-valid');
+				},
+				submitHandler: function () {
+					event.preventDefault();
+					let data = $("#start-form").serialize();
+					/*
+					let formData = $("#start-form").serializeObject();
+					console.log(formData);
+					console.log(data);
+					try {
+					axios.post(`${url}/sistema/Start`, {
+						firstName: 'Fred',
+						lastName: 'Flintstone'
+					})
+						.then(function (response) {
+							console.log(response);
+						})
+						.catch(function (error) {
+							console.log(error);
+						});
+						} catch (error) {
+							// handle error
+						}
+					*/
+					//
+					$.ajax({
+						type: 'POST',
+						url: url + '/sistema/Start',
+						data: data,
+						dataType: 'json',
+						beforeSend: function () {
+							$("#send_form").html('<i class="fas fa-spinner fa-spin"></i> Iniciando ...');
 							$('#imageQrcode').attr("src", 'imagens/body/loading.gif');
-						  $("#description").html("Por favor aguarde, sistema iniciando.");
+							$("#description").html("Por favor aguarde, sistema iniciando.");
+						},
+						success: function (response) {
+							console.log(response);
+							$("#send_form").html('Iniciar');
+							if (response.state == 'CONNECTED') {
+								$('#imageQrcode').attr("src", 'imagens/body/ok.png');
+								$("#description").html("Sistema iniciado com sucesso.");
+
+								window.scrollTo(0, 0);
+							} else if (response.state == 'DISCONNECTED') {
+								$('#imageQrcode').attr("src", 'imagens/body/error.png');
+								$("#description").html("Sistema desconectado");
+
+								window.scrollTo(0, 0);
+							} else if (response.state == 'STARTING') {
+								$('#imageQrcode').attr("src", 'imagens/body/loading.gif');
+								$("#description").html("Por favor aguarde, sistema iniciando.");
+
+								window.scrollTo(0, 0);
+							}
+						},
+						error: function (XMLHttpRequest, textStatus, errorThrown) {
+							$("#send_form").html('Iniciar');
+							$('#imageQrcode').attr("src", 'imagens/body/error.png');
+							$("#description").html("Sistema não iniciado");
 
 							window.scrollTo(0, 0);
 						}
-					},
-					error: function (XMLHttpRequest, textStatus, errorThrown) {
+					}).fail(function (jqXHR, textStatus, error) {
 						$("#send_form").html('Iniciar');
 						$('#imageQrcode').attr("src", 'imagens/body/error.png');
 						$("#description").html("Sistema não iniciado");
 
 						window.scrollTo(0, 0);
+					});
+				}
+			});
+			//
+			socket.on('qrCode', (qrCode) => {
+				let SessionName = $('#SessionName').val();
+				if (SessionName === qrCode.SessionName) {
+					$("#description").html("Por favor, efetue a leitura do qr code informado, tentativa " + qrCode.attempts);
+					$('#imageQrcode').attr("src", qrCode.data);
+				}
+			});
+			//
+			socket.on('status', (update) => {
+				let SessionName = $('#SessionName').val();
+				//
+				console.log(update);
+				//
+				if (SessionName == update.SessionName) {
+					if (update.status == 'isLogged' || update.status == 'qrReadSuccess' || update.status == 'chatsAvailable' || update.status == 'inChat') {
+						//
+						$('#imageQrcode').attr("src", 'imagens/body/ok.png');
+						$("#description").html("Sistema iniciado com sucesso.");
+						//
+					} else if (update.status == 'qrReadError') {
+						//
+						$('#imageQrcode').attr("src", 'imagens/body/error.png');
+						$("#description").html("Erro ao efetuar leitura do qr code ou não lido.");
+						//
+					} else if (update.status == 'autocloseCalled' || update.status == 'browserClose') {
+						//
+						$('#imageQrcode').attr("src", 'imagens/body/error.png');
+						$("#description").html("Erro ao efetuar leitura do qr code, navegador fechado.");
+						//
+					} else if (update.status == 'desconnectedMobile') {
+						//
+						$('#imageQrcode').attr("src", 'imagens/body/error.png');
+						$("#description").html("Dispositivo desconectado.");
+						//
+					} else if (update.status == 'notLogged') {
+						//
+						$('#imageQrcode').attr("src", 'imagens/body/error.png');
+						$("#description").html("Dispositivo desconectado.");
+						//
 					}
-				}).fail(function (jqXHR, textStatus, error) {
-					$("#send_form").html('Iniciar');
-					$('#imageQrcode').attr("src", 'imagens/body/error.png');
-					$("#description").html("Sistema não iniciado");
-
-					window.scrollTo(0, 0);
-				});
-			}
-		});
-		//
-		socket.on('qrCode', (qrCode) => {
-			let SessionName = $('#SessionName').val();
-			if (SessionName === qrCode.SessionName) {
-				$("#description").html("Por favor, efetue a leitura do qr code informado, tentativa "+qrCode.attempts);
-				$('#imageQrcode').attr("src", qrCode.data);
-			}
-		});
-		//
-		socket.on('status', (update) => {
-			let SessionName = $('#SessionName').val();
-			//
-			console.log(update);
-			//
-			if (SessionName == update.SessionName) {
-			if (update.status == 'isLogged' || update.status  == 'qrReadSuccess' || update.status  == 'chatsAvailable' || update.status  == 'inChat') {
+				}
 				//
-				$('#imageQrcode').attr("src", 'imagens/body/ok.png');
-        $("#description").html("Sistema iniciado com sucesso.");
-				//
-			} else if(update.status == 'qrReadError'){
-				//
-				$('#imageQrcode').attr("src", 'imagens/body/error.png');
-        $("#description").html("Erro ao efetuar leitura do qr code ou não lido.");
-				//
-			} else if(update.status == 'autocloseCalled' || update.status == 'browserClose'){
-				//
-				$('#imageQrcode').attr("src", 'imagens/body/error.png');
-        $("#description").html("Erro ao efetuar leitura do qr code, navegador fechado.");
-				//
-			} else if(update.status == 'desconnectedMobile'){
-				//
-				$('#imageQrcode').attr("src", 'imagens/body/error.png');
-        $("#description").html("Dispositivo desconectado.");
-				//
-			} else if(update.status == 'notLogged'){
-				//
-				$('#imageQrcode').attr("src", 'imagens/body/error.png');
-        $("#description").html("Dispositivo desconectado.");
-				//
-			} 
-		}
-			//
+			});
 		});
 	</script>
 </body>
