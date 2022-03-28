@@ -302,7 +302,7 @@ node -e "console.log(require('crypto').randomBytes(64).toString('base64').replac
 ```bash
 sudo mkdir /usr/local/tokens
 
-sudo chmod -R 755 /usr/local/tokens
+sudo chmod -R 777 /usr/local/tokens
 ```
 
 ## Configuração inicial do arquivo ".env-example"
@@ -487,6 +487,24 @@ git clone https://github.com/AlanMartines/mywhatsapp-api-node-wppconnect.git Api
 # Acesse a pasta do projeto no terminal/cmd
 cd ApiWPPConnect
 
+# Instale as dependências
+npm install --allow-root --unsafe-perm=true
+
+# Clone este repositório
+git clone https://github.com/wppconnect-team/wppconnect.git
+
+# Acesse a pasta do projeto no terminal/cmd
+cd wppconnect
+
+# Instale as dependências
+npm install --allow-root --unsafe-perm=true
+
+# Building WPPConnect
+npm run build
+
+# Ir para seu diretório anterior
+cd ..
+
 # Configuração inicial
 cp .env-example .env
 
@@ -506,6 +524,24 @@ git clone https://github.com/AlanMartines/mywhatsapp-api-node-wppconnect.git Api
 # Acesse a pasta do projeto no terminal/cmd
 cd ApiWPPConnect
 
+# Instale as dependências
+npm install --allow-root --unsafe-perm=true
+
+# Clone este repositório
+git clone https://github.com/wppconnect-team/wppconnect.git
+
+# Acesse a pasta do projeto no terminal/cmd
+cd wppconnect
+
+# Instale as dependências
+npm install --allow-root --unsafe-perm=true
+
+# Building WPPConnect
+npm run build
+
+# Ir para seu diretório anterior
+cd ..
+
 # Configuração inicial
 cp .env-example .env
 
@@ -515,6 +551,8 @@ docker build -t alanmartines/mywhatsapp-api-node-wppconnect:1.0.0 -f Dockerfile.
 # Criar contêiner
 docker run -d -p 9001:9001 --name ApiWPPconnect \
   --restart=always \
+	-v ./:/home/ApiWPPConnect \
+	-v /usr/local/tokens:/usr/local/tokens \
 	-e NODE_EN=production \
 	-e HOST=0.0.0.0 \
 	-e PORT=9001 \

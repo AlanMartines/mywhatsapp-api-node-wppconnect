@@ -2,7 +2,7 @@ FROM node:latest
 
 LABEL version="1.0.0" description="ApiWPPconnect" maintainer="Alan Martines<alancpmartines@hotmail.com>"
 
-# RUN mkdir /home/ApiWPPconnect
+RUN mkdir -p /home/ApiWPPconnect
 RUN mkdir -p /usr/local/tokens
 
 RUN apt-get update && \

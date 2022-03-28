@@ -16,6 +16,9 @@ services:
     restart: always
     networks:
       - mywhatsapp-api
+    volumes:
+      - ./:/home/ApiWPPConnect
+      - /usr/local/tokens:/usr/local/tokens
     environment:
       NODE_ENV: production
       HOST: 0.0.0.0
