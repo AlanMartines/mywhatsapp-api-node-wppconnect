@@ -462,7 +462,7 @@ module.exports = class Sessions {
 		}
 		//
 		Sessions.sessions.push(newSession);
-		console.log("- Nova sessão: " + newSession.state);
+		console.log("- Nova sessão: " + SessionName);
 
 		//setup session
 		newSession.client = Sessions.initSession(socket, SessionName, AuthorizationToken, MultiDevice, whatsappVersion);

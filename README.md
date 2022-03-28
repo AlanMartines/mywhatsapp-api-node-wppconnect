@@ -200,6 +200,42 @@ sudo apt install mysql-server -y
 sudo mysql_secure_installation
 ```
 
+#### Instale o MySQL CentOS
+
+###### Instalar
+
+```bash
+#Atualize o índice de pacotes em seu servidor se ainda não tiver feito isso
+sudo yum update
+
+#baixar os repositórios MySQL
+sudo wget https://dev.mysql.com/get/mysql80-community-release-el7-3.noarch.rpm
+
+#Preparar o repositório
+sudo rpm -Uvh mysql80-community-release-el7-3.noarch.rpm
+
+#Instale o pacote mysql-server
+sudo yum install mysql-server -y
+
+#Execute o script de segurança
+sudo mysql_secure_installation
+```
+
+#### Instale o MySQL Alpaine Linux
+
+###### Instalar
+
+```bash
+#Atualize o índice de pacotes em seu servidor se ainda não tiver feito isso
+apk update
+
+#Instale o pacote mysql-server
+apk add mysql mysql-client
+
+#Execute o script de segurança
+mysql_secure_installation
+```
+
 ## Rodando a aplicação
 
 ```bash
