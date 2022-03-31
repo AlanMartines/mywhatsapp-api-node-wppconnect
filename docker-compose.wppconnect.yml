@@ -17,7 +17,7 @@ services:
     networks:
       - mywhatsapp-api
     volumes:
-      - ./:/home/ApiWPPConnect
+      - .:/home/ApiWPPConnect
       - /usr/local/tokens:/usr/local/tokens
     environment:
       NODE_ENV: production

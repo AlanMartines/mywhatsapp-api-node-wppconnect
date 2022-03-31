@@ -104,7 +104,7 @@ module.exports = class Webhooks {
             }
 
         } catch (error) {
-            console?.log(error)
+            console?.log(error);
         }
     }
 }

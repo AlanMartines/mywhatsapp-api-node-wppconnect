@@ -300,9 +300,11 @@ node -e "console.log(require('crypto').randomBytes(64).toString('base64').replac
 ## Criar pasta tokens (Linux)
 
 ```bash
-sudo mkdir /usr/local/tokens
+#Criar pasta para os tokens
+mkdir /usr/local/tokens
 
-sudo chmod -R 777 /usr/local/tokens
+#Setar permição na pasta tokens
+chmod -R 777 /usr/local/tokens
 ```
 
 ## Configuração inicial do arquivo ".env-example"
@@ -481,6 +483,12 @@ router.post("/Close", (req, res, next) => {
 # Ir para seu diretório home
 cd ~
 
+#Criar pasta para os tokens
+mkdir /usr/local/tokens
+
+#Setar permição na pasta tokens
+chmod -R 777 /usr/local/tokens
+
 # Clone este repositório
 git clone https://github.com/AlanMartines/mywhatsapp-api-node-wppconnect.git ApiWPPConnect
 
@@ -518,6 +526,12 @@ docker-compose -f docker-compose.wppconnect.yml up --build -d
 # Ir para seu diretório home
 cd ~
 
+#Criar pasta para os tokens
+mkdir /usr/local/tokens
+
+#Setar permição na pasta tokens
+chmod -R 777 /usr/local/tokens
+
 # Clone este repositório
 git clone https://github.com/AlanMartines/mywhatsapp-api-node-wppconnect.git ApiWPPConnect
 
@@ -551,7 +565,7 @@ docker build -t alanmartines/mywhatsapp-api-node-wppconnect:1.0.0 -f Dockerfile.
 # Criar contêiner
 docker run -d -p 9001:9001 --name ApiWPPconnect \
   --restart=always \
-	-v ./:/home/ApiWPPConnect \
+	-v ($pwd):/home/ApiWPPConnect \
 	-v /usr/local/tokens:/usr/local/tokens \
 	-e NODE_EN=production \
 	-e HOST=0.0.0.0 \
