@@ -503,11 +503,7 @@ module.exports = class Sessions {
 		session.browserSessionToken = null;
 		session.AuthorizationToken = AuthorizationToken;
 		//
-		/*
-		session.process = new PQueue({
-			concurrency: 1
-		});
-		*/
+		session.process = new PQueue({ concurrency: 1 });
 		//
 		//
 		/*
