@@ -10,7 +10,8 @@ const sleep = require('sleep-promise');
 const {
 	forEach
 } = require('p-iteration');
-const PQueue = require('p-queue');
+//const PQueue = require('p-queue');
+const {default: pQueue} = require('p-queue');
 if (fs.existsSync('./wppconnect/dist/index.js')) {
 	//
 	console.log("- Wppconnect is patch");
@@ -503,7 +504,7 @@ module.exports = class Sessions {
 		session.browserSessionToken = null;
 		session.AuthorizationToken = AuthorizationToken;
 		//
-		session.process = new PQueue({ concurrency: 1 });
+		session.process = new pQueue({ concurrency: 1 });
 		//
 		//
 		/*
