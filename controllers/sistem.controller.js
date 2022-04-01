@@ -3575,16 +3575,18 @@ router.post("/setProfileStatus", upload.none(''), verifyToken.verify, async (req
 	} else {
 		//
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
+
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var setProfileStatus = await Sessions.setProfileStatus(
+				var setProfileStatus = await session.process.add(async () => await Sessions.setProfileStatus(
 					removeWithspace(req.body.SessionName),
 					req.body.ProfileStatus
-				);
+				));
 				res.setHeader('Content-Type', 'application/json');
 				res.status(200).json({
 					"Status": setProfileStatus
@@ -3620,16 +3622,18 @@ router.post("/setProfileName", upload.none(''), verifyToken.verify, async (req, 
 	} else {
 		//
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
+
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var setProfileName = await Sessions.setProfileName(
+				var setProfileName = await session.process.add(async () => await Sessions.setProfileName(
 					removeWithspace(req.body.SessionName),
 					req.body.ProfileName
-				);
+				));
 				res.setHeader('Content-Type', 'application/json');
 				res.status(200).json({
 					"Status": setProfileName
@@ -3664,6 +3668,8 @@ router.post("/setProfilePic", upload.single('file'), verifyToken.verify, async (
 	} else {
 		//
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
+
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -3676,10 +3682,10 @@ router.post("/setProfilePic", upload.single('file'), verifyToken.verify, async (
 				fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
 				console.log("- File", filePath);
 				//
-				var setProfilePic = await Sessions.setProfilePic(
+				var setProfilePic = await session.process.add(async () => await Sessions.setProfilePic(
 					removeWithspace(req.body.SessionName),
 					filePath
-				);
+				));
 				//
 				res.setHeader('Content-Type', 'application/json');
 				res.status(200).json({
@@ -3722,13 +3728,15 @@ router.post("/killServiceWorker", upload.none(''), verifyToken.verify, async (re
 	} else {
 		//
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
+
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var killServiceWorker = await Sessions.killServiceWorker(removeWithspace(req.body.SessionName));
+				var killServiceWorker = await session.process.add(async () => await Sessions.killServiceWorker(removeWithspace(req.body.SessionName)));
 				res.setHeader('Content-Type', 'application/json');
 				res.status(200).json({
 					"Status": killServiceWorker
@@ -3765,13 +3773,15 @@ router.post("/restartService", upload.none(''), verifyToken.verify, async (req, 
 	} else {
 		//
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
+
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var restartService = await Sessions.restartService(removeWithspace(req.body.SessionName));
+				var restartService = await session.process.add(async () => await Sessions.restartService(removeWithspace(req.body.SessionName)));
 				res.setHeader('Content-Type', 'application/json');
 				res.status(200).json({
 					"Status": restartService
@@ -3808,6 +3818,8 @@ router.post("/reloadService", upload.none(''), verifyToken.verify, async (req, r
 	} else {
 		//
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
+
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -3821,11 +3833,11 @@ router.post("/reloadService", upload.none(''), verifyToken.verify, async (req, r
 			case 'DISCONNECTED':
 				//
 				try {
-					var killServiceWorker = await Sessions.killServiceWorker(removeWithspace(req.body.SessionName));
+					var killServiceWorker = await session.process.add(async () => await Sessions.killServiceWorker(removeWithspace(req.body.SessionName)));
 					//
 					if (killServiceWorker.erro === false && killServiceWorker.status === 200) {
 						//
-						var restartService = await Sessions.restartService(removeWithspace(req.body.SessionName));
+						var restartService = await session.process.add(async () => await Sessions.restartService(removeWithspace(req.body.SessionName)));
 						//
 						if (restartService.erro === false && restartService.status === 200) {
 							//
@@ -3905,13 +3917,15 @@ router.post("/getHostDevice", upload.none(''), verifyToken.verify, async (req, r
 	} else {
 		//
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
+
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var getHostDevice = await Sessions.getHostDevice(removeWithspace(req.body.SessionName));
+				var getHostDevice = await session.process.add(async () => await Sessions.getHostDevice(removeWithspace(req.body.SessionName)));
 				//
 				//console.log(result);
 				res.setHeader('Content-Type', 'application/json');
@@ -3949,13 +3963,15 @@ router.post("/isMultiDevice", upload.none(''), verifyToken.verify, async (req, r
 	} else {
 		//
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
+
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var isMultiDevice = await Sessions.isMultiDevice(removeWithspace(req.body.SessionName));
+				var isMultiDevice = await session.process.add(async () => await Sessions.isMultiDevice(removeWithspace(req.body.SessionName)));
 				//
 				//console.log(result);
 				res.setHeader('Content-Type', 'application/json');
@@ -3993,13 +4009,15 @@ router.post("/getConnectionState", upload.none(''), verifyToken.verify, async (r
 	} else {
 		//
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
+
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var getConnectionState = await Sessions.getConnectionState(removeWithspace(req.body.SessionName));
+				var getConnectionState = await session.process.add(async () => await Sessions.getConnectionState(removeWithspace(req.body.SessionName)));
 				res.setHeader('Content-Type', 'application/json');
 				res.status(200).json({
 					"Status": getConnectionState
@@ -4035,13 +4053,15 @@ router.post("/getBatteryLevel", upload.none(''), verifyToken.verify, async (req,
 	} else {
 		//
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
+
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var getBatteryLevel = await Sessions.getBatteryLevel(removeWithspace(req.body.SessionName));
+				var getBatteryLevel = await session.process.add(async () => await Sessions.getBatteryLevel(removeWithspace(req.body.SessionName)));
 				//
 				res.setHeader('Content-Type', 'application/json');
 				res.status(200).json({
@@ -4061,24 +4081,43 @@ router.post("/getBatteryLevel", upload.none(''), verifyToken.verify, async (req,
 //
 // Is Connected
 router.post("/isConnected", upload.none(''), verifyToken.verify, async (req, res, next) => {
-	var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-	switch (sessionStatus.status) {
-		case 'inChat':
-		case 'qrReadSuccess':
-		case 'isLogged':
-		case 'chatsAvailable':
-			//
-			var isConnected = await Sessions.isConnected(removeWithspace(req.body.SessionName));
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200).json({
-				"Status": isConnected
-			});
-			break;
-		default:
-			res.setHeader('Content-Type', 'application/json');
-			res.status(400).json({
-				"Status": sessionStatus
-			});
+	//
+	if (!removeWithspace(req.body.SessionName)) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
+
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
+				//
+				var isConnected = await session.process.add(async () => await Sessions.isConnected(removeWithspace(req.body.SessionName)));
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": isConnected
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
 	}
 }); //isConnected
 //
@@ -4103,13 +4142,15 @@ router.post("/getWAVersion", upload.none(''), verifyToken.verify, async (req, re
 	} else {
 		//
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
+
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var getWAVersion = await Sessions.getWAVersion(removeWithspace(req.body.SessionName));
+				var getWAVersion = await session.process.add(async () => await Sessions.getWAVersion(removeWithspace(req.body.SessionName)));
 				res.setHeader('Content-Type', 'application/json');
 				res.status(200).json({
 					"Status": getWAVersion
@@ -4145,13 +4186,15 @@ router.post("/getWAVersion", upload.none(''), verifyToken.verify, async (req, re
 	} else {
 		//
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
+
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var getWAVersion = await Sessions.getWAVersion(removeWithspace(req.body.SessionName));
+				var getWAVersion = await session.process.add(async () => await Sessions.getWAVersion(removeWithspace(req.body.SessionName)));
 				res.setHeader('Content-Type', 'application/json');
 				res.status(200).json({
 					"Status": getWAVersion
@@ -4187,16 +4230,18 @@ router.post("/startPhoneWatchdog", upload.none(''), verifyToken.verify, async (r
 	} else {
 		//
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
+
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var startPhoneWatchdog = await Sessions.startPhoneWatchdog(
+				var startPhoneWatchdog = await session.process.add(async () => await Sessions.startPhoneWatchdog(
 					removeWithspace(req.body.SessionName),
 					req.body.interval
-				);
+				));
 				res.setHeader('Content-Type', 'application/json');
 				res.status(200).json({
 					"Status": startPhoneWatchdog
@@ -4232,13 +4277,15 @@ router.post("/stopPhoneWatchdog", upload.none(''), verifyToken.verify, async (re
 	} else {
 		//
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
+
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var stopPhoneWatchdog = await Sessions.stopPhoneWatchdog(removeWithspace(req.body.SessionName));
+				var stopPhoneWatchdog = await session.process.add(async () => await Sessions.stopPhoneWatchdog(removeWithspace(req.body.SessionName)));
 				res.setHeader('Content-Type', 'application/json');
 				res.status(200).json({
 					"Status": stopPhoneWatchdog
