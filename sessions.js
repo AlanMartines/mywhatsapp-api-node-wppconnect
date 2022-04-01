@@ -506,7 +506,7 @@ module.exports = class Sessions {
 		session.state = 'STARTING';
 		session.status = 'notLogged';
 		//
-		session.process = new pQueue({ concurrency: 1 });
+		session.process = new pQueue({ concurrency: 2 });
 		//
 		//
 		/*

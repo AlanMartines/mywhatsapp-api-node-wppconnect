@@ -632,6 +632,7 @@ router.post("/sendText", upload.none(''), verifyToken.verify, async (req, res, n
 	} else {
 		//
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = Sessions.getSession(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -645,11 +646,11 @@ router.post("/sendText", upload.none(''), verifyToken.verify, async (req, res, n
 				//
 				if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
 					//
-					var sendText = await Sessions.sendText(
+					var sendText = await session.process.add(async () => await Sessions.sendText(
 						removeWithspace(req.body.SessionName),
 						checkNumberStatus.number + '@c.us',
 						req.body.msg
-					);
+					));
 
 					//
 				} else {
