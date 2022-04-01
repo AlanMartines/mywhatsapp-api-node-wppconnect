@@ -3263,6 +3263,8 @@ router.post("/addParticipant", upload.none(''), verifyToken.verify, async (req, 
 	} else {
 		//
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
+
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -3276,11 +3278,11 @@ router.post("/addParticipant", upload.none(''), verifyToken.verify, async (req, 
 				//
 				if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
 					//
-					var addParticipant = await Sessions.addParticipant(
+					var addParticipant = await session.process.add(async () => await Sessions.addParticipant(
 						removeWithspace(req.body.SessionName),
 						req.body.groupId.trim() + '@g.us',
 						checkNumberStatus.number + '@c.us'
-					);
+					));
 					//
 				} else {
 					var addParticipant = checkNumberStatus;
@@ -3321,6 +3323,8 @@ router.post("/promoteParticipant", upload.none(''), verifyToken.verify, async (r
 	} else {
 		//
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
+
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -3334,11 +3338,11 @@ router.post("/promoteParticipant", upload.none(''), verifyToken.verify, async (r
 				//
 				if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
 					//
-					var promoteParticipant = await Sessions.promoteParticipant(
+					var promoteParticipant = await session.process.add(async () => await Sessions.promoteParticipant(
 						removeWithspace(req.body.SessionName),
 						req.body.groupId.trim() + '@g.us',
 						checkNumberStatus.number + '@c.us'
-					);
+					));
 					//
 				} else {
 					var promoteParticipant = checkNumberStatus;
@@ -3379,6 +3383,8 @@ router.post("/demoteParticipant", upload.none(''), verifyToken.verify, async (re
 	} else {
 		//
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
+
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -3392,11 +3398,11 @@ router.post("/demoteParticipant", upload.none(''), verifyToken.verify, async (re
 				//
 				if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
 					//
-					var demoteParticipant = await Sessions.demoteParticipant(
+					var demoteParticipant = await session.process.add(async () => await Sessions.demoteParticipant(
 						removeWithspace(req.body.SessionName),
 						req.body.groupId.trim() + '@g.us',
 						soNumeros(req.body.phonefull).trim() + '@c.us'
-					);
+					));
 					//
 				} else {
 					var demoteParticipant = checkNumberStatus;
@@ -3436,6 +3442,8 @@ router.post("/getGroupInfoFromInviteLink", upload.none(''), verifyToken.verify, 
 		//
 	} else {
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
+
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -3459,10 +3467,10 @@ router.post("/getGroupInfoFromInviteLink", upload.none(''), verifyToken.verify, 
 				}
 				//
 
-				var getGroupInfoFromInviteLink = await Sessions.getGroupInfoFromInviteLink(
+				var getGroupInfoFromInviteLink = await session.process.add(async () => await Sessions.getGroupInfoFromInviteLink(
 					removeWithspace(req.body.SessionName),
 					req.body.InviteCode
-				);
+				));
 				res.setHeader('Content-Type', 'application/json');
 				res.status(200).json({
 					"Status": getGroupInfoFromInviteLink
@@ -3497,6 +3505,8 @@ router.post("/joinGroup", upload.none(''), verifyToken.verify, async (req, res, 
 		//
 	} else {
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
+
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -3520,10 +3530,10 @@ router.post("/joinGroup", upload.none(''), verifyToken.verify, async (req, res, 
 				}
 				//
 
-				var joinGroup = await Sessions.joinGroup(
+				var joinGroup = await session.process.add(async () => await Sessions.joinGroup(
 					removeWithspace(req.body.SessionName),
 					req.body.InviteCode
-				);
+				));
 				res.setHeader('Content-Type', 'application/json');
 				res.status(200).json({
 					"Status": joinGroup
