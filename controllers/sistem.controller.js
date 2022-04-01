@@ -546,7 +546,6 @@ router.post("/sendContactVcardList", upload.single('file'), verifyToken.verify, 
 					fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
 					console.log("- File:", filePath);
 					//
-					//
 					var checkNumberStatus = await Sessions.checkNumberStatus(
 						removeWithspace(req.body.SessionName),
 						soNumeros(req.body.phonefull).trim() + '@c.us'
@@ -568,10 +567,10 @@ router.post("/sendContactVcardList", upload.single('file'), verifyToken.verify, 
 								contactlistValid.push(numero + '@c.us');
 								//
 							}
-							await sleep(1000);
+							//await sleep(1000);
 						}
 						//
-						var sendContactVcardList =  await session.process.add(async () => await Sessions.sendContactVcardList(
+						var sendContactVcardList = await session.process.add(async () => await Sessions.sendContactVcardList(
 							removeWithspace(req.body.SessionName),
 							checkNumberStatus.number + '@c.us',
 							contactlistValid,
@@ -693,6 +692,8 @@ router.post("/sendTextMassa", upload.single('file'), verifyToken.verify, async (
 	} else {
 		//
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = Sessions.getSession(removeWithspace(req.body.SessionName));
+
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -716,16 +717,16 @@ router.post("/sendTextMassa", upload.single('file'), verifyToken.verify, async (
 							//
 							var checkNumberStatus = await Sessions.checkNumberStatus(
 								removeWithspace(req.body.SessionName),
-								soNumeros(numero) + '@c.us'
+								soNumeros(req.body.phonefull).trim() + '@c.us'
 							);
 							//
 							if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
 								//
-								var sendTextMassaRes = await Sessions.sendText(
+								var sendTextMassaRes = await session.process.add(async () => await Sessions.sendText(
 									removeWithspace(req.body.SessionName),
 									checkNumberStatus.number + '@c.us',
 									req.body.msg
-								);
+								));
 								//
 							} else {
 								var sendTextMassaRes = checkNumberStatus;
@@ -734,7 +735,7 @@ router.post("/sendTextMassa", upload.single('file'), verifyToken.verify, async (
 							sendTextMassa.push(sendTextMassaRes);
 							//
 						}
-						await sleep(1000);
+						//await sleep(1000);
 					}
 					//
 					//
@@ -790,6 +791,8 @@ router.post("/sendLocation", upload.none(''), verifyToken.verify, async (req, re
 	} else {
 		//
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = Sessions.getSession(removeWithspace(req.body.SessionName));
+
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -803,13 +806,13 @@ router.post("/sendLocation", upload.none(''), verifyToken.verify, async (req, re
 				//
 				if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
 					//
-					var sendLocation = await Sessions.sendLocation(
+					var sendLocation = await session.process.add(async () => await Sessions.sendLocation(
 						removeWithspace(req.body.SessionName),
 						checkNumberStatus.number + '@c.us',
 						req.body.lat,
 						req.body.long,
 						req.body.local
-					);
+					));
 					//
 				} else {
 					var sendLocation = checkNumberStatus;
@@ -851,6 +854,8 @@ router.post("/sendLinkPreview", upload.none(''), verifyToken.verify, async (req,
 	} else {
 		//
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = Sessions.getSession(removeWithspace(req.body.SessionName));
+
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -879,12 +884,12 @@ router.post("/sendLinkPreview", upload.none(''), verifyToken.verify, async (req,
 				//
 				if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
 					//
-					var sendLinkPreview = await Sessions.sendLinkPreview(
+					var sendLinkPreview = await session.process.add(async () => await Sessions.sendLinkPreview(
 						removeWithspace(req.body.SessionName),
 						checkNumberStatus.number + '@c.us',
 						req.body.link,
 						req.body.descricao
-					);
+					));
 					//
 				} else {
 					var sendLinkPreview = checkNumberStatus;
@@ -926,6 +931,8 @@ router.post("/sendImage", upload.single('file'), verifyToken.verify, async (req,
 	} else {
 		//
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = Sessions.getSession(removeWithspace(req.body.SessionName));
+
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -945,13 +952,13 @@ router.post("/sendImage", upload.single('file'), verifyToken.verify, async (req,
 					//
 					if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
 						//
-						var sendImage = await Sessions.sendImage(
+						var sendImage = await session.process.add(async () => await Sessions.sendImage(
 							removeWithspace(req.body.SessionName),
 							checkNumberStatus.number + '@c.us',
 							filePath,
 							req.file.originalname,
 							req.body.caption
-						);
+						));
 						//
 					} else {
 						var sendImage = checkNumberStatus;
@@ -1018,6 +1025,8 @@ router.post("/sendImageMassa", sendImageMassa, verifyToken.verify, async (req, r
 	} else {
 		//
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = Sessions.getSession(removeWithspace(req.body.SessionName));
+
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -1048,18 +1057,18 @@ router.post("/sendImageMassa", sendImageMassa, verifyToken.verify, async (req, r
 							//
 							var checkNumberStatus = await Sessions.checkNumberStatus(
 								removeWithspace(req.body.SessionName),
-								soNumeros(numero) + '@c.us'
+								soNumeros(req.body.phonefull).trim() + '@c.us'
 							);
 							//
 							if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
 								//
-								var sendImageMassaRes = await Sessions.sendImage(
+								var sendImageMassaRes = await session.process.add(async () => await Sessions.sendImage(
 									removeWithspace(req.body.SessionName),
 									checkNumberStatus.number + '@c.us',
 									filePathImagem,
 									req.files['fileimg'][0].originalname,
 									req.body.caption
-								);
+								));
 								//
 							} else {
 								var sendImageMassaRes = checkNumberStatus;
@@ -1069,7 +1078,7 @@ router.post("/sendImageMassa", sendImageMassa, verifyToken.verify, async (req, r
 							//
 							sendImageMassa.push(sendImageMassaRes);
 						}
-						await sleep(1000);
+						//await sleep(1000);
 					}
 					//
 					await deletaArquivosTemp(filePathContato);
@@ -1127,6 +1136,8 @@ router.post("/sendMultImage", upload.array('file', 50), verifyToken.verify, asyn
 	} else {
 		//
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = Sessions.getSession(removeWithspace(req.body.SessionName));
+
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -1153,17 +1164,17 @@ router.post("/sendMultImage", upload.array('file', 50), verifyToken.verify, asyn
 							fs.writeFileSync(filePathImagem, resultfile.buffer.toString('base64'), 'base64');
 							console.log("- File:", filePathImagem);
 							//
-							var sendMultImageRes = await Sessions.sendImage(
+							var sendMultImageRes = await session.process.add(async () => await Sessions.sendImage(
 								removeWithspace(req.body.SessionName),
 								checkNumberStatus.number + '@c.us',
 								filePathImagem,
 								resultfile.originalname,
 								req.body.caption
-							);
+							));
 							//
 							sendMultImage.push(sendMultImageRes);
 							//
-							await sleep(1000);
+							//await sleep(1000);
 							//
 							await deletaArquivosTemp(filePathImagem);
 							//
@@ -1179,7 +1190,7 @@ router.post("/sendMultImage", upload.array('file', 50), verifyToken.verify, asyn
 							//
 							sendMultImage.push(erroStatus);
 							//
-							await sleep(1000);
+							//await sleep(1000);
 							//
 							await deletaArquivosTemp(filePathImagem);
 							//
@@ -1233,6 +1244,8 @@ router.post("/sendMultImageMassa", sendMultImageMassa, verifyToken.verify, async
 	} else {
 		//
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = Sessions.getSession(removeWithspace(req.body.SessionName));
+
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -1272,17 +1285,17 @@ router.post("/sendMultImageMassa", sendMultImageMassa, verifyToken.verify, async
 										fs.writeFileSync(filePathImagem, resultfile.buffer.toString('base64'), 'base64');
 										console.log("- File Imagem:", filePathImagem);
 										//
-										var sendMultImageMassaRes = await Sessions.sendImage(
+										var sendMultImageMassaRes = await session.process.add(async () => await Sessions.sendImage(
 											removeWithspace(req.body.SessionName),
 											checkNumberStatus.number + '@c.us',
 											filePathImagem,
 											resultfile.originalname,
 											req.body.caption
-										);
+										));
 										//
 										sendMultImageMassa.push(sendMultImageMassaRes);
 										//
-										await sleep(1000);
+										//await sleep(1000);
 										//
 										//
 										await deletaArquivosTemp(filePathImagem);
@@ -1300,7 +1313,7 @@ router.post("/sendMultImageMassa", sendMultImageMassa, verifyToken.verify, async
 										//
 										sendMultImageMassa.push(erroStatus);
 										//
-										await sleep(1000);
+										//await sleep(1000);
 										//
 										//
 										await deletaArquivosTemp(filePathImagem);
@@ -1315,7 +1328,7 @@ router.post("/sendMultImageMassa", sendMultImageMassa, verifyToken.verify, async
 								var sendMultImageMassa = checkNumberStatus;
 							}
 						}
-						await sleep(1000);
+						//await sleep(1000);
 					}
 					//
 					//console.log(result);
@@ -1368,6 +1381,8 @@ router.post("/sendFile", upload.single('file'), verifyToken.verify, async (req, 
 	} else {
 		//
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = Sessions.getSession(removeWithspace(req.body.SessionName));
+
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -1387,13 +1402,13 @@ router.post("/sendFile", upload.single('file'), verifyToken.verify, async (req, 
 					//
 					if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
 						//
-						var sendFile = await Sessions.sendFile(
+						var sendFile = await session.process.add(async () => await Sessions.sendFile(
 							removeWithspace(req.body.SessionName),
 							checkNumberStatus.number + '@c.us',
 							filePath,
 							req.file.originalname,
 							req.body.caption
-						);
+						));
 						//
 					} else {
 						var sendFile = checkNumberStatus;
@@ -1452,6 +1467,8 @@ router.post("/sendFileBase64", upload.none(''), verifyToken.verify, async (req, 
 	} else {
 		//
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = Sessions.getSession(removeWithspace(req.body.SessionName));
+
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -1471,13 +1488,13 @@ router.post("/sendFileBase64", upload.none(''), verifyToken.verify, async (req, 
 					//
 					if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
 						//
-						var sendFileBase64 = await Sessions.sendFile(
+						var sendFileBase64 = await session.process.add(async () => await Sessions.sendFile(
 							removeWithspace(req.body.SessionName),
 							checkNumberStatus.number + '@c.us',
 							filePath,
 							req.body.originalname,
 							req.body.caption
-						);
+						));
 						//
 					} else {
 						var sendFileBase64 = checkNumberStatus;
@@ -1535,6 +1552,8 @@ router.post("/sendFileToBase64", upload.single('file'), verifyToken.verify, asyn
 	} else {
 		//
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = Sessions.getSession(removeWithspace(req.body.SessionName));
+
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -1548,14 +1567,14 @@ router.post("/sendFileToBase64", upload.single('file'), verifyToken.verify, asyn
 				//
 				if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
 					//
-					var sendFileFromBase64 = await Sessions.sendFileFromBase64(
+					var sendFileFromBase64 = await session.process.add(async () => await Sessions.sendFileFromBase64(
 						removeWithspace(req.body.SessionName),
 						checkNumberStatus.number + '@c.us',
 						req.file.buffer.toString('base64'),
 						req.file.mimetype,
 						req.file.originalname,
 						req.body.msg
-					);
+					));
 					//
 				} else {
 					var sendFileFromBase64 = checkNumberStatus;
@@ -1597,6 +1616,8 @@ router.post("/sendFileFromBase64", upload.none(''), verifyToken.verify, async (r
 	} else {
 		//
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = Sessions.getSession(removeWithspace(req.body.SessionName));
+
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -1610,14 +1631,14 @@ router.post("/sendFileFromBase64", upload.none(''), verifyToken.verify, async (r
 				//
 				if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
 					//
-					var sendFileFromBase64 = await Sessions.sendFileFromBase64(
+					var sendFileFromBase64 = await session.process.add(async () => await Sessions.sendFileFromBase64(
 						removeWithspace(req.body.SessionName),
 						checkNumberStatus.number + '@c.us',
 						req.body.base64,
 						req.body.mimetype,
 						req.body.originalname,
 						req.body.caption
-					);
+					));
 					//
 				} else {
 					var sendFileFromBase64 = checkNumberStatus;
@@ -1665,15 +1686,17 @@ router.post("/getAllContacts", upload.none(''), verifyToken.verify, async (req, 
 	} else {
 		//
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = Sessions.getSession(removeWithspace(req.body.SessionName));
+
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var getAllContacts = await Sessions.getAllContacts(
+				var getAllContacts = await session.process.add(async () => await Sessions.getAllContacts(
 					req.body.SessionName
-				);
+				));
 				//
 				res.json({
 					"Status": getAllContacts
@@ -1709,15 +1732,17 @@ router.post("/getAllGroups", upload.none(''), verifyToken.verify, async (req, re
 	} else {
 		//
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = Sessions.getSession(removeWithspace(req.body.SessionName));
+
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var getAllGroups = await Sessions.getAllGroups(
+				var getAllGroups = await session.process.add(async () => await Sessions.getAllGroups(
 					req.body.SessionName
-				);
+				));
 				//
 				res.json({
 					"Status": getAllGroups
@@ -1753,15 +1778,17 @@ router.post("/getSessionTokenBrowser", upload.none(''), verifyToken.verify, asyn
 	} else {
 		//
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = Sessions.getSession(removeWithspace(req.body.SessionName));
+
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var getSessionTokenBrowser = await Sessions.getSessionTokenBrowser(
+				var getSessionTokenBrowser = await session.process.add(async () => await Sessions.getSessionTokenBrowser(
 					req.body.SessionName
-				);
+				));
 				res.setHeader('Content-Type', 'application/json');
 				res.status(200).json({
 					"Status": getSessionTokenBrowser
@@ -1797,15 +1824,17 @@ router.post("/getBlockList", upload.none(''), verifyToken.verify, async (req, re
 	} else {
 		//
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = Sessions.getSession(removeWithspace(req.body.SessionName));
+
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var getBlockList = await Sessions.getBlockList(
+				var getBlockList = await session.process.add(async () => await Sessions.getBlockList(
 					req.body.SessionName
-				);
+				));
 				res.setHeader('Content-Type', 'application/json');
 				res.status(200).json({
 					"Status": getBlockList
@@ -1841,6 +1870,8 @@ router.post("/getStatus", upload.none(''), verifyToken.verify, async (req, res, 
 	} else {
 		//
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = Sessions.getSession(removeWithspace(req.body.SessionName));
+
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -1854,10 +1885,10 @@ router.post("/getStatus", upload.none(''), verifyToken.verify, async (req, res, 
 				//
 				if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
 					//
-					var getStatus = await Sessions.getStatus(
+					var getStatus = await session.process.add(async () => await Sessions.getStatus(
 						removeWithspace(req.body.SessionName),
 						soNumeros(req.body.phonefull).trim() + '@c.us'
-					);
+					));
 					//
 				} else {
 					var getStatus = checkNumberStatus;
@@ -1899,6 +1930,8 @@ router.post("/getNumberProfile", upload.none(''), verifyToken.verify, async (req
 	} else {
 		//
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = Sessions.getSession(removeWithspace(req.body.SessionName));
+
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -1912,10 +1945,10 @@ router.post("/getNumberProfile", upload.none(''), verifyToken.verify, async (req
 				//
 				if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
 					//
-					var getNumberProfile = await Sessions.getNumberProfile(
+					var getNumberProfile = await session.process.add(async () => await Sessions.getNumberProfile(
 						removeWithspace(req.body.SessionName),
 						soNumeros(req.body.phonefull).trim() + '@c.us'
-					);
+					));
 					//
 				} else {
 					var getNumberProfile = checkNumberStatus;
@@ -1957,6 +1990,8 @@ router.post("/getProfilePicFromServer", upload.none(''), verifyToken.verify, asy
 	} else {
 		//
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = Sessions.getSession(removeWithspace(req.body.SessionName));
+
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -1970,10 +2005,10 @@ router.post("/getProfilePicFromServer", upload.none(''), verifyToken.verify, asy
 				//
 				if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
 					//
-					var getProfilePicFromServer = await Sessions.getProfilePicFromServer(
+					var getProfilePicFromServer = await session.process.add(async () => await Sessions.getProfilePicFromServer(
 						removeWithspace(req.body.SessionName),
 						soNumeros(req.body.phonefull).trim() + '@c.us'
-					);
+					));
 					//
 				} else {
 					var getProfilePicFromServer = checkNumberStatus;
@@ -2015,16 +2050,18 @@ router.post("/checkNumberStatus", upload.none(''), verifyToken.verify, async (re
 	} else {
 		//
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = Sessions.getSession(removeWithspace(req.body.SessionName));
+
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var checkNumberStatus = await Sessions.checkNumberStatus(
+				var checkNumberStatus = await session.process.add(async () => await Sessions.checkNumberStatus(
 					removeWithspace(req.body.SessionName),
 					soNumeros(req.body.phonefull).trim() + '@c.us'
-				);
+				));
 				//
 				//console.log(result);
 				res.setHeader('Content-Type', 'application/json');
@@ -2062,6 +2099,8 @@ router.post("/checkNumberStatusMassa", upload.single('file'), verifyToken.verify
 	} else {
 		//
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = Sessions.getSession(removeWithspace(req.body.SessionName));
+
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -2082,10 +2121,10 @@ router.post("/checkNumberStatusMassa", upload.single('file'), verifyToken.verify
 					//
 					if (numero.length !== 0) {
 						//
-						var checkNumberStatus = await Sessions.checkNumberStatus(
+						var checkNumberStatus = await session.process.add(async () => await Sessions.checkNumberStatus(
 							removeWithspace(req.body.SessionName),
 							soNumeros(numero) + '@c.us'
-						);
+						));
 						//
 						if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
 							//
@@ -2095,7 +2134,7 @@ router.post("/checkNumberStatusMassa", upload.single('file'), verifyToken.verify
 							var checkNumberStatusMassa = checkNumberStatus;
 						}
 					}
-					await sleep(1000);
+					//await sleep(1000);
 				}
 				//
 				await deletaArquivosTemp(filePath);
@@ -2142,17 +2181,19 @@ router.post("/sendTextGrupo", upload.none(''), verifyToken.verify, async (req, r
 	} else {
 		//
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = Sessions.getSession(removeWithspace(req.body.SessionName));
+
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var sendTextGrupo = await Sessions.sendText(
+				var sendTextGrupo = await session.process.add(async () => await Sessions.sendText(
 					removeWithspace(req.body.SessionName),
 					req.body.groupId.trim() + '@g.us',
 					req.body.msg
-				);
+				));
 				//
 				//console.log(result);
 				res.setHeader('Content-Type', 'application/json');
@@ -2656,7 +2697,7 @@ router.post("/createGroup", upload.single('file'), verifyToken.verify, async (re
 							//
 						}
 						//
-						await sleep(1000);
+						//await sleep(1000);
 					}
 					//
 					var createGroup = await Sessions.createGroup(
@@ -2906,7 +2947,7 @@ router.post("/createGroupSetAdminMembers", upload.single('file'), verifyToken.ve
 							//
 						}
 						//
-						await sleep(1000);
+						//await sleep(1000);
 					}
 					//
 					var createGroup = await Sessions.createGroup(
@@ -2932,7 +2973,7 @@ router.post("/createGroupSetAdminMembers", upload.single('file'), verifyToken.ve
 							//
 							createGroupSetAdminMembers.push(promoteParticipant);
 							//
-							await sleep(1000);
+							//await sleep(1000);
 						});
 						//
 					} else {
@@ -3045,7 +3086,7 @@ router.post("/createCountGroupSetAdminMembers", upload.single('file'), verifyTok
 							//
 						}
 						//
-						await sleep(1000);
+						//await sleep(1000);
 					}
 					//
 					for (count = 1; count <= req.body.count; count++) {
@@ -3072,7 +3113,7 @@ router.post("/createCountGroupSetAdminMembers", upload.single('file'), verifyTok
 								//
 								createCountGroupSetAdminMembers.push(promoteParticipant);
 								//
-								await sleep(1000);
+								//await sleep(1000);
 							});
 							//
 						} else {
