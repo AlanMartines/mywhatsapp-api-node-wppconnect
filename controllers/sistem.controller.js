@@ -222,6 +222,7 @@ router.post("/Close", upload.none(''), verifyToken.verify, async (req, res, next
 	} else {
 		//
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = Sessions.getSession(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -267,6 +268,7 @@ router.post("/Logout", upload.none(''), verifyToken.verify, async (req, res, nex
 	} else {
 		//
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = Sessions.getSession(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -469,7 +471,8 @@ router.post("/sendContactVcard", upload.none(''), verifyToken.verify, async (req
 		//
 	} else {
 		//
-		var sessionStatus = await session.process.add(async () => await Sessions.ApiStatus(removeWithspace(req.body.SessionName)));
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = Sessions.getSession(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -483,12 +486,12 @@ router.post("/sendContactVcard", upload.none(''), verifyToken.verify, async (req
 				//
 				if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
 					//
-					var sendContactVcard = await Sessions.sendContactVcard(
+					var sendContactVcard = await session.process.add(async () => await Sessions.sendContactVcard(
 						removeWithspace(req.body.SessionName),
 						checkNumberStatus.number + '@c.us',
 						soNumeros(req.body.contact) + '@c.us',
 						req.body.namecontact
-					);
+					));
 					//
 				} else {
 					var sendContactVcard = checkNumberStatus;
@@ -530,6 +533,7 @@ router.post("/sendContactVcardList", upload.single('file'), verifyToken.verify, 
 	} else {
 		//
 		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = Sessions.getSession(removeWithspace(req.body.SessionName));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
@@ -567,12 +571,12 @@ router.post("/sendContactVcardList", upload.single('file'), verifyToken.verify, 
 							await sleep(1000);
 						}
 						//
-						var sendContactVcardList = await Sessions.sendContactVcardList(
+						var sendContactVcardList =  await session.process.add(async () => await Sessions.sendContactVcardList(
 							removeWithspace(req.body.SessionName),
 							checkNumberStatus.number + '@c.us',
 							contactlistValid,
 							contactlistInvalid
-						);
+						));
 						//
 					} else {
 						var sendContactVcardList = sessionStatus;
