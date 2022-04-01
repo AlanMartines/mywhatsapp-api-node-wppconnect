@@ -230,7 +230,7 @@ router.post("/Close", upload.none(''), verifyToken.verify, async (req, res, next
 			case 'qrRead':
 			case 'notLogged':
 				//
-				var closeSession = await Sessions.closeSession(removeWithspace(req.body.SessionName));
+				var closeSession = await session.process.add(async () => await Sessions.closeSession(removeWithspace(req.body.SessionName)));
 				res.setHeader('Content-Type', 'application/json');
 				res.status(200).json({
 					"Status": closeSession
@@ -273,7 +273,7 @@ router.post("/Logout", upload.none(''), verifyToken.verify, async (req, res, nex
 			case 'isLogged':
 			case 'chatsAvailable':
 				//
-				var LogoutSession = await Sessions.logoutSession(removeWithspace(req.body.SessionName));
+				var LogoutSession = await session.process.add(async () => await Sessions.logoutSession(removeWithspace(req.body.SessionName)));
 				res.setHeader('Content-Type', 'application/json');
 				res.status(200).json({
 					"Status": LogoutSession
@@ -469,7 +469,7 @@ router.post("/sendContactVcard", upload.none(''), verifyToken.verify, async (req
 		//
 	} else {
 		//
-		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var sessionStatus = await session.process.add(async () => await Sessions.ApiStatus(removeWithspace(req.body.SessionName)));
 		switch (sessionStatus.status) {
 			case 'inChat':
 			case 'qrReadSuccess':
