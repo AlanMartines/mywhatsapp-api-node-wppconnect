@@ -503,6 +503,8 @@ module.exports = class Sessions {
 		var session = Sessions.getSession(SessionName);
 		session.browserSessionToken = null;
 		session.AuthorizationToken = AuthorizationToken;
+		session.state = 'STARTING';
+		session.status = 'notLogged';
 		//
 		session.process = new pQueue({ concurrency: 1 });
 		//

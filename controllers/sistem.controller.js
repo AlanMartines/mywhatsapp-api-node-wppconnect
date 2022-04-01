@@ -147,8 +147,6 @@ router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next
 				await Sessions.Start(req.io, removeWithspace(req.body.SessionName), removeWithspace(req.body.SessionName), req.body.MultiDevice, req.body.whatsappVersion);
 				var session = Sessions.getSession(removeWithspace(req.body.SessionName));
 				console.log("- AuthorizationToken:", removeWithspace(req.body.SessionName));
-				session.state = 'STARTING';
-				session.status = 'notLogged';
 				session.wh_status = req.body.wh_status;
 				session.wh_message = req.body.wh_message;
 				session.wh_qrcode = req.body.wh_qrcode;
