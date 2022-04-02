@@ -154,12 +154,10 @@ FORCE_CONNECTION_USE_HERE=0
 			}));
 			// Rotas
 			app.set('view engine', 'ejs');
-			/*
-			app.set('views', path.join(__dirname, '/views'));
+			app.set('views', path.join(__dirname, './views'));
 			app.set('json spaces', 2);
 			app.use(express.static('public'));
-			express.static(path.join(__dirname, '/public'));
-			*/
+			express.static(path.join(__dirname, './public'));
 			//
 			app.use((req, res, next) => {
 				req.io = io;
@@ -215,7 +213,7 @@ FORCE_CONNECTION_USE_HERE=0
 			});
 			//
 			app.get('/Start', function (req, res, next) {
-				res.render('./view/pages/index', {
+				res.render('index', {
 					port: config.PORT,
 					host: config.HOST,
 					host_ssl: config.DOMAIN_SSL,
