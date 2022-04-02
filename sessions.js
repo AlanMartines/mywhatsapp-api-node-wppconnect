@@ -515,6 +515,7 @@ module.exports = class Sessions {
 			╚═╝┴   ┴ ┴└─┘┘└┘┴ ┴┴─┘  ╚═╝┴└─└─┘┴ ┴ ┴ └─┘  ╩  ┴ ┴┴└─┴ ┴┴ ┴└─┘ ┴ └─┘┴└─└─┘
 	 */
 		//
+		/*
 		if (MultiDevice == true || MultiDevice == 'true') {
 			//
 			await deletaToken(`${tokenPatch}`, `${SessionName}.data.json`);
@@ -524,6 +525,7 @@ module.exports = class Sessions {
 			await deletaCache(`${tokenPatch}`, `WPP-${SessionName}`);
 			//
 		}
+		*/
 		//
 		try {
 			const client = await wppconnect.create({
