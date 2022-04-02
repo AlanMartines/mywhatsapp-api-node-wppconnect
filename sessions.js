@@ -2255,7 +2255,7 @@ module.exports = class Sessions {
 		//
 		var session = Sessions.getSession(SessionName);
 		var resultgetHostDevice = await session.client.then(async client => {
-			return await client.getHost().then((result) => {
+			return await client.getMe().then((result) => {
 				console.log('Result: ', result); //return object success
 				//
 				return {
