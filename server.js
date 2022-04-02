@@ -156,8 +156,7 @@ FORCE_CONNECTION_USE_HERE=0
 			app.set('view engine', 'ejs');
 			app.set('views', './views');
 			app.set('json spaces', 2);
-			app.use(express.static('public'));
-			express.static('./public');
+			app.use(express.static('./public'))
 			//
 			app.use((req, res, next) => {
 				req.io = io;
