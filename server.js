@@ -153,8 +153,8 @@ FORCE_CONNECTION_USE_HERE=0
 				parameterLimit: 50000
 			}));
 			// Rotas
-			/*
 			app.set('view engine', 'ejs');
+			/*
 			app.set('views', path.join(__dirname, '/views'));
 			app.set('json spaces', 2);
 			app.use(express.static('public'));
