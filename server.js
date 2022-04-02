@@ -154,7 +154,7 @@ FORCE_CONNECTION_USE_HERE=0
 			}));
 			// Rotas
 			app.set('view engine', 'ejs');
-			app.set('views', __dirname + './views');
+			app.set('views', __dirname + '/views');
 			app.set('json spaces', 2);
 			app.use(express.static(__dirname + '/public'));
 			//
