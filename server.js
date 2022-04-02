@@ -238,7 +238,7 @@ FORCE_CONNECTION_USE_HERE=0
 			});
 		} catch (error) {
 			console.log('- Não foi fossivel iniciar o sistema');
-			console.log(error.message);
+			console.log(error);
 			process.exit(1);
 		}
 		//
