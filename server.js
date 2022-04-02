@@ -1,6 +1,7 @@
 const fs = require('fs-extra');
 const express = require('express');
 require('express-async-errors');
+const exphbs  = require('express-handlebars');
 const bodyParser = require('body-parser');
 const app = express();
 const cors = require('cors');
@@ -153,10 +154,9 @@ FORCE_CONNECTION_USE_HERE=0
 				parameterLimit: 50000
 			}));
 			// Rotas
-			app.set('view engine', 'ejs');
-			app.set('views', __dirname + '/views');
-			app.set('json spaces', 2);
-			app.use('/public', express.static(__dirname + '/public'))
+			app.set('view engine', 'hbs');
+			app.engine('hbs', exphbs({extname: '.hbs'}));
+			app.use('/public', express.static(__dirname + '/public'));
 			//
 			app.use((req, res, next) => {
 				req.io = io;
