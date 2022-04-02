@@ -1,0 +1,231 @@
+	<!-- Footer -->
+	<footer class="footer-distributed">
+		<div class="footer-left">
+			<div class="text-center">
+				<img class="img-fluid" src="../../public/imagens/favicons/apple-icon-180x180.png" width="120px">
+				</p>
+				<p class="footer-company-name">Copyright &copy; 2022 - <spam id="year"></spam> EletroInfo - Desenvolvido por
+					<b>Alan Martines</b>
+				</p>
+			</div>
+		</div>
+		<div class="footer-center">
+			<div>
+
+			</div>
+		</div>
+		<div class="footer-right">
+			<p class="footer-company-about">
+				<span>Nota!</span>"Sejam todos bem-vindos a API My Whatsapp"
+			</p>
+			<div class="footer-icons">
+				<a href="https://api.whatsapp.com/send/?phone=5567996787854&text&app_absent=0" target="_blank"><i
+						class="fab fa-whatsapp"></i></a>
+				<a href="https://github.com/AlanMartines/mywhatsapp-api-node-wppconnect" target="_blank"><i
+						class="fab fa-github-square"></i></a>
+			</div>
+		</div>
+	</footer>
+	<!-- Footer -->
+	<!--- --------------------------------------------------------------------------------------------------------------------------- --->
+	<!-- Primeiro o jQuery, depois o Popper.js, e depois o Bootstrap JS -->
+	<script type="text/javascript" src="../../public/jquery/jquery-3.5.1.js"></script>
+	<script type="text/javascript" src="../../public/popper/popper.min.js"></script>
+	<script type="text/javascript" src="../../public/bootstrap/js/bootstrap.min.js"></script>
+	<!-- Inclusão do Plugin jQuery Validation-->
+	<script type="text/javascript" src="../../public/jquery/jquery.validate.min.js"></script>
+	<script type="text/javascript" src="../../public/jquery/jquery.maskedinput.min.js"></script>
+	<script type="text/javascript" src="../../public/jquery/additional-methods.min.js"></script>
+	<script type="text/javascript" src="lobibox/js/lobibox.min.js"> </script>
+	<!--- --------------------------------------------------------------------------------------------------------------------------- --->
+	<!-- JavaScript (Opcional) -->
+	<script type="text/javascript" src="../../public/sweetalert2/js/sweetalert2.min.js"></script>
+	<script type="text/javascript" src="../../public/axios/axios.min.js"></script>
+	<script type="text/javascript" src="../../public/socket/socket.io.js"></script>
+	<script type="text/javascript" src="../../public/page/js/custom.js"></script>
+	<script type="text/javascript" src="../../public/page/js/start.js"></script>
+	<script type="text/javascript">
+		//
+		let url;
+		let host = '<%=host %>';
+		let host_ssl = '<%=host_ssl %>';
+		let port = '<%=port %>';
+		url = host_ssl == '' ? `http://${host}:${port}` : `https://${host_ssl}`;
+		let validate_mysql = '<%=validate_mysql %>';
+		let d = new Date();
+		let year = d.getFullYear();
+		$("#year").text(year);
+		//
+		$(document).ready(function () {
+			//
+			if(validate_mysql == true){
+				$('#SessionName').prop('readonly', true);
+			}
+			//
+    $('#AuthorizationToken').keyup(function() {   
+			if(validate_mysql == true){
+        let inputValue = $('#AuthorizationToken').val();
+				$('#SessionName').val(inputValue);
+			}
+    });
+			//
+			const socket = io(url + '/', { transports: ['websocket'] });
+			//
+			$("#description").html("Sistema não iniciado");
+			//
+			$("#start-form").validate({
+				rules: {
+					AuthorizationToken: {
+						required: true
+					},
+					SessionName: {
+						required: true
+					},
+					MultiDevice: {
+						required: true
+					},
+					whatsappVersion: {
+						required: false
+					}
+				},
+				messages: {
+					AuthorizationToken: {
+						required: "Por favor, Informe seu token."
+					},
+					SessionName: {
+						required: "Por favor, Informe o nome da sessão."
+					},
+					MultiDevice: {
+						required: "Por favor, Selecione uma opção."
+					},
+					whatsappVersion: {
+						required: "Por favor, Informe uma versão."
+					}
+				},
+				errorPlacement: function (error, element) {
+					$(element).closest('.form-group').find('.help-block').html(error.html());
+				},
+				highlight: function (element) {
+					$(element).closest('.form-control').removeClass('is-valid').addClass('is-invalid');
+					$(element).closest('.custom-select').removeClass('is-valid').addClass('is-invalid');
+				},
+				unhighlight: function (element, errorClass, validClass) {
+					$(element).closest('.form-group').find('.help-block').html('');
+					$(element).closest('.form-control').removeClass('is-invalid').addClass('is-valid');
+					$(element).closest('.custom-select').removeClass('is-invalid').addClass('is-valid');
+				},
+				submitHandler: function () {
+					event.preventDefault();
+					let data = $("#start-form").serialize();
+					/*
+					let formData = $("#start-form").serializeObject();
+					console.log(formData);
+					console.log(data);
+					try {
+					axios.post(`${url}/sistema/Start`, {
+						firstName: 'Fred',
+						lastName: 'Flintstone'
+					})
+						.then(function (response) {
+							console.log(response);
+						})
+						.catch(function (error) {
+							console.log(error);
+						});
+						} catch (error) {
+							// handle error
+						}
+					*/
+					//
+					$.ajax({
+						type: 'POST',
+						url: url + '/sistema/Start',
+						data: data,
+						dataType: 'json',
+						beforeSend: function () {
+							$("#send_form").html('<i class="fas fa-spinner fa-spin"></i> Iniciando ...');
+							$('#imageQrcode').attr("src", 'imagens/body/loading.gif');
+							$("#description").html("Por favor aguarde, sistema iniciando.");
+						},
+						success: function (response) {
+							console.log(response);
+							$("#send_form").html('Iniciar');
+							if (response.state == 'CONNECTED') {
+								$('#imageQrcode').attr("src", 'imagens/body/ok.png');
+								$("#description").html("Sistema iniciado com sucesso.");
+
+								window.scrollTo(0, 0);
+							} else if (response.state == 'DISCONNECTED') {
+								$('#imageQrcode').attr("src", 'imagens/body/error.png');
+								$("#description").html("Sistema desconectado");
+
+								window.scrollTo(0, 0);
+							} else if (response.state == 'STARTING') {
+								$('#imageQrcode').attr("src", 'imagens/body/loading.gif');
+								$("#description").html("Por favor aguarde, sistema iniciando.");
+
+								window.scrollTo(0, 0);
+							}
+						},
+						error: function (XMLHttpRequest, textStatus, errorThrown) {
+							$("#send_form").html('Iniciar');
+							$('#imageQrcode').attr("src", 'imagens/body/error.png');
+							$("#description").html("Sistema não iniciado");
+
+							window.scrollTo(0, 0);
+						}
+					}).fail(function (jqXHR, textStatus, error) {
+						$("#send_form").html('Iniciar');
+						$('#imageQrcode').attr("src", 'imagens/body/error.png');
+						$("#description").html("Sistema não iniciado");
+
+						window.scrollTo(0, 0);
+					});
+				}
+			});
+			//
+			socket.on('qrCode', (qrCode) => {
+				let SessionName = $('#SessionName').val();
+				if (SessionName === qrCode.SessionName) {
+					$("#description").html("Por favor, efetue a leitura do qr code informado, tentativa " + qrCode.attempts);
+					$('#imageQrcode').attr("src", qrCode.data);
+				}
+			});
+			//
+			socket.on('status', (update) => {
+				let SessionName = $('#SessionName').val();
+				//
+				console.log(update);
+				//
+				if (SessionName == update.SessionName) {
+					if (update.status == 'isLogged' || update.status == 'qrReadSuccess' || update.status == 'chatsAvailable' || update.status == 'inChat') {
+						//
+						$('#imageQrcode').attr("src", 'imagens/body/ok.png');
+						$("#description").html("Sistema iniciado com sucesso.");
+						//
+					} else if (update.status == 'qrReadError') {
+						//
+						$('#imageQrcode').attr("src", 'imagens/body/error.png');
+						$("#description").html("Erro ao efetuar leitura do qr code ou não lido.");
+						//
+					} else if (update.status == 'autocloseCalled' || update.status == 'browserClose') {
+						//
+						$('#imageQrcode').attr("src", 'imagens/body/error.png');
+						$("#description").html("Erro ao efetuar leitura do qr code, navegador fechado.");
+						//
+					} else if (update.status == 'desconnectedMobile') {
+						//
+						$('#imageQrcode').attr("src", 'imagens/body/error.png');
+						$("#description").html("Dispositivo desconectado.");
+						//
+					} else if (update.status == 'notLogged') {
+						//
+						$('#imageQrcode').attr("src", 'imagens/body/error.png');
+						$("#description").html("Dispositivo desconectado.");
+						//
+					}
+				}
+				//
+			});
+		});
+	</script>
