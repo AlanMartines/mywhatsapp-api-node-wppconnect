@@ -346,7 +346,7 @@ module.exports = class Sessions {
 	//
 	// ------------------------------------------------------------------------------------------------------- //
 	//
-	static async Start(socket, SessionName, AuthorizationToken, MultiDevice, whatsappVersion) {
+	static async Start(socket, SessionName, AuthorizationToken, whatsappVersion) {
 		Sessions.sessions = Sessions.sessions || []; //start array
 
 		var session = Sessions.getSession(SessionName);
@@ -354,7 +354,7 @@ module.exports = class Sessions {
 		//
 		if (session == false) {
 			//create new session
-			session = await Sessions.addSesssion(socket, SessionName, AuthorizationToken, MultiDevice, whatsappVersion);
+			session = await Sessions.addSesssion(socket, SessionName, AuthorizationToken, whatsappVersion);
 			//
 		} else if (["CLOSED"].includes(session.state)) {
 			//restart session
@@ -370,7 +370,7 @@ module.exports = class Sessions {
 			console.log('- State do sistema:', session.state);
 			console.log('- Status da sessão:', session.status);
 			//
-			session.client = Sessions.initSession(socket, SessionName, AuthorizationToken, MultiDevice, whatsappVersion);
+			session.client = Sessions.initSession(socket, SessionName, AuthorizationToken, whatsappVersion);
 			//
 			//
 		} else if (["CONFLICT", "UNPAIRED", "UNLAUNCHED", "UNPAIRED_IDLE"].includes(session.state)) {
@@ -389,7 +389,7 @@ module.exports = class Sessions {
 				client.useHere();
 			});
 			//
-			session.client = Sessions.initSession(socket, SessionName, AuthorizationToken, MultiDevice, whatsappVersion);
+			session.client = Sessions.initSession(socket, SessionName, AuthorizationToken, whatsappVersion);
 			//
 		} else if (["DISCONNECTED"].includes(session.state)) {
 			//
@@ -405,7 +405,7 @@ module.exports = class Sessions {
 			console.log('- State do sistema:', session.state);
 			console.log('- Status da sessão:', session.status);
 			//
-			session.client = Sessions.initSession(socket, SessionName, AuthorizationToken, MultiDevice, whatsappVersion);
+			session.client = Sessions.initSession(socket, SessionName, AuthorizationToken, whatsappVersion);
 			//
 			//
 		} else if (["NOTFOUND"].includes(session.state)) {
@@ -422,7 +422,7 @@ module.exports = class Sessions {
 			console.log('- State do sistema:', session.state);
 			console.log('- Status da sessão:', session.status);
 			//
-			session = await Sessions.addSesssion(socket, SessionName, AuthorizationToken, MultiDevice, whatsappVersion);
+			session = await Sessions.addSesssion(socket, SessionName, AuthorizationToken, whatsappVersion);
 			//
 		} else {
 			//
@@ -439,11 +439,10 @@ module.exports = class Sessions {
 	//
 	// ------------------------------------------------------------------------------------------------------- //
 	//
-	static async addSesssion(socket, SessionName, AuthorizationToken, MultiDevice, whatsappVersion) {
+	static async addSesssion(socket, SessionName, AuthorizationToken, whatsappVersion) {
 		console.log("- Adicionando sessão");
 		var newSession = {
 			AuthorizationToken: AuthorizationToken,
-			MultiDevice: MultiDevice,
 			name: SessionName,
 			process: null,
 			qrcode: null,
@@ -466,7 +465,7 @@ module.exports = class Sessions {
 		console.log("- Nova sessão: " + SessionName);
 
 		//setup session
-		newSession.client = Sessions.initSession(socket, SessionName, AuthorizationToken, MultiDevice, whatsappVersion);
+		newSession.client = Sessions.initSession(socket, SessionName, AuthorizationToken, whatsappVersion);
 		//
 
 		return newSession;
@@ -497,9 +496,8 @@ module.exports = class Sessions {
 	//
 	// ------------------------------------------------------------------------------------------------------- //
 	//
-	static async initSession(socket, SessionName, AuthorizationToken, MultiDevice, whatsappVersion) {
+	static async initSession(socket, SessionName, AuthorizationToken, whatsappVersion) {
 		console.log("- Iniciando sessão");
-		console.log("- Multi-Device:", MultiDevice);
 		var session = Sessions.getSession(SessionName);
 		session.browserSessionToken = null;
 		session.AuthorizationToken = AuthorizationToken;
@@ -514,18 +512,6 @@ module.exports = class Sessions {
 			║ ║├─┘ │ ││ ││││├─┤│    ║  ├┬┘├┤ ├─┤ │ ├┤   ╠═╝├─┤├┬┘├─┤│││├┤  │ ├┤ ├┬┘└─┐
 			╚═╝┴   ┴ ┴└─┘┘└┘┴ ┴┴─┘  ╚═╝┴└─└─┘┴ ┴ ┴ └─┘  ╩  ┴ ┴┴└─┴ ┴┴ ┴└─┘ ┴ └─┘┴└─└─┘
 	 */
-		//
-		/*
-		if (MultiDevice == true || MultiDevice == 'true') {
-			//
-			await deletaToken(`${tokenPatch}`, `${SessionName}.data.json`);
-			//
-		} else if (MultiDevice == false || typeof MultiDevice == 'undefined') {
-			//
-			await deletaCache(`${tokenPatch}`, `WPP-${SessionName}`);
-			//
-		}
-		*/
 		//
 		try {
 			const client = await wppconnect.create({
