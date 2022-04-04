@@ -381,6 +381,7 @@ try{
 try{
 		client?.onAck(async (ack) => {
 			console.log("- Listen to ack", ack?.ack);
+			console.log(ack);
 			let type = ack?.type;
 			if (type == 'chat' && ack?.subtype == 'url') {
 				type = 'link'
