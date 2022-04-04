@@ -372,7 +372,8 @@ module.exports = class Events {
 				}
 			});
 		} catch (error) {
-			console.log("- Error onAnyMessage:", error.message);
+			console?.log('- Nome da sessão:', session.name);
+			console.log("- Error onAnyMessage:", error);
 		}
 	}
 
@@ -450,7 +451,8 @@ module.exports = class Events {
 
 						break;
 				}
-				console.log("- Listen to ack", onAck, "for status", status);
+				console?.log('- Nome da sessão:', session.name);
+				console?.log("- Listen to ack", onAck, "for status", status);
 				let response = {
 					"wook": 'MESSAGE_STATUS',
 					"status": status,
@@ -466,6 +468,7 @@ module.exports = class Events {
 
 			});
 		} catch (error) {
+			console?.log('- Nome da sessão:', session.name);
 			console.log("- Error onAck:", error);
 		}
 	}
@@ -473,6 +476,7 @@ module.exports = class Events {
 	static statusConnection(session, client, socket) {
 		try {
 			client?.onStateChange(async (state) => {
+				console?.log('- Nome da sessão:', session.name);
 				console?.log('- State changed: ', state);
 				// force whatsapp take over
 				if ('CONFLICT'?.includes(state)) client?.useHere();
@@ -485,7 +489,8 @@ module.exports = class Events {
 
 			});
 		} catch (error) {
-			console.log("- Error onStateChange:", error.message);
+			console?.log('- Nome da sessão:', session.name);
+			console.log("- Error onStateChange:", error);
 		}
 	}
 
@@ -494,20 +499,24 @@ module.exports = class Events {
 		// function to detect incoming call
 		try {
 			client.onIncomingCall(async (call) => {
+				console?.log('- Nome da sessão:', session.name);
 				console?.log('- onIncomingCall: ', call?.peerJid);
 				await client?.rejectCall();
 				await client?.sendText(call.peerJid, await saudacao() + ",\nDesculpe-me mas não consigo atender sua chamada, se for urgente manda msg de texto, grato.");
 			});
 		} catch (error) {
+			console?.log('- Nome da sessão:', session.name);
 			console.log("- Error onIncomingCall:", error);
 		}
 		//
 		try {
 			// Listen when client has been added to a group
 			client?.onAddedToGroup(async (chatEvent) => {
+				console?.log('- Nome da sessão:', session.name);
 				console.log('- Listen when client has been added to a group:', chatEvent.name);
 			});
 		} catch (error) {
+			console?.log('- Nome da sessão:', session.name);
 			console.log("- Error onAddedToGroup:", error);
 		}
 		//
