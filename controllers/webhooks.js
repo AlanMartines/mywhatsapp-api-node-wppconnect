@@ -80,6 +80,7 @@ module.exports = class Webhooks {
 
     static async wh_qrcode(data, response, urlCode) {
         //let data = Sessions?.getSession(session)
+				console.log("- WH QR-Code", data?.wh_qrcode);
         try {
             let object = {
                 "wook": 'QRCODE',
