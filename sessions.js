@@ -371,7 +371,7 @@ module.exports = class Sessions {
 			console.log('- Status da sessão:', session.status);
 			//
 			session.client = Sessions.initSession(socket, SessionName, AuthorizationToken, MultiDevice, whatsappVersion);
-			Sessions.setup(socket, SessionName);
+			//
 			//
 		} else if (["CONFLICT", "UNPAIRED", "UNLAUNCHED", "UNPAIRED_IDLE"].includes(session.state)) {
 			//
@@ -406,7 +406,7 @@ module.exports = class Sessions {
 			console.log('- Status da sessão:', session.status);
 			//
 			session.client = Sessions.initSession(socket, SessionName, AuthorizationToken, MultiDevice, whatsappVersion);
-			Sessions.setup(socket, SessionName);
+			//
 			//
 		} else if (["NOTFOUND"].includes(session.state)) {
 			//
@@ -467,7 +467,7 @@ module.exports = class Sessions {
 
 		//setup session
 		newSession.client = Sessions.initSession(socket, SessionName, AuthorizationToken, MultiDevice, whatsappVersion);
-		Sessions.setup(socket, SessionName);
+		//
 
 		return newSession;
 	} //addSession
@@ -786,31 +786,6 @@ module.exports = class Sessions {
 		║ ╦├┤  │  │ │││││ ┬  └─┐ │ ├─┤├┬┘ │ ├┤  ││
 		╚═╝└─┘ ┴  ┴ ┴┘└┘└─┘  └─┘ ┴ ┴ ┴┴└─ ┴ └─┘─┴┘
 	*/
-	//
-	static async setup(socket, SessionName) {
-		var session = Sessions.getSession(SessionName);
-		await session.client.then(async (client) => {
-			/*
-			try {
-				//
-				events?.receiveMessage(session, client, socket);
-				events?.statusMessage(session, client, socket);
-				events?.statusConnection(session, client, socket);
-				events?.extraEvents(session, client, socket);
-				//
-			} catch (error) {
-				session.state = "NOTFOUND";
-				session.status = "notLogged";
-				session.qrcode = null;
-				session.attempts = 0;
-				session.message = 'Sistema desconectado';
-				console.log("- Instância não iniciada:", error.message);
-			}
-			*/
-		});
-	} //setup
-	//
-	// ------------------------------------------------------------------------------------------------//
 	//
 	static async closeSession(SessionName) {
 		console.log("- Fechando sessão");

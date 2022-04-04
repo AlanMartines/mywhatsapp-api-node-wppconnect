@@ -31,7 +31,7 @@ module.exports = class Events {
 
 	static async receiveMessage(session, client, socket) {
 try{
-		await client?.onAnyMessage(async message => {
+		await client?.onAnyMessage(async (message) => {
 			if (message.from != 'status@broadcast') {
 				let type = message?.type
 
@@ -379,14 +379,15 @@ try{
 	static statusMessage(session, client, socket) {
 		let data = Sessions.getSession(session);
 try{
-		client?.onAck(async ack => {
-			let type = ack?.type
+		client?.onAck(async (ack) => {
+			console.log("- Listen to ack", ack?.ack);
+			let type = ack?.type;
 			if (type == 'chat' && ack?.subtype == 'url') {
 				type = 'link'
 			} else if (type == 'chat' && !ack?.subtype) {
 				type = 'text'
 			}
-			let status
+			let status;
 			switch (ack?.ack) {
 				case 0:
 					status = 'CLOCK'
@@ -465,14 +466,14 @@ try{
 
 		});
 	} catch (error) {
-		console.log("- Error onAck:", error.message);
+		console.log("- Error onAck:", error);
 	}
 	}
 
 	static statusConnection(session, client, socket) {
 try{
 		client?.onStateChange(async (state) => {
-			console?.log('State changed: ', state);
+			console?.log('- State changed: ', state);
 			// force whatsapp take over
 			if ('CONFLICT'?.includes(state)) client?.useHere();
 			// detect disconnect on whatsapp
@@ -493,6 +494,7 @@ try{
 		// function to detect incoming call
 		try {
 			client.onIncomingCall(async (call) => {
+				console?.log('- onIncomingCall: ', call?.peerJid);
 				await client?.rejectCall();
 				await client?.sendText(call.peerJid, await saudacao() + ",\nDesculpe-me mas não consigo atender sua chamada, se for urgente manda msg de texto, grato.");
 			});
