@@ -479,8 +479,8 @@ module.exports = class Events {
 				// detect disconnect on whatsapp
 				if ('UNPAIRED'?.includes(state)) webhooks?.wh_connect(session, 'disconnectedMobile');
 				if (state === 'TIMEOUT') {
-					client?.starttoWatchdog(15000); // 15s
-					client?.stoptoWatchdog(15000); // 15s
+					client?.startPhoneWatchdog(15000); // 15s
+					client?.stopPhoneWatchdog(15000); // 15s
 				}
 
 			});
