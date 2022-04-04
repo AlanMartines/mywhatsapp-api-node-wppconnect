@@ -14,7 +14,7 @@ const validUrl = require('valid-url');
 const upload = multer({})
 const router = express.Router();
 const Sessions = require("../sessions.js");
-const config = require('./config.global');
+const config = require('../config.global');
 const verifyToken = require("../middleware/verifyToken");
 const verifyJson = require("../middleware/validateJson");
 //
