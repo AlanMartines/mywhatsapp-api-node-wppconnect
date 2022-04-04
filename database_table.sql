@@ -7,6 +7,7 @@ USE `mywhatsapp-api`;
 CREATE TABLE IF NOT EXISTS `tokens` (
   `ID` int unsigned NOT NULL AUTO_INCREMENT,
   `token` char(255) NOT NULL,
+	`webhook` char(255) NULL,
   `status` char(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'false',
   `state` char(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'false',
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
