@@ -461,8 +461,8 @@ module.exports = class Events {
 					"type": type,
 					"dateTime": moment?.unix(ack?.t)?.format('DD-MM-YYYY hh:mm:ss')
 				}
-				data.funcoesSocket.ack(session, response)
-				await webhooks?.wh_status(session, response)
+				//data.funcoesSocket.ack(session, response);
+				await webhooks?.wh_status(session, response);
 
 			});
 		} catch (error) {
