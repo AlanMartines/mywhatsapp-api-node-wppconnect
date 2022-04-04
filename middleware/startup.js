@@ -45,7 +45,7 @@ module.exports = class startAll {
 				const conn = require('../config/dbConnection').promise();
 				try {
 					//
-					const sql = "SELECT token FROM tokens";
+					const sql = "SELECT token FROM tokens WHERE active='true'";
 					const [row] = await conn.execute(sql);
 					//
 					if (row.length > 0) {
@@ -77,7 +77,7 @@ module.exports = class startAll {
 						if (files.length) {
 							//
 							fs.readdirSync(tokenPatch).forEach(SessionName => {
-								if (SessionName.split('.')[2] === 'json') {
+								if (SessionName.split('.')[2] == 'json') {
 									console.log(`- File json Session: ${SessionName.split('.')[0]}`);
 									SessionsArray.push(SessionName.split('.')[0]);
 								}
