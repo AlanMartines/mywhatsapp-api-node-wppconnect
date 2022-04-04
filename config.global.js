@@ -7,6 +7,7 @@ config.PORT = process.env.PORT || '9001';
 config.DOMAIN_SSL = process.env.DOMAIN_SSL || '';
 config.VIEW_QRCODE_TERMINAL = process.env.VIEW_QRCODE_TERMINAL || 1;
 config.DEVICE_NAME = process.env.DEVICE_NAME || 'My Whatsapp';
+config.WA_VERSION = process.env.WA_VERSION || '';
 config.AUTO_CLOSE = process.env.AUTO_CLOSE || 60000;
 config.JWT_SECRET = process.env.JWT_SECRET || '09f26e402586e2faa8da4c98a35f1b20d6b033c60';
 config.VALIDATE_MYSQL = process.env.VALIDATE_MYSQL || 0;

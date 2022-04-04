@@ -634,8 +634,8 @@ module.exports = class Sessions {
 						//
 					}
 				},
-				whatsappVersion: whatsappVersion ? `${whatsappVersion}` : '', // whatsappVersion: '2.2142.12',
-				deviceName: `${config.DEVICE_NAME}`,
+				whatsappVersion: whatsappVersion ? `${whatsappVersion}` : `${config.WA_VERSION}`, // whatsappVersion: '2.2142.12',
+				deviceName: config.DEVICE_NAME ? `${config.DEVICE_NAME}` : 'My-Whatsapp',
 				tokenStore: 'memory',
 				headless: true, // Headless chrome
 				devtools: false, // Open devtools by default
@@ -2255,7 +2255,7 @@ module.exports = class Sessions {
 		//
 		var session = Sessions.getSession(SessionName);
 		var resultgetHostDevice = await session.client.then(async client => {
-			return await client.getMe().then((result) => {
+			return await client.getHostDevice().then((result) => {
 				console.log('Result: ', result); //return object success
 				//
 				return {
@@ -2263,18 +2263,18 @@ module.exports = class Sessions {
 					"status": 200,
 					"message": "Dados do dispositivo obtido com sucesso",
 					"HostDevice": {
-						"user": result.wid.user,
-						"connected": result.connected,
-						"isResponse": result.isResponse,
-						"battery": result.battery,
-						"plugged": result.plugged,
-						"locales": result.locales,
-						"is24h": result.is24h,
-						"device_manufacturer": result.phone.device_manufacturer,
-						"platform": result.platform,
-						"os_version": result.phone.os_version,
-						"wa_version": result.phone.wa_version,
-						"pushname": result.pushname
+						"user": result?.wid?.user,
+						"connected": result?.connected,
+						"isResponse": result?.isResponse,
+						"battery": result?.battery,
+						"plugged": result?.plugged,
+						"locales": result?.locales,
+						"is24h": result?.is24h,
+						"device_manufacturer": result?.phone?.device_manufacturer,
+						"platform": result?.platform,
+						"os_version": result?.phone?.os_version,
+						"wa_version": result?.phone?.wa_version,
+						"pushname": result?.pushname
 					}
 				};
 				//
