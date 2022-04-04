@@ -147,10 +147,42 @@ router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next
 				await Sessions.Start(req.io, removeWithspace(req.body.SessionName), removeWithspace(req.body.SessionName), req.body.MultiDevice, req.body.whatsappVersion);
 				var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
 				console.log("- AuthorizationToken:", removeWithspace(req.body.SessionName));
-				session.wh_status = req.body.wh_status;
-				session.wh_message = req.body.wh_message;
-				session.wh_qrcode = req.body.wh_qrcode;
-				session.wh_connect = req.body.wh_connect;
+				if (parseInt(config.VALIDATE_MYSQL) == true) {
+					const conn = require('../config/dbConnection').promise();
+					try {
+						//
+						const sql = "SELECT * FROM tokens WHERE token=? LIMIT 1";
+						const values = [removeWithspace(req.body.SessionName)];
+						const [row] = await conn.execute(sql, values);
+						//conn.end();
+						//conn.release();
+						//
+						if (row.length == 1) {
+							//
+							const results = JSON.parse(JSON.stringify(row[0]));
+							//
+							const webHoon = results.active;
+							//
+							session.wh_status = webHoon;
+							session.wh_message = webHoon;
+							session.wh_qrcode = webHoon;
+							session.wh_connect = webHoon;
+							//
+						} else {
+							session.wh_status = req.body.wh_status;
+							session.wh_message = req.body.wh_message;
+							session.wh_qrcode = req.body.wh_qrcode;
+							session.wh_connect = req.body.wh_connect;
+						}
+					} catch (err) {
+						console.log("- Error:", err);
+					}
+				} else {
+					session.wh_status = req.body.wh_status;
+					session.wh_message = req.body.wh_message;
+					session.wh_qrcode = req.body.wh_qrcode;
+					session.wh_connect = req.body.wh_connect;
+				}
 				var Start = {
 					result: "info",
 					state: 'STARTING',
