@@ -573,6 +573,7 @@ docker run -d -p 9001:9001 --name ApiWPPconnect \
 	-e DOMAIN_SSL= \
 	-e VIEW_QRCODE_TERMINAL=0 \
 	-e DEVICE_NAME='My-Whatsapp' \
+	-e WA_VERSION= \
 	-e AUTO_CLOSE=60000 \
 	-e JWT_SECRET=09f26e402586e2faa8da4c98a35f1b20d6b033c60 \
 	-e VALIDATE_MYSQL=0 \
