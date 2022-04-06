@@ -143,7 +143,6 @@ router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next
 			case 'CLOSED':
 			case 'DISCONNECTED':
 			case 'NOTFOUND':
-			case 'qrRead':
 				//
 				await Sessions.Start(req.io, removeWithspace(req.body.SessionName), removeWithspace(req.body.SessionName), req.body.whatsappVersion);
 				var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
