@@ -1,6 +1,7 @@
 const webhooks = require('./webhooks');
 const Sessions = require('./sessions');
 const moment = require('moment');
+const mime = require('mime-types');
 moment()?.format('DD-MM-YYYY hh:mm:ss');
 moment?.locale('pt-br');
 //
