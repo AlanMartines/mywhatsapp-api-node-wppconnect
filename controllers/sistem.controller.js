@@ -157,7 +157,7 @@ router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next
 						//conn.end();
 						//conn.release();
 						//
-						if (row.length > 0) {
+						if (row.length == 1) {
 							//
 							const results = JSON.parse(JSON.stringify(row[0]));
 							//
