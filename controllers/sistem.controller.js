@@ -163,11 +163,19 @@ router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next
 							//
 							const webHook = results.webhook;
 							//
-							session.wh_status = webHook;
-							session.wh_message = webHook;
-							session.wh_qrcode = webHook;
-							session.wh_connect = webHook;
-							//
+							if (webHook) {
+								//
+								session.wh_status = webHook;
+								session.wh_message = webHook;
+								session.wh_qrcode = webHook;
+								session.wh_connect = webHook;
+								//
+							} else {
+								session.wh_status = req.body.wh_status;
+								session.wh_message = req.body.wh_message;
+								session.wh_qrcode = req.body.wh_qrcode;
+								session.wh_connect = req.body.wh_connect;
+							}
 						} else {
 							session.wh_status = req.body.wh_status;
 							session.wh_message = req.body.wh_message;
