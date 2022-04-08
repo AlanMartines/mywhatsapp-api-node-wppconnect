@@ -359,18 +359,28 @@ module.exports = class Sessions {
 		session.attempts = 0;
 		session.browserSessionToken = null;
 		//
+		await deletaToken(`${tokenPatch}`, `${SessionName}.data.json`);
+		await deletaCache(`${tokenPatch}`, `WPP-${SessionName}`);
+		//
 		session.client = await Sessions.initSession(socket, SessionName, AuthorizationToken, whatsappVersion).then(async (result) => {
 			//console.log('Result: ', result); //return object success
-			//
-			await deletaToken(`${tokenPatch}`, `${SessionName}.data.json`);
-			await deletaCache(`${tokenPatch}`, `WPP-${SessionName}`);
-			//
-			return {
-				result: "info",
-				state: session.state,
-				status: session.status,
-				message: "Sistema iniciando e indisponivel para uso"
-			};
+			if (session.client) {
+				return {
+					result: "info",
+					state: session.state,
+					status: session.status,
+					message: "Sistema iniciando e indisponivel para uso"
+				};
+			} else {
+				//
+				return {
+					result: 'error',
+					state: 'CLOSED',
+					status: 'notLogged',
+					message: 'Sistema Off-line'
+				};
+				//
+			}
 			//
 		}).catch((erro) => {
 			console.error("Error when:", erro); //return object error
