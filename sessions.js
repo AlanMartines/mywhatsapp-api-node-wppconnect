@@ -364,7 +364,9 @@ module.exports = class Sessions {
 			await deletaCache(`${tokenPatch}`, `WPP-${SessionName}`);
 			//
 			try {
-				session.client = await Sessions.initSession(socket, SessionName, AuthorizationToken, whatsappVersion).then(async (result) => {
+				session.client = await Sessions.initSession(socket, SessionName, AuthorizationToken, whatsappVersion);
+				/*
+				.then((result) => {
 					//console.log('Result: ', result); //return object success
 					return result;
 					//
@@ -379,6 +381,7 @@ module.exports = class Sessions {
 					};
 					//
 				});
+				*/
 				//console.log('Result: ', result); //return object success
 				if (session.client) {
 					return {
