@@ -4,6 +4,7 @@ LABEL version="1.0.0" description="ApiWPPconnect" maintainer="Alan Martines<alan
 
 RUN mkdir -p /home/ApiWPPconnect
 RUN mkdir -p /usr/local/tokens
+RUN chmod -R 777 /usr/local/tokens/
 
 RUN apt-get update && \
 	apt-get upgrade -y && \
