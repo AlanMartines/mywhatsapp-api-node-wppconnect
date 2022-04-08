@@ -364,7 +364,7 @@ module.exports = class Sessions {
 			await deletaCache(`${tokenPatch}`, `WPP-${SessionName}`);
 			//
 			try {
-				session.client = await Sessions.initSession(socket, SessionName, AuthorizationToken, whatsappVersion);
+				session.client = Sessions.initSession(socket, SessionName, AuthorizationToken, whatsappVersion);
 				//
 					return {
 						result: "info",
