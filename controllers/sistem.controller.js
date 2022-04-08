@@ -216,6 +216,37 @@ router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next
 //
 // ------------------------------------------------------------------------------------------------//
 //
+router.post("/resetToken", verifyToken.verify, upload.none(''), async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName)) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
+		var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
+		//
+		var resetToken = await session.process.add(async () => await Sessions.resetToken(req.io, removeWithspace(session.SessionName), removeWithspace(session.SessionName), session.whatsappVersion));
+		res.setHeader('Content-Type', 'application/json');
+		res.status(200).json({
+			"Status": resetToken
+		});
+		//
+	}
+	//
+});
+//
+// ------------------------------------------------------------------------------------------------//
+//
 router.post("/Status", upload.none(''), verifyToken.verify, async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName)) {
@@ -3796,12 +3827,12 @@ router.post("/killServiceWorker", upload.none(''), verifyToken.verify, async (re
 		//
 		var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
 		//
-				var killServiceWorker = await session.process.add(async () => await Sessions.killServiceWorker(removeWithspace(req.body.SessionName)));
-				res.setHeader('Content-Type', 'application/json');
-				res.status(200).json({
-					"Status": killServiceWorker
-				});
-				//
+		var killServiceWorker = await session.process.add(async () => await Sessions.killServiceWorker(removeWithspace(req.body.SessionName)));
+		res.setHeader('Content-Type', 'application/json');
+		res.status(200).json({
+			"Status": killServiceWorker
+		});
+		//
 	}
 }); //killServiceWorker
 //
@@ -3826,13 +3857,13 @@ router.post("/restartService", upload.none(''), verifyToken.verify, async (req, 
 	} else {
 		//
 		var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
-				//
-				var restartService = await session.process.add(async () => await Sessions.restartService(removeWithspace(req.body.SessionName)));
-				res.setHeader('Content-Type', 'application/json');
-				res.status(200).json({
-					"Status": restartService
-				});
-				//
+		//
+		var restartService = await session.process.add(async () => await Sessions.restartService(removeWithspace(req.body.SessionName)));
+		res.setHeader('Content-Type', 'application/json');
+		res.status(200).json({
+			"Status": restartService
+		});
+		//
 	}
 }); //restartService
 //
@@ -3857,61 +3888,61 @@ router.post("/reloadService", upload.none(''), verifyToken.verify, async (req, r
 	} else {
 		//
 		var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
+		//
+		try {
+			var killServiceWorker = await session.process.add(async () => await Sessions.killServiceWorker(removeWithspace(req.body.SessionName)));
+			//
+			if (killServiceWorker.erro === false && killServiceWorker.status === 200) {
 				//
-				try {
-					var killServiceWorker = await session.process.add(async () => await Sessions.killServiceWorker(removeWithspace(req.body.SessionName)));
+				var restartService = await session.process.add(async () => await Sessions.restartService(removeWithspace(req.body.SessionName)));
+				//
+				if (restartService.erro === false && restartService.status === 200) {
 					//
-					if (killServiceWorker.erro === false && killServiceWorker.status === 200) {
-						//
-						var restartService = await session.process.add(async () => await Sessions.restartService(removeWithspace(req.body.SessionName)));
-						//
-						if (restartService.erro === false && restartService.status === 200) {
-							//
-							var reload = restartService;
-							//
-							//await deletaToken(session.tokenPatch + "/" + req.body.SessionName + ".data.json");
-							//
-							res.setHeader('Content-Type', 'application/json');
-							res.status(200).json({
-								"Status": reload
-							});
-							//
-						} else {
-							//
-							var reload = restartService;
-							//
-							res.setHeader('Content-Type', 'application/json');
-							res.status(400).json({
-								"Status": reload
-							});
-							//
-						}
-						//
-					} else {
-						//
-						var reload = killServiceWorker;
-						//
-						res.setHeader('Content-Type', 'application/json');
-						res.status(400).json({
-							"Status": reload
-						});
-						//
-					}
-				} catch (error) {
-					console.log("Erro on killServiceWorker\n", error);
+					var reload = restartService;
+					//
+					//await deletaToken(session.tokenPatch + "/" + req.body.SessionName + ".data.json");
 					//
 					res.setHeader('Content-Type', 'application/json');
-					res.status(404).json({
-						"Status": {
-							"erro": true,
-							"status": 404,
-							"message": "Sessão não iniciada.",
-							"restartService": false
-						}
+					res.status(200).json({
+						"Status": reload
+					});
+					//
+				} else {
+					//
+					var reload = restartService;
+					//
+					res.setHeader('Content-Type', 'application/json');
+					res.status(400).json({
+						"Status": reload
 					});
 					//
 				}
 				//
+			} else {
+				//
+				var reload = killServiceWorker;
+				//
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": reload
+				});
+				//
+			}
+		} catch (error) {
+			console.log("Erro on killServiceWorker\n", error);
+			//
+			res.setHeader('Content-Type', 'application/json');
+			res.status(404).json({
+				"Status": {
+					"erro": true,
+					"status": 404,
+					"message": "Sessão não iniciada.",
+					"restartService": false
+				}
+			});
+			//
+		}
+		//
 	}
 }); //reloadService
 //
@@ -4282,19 +4313,6 @@ router.post("/stopPhoneWatchdog", upload.none(''), verifyToken.verify, async (re
  ║ ├┤ └─┐ │ ├┤ └─┐   ││├┤   ╠╦╝│ │ │ ├─┤└─┐
  ╩ └─┘└─┘ ┴ └─┘└─┘  ─┴┘└─┘  ╩╚═└─┘ ┴ ┴ ┴└─┘
  */
-//
-// ------------------------------------------------------------------------------------------------//
-//
-router.post("/RotaTeste", verifyToken.verify, upload.single('file'), async (req, res, next) => {
-	//
-	res.setHeader('Content-Type', 'application/json');
-	res.status(200).json({
-		auth: true,
-		token: req.userToken,
-		message: 'Token validate'
-	});
-	//
-});
 //
 // ------------------------------------------------------------------------------------------------//
 //

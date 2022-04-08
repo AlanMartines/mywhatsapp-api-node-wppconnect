@@ -346,6 +346,46 @@ module.exports = class Sessions {
 	//
 	// ------------------------------------------------------------------------------------------------------- //
 	//
+	static async resetToken(socket, SessionName, AuthorizationToken, whatsappVersion) {
+		console.log("- Resetando sessão");
+		var session = Sessions.getSession(SessionName);
+		//
+		session.AuthorizationToken = AuthorizationToken;
+		session.qrcode = null;
+		session.client = false;
+		session.result = null;
+		session.state = null;
+		session.status = null;
+		session.message = null;
+		session.attempts = 0;
+		session.browserSessionToken = null;
+		//
+		session.client = await Sessions.initSession(socket, SessionName, AuthorizationToken, whatsappVersion).then((result) => {
+			//console.log('Result: ', result); //return object success
+			//
+			return {
+				result: "info",
+				state: session.state,
+				status: session.status,
+				message: "Sistema iniciando e indisponivel para uso"
+			};
+			//
+		}).catch((erro) => {
+			console.error("Error when:", erro); //return object error
+			//
+			return {
+				result: 'error',
+				state: 'CLOSED',
+				status: 'notLogged',
+				message: 'Sistema Off-line'
+			};
+			//
+		});
+		//
+	} //resetToken
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
 	static async Start(socket, SessionName, AuthorizationToken, whatsappVersion) {
 		Sessions.sessions = Sessions.sessions || []; //start array
 
@@ -502,7 +542,7 @@ module.exports = class Sessions {
 		session.browserSessionToken = null;
 		session.AuthorizationToken = AuthorizationToken;
 		session.state = 'STARTING';
-		session.status = 'qrRead';
+		session.status = 'notLogged';
 		//
 		session.process = new pQueue({ concurrency: 1 });
 		//
