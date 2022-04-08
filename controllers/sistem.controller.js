@@ -10,6 +10,7 @@ const express = require("express");
 const multer = require('multer');
 const sleep = require('sleep-promise');
 const validUrl = require('valid-url');
+const mime = require('mime-types');
 // https://stackoverflow.com/questions/60408575/how-to-validate-file-extension-with-multer-middleware
 const upload = multer({})
 const router = express.Router();
