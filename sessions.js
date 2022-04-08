@@ -350,7 +350,6 @@ module.exports = class Sessions {
 		console.log("- Resetando sessão");
 		var session = Sessions.getSession(SessionName);
 		//
-		session.AuthorizationToken = AuthorizationToken;
 		session.qrcode = null;
 		session.client = false;
 		session.result = null;
