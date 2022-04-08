@@ -365,44 +365,18 @@ module.exports = class Sessions {
 			//
 			try {
 				session.client = await Sessions.initSession(socket, SessionName, AuthorizationToken, whatsappVersion);
-				/*
-				.then((result) => {
-					//console.log('Result: ', result); //return object success
-					return result;
-					//
-				}).catch((error) => {
-					console.error("Error when:", error); //return object error
-					//
-					return {
-						result: 'error',
-						state: 'CLOSED',
-						status: 'notLogged',
-						message: 'Sistema Off-line'
-					};
-					//
-				});
-				*/
-				//console.log('Result: ', result); //return object success
-				if (session.client) {
+				//
 					return {
 						result: "info",
 						state: session.state,
 						status: session.status,
 						message: "Sistema iniciando e indisponivel para uso"
 					};
-				} else {
-					//
-					return {
-						result: 'error',
-						state: 'CLOSED',
-						status: 'notLogged',
-						message: 'Sistema Off-line'
-					};
-					//
-				}
 				//
 			} catch (error) {
 				console.error("Error when:", error); //return object error
+				//
+				session.client = false;
 				//
 				return {
 					result: 'error',
