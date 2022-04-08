@@ -3794,28 +3794,14 @@ router.post("/killServiceWorker", upload.none(''), verifyToken.verify, async (re
 		//
 	} else {
 		//
-		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
-
-		switch (sessionStatus.status) {
-			case 'inChat':
-			case 'qrReadSuccess':
-			case 'isLogged':
-			case 'chatsAvailable':
-				//
+		//
 				var killServiceWorker = await session.process.add(async () => await Sessions.killServiceWorker(removeWithspace(req.body.SessionName)));
 				res.setHeader('Content-Type', 'application/json');
 				res.status(200).json({
 					"Status": killServiceWorker
 				});
 				//
-				break;
-			default:
-				res.setHeader('Content-Type', 'application/json');
-				res.status(400).json({
-					"Status": sessionStatus
-				});
-		}
 	}
 }); //killServiceWorker
 //
@@ -3839,14 +3825,7 @@ router.post("/restartService", upload.none(''), verifyToken.verify, async (req, 
 		//
 	} else {
 		//
-		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
-
-		switch (sessionStatus.status) {
-			case 'inChat':
-			case 'qrReadSuccess':
-			case 'isLogged':
-			case 'chatsAvailable':
 				//
 				var restartService = await session.process.add(async () => await Sessions.restartService(removeWithspace(req.body.SessionName)));
 				res.setHeader('Content-Type', 'application/json');
@@ -3854,13 +3833,6 @@ router.post("/restartService", upload.none(''), verifyToken.verify, async (req, 
 					"Status": restartService
 				});
 				//
-				break;
-			default:
-				res.setHeader('Content-Type', 'application/json');
-				res.status(400).json({
-					"Status": sessionStatus
-				});
-		}
 	}
 }); //restartService
 //
@@ -3884,20 +3856,7 @@ router.post("/reloadService", upload.none(''), verifyToken.verify, async (req, r
 		//
 	} else {
 		//
-		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
 		var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
-
-		switch (sessionStatus.status) {
-			case 'inChat':
-			case 'qrReadSuccess':
-			case 'isLogged':
-			case 'chatsAvailable':
-			case 'notLogged':
-			case 'deviceNotConnected':
-			case 'desconnectedMobile':
-			case 'qrReadFail':
-			case 'deleteToken':
-			case 'DISCONNECTED':
 				//
 				try {
 					var killServiceWorker = await session.process.add(async () => await Sessions.killServiceWorker(removeWithspace(req.body.SessionName)));
@@ -3953,13 +3912,6 @@ router.post("/reloadService", upload.none(''), verifyToken.verify, async (req, r
 					//
 				}
 				//
-				break;
-			default:
-				res.setHeader('Content-Type', 'application/json');
-				res.status(400).json({
-					"Status": sessionStatus
-				});
-		}
 	}
 }); //reloadService
 //
@@ -4187,50 +4139,6 @@ router.post("/isConnected", upload.none(''), verifyToken.verify, async (req, res
 		}
 	}
 }); //isConnected
-//
-// ------------------------------------------------------------------------------------------------//
-//
-// Obter versão da web do Whatsapp
-router.post("/getWAVersion", upload.none(''), verifyToken.verify, async (req, res, next) => {
-	//
-	if (!removeWithspace(req.body.SessionName)) {
-		var validate = {
-			result: "info",
-			state: 'FAILURE',
-			status: 'notProvided',
-			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
-		};
-		//
-		res.setHeader('Content-Type', 'application/json');
-		res.status(400).json({
-			"Status": validate
-		});
-		//
-	} else {
-		//
-		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
-		var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
-
-		switch (sessionStatus.status) {
-			case 'inChat':
-			case 'qrReadSuccess':
-			case 'isLogged':
-			case 'chatsAvailable':
-				//
-				var getWAVersion = await session.process.add(async () => await Sessions.getWAVersion(removeWithspace(req.body.SessionName)));
-				res.setHeader('Content-Type', 'application/json');
-				res.status(200).json({
-					"Status": getWAVersion
-				});
-				break;
-			default:
-				res.setHeader('Content-Type', 'application/json');
-				res.status(400).json({
-					"Status": sessionStatus
-				});
-		}
-	}
-}); //getWAVersion
 //
 // ------------------------------------------------------------------------------------------------//
 //
