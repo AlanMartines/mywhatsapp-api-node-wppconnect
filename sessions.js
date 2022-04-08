@@ -362,7 +362,22 @@ module.exports = class Sessions {
 		await deletaToken(`${tokenPatch}`, `${SessionName}.data.json`);
 		await deletaCache(`${tokenPatch}`, `WPP-${SessionName}`);
 		//
-		session.client = await Sessions.initSession(socket, SessionName, AuthorizationToken, whatsappVersion).then(async (result) => {
+		try{
+			session.client = await Sessions.initSession(socket, SessionName, AuthorizationToken, whatsappVersion).then(async (result) => {
+				//console.log('Result: ', result); //return object success
+				return result;
+				//
+			}).catch((error) => {
+				console.error("Error when:", error); //return object error
+				//
+				return {
+					result: 'error',
+					state: 'CLOSED',
+					status: 'notLogged',
+					message: 'Sistema Off-line'
+				};
+				//
+			});
 			//console.log('Result: ', result); //return object success
 			if (session.client) {
 				return {
@@ -382,8 +397,8 @@ module.exports = class Sessions {
 				//
 			}
 			//
-		}).catch((erro) => {
-			console.error("Error when:", erro); //return object error
+		} catch (error) {
+			console.error("Error when:", error); //return object error
 			//
 			return {
 				result: 'error',
@@ -392,7 +407,7 @@ module.exports = class Sessions {
 				message: 'Sistema Off-line'
 			};
 			//
-		});
+		};
 		//
 	} //restartToken
 	//
