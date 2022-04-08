@@ -11,7 +11,7 @@ const {
 	forEach
 } = require('p-iteration');
 //const PQueue = require('p-queue');
-const {default: pQueue} = require('p-queue');
+const { default: pQueue } = require('p-queue');
 if (fs.existsSync('./wppconnect/dist/index.js')) {
 	//
 	console.log("- Wppconnect is patch");
@@ -818,39 +818,25 @@ module.exports = class Sessions {
 		var session = Sessions.getSession(SessionName);
 		var closeSession = await session.client.then(async client => {
 			try {
-				const strClosed = await client.close();
+				await client.close();
 				//
 				console.log("- Close:", strClosed);
 				//
-				if (strClosed) {
-					//
-					session.state = "CLOSED";
-					session.status = "CLOSED";
-					session.client = false;
-					session.qrcode = null;
-					console.log("- Sessão fechada");
-					//
-					var returnClosed = {
-						result: "success",
-						state: session.state,
-						status: session.status,
-						qrcode: session.qrcode,
-						message: "Sessão fechada com sucesso"
-					};
-					//
-					await updateStateDb(session.state, session.status, session.AuthorizationToken);
-					//
-				} else {
-					//
-					var returnClosed = {
-						result: "error",
-						state: session.state,
-						status: session.status,
-						qrcode: session.qrcode,
-						message: "Erro ao fechar sessão"
-					};
-					//
-				}
+				session.state = "CLOSED";
+				session.status = "CLOSED";
+				session.client = false;
+				session.qrcode = null;
+				console.log("- Sessão fechada");
+				//
+				var returnClosed = {
+					result: "success",
+					state: session.state,
+					status: session.status,
+					qrcode: session.qrcode,
+					message: "Sessão fechada com sucesso"
+				};
+				//
+				await updateStateDb(session.state, session.status, session.AuthorizationToken);
 				//
 				return returnClosed;
 				//
@@ -878,36 +864,23 @@ module.exports = class Sessions {
 		var session = Sessions.getSession(SessionName);
 		var LogoutSession = await session.client.then(async client => {
 			try {
-				const strLogout = await client.logout();
-				if (strLogout) {
-					//
-					const strClosed = await client.close();
-					//
-					session.state = "DISCONNECTED";
-					session.status = "DISCONNECTED";
-					session.client = false;
-					session.qrcode = null;
-					console.log("- Sessão desconetada");
-					//
-					var returnLogout = {
-						result: "success",
-						state: session.state,
-						status: session.status,
-						qrcode: session.qrcode,
-						message: "Sessão desconetada"
-					};
-					//
-				} else {
-					//
-					var returnLogout = {
-						result: "error",
-						state: session.state,
-						status: session.status,
-						message: "Erro ao desconetar sessão"
-					};
-					//
-				}
+				await client.logout();
 				//
+				await client.close();
+				//
+				session.state = "DISCONNECTED";
+				session.status = "notLogged";
+				session.client = false;
+				session.qrcode = null;
+				console.log("- Sessão desconetada");
+				//
+				var returnLogout = {
+					result: "success",
+					state: session.state,
+					status: session.status,
+					qrcode: session.qrcode,
+					message: "Sessão desconetada"
+				};
 				//
 				await deletaToken(`${tokenPatch}`, `${SessionName}.data.json`);
 				await deletaCache(`${tokenPatch}`, `WPP-${SessionName}`);
