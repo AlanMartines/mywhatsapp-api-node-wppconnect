@@ -1577,6 +1577,8 @@ router.post("/sendFileBase64", upload.none(''), verifyToken.verify, async (req, 
 					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'WPP-' + removeWithspace(req.body.SessionName) + '-'));
 					var filePath = path.join(folderName, req.body.originalname);
 					var base64Data = req.body.base64.replace(/^data:([A-Za-z-+/]+);base64,/,'');
+					var mimeType = mime.contentType(path.extname(filePath));
+					console.log('- mimeType:', mimeType);
 					fs.writeFileSync(filePath, base64Data,  {encoding: 'base64'});
 					console.log("- File", filePath);
 					//
