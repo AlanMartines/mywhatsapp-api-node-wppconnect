@@ -1602,7 +1602,7 @@ router.post("/sendFileBase64", upload.none(''), verifyToken.verify, async (req, 
 						var sendFileBase64 = checkNumberStatus;
 					}
 					//
-					await deletaArquivosTemp(filePath);
+					//await deletaArquivosTemp(filePath);
 					//
 					//console.log(result);
 					res.setHeader('Content-Type', 'application/json');
