@@ -1576,8 +1576,7 @@ router.post("/sendFileBase64", upload.none(''), verifyToken.verify, async (req, 
 				try {
 					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'WPP-' + removeWithspace(req.body.SessionName) + '-'));
 					var filePath = path.join(folderName, req.body.originalname);
-					var fileContents = new Buffer(req.body.base64, 'base64')
-					fs.writeFileSync(filePath, fileContents);
+					fs.writeFileSync(filePath, req.body.base64, 'base64');
 					console.log("- File", filePath);
 					//
 					var checkNumberStatus = await Sessions.checkNumberStatus(
