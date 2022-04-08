@@ -235,7 +235,7 @@ router.post("/restartToken", verifyToken.verify, upload.none(''), async (req, re
 		//
 		var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
 		//
-		var resetToken = await session.process.add(async () => await Sessions.restartToken(req.io, session.name, session.AuthorizationToken, session.whatsappVersion));
+		var resetToken = await Sessions.restartToken(req.io, session.name, session.AuthorizationToken, session.whatsappVersion);
 		res.setHeader('Content-Type', 'application/json');
 		res.status(200).json({
 			"Status": resetToken
