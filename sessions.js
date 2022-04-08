@@ -555,7 +555,7 @@ module.exports = class Sessions {
 		session.browserSessionToken = null;
 		session.AuthorizationToken = AuthorizationToken;
 		session.state = 'STARTING';
-		session.status = 'notLogged';
+		session.status = 'qrRead';
 		//
 		session.process = new pQueue({ concurrency: 1 });
 		//
