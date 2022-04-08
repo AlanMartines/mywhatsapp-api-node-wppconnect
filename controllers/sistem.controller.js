@@ -1575,13 +1575,12 @@ router.post("/sendFileBase64", upload.none(''), verifyToken.verify, async (req, 
 			case 'chatsAvailable':
 				//
 				try {
-					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'WPP-' + removeWithspace(req.body.SessionName) + '-'));
-					var filePath = path.join(folderName, req.body.originalname);
-					var base64Data = req.body.base64.replace(/^data:([A-Za-z-+/]+);base64,/,'');
+					//var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'WPP-' + removeWithspace(req.body.SessionName) + '-'));
+					//var filePath = path.join(folderName, req.body.originalname);
+					//var base64Data = req.body.base64.replace(/^data:([A-Za-z-+/]+);base64,/,'');
 					var mimeType = mime.lookup(req.body.originalname);
-					console.log('- mimeType:', mimeType);
-					fs.writeFileSync(filePath, base64Data,  {encoding: 'base64'});
-					console.log("- File", filePath);
+					//fs.writeFileSync(filePath, base64Data,  {encoding: 'base64'});
+					//console.log("- File", filePath);
 					//
 					var checkNumberStatus = await Sessions.checkNumberStatus(
 						removeWithspace(req.body.SessionName),
@@ -1589,15 +1588,16 @@ router.post("/sendFileBase64", upload.none(''), verifyToken.verify, async (req, 
 					);
 					//
 					if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
-						//
-						var sendFileBase64 = await session.process.add(async () => await Sessions.sendFile(
-							removeWithspace(req.body.SessionName),
-							checkNumberStatus.number + '@c.us',
-							filePath,
-							req.body.originalname,
-							req.body.caption
-						));
-						//
+					//
+					var sendFileBase64 = await session.process.add(async () => await Sessions.sendFileFromBase64(
+						removeWithspace(req.body.SessionName),
+						checkNumberStatus.number + '@c.us',
+						req.body.base64,
+						mimeType,
+						req.body.originalname,
+						req.body.caption
+					));
+					//
 					} else {
 						var sendFileBase64 = checkNumberStatus;
 					}
