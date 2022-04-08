@@ -360,7 +360,7 @@ module.exports = class Sessions {
 		session.attempts = 0;
 		session.browserSessionToken = null;
 		//
-		session.client = Sessions.initSession(socket, SessionName, AuthorizationToken, whatsappVersion).then((result) => {
+		session.client = await Sessions.initSession(socket, SessionName, AuthorizationToken, whatsappVersion).then(async (result) => {
 			//console.log('Result: ', result); //return object success
 			//
 			await deletaToken(`${tokenPatch}`, `${SessionName}.data.json`);
