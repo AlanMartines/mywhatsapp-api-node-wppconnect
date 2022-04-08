@@ -350,24 +350,55 @@ module.exports = class Sessions {
 		console.log("- Resetando sessão");
 		var session = Sessions.getSession(SessionName);
 		//
-		session.qrcode = null;
-		session.client = false;
-		session.result = null;
-		session.state = null;
-		session.status = null;
-		session.message = null;
-		session.attempts = 0;
-		session.browserSessionToken = null;
-		//
-		await deletaToken(`${tokenPatch}`, `${SessionName}.data.json`);
-		await deletaCache(`${tokenPatch}`, `WPP-${SessionName}`);
-		//
-		try{
-			session.client = await Sessions.initSession(socket, SessionName, AuthorizationToken, whatsappVersion).then(async (result) => {
+		if (session) {
+			session.qrcode = null;
+			session.client = false;
+			session.result = null;
+			session.state = null;
+			session.status = null;
+			session.message = null;
+			session.attempts = 0;
+			session.browserSessionToken = null;
+			//
+			await deletaToken(`${tokenPatch}`, `${SessionName}.data.json`);
+			await deletaCache(`${tokenPatch}`, `WPP-${SessionName}`);
+			//
+			try {
+				session.client = await Sessions.initSession(socket, SessionName, AuthorizationToken, whatsappVersion).then(async (result) => {
+					//console.log('Result: ', result); //return object success
+					return result;
+					//
+				}).catch((error) => {
+					console.error("Error when:", error); //return object error
+					//
+					return {
+						result: 'error',
+						state: 'CLOSED',
+						status: 'notLogged',
+						message: 'Sistema Off-line'
+					};
+					//
+				});
 				//console.log('Result: ', result); //return object success
-				return result;
+				if (session.client) {
+					return {
+						result: "info",
+						state: session.state,
+						status: session.status,
+						message: "Sistema iniciando e indisponivel para uso"
+					};
+				} else {
+					//
+					return {
+						result: 'error',
+						state: 'CLOSED',
+						status: 'notLogged',
+						message: 'Sistema Off-line'
+					};
+					//
+				}
 				//
-			}).catch((error) => {
+			} catch (error) {
 				console.error("Error when:", error); //return object error
 				//
 				return {
@@ -377,38 +408,16 @@ module.exports = class Sessions {
 					message: 'Sistema Off-line'
 				};
 				//
-			});
-			//console.log('Result: ', result); //return object success
-			if (session.client) {
-				return {
-					result: "info",
-					state: session.state,
-					status: session.status,
-					message: "Sistema iniciando e indisponivel para uso"
-				};
-			} else {
-				//
-				return {
-					result: 'error',
-					state: 'CLOSED',
-					status: 'notLogged',
-					message: 'Sistema Off-line'
-				};
-				//
-			}
+			};
 			//
-		} catch (error) {
-			console.error("Error when:", error); //return object error
-			//
+		} else {
 			return {
 				result: 'error',
-				state: 'CLOSED',
+				state: 'NOTFOUND',
 				status: 'notLogged',
 				message: 'Sistema Off-line'
 			};
-			//
-		};
-		//
+		}
 	} //restartToken
 	//
 	// ------------------------------------------------------------------------------------------------//
