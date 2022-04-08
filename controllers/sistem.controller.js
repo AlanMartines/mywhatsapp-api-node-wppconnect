@@ -216,7 +216,7 @@ router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next
 //
 // ------------------------------------------------------------------------------------------------//
 //
-router.post("/resetToken", verifyToken.verify, upload.none(''), async (req, res, next) => {
+router.post("/restartToken", verifyToken.verify, upload.none(''), async (req, res, next) => {
 	//
 	if (!removeWithspace(req.body.SessionName)) {
 		var validate = {
@@ -235,7 +235,7 @@ router.post("/resetToken", verifyToken.verify, upload.none(''), async (req, res,
 		//
 		var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
 		//
-		var resetToken = await session.process.add(async () => await Sessions.resetToken(req.io, removeWithspace(session.SessionName), removeWithspace(session.SessionName), session.whatsappVersion));
+		var resetToken = await session.process.add(async () => await Sessions.restartToken(req.io, removeWithspace(session.SessionName), removeWithspace(session.SessionName), session.whatsappVersion));
 		res.setHeader('Content-Type', 'application/json');
 		res.status(200).json({
 			"Status": resetToken

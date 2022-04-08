@@ -346,7 +346,7 @@ module.exports = class Sessions {
 	//
 	// ------------------------------------------------------------------------------------------------------- //
 	//
-	static async resetToken(socket, SessionName, AuthorizationToken, whatsappVersion) {
+	static async restartToken(socket, SessionName, AuthorizationToken, whatsappVersion) {
 		console.log("- Resetando sessão");
 		var session = Sessions.getSession(SessionName);
 		//
@@ -362,6 +362,11 @@ module.exports = class Sessions {
 		//
 		session.client = await Sessions.initSession(socket, SessionName, AuthorizationToken, whatsappVersion).then((result) => {
 			//console.log('Result: ', result); //return object success
+			//
+			//
+			await deletaToken(`${tokenPatch}`, `${SessionName}.data.json`);
+			await deletaCache(`${tokenPatch}`, `WPP-${SessionName}`);
+			//
 			//
 			return {
 				result: "info",
@@ -382,7 +387,7 @@ module.exports = class Sessions {
 			//
 		});
 		//
-	} //resetToken
+	} //restartToken
 	//
 	// ------------------------------------------------------------------------------------------------//
 	//
@@ -884,7 +889,6 @@ module.exports = class Sessions {
 				//
 				await deletaToken(`${tokenPatch}`, `${SessionName}.data.json`);
 				await deletaCache(`${tokenPatch}`, `WPP-${SessionName}`);
-				//
 				//
 				await updateStateDb(session.state, session.status, session.AuthorizationToken);
 				//
