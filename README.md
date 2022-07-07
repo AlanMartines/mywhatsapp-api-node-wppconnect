@@ -291,10 +291,10 @@ pm2 unstartup systemd
 # Pronto, escaneie o código QR-Code do Whatsapp e aproveite!
 ```
 
-## Gerar TOKEN_SECRET para uso no jwt
+## Gerar SECRET_KEY
 
 ```bash
-node -e "console.log(require('crypto').randomBytes(64).toString('base64').replace(/[^a-zA-Z0-9]/g, ''));"
+node -e "console.log(require('crypto').randomBytes(32).toString('base64').replace(/[^a-zA-Z0-9]/g, ''));"
 ```
 
 ## Criar pasta tokens (Linux)
@@ -328,8 +328,8 @@ VIEW_QRCODE_TERMINAL=0
 # Auto close
 AUTO_CLOSE=60000
 #
-# Chave de segurança para validação no JWT
-JWT_SECRET=09f26e402586e2faa8da4c98a35f1b20d6b033c60
+# Chave de segurança para validação
+SECRET_KEY=09f26e402586e2faa8da4c98a35f1b20d6b033c60
 #
 # Validate in terminal false or true
 VALIDATE_MYSQL=0
@@ -577,7 +577,7 @@ docker run -d -p 9001:9001 --name ApiWPPconnect \
 	-e DEVICE_NAME='My-Whatsapp' \
 	-e WA_VERSION= \
 	-e AUTO_CLOSE=60000 \
-	-e JWT_SECRET=09f26e402586e2faa8da4c98a35f1b20d6b033c60 \
+	-e SECRET_KEY=09f26e402586e2faa8da4c98a35f1b20d6b033c60 \
 	-e VALIDATE_MYSQL=0 \
 	-e MYSQL_HOST=localhost \
 	-e MYSQL_PORT=3306 \
