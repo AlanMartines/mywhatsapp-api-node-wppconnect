@@ -271,21 +271,18 @@
 		let host_ssl = '<%=host_ssl %>';
 		let port = '<%=port %>';
 		url = host_ssl == '' ? `http://${host}:${port}` : `https://${host_ssl}`;
-		let validate_mysql = '<%=validate_mysql %>';
+		let secret_key = '<%=secret_key %>';
 		let d = new Date();
 		let year = d.getFullYear();
 		$("#year").text(year);
 		//
 		$(document).ready(function () {
 			//
-			if(validate_mysql == true){
-				$('#SessionName').prop('readonly', true);
-			}
-			//
     $('#AuthorizationToken').keyup(function() {   
-			if(validate_mysql == true){
-        let inputValue = $('#AuthorizationToken').val();
-				$('#SessionName').val(inputValue);
+			if(secret_key){
+        //let inputValue = $('#AuthorizationToken').val();
+			}else{
+
 			}
     });
 			//

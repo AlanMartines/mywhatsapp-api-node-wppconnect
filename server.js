@@ -198,7 +198,7 @@ FORCE_CONNECTION_USE_HERE=0
 					port: config.PORT,
 					host: config.HOST,
 					host_ssl: config.DOMAIN_SSL,
-					validate_mysql: parseInt(config.VALIDATE_MYSQL),
+					secret_key: parseInt(config.SECRET_KEY),
 				});
 			});
 			//
