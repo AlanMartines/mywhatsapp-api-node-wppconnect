@@ -346,6 +346,10 @@
 								$('#imageQrcode').attr("src", '/imagens/body/error.png');
 								$("#description").html("Sistema desconectado");
 								window.scrollTo(0, 0);
+							} else if (response.state == 'FAILURE') {
+								$('#imageQrcode').attr("src", '/imagens/body/error.png');
+								$("#description").html("Secret key não autorizada, verifique e tente novamente");
+								window.scrollTo(0, 0);
 							} else if (response.state == 'STARTING') {
 								$('#imageQrcode').attr("src", '/imagens/body/loading.gif');
 								$("#description").html("Por favor aguarde, sistema iniciando.");
