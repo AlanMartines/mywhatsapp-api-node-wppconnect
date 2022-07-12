@@ -25,7 +25,7 @@ exports.verify = async (req, res, next) => {
 					"result": "info",
 					"state": "FAILURE",
 					"status": "notProvided",
-					"message": "ToKey ken não autorizada, verifique e tente novamente"
+					"message": "Key não autorizada, verifique e tente novamente"
 				}
 			});
 		}
