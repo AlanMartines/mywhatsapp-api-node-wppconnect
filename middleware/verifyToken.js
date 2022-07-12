@@ -19,6 +19,15 @@ exports.verify = async (req, res, next) => {
 		if (theTokenAuth == config.SECRET_KEY) {
 			next();
 		} else {
+			let socket = req.io;
+				//
+				socket.emit('status',
+					{
+						status: 'notProvided',
+						SessionName: req.body.SessionName
+					}
+				);
+				//
 			res.setHeader('Content-Type', 'application/json');
 			return res.status(404).json({
 				"Status": {
