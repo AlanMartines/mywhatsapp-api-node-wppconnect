@@ -25,7 +25,7 @@ exports.verify = async (req, res, next) => {
 					"result": "info",
 					"state": "FAILURE",
 					"status": "notProvided",
-					"message": "Key não autorizada, verifique e tente novamente"
+					"message": "Secret key não autorizada, verifique e tente novamente"
 				}
 			});
 		}
