@@ -68,32 +68,6 @@ async function osplatform() {
 //
 // ------------------------------------------------------------------------------------------------------- //
 //
-async function updateStateDb(state, status, AuthorizationToken) {
-	//
-	const date_now = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
-	console.log("- Date:", date_now);
-	//
-	//
-	const sql = "UPDATE tokens SET state=?, status=?, lastactivit=? WHERE token=?";
-	const values = [state, status, date_now, AuthorizationToken];
-	//
-	if (parseInt(config.VALIDATE_MYSQL) == true) {
-		console.log('- Atualizando status');
-		const conn = require('./config/dbConnection').promise();
-		const resUpdate = await conn.execute(sql, values);
-		//conn.end();
-		//conn.release();
-		if (resUpdate) {
-			console.log('- Status atualizado');
-		} else {
-			console.log('- Status não atualizado');
-		}
-	}
-	//
-}
-//
-// ------------------------------------------------------------------------------------------------------- //
-//
 async function deletaToken(filePath, filename) {
 	//
 	fs.unlink(`${filePath}/${filename}`, function (err) {
@@ -346,7 +320,7 @@ module.exports = class Sessions {
 	//
 	// ------------------------------------------------------------------------------------------------------- //
 	//
-	static async restartToken(socket, SessionName, AuthorizationToken, whatsappVersion) {
+	static async restartToken(socket, SessionName, whatsappVersion) {
 		console.log("- Resetando sessão");
 		var session = Sessions.getSession(SessionName);
 		//
@@ -364,14 +338,14 @@ module.exports = class Sessions {
 			await deletaCache(`${tokenPatch}`, `WPP-${SessionName}`);
 			//
 			try {
-				session.client = Sessions.initSession(socket, SessionName, AuthorizationToken, whatsappVersion);
+				session.client = Sessions.initSession(socket, SessionName, whatsappVersion);
 				//
-					return {
-						result: "info",
-						state: session.state,
-						status: session.status,
-						message: "Sistema iniciando e indisponivel para uso"
-					};
+				return {
+					result: "info",
+					state: session.state,
+					status: session.status,
+					message: "Sistema iniciando e indisponivel para uso"
+				};
 				//
 			} catch (error) {
 				console.error("Error when:", error); //return object error
@@ -399,7 +373,7 @@ module.exports = class Sessions {
 	//
 	// ------------------------------------------------------------------------------------------------//
 	//
-	static async Start(socket, SessionName, AuthorizationToken, whatsappVersion) {
+	static async Start(socket, SessionName, whatsappVersion) {
 		Sessions.sessions = Sessions.sessions || []; //start array
 
 		var session = Sessions.getSession(SessionName);
@@ -407,7 +381,7 @@ module.exports = class Sessions {
 		//
 		if (session == false) {
 			//create new session
-			session = await Sessions.addSesssion(socket, SessionName, AuthorizationToken, whatsappVersion);
+			session = await Sessions.addSesssion(socket, SessionName, whatsappVersion);
 			//
 		} else if (["CLOSED"].includes(session.state)) {
 			//restart session
@@ -423,8 +397,7 @@ module.exports = class Sessions {
 			console.log('- State do sistema:', session.state);
 			console.log('- Status da sessão:', session.status);
 			//
-			session.client = Sessions.initSession(socket, SessionName, AuthorizationToken, whatsappVersion);
-			//
+			session.client = Sessions.initSession(socket, SessionName, whatsappVersion);
 			//
 		} else if (["CONFLICT", "UNPAIRED", "UNLAUNCHED", "UNPAIRED_IDLE"].includes(session.state)) {
 			//
@@ -442,7 +415,7 @@ module.exports = class Sessions {
 				client.useHere();
 			});
 			//
-			session.client = Sessions.initSession(socket, SessionName, AuthorizationToken, whatsappVersion);
+			session.client = Sessions.initSession(socket, SessionName, whatsappVersion);
 			//
 		} else if (["DISCONNECTED"].includes(session.state)) {
 			//
@@ -458,7 +431,7 @@ module.exports = class Sessions {
 			console.log('- State do sistema:', session.state);
 			console.log('- Status da sessão:', session.status);
 			//
-			session.client = Sessions.initSession(socket, SessionName, AuthorizationToken, whatsappVersion);
+			session.client = Sessions.initSession(socket, SessionName, whatsappVersion);
 			//
 			//
 		} else if (["NOTFOUND"].includes(session.state)) {
@@ -475,7 +448,7 @@ module.exports = class Sessions {
 			console.log('- State do sistema:', session.state);
 			console.log('- Status da sessão:', session.status);
 			//
-			session = await Sessions.addSesssion(socket, SessionName, AuthorizationToken, whatsappVersion);
+			session = await Sessions.addSesssion(socket, SessionName, whatsappVersion);
 			//
 		} else {
 			//
@@ -485,17 +458,14 @@ module.exports = class Sessions {
 			//
 		}
 		//
-		await updateStateDb(session.state, session.status, AuthorizationToken);
-		//
 		return session;
 	} //start
 	//
 	// ------------------------------------------------------------------------------------------------------- //
 	//
-	static async addSesssion(socket, SessionName, AuthorizationToken, whatsappVersion) {
+	static async addSesssion(socket, SessionName, whatsappVersion) {
 		console.log("- Adicionando sessão");
 		var newSession = {
-			AuthorizationToken: AuthorizationToken,
 			name: SessionName,
 			process: null,
 			qrcode: null,
@@ -518,7 +488,7 @@ module.exports = class Sessions {
 		console.log("- Nova sessão: " + SessionName);
 
 		//setup session
-		newSession.client = Sessions.initSession(socket, SessionName, AuthorizationToken, whatsappVersion);
+		newSession.client = Sessions.initSession(socket, SessionName, whatsappVersion);
 		//
 
 		return newSession;
@@ -549,11 +519,10 @@ module.exports = class Sessions {
 	//
 	// ------------------------------------------------------------------------------------------------------- //
 	//
-	static async initSession(socket, SessionName, AuthorizationToken, whatsappVersion) {
+	static async initSession(socket, SessionName, whatsappVersion) {
 		console.log("- Iniciando sessão");
 		var session = Sessions.getSession(SessionName);
 		session.browserSessionToken = null;
-		session.AuthorizationToken = AuthorizationToken;
 		session.state = 'STARTING';
 		session.status = 'qrRead';
 		//
@@ -596,10 +565,6 @@ module.exports = class Sessions {
 					//console.log(urlCode);
 					session.CodeurlCode = urlCode;
 					//
-					if (attempts <= 2) {
-						await updateStateDb(session.state, session.status, session.AuthorizationToken);
-					}
-					//
 					var qrCode = base64Qrimg.replace('data:image/png;base64,', '');
 					const imageBuffer = Buffer.from(qrCode, 'base64');
 					//
@@ -614,7 +579,6 @@ module.exports = class Sessions {
 					console.log('- Session name: ', session_wppconnect);
 					webhooks?.wh_connect(Sessions.getSession(SessionName), statusSession)
 					//
-					//
 					switch (statusSession) {
 						case 'isLogged':
 						case 'qrReadSuccess':
@@ -627,8 +591,6 @@ module.exports = class Sessions {
 							session.CodeasciiQR = null;
 							session.CodeurlCode = null;
 							session.message = "Sistema iniciado e disponivel para uso";
-							//
-							await updateStateDb(session.state, session.status, session.AuthorizationToken);
 							//
 							break;
 						case 'autocloseCalled':
@@ -643,8 +605,6 @@ module.exports = class Sessions {
 							session.CodeurlCode = null;
 							session.message = "Sistema fechado";
 							//
-							await updateStateDb(session.state, session.status, session.AuthorizationToken);
-							//
 							break;
 						case 'qrReadFail':
 						case 'notLogged':
@@ -658,8 +618,6 @@ module.exports = class Sessions {
 							session.qrcode = null;
 							session.message = "Dispositivo desconetado";
 							//
-							await updateStateDb(session.state, session.status, session.AuthorizationToken);
-							//
 							break;
 						default:
 							//session.client = false;
@@ -668,8 +626,6 @@ module.exports = class Sessions {
 							session.status = statusSession;
 							session.qrcode = null;
 							session.message = "Dispositivo desconetado";
-							//
-							await updateStateDb(session.state, session.status, session.AuthorizationToken);
 						//
 					}
 				},
@@ -833,7 +789,7 @@ module.exports = class Sessions {
 			try {
 				await client.close();
 				//
-				console.log("- Close:", strClosed);
+				console.log("- Close");
 				//
 				session.state = "CLOSED";
 				session.status = "CLOSED";
@@ -848,8 +804,6 @@ module.exports = class Sessions {
 					qrcode: session.qrcode,
 					message: "Sessão fechada com sucesso"
 				};
-				//
-				await updateStateDb(session.state, session.status, session.AuthorizationToken);
 				//
 				return returnClosed;
 				//
@@ -898,8 +852,6 @@ module.exports = class Sessions {
 				await deletaToken(`${tokenPatch}`, `${SessionName}.data.json`);
 				await deletaCache(`${tokenPatch}`, `WPP-${SessionName}`);
 				//
-				await updateStateDb(session.state, session.status, session.AuthorizationToken);
-				//
 				return returnLogout;
 				//
 			} catch (error) {
@@ -914,8 +866,6 @@ module.exports = class Sessions {
 				//
 			}
 		});
-		//
-		await updateStateDb(session.state, session.status, session.AuthorizationToken);
 		//
 		return LogoutSession;
 	} //LogoutSession

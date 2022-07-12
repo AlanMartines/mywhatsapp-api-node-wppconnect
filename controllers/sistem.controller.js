@@ -145,53 +145,15 @@ router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next
 			case 'DISCONNECTED':
 			case 'NOTFOUND':
 				//
-				await Sessions.Start(req.io, removeWithspace(req.body.SessionName), removeWithspace(req.body.SessionName), req.body.whatsappVersion);
+				await Sessions.Start(req.io, removeWithspace(req.body.SessionName), req.body.whatsappVersion);
 				var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
-				console.log("- AuthorizationToken:", removeWithspace(req.body.SessionName));
-				if (parseInt(config.VALIDATE_MYSQL) == true) {
-					const conn = require('../config/dbConnection').promise();
-					try {
-						//
-						const sql = "SELECT * FROM tokens WHERE token=? LIMIT 1";
-						const values = [removeWithspace(req.body.SessionName)];
-						const [row] = await conn.execute(sql, values);
-						//conn.end();
-						//conn.release();
-						//
-						if (row.length == 1) {
-							//
-							const results = JSON.parse(JSON.stringify(row[0]));
-							//
-							const webHook = results.webhook;
-							//
-							if (webHook) {
-								//
-								session.wh_status = webHook;
-								session.wh_message = webHook;
-								session.wh_qrcode = webHook;
-								session.wh_connect = webHook;
-								//
-							} else {
-								session.wh_status = req.body.wh_status;
-								session.wh_message = req.body.wh_message;
-								session.wh_qrcode = req.body.wh_qrcode;
-								session.wh_connect = req.body.wh_connect;
-							}
-						} else {
-							session.wh_status = req.body.wh_status;
-							session.wh_message = req.body.wh_message;
-							session.wh_qrcode = req.body.wh_qrcode;
-							session.wh_connect = req.body.wh_connect;
-						}
-					} catch (err) {
-						console.log("- Error:", err);
-					}
-				} else {
-					session.wh_status = req.body.wh_status;
-					session.wh_message = req.body.wh_message;
-					session.wh_qrcode = req.body.wh_qrcode;
-					session.wh_connect = req.body.wh_connect;
-				}
+				console.log("- Session Name:", removeWithspace(req.body.SessionName));
+				//
+				session.wh_status = req.body.wh_status ? req.body.wh_status : '';
+				session.wh_message = req.body.wh_message ? req.body.wh_message : '';
+				session.wh_qrcode = req.body.wh_qrcode ? req.body.wh_qrcode : '';
+				session.wh_connect = req.body.wh_connect ? req.body.wh_connect : '';
+				//
 				var Start = {
 					result: "info",
 					state: 'STARTING',
@@ -236,7 +198,7 @@ router.post("/restartToken", verifyToken.verify, upload.none(''), async (req, re
 		//
 		var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
 		//
-		var resetToken = await Sessions.restartToken(req.io, session.name, session.AuthorizationToken, session.whatsappVersion);
+		var resetToken = await Sessions.restartToken(req.io, session.name, session.whatsappVersion);
 		res.setHeader('Content-Type', 'application/json');
 		res.status(200).json({
 			"Status": resetToken
@@ -1588,16 +1550,16 @@ router.post("/sendFileBase64", upload.none(''), verifyToken.verify, async (req, 
 					);
 					//
 					if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
-					//
-					var sendFileBase64 = await session.process.add(async () => await Sessions.sendFileFromBase64(
-						removeWithspace(req.body.SessionName),
-						checkNumberStatus.number + '@c.us',
-						req.body.base64,
-						mimeType,
-						req.body.originalname,
-						req.body.caption
-					));
-					//
+						//
+						var sendFileBase64 = await session.process.add(async () => await Sessions.sendFileFromBase64(
+							removeWithspace(req.body.SessionName),
+							checkNumberStatus.number + '@c.us',
+							req.body.base64,
+							mimeType,
+							req.body.originalname,
+							req.body.caption
+						));
+						//
 					} else {
 						var sendFileBase64 = checkNumberStatus;
 					}
