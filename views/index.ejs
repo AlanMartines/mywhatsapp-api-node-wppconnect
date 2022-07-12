@@ -116,8 +116,8 @@
 									</div>
 									<select class="rounded form-control" name="MultiDevice" id="MultiDevice">
 										<option value="" selected="selected">-- Selecione --</option>
-										<option value="true">true</option>
-										<option value="false">false</option>
+										<option value="true">Sim</option>
+										<option value="false">Não</option>
 									</select>
 								</div>
 
@@ -278,14 +278,6 @@
 		//
 		$(document).ready(function () {
 			//
-    $('#AuthorizationToken').keyup(function() {   
-			if(secret_key){
-        //let inputValue = $('#AuthorizationToken').val();
-			}else{
-
-			}
-    });
-			//
 			const socket = io(url + '/', { transports: ['websocket'] });
 			//
 			$("#description").html("Sistema não iniciado");
@@ -329,31 +321,10 @@
 				unhighlight: function (element, errorClass, validClass) {
 					$(element).closest('.form-group').find('.help-block').html('');
 					$(element).closest('.form-control').removeClass('is-invalid').addClass('is-valid');
-					$(element).closest('.custom-select').removeClass('is-invalid').addClass('is-valid');
 				},
 				submitHandler: function () {
 					event.preventDefault();
 					let data = $("#start-form").serialize();
-					/*
-					let formData = $("#start-form").serializeObject();
-					console.log(formData);
-					console.log(data);
-					try {
-					axios.post(`${url}/sistema/Start`, {
-						firstName: 'Fred',
-						lastName: 'Flintstone'
-					})
-						.then(function (response) {
-							console.log(response);
-						})
-						.catch(function (error) {
-							console.log(error);
-						});
-						} catch (error) {
-							// handle error
-						}
-					*/
-					//
 					$.ajax({
 						type: 'POST',
 						url: url + '/sistema/Start',
@@ -370,17 +341,14 @@
 							if (response.state == 'CONNECTED') {
 								$('#imageQrcode').attr("src", '/imagens/body/ok.png');
 								$("#description").html("Sistema iniciado com sucesso.");
-
 								window.scrollTo(0, 0);
 							} else if (response.state == 'DISCONNECTED') {
 								$('#imageQrcode').attr("src", '/imagens/body/error.png');
 								$("#description").html("Sistema desconectado");
-
 								window.scrollTo(0, 0);
 							} else if (response.state == 'STARTING') {
 								$('#imageQrcode').attr("src", '/imagens/body/loading.gif');
 								$("#description").html("Por favor aguarde, sistema iniciando.");
-
 								window.scrollTo(0, 0);
 							}
 						},
@@ -388,14 +356,12 @@
 							$("#send_form").html('Iniciar');
 							$('#imageQrcode').attr("src", '/imagens/body/error.png');
 							$("#description").html("Sistema não iniciado");
-
 							window.scrollTo(0, 0);
 						}
 					}).fail(function (jqXHR, textStatus, error) {
 						$("#send_form").html('Iniciar');
 						$('#imageQrcode').attr("src", '/imagens/body/error.png');
 						$("#description").html("Sistema não iniciado");
-
 						window.scrollTo(0, 0);
 					});
 				}
