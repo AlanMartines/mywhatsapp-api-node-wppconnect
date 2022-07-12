@@ -1,7 +1,5 @@
 const config = require('../config.global');
 //
-var todayDate = new Date().toISOString().slice(0, 10);
-//
 exports.verify = async (req, res, next) => {
 	//
 	if (!req.body.AuthorizationToken) {
