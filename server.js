@@ -56,7 +56,7 @@ REDIS_URL=redis://localhost:6379
 # Exemplos:
 # DOMAIN_SSL=api.meudomai.com.br ou meudomai.com.br
 # DOMAIN_SSL=
-DOMAIN_SSL=wppconnect.eletroinfo.site
+DOMAIN_SSL=
 #
 # Define se o qrcode vai ser mostrado no terminal
 VIEW_QRCODE_TERMINAL=0
