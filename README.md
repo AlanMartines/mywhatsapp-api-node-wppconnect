@@ -322,32 +322,35 @@ HOST=localhost
 # Defina o numero da porta a ser usada pela API.
 PORT=9001
 #
+# Redis config => NÃO MEXER NA VARIAVEL REDIS_URL
+REDIS_URL=redis://localhost:6379
+#
+# CASO UTILIZE CERTIFICADO SSL COM REDIRECIONAMENTO DE PORTA, DEVE PREENCHER A VARIAVEL DOMAIN_SSL
+# CASO DE NÃO SER CONFIGURADO UM DOMÍNIO MATENHA A VARIAVEL DOMAIN_SSL VAZIA
+# Exemplos:
+# DOMAIN_SSL=api.meudomai.com.br ou meudomai.com.br
+# DOMAIN_SSL=
+DOMAIN_SSL=wppconnect.eletroinfo.site
+#
 # Define se o qrcode vai ser mostrado no terminal
 VIEW_QRCODE_TERMINAL=0
+#
+# Device name
+DEVICE_NAME='My-Whatsapp'
+#
+# Defina a versão do whatsapp a ser usada.
+# CASO DE NÃO SER CONFIGURADO UM VERSÂO MATENHA A VARIAVEL WA_VERSION VAZIA
+# Exemplos:
+# WA_VERSION='2.2204.13'
+# WA_VERSION=
+#
+WA_VERSION=
 #
 # Auto close
 AUTO_CLOSE=60000
 #
-# Chave de segurança para validação
+# Chave de segurança para validação no JWT
 SECRET_KEY=09f26e402586e2faa8da4c98a35f1b20d6b033c60
-#
-# Validate in terminal false or true
-VALIDATE_MYSQL=0
-#
-# O host do banco. Ex: localhost
-MYSQL_HOST=localhost
-#
-# Port do banco. Ex: 3306
-MYSQL_PORT=3306
-#
-# Um usuário do banco. Ex: user
-MYSQL_USER=mywhatsappapi
-#
-# A senha do usuário do banco. Ex: user123
-MYSQL_PASSWORD=TuUep8KkjCtAA@
-#
-# A base de dados a qual a aplicação irá se conectar. Ex: node_mysql
-MYSQL_DATABASE=mywhatsapp-api
 #
 # Gag image
 TAG=1.0.0
@@ -355,32 +358,21 @@ TAG=1.0.0
 # browserWSEndpoint Ex.: ws://127.0.0.1:3000
 BROWSER_WSENDPOINT=
 #
+# Default 1
+MAX_CONCURRENT_SESSIONS=1
+#
 # Set name instace for use ecosystem.config.js
 NAME_INSTANCES=ApiWPPConnectClus
 #
 # Set count instace for use ecosystem.config.js
 INSTANCES=1
-```
-
-## Create MySQL DATABASE/TABLE
-
-```sql
--- Copiando estrutura do banco de dados para mywhatsapp-api
-CREATE DATABASE IF NOT EXISTS `mywhatsapp-api`;
-USE `mywhatsapp-api`;
-
--- Copiando estrutura para tabela mywhatsapp-api.tokens
-CREATE TABLE IF NOT EXISTS `tokens` (
-  `ID` int unsigned NOT NULL AUTO_INCREMENT,
-  `token` char(255) NOT NULL,
-	`sessionToken` text DEFAULT NULL,
-	`webhook` char(255) DEFAULT NULL,
-  `status` char(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'false',
-  `state` char(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'false',
-  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `lastactivit` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb3;
+#
+# Caso queira que ao iniciar a API todas as sessões salvas sejam inicializadas automaticamente
+START_ALL_SESSIONS=0
+#
+# Caso queira forçar a reconexão da API em caso de desconexão do WhatsApp defina true
+FORCE_CONNECTION_USE_HERE=0
+#
 ```
 
 ## Rotas
