@@ -4,7 +4,7 @@ exports.verify = async (req, res, next) => {
 	//
 	if (!req.body.AuthorizationToken) {
 		res.setHeader('Content-Type', 'application/json');
-		res.status(422).json({
+		res.status(400).json({
 			"Status": {
 				"result": "info",
 				"state": "FAILURE",
