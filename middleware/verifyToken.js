@@ -24,12 +24,13 @@ exports.verify = async (req, res, next) => {
 				socket.emit('status',
 					{
 						status: 'notProvided',
-						SessionName: req.body.SessionName
+						SessionName: req.body.SessionName,
+						message: "Secret key não autorizada, verifique e tente novamente"
 					}
 				);
 				//
 			res.setHeader('Content-Type', 'application/json');
-			return res.status(404).json({
+			return res.status(400).json({
 				"Status": {
 					"result": "info",
 					"state": "FAILURE",
