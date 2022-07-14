@@ -1,13 +1,13 @@
 {
 	"_type": "export",
 	"__export_format": 4,
-	"__export_date": "2022-03-25T21:22:20.711Z",
+	"__export_date": "2022-07-14T02:17:51.597Z",
 	"__export_source": "insomnia.desktop.app:v2022.2.1",
 	"resources": [
 		{
 			"_id": "req_5e91c166c9f149248750520140b9b364",
 			"parentId": "fld_a1a8e5ed10404b78984573d1756a1179",
-			"modified": 1648243319556,
+			"modified": 1657765025979,
 			"created": 1632079892455,
 			"url": "{{ _.Localhost }}/sistema/Start",
 			"name": "Start - ✔️📝",
@@ -15,7 +15,7 @@
 			"method": "POST",
 			"body": {
 				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"MultiDevice\": false,\n\t\"whatsappVersion\": \"\",\n\t\"wh_status\": \"{{ _.WebHook }}\",\n\t\"wh_message\": \"{{ _.WebHook }}\",\n\t\"wh_qrcode\": \"{{ _.WebHook }}\",\n\t\"wh_connect\": \"{{ _.WebHook }}\"\n}"
+				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"MultiDevice\": \"true\",\n\t\"whatsappVersion\": \"\",\n\t\"wh_status\": \"{{ _.WebHook }}\",\n\t\"wh_message\": \"{{ _.WebHook }}\",\n\t\"wh_qrcode\": \"{{ _.WebHook }}\",\n\t\"wh_connect\": \"{{ _.WebHook }}\"\n}"
 			},
 			"parameters": [],
 			"headers": [
@@ -39,7 +39,7 @@
 		{
 			"_id": "fld_a1a8e5ed10404b78984573d1756a1179",
 			"parentId": "wrk_43f3024baba5440caec06b068fd61b21",
-			"modified": 1644352975476,
+			"modified": 1657759619833,
 			"created": 1632079892439,
 			"name": "Getting started - ✔️📝",
 			"description": "",
@@ -51,7 +51,7 @@
 		{
 			"_id": "wrk_43f3024baba5440caec06b068fd61b21",
 			"parentId": null,
-			"modified": 1639058050608,
+			"modified": 1657759620023,
 			"created": 1632079892392,
 			"name": "API My WhatsApp - WPPConnect v2.0",
 			"description": "",
@@ -61,7 +61,7 @@
 		{
 			"_id": "req_4a77c326c6354f74b6f4244e9ba31331",
 			"parentId": "fld_a1a8e5ed10404b78984573d1756a1179",
-			"modified": 1647374903763,
+			"modified": 1657759619874,
 			"created": 1632079892467,
 			"url": "{{ _.Localhost }}/sistema/Status",
 			"name": "Status - ✔️📝",
@@ -93,7 +93,7 @@
 		{
 			"_id": "req_561c437873ef4225a7abaa5fe3166c8b",
 			"parentId": "fld_a1a8e5ed10404b78984573d1756a1179",
-			"modified": 1647537937606,
+			"modified": 1657759619879,
 			"created": 1632079892475,
 			"url": "{{ _.Localhost }}/sistema/Close",
 			"name": "Close - ✔️📝",
@@ -125,7 +125,7 @@
 		{
 			"_id": "req_2b48e437f0744b6f8c9e7390fcf18c11",
 			"parentId": "fld_a1a8e5ed10404b78984573d1756a1179",
-			"modified": 1647362199295,
+			"modified": 1657759619852,
 			"created": 1632079892508,
 			"url": "{{ _.Localhost }}/sistema/Logout",
 			"name": "Logout - ✔️📝",
@@ -157,7 +157,7 @@
 		{
 			"_id": "req_c05b57af17134feeb26e61c5b69ec67a",
 			"parentId": "fld_a1a8e5ed10404b78984573d1756a1179",
-			"modified": 1647364397332,
+			"modified": 1657759619951,
 			"created": 1632079892446,
 			"url": "{{ _.Localhost }}/sistema/QRCode",
 			"name": "Read QR-Code - ✔️📝",
@@ -189,7 +189,7 @@
 		{
 			"_id": "req_e2861fcbc3c349c6914a3dd0dbb879bd",
 			"parentId": "fld_a1a8e5ed10404b78984573d1756a1179",
-			"modified": 1647540350802,
+			"modified": 1657759619998,
 			"created": 1647369043144,
 			"url": "{{ _.Localhost }}/sistema/getSession",
 			"name": "getSession - ✔️📝",
@@ -221,7 +221,7 @@
 		{
 			"_id": "req_6a29ce642f2f44d29be028e12ba0b7b2",
 			"parentId": "fld_a1a8e5ed10404b78984573d1756a1179",
-			"modified": 1647538268908,
+			"modified": 1657759619906,
 			"created": 1632079892486,
 			"url": "{{ _.Localhost }}/sistema/getSessions",
 			"name": "getSessions - ✔️📝",
@@ -253,7 +253,7 @@
 		{
 			"_id": "req_6b36e659ef304e778d977bdbff158b69",
 			"parentId": "fld_a1a8e5ed10404b78984573d1756a1179",
-			"modified": 1639058050561,
+			"modified": 1657759619909,
 			"created": 1632079892498,
 			"url": "{{ _.Localhost }}/sistema/getHardware",
 			"name": "geHardware - ✔️📝",
@@ -283,41 +283,9 @@
 			"_type": "request"
 		},
 		{
-			"_id": "req_9f8f06dbf08d4eb29ddbd4ec141b223c",
-			"parentId": "fld_a1a8e5ed10404b78984573d1756a1179",
-			"modified": 1648044250647,
-			"created": 1632079892519,
-			"url": "https://painel.connectzap.com.br/sistema/tst.php",
-			"name": "RotaTeste - ✔️✔️",
-			"description": "",
-			"method": "POST",
-			"body": {
-				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"View\": true\n}"
-			},
-			"parameters": [],
-			"headers": [
-				{
-					"id": "pair_db0c91da2c874dcfbca1944b692c42c6",
-					"name": "Content-Type",
-					"value": "application/json"
-				}
-			],
-			"authentication": {},
-			"metaSortKey": -1211746115137.25,
-			"isPrivate": false,
-			"settingStoreCookies": true,
-			"settingSendCookies": true,
-			"settingDisableRenderRequestBody": false,
-			"settingEncodeUrl": true,
-			"settingRebuildPath": true,
-			"settingFollowRedirects": "global",
-			"_type": "request"
-		},
-		{
 			"_id": "req_eb093f347e3348adaca4834b52bcf891",
 			"parentId": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
-			"modified": 1647366515440,
+			"modified": 1657759620007,
 			"created": 1632079892655,
 			"url": "{{ _.Localhost }}/sistema/sendContactVcard",
 			"name": "sendContactVcard - ✔️📝",
@@ -349,7 +317,7 @@
 		{
 			"_id": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
 			"parentId": "wrk_43f3024baba5440caec06b068fd61b21",
-			"modified": 1639058050510,
+			"modified": 1657759619827,
 			"created": 1632079892546,
 			"name": "Basic Functions (usage) - ✔️📝",
 			"description": "",
@@ -361,7 +329,7 @@
 		{
 			"_id": "req_fc6e9bfd3475482787e60ba8a27a807c",
 			"parentId": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
-			"modified": 1647364460156,
+			"modified": 1657759620018,
 			"created": 1632079892667,
 			"url": "{{ _.Localhost }}/sistema/sendContactVcardList",
 			"name": "sendContactVcardList - ✔️📝",
@@ -420,7 +388,7 @@
 		{
 			"_id": "req_d048baba45f34c41abd98be0c00c1c40",
 			"parentId": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
-			"modified": 1647368671049,
+			"modified": 1657759619976,
 			"created": 1632079892555,
 			"url": "{{ _.Localhost }}/sistema/sendText",
 			"name": "sendText - ✔️📝",
@@ -452,7 +420,7 @@
 		{
 			"_id": "req_db1230dbf9794fa3b1e81c94011e48cd",
 			"parentId": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
-			"modified": 1643130714836,
+			"modified": 1657759619989,
 			"created": 1632079892624,
 			"url": "{{ _.Localhost }}/sistema/sendTextMassa",
 			"name": "sendTextMassa - ✔️📝",
@@ -511,7 +479,7 @@
 		{
 			"_id": "req_55cc547268714a57a45024e47f14f045",
 			"parentId": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
-			"modified": 1643229696950,
+			"modified": 1657759619877,
 			"created": 1632079892679,
 			"url": "{{ _.Localhost }}/sistema/sendLocation",
 			"name": "sendLocation - ✔️📝",
@@ -543,7 +511,7 @@
 		{
 			"_id": "req_5f981de403a945ebba3aa4370f449dd2",
 			"parentId": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
-			"modified": 1639058050554,
+			"modified": 1657759619897,
 			"created": 1632079892689,
 			"url": "{{ _.Localhost }}/sistema/sendLinkPreview",
 			"name": "sendLinkPreview - ✔️📝",
@@ -575,7 +543,7 @@
 		{
 			"_id": "req_56911f003f694c30947c3ff3282f8d85",
 			"parentId": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
-			"modified": 1643130714834,
+			"modified": 1657759619882,
 			"created": 1632079892567,
 			"url": "{{ _.Localhost }}/sistema/sendImage",
 			"name": "sendImage - ✔️📝",
@@ -643,7 +611,7 @@
 		{
 			"_id": "req_3c1f4e32ae034831b9f38bca3b531cad",
 			"parentId": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
-			"modified": 1643130714833,
+			"modified": 1657759619859,
 			"created": 1632079892708,
 			"url": "{{ _.Localhost }}/sistema/sendImageMassa",
 			"name": "sendImageMassa - ✔️📝",
@@ -710,7 +678,7 @@
 		{
 			"_id": "req_6016c7c7905c47ceb10264dd70f6baef",
 			"parentId": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
-			"modified": 1643130714834,
+			"modified": 1657759619900,
 			"created": 1632079892720,
 			"url": "{{ _.Localhost }}/sistema/sendMultImage",
 			"name": "sendMultImage - ✔️📝",
@@ -817,7 +785,7 @@
 		{
 			"_id": "req_04376144117f4e919db58fb513f9bddf",
 			"parentId": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
-			"modified": 1643130714832,
+			"modified": 1657759619839,
 			"created": 1632079892731,
 			"url": "{{ _.Localhost }}/sistema/sendMultImageMassa",
 			"name": "sendMultImageMassa - ✔️📝",
@@ -926,7 +894,7 @@
 		{
 			"_id": "req_5d1f0a3b6d2c4d9f99b0ef6210de4298",
 			"parentId": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
-			"modified": 1643720804183,
+			"modified": 1657759619887,
 			"created": 1632079892601,
 			"url": "{{ _.Localhost }}/sistema/sendFile",
 			"name": "sendFile - ✔️📝",
@@ -958,7 +926,7 @@
 					},
 					{
 						"description": "",
-						"fileName": "C:\\Users\\alan.martines\\Downloads\\rufus-3.17.exe",
+						"fileName": "C:\\Scripts\\Contatos.txt",
 						"id": "pair_f3e26b070cc14d9099b89594fdcc8b46",
 						"name": "file",
 						"type": "file",
@@ -994,7 +962,7 @@
 		{
 			"_id": "req_ad2674f85a6342529d08d60f434e88a2",
 			"parentId": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
-			"modified": 1643229707738,
+			"modified": 1657759619942,
 			"created": 1632079892612,
 			"url": "{{ _.Localhost }}/sistema/sendFileBase64",
 			"name": "sendFileBase64 - ✔️📝",
@@ -1002,7 +970,7 @@
 			"method": "POST",
 			"body": {
 				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\"phonefull\":\"+55(67)9 9678-7854\",\n\"base64\":\"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\",\n\"originalname\":\"output-onlinepngtools.png\",\n\"caption\":\"Teste Base64 output-onlinepngtools.png\"\n}"
+				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"phonefull\":\"+55(67)9 9678-7854\",\n\"base64\":\"iVBORw0KGgoAAAANSUhEUgAAANwAAADcCAYAAAAbWs+BAAAGwElEQVR4Ae3cwZFbNxBFUY5rkrDTmKAUk5QT03Aa44U22KC7NHptw+DRikVAXf8fzC3u8Hj4R4AAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAgZzAW26USQT+e4HPx+Mz+RRvj0e0kT+SD2cWAQK1gOBqH6sEogKCi3IaRqAWEFztY5VAVEBwUU7DCNQCgqt9rBKICgguymkYgVpAcLWPVQJRAcFFOQ0jUAsIrvaxSiAqILgop2EEagHB1T5WCUQFBBflNIxALSC42scqgaiA4KKchhGoBQRX+1glEBUQXJTTMAK1gOBqH6sEogKCi3IaRqAWeK+Xb1z9iN558fHxcSPS9p2ezx/ROz4e4TtIHt+3j/61hW9f+2+7/+UXbifjewIDAoIbQDWSwE5AcDsZ3xMYEBDcAKqRBHYCgtvJ+J7AgIDgBlCNJLATENxOxvcEBgQEN4BqJIGdgOB2Mr4nMCAguAFUIwnsBAS3k/E9gQEBwQ2gGklgJyC4nYzvCQwICG4A1UgCOwHB7WR8T2BAQHADqEYS2AkIbifjewIDAoIbQDWSwE5AcDsZ3xMYEEjfTzHwiK91B8npd6Q8n8/oGQ/ckRJ9vvQwv3BpUfMIFAKCK3AsEUgLCC4tah6BQkBwBY4lAmkBwaVFzSNQCAiuwLFEIC0guLSoeQQKAcEVOJYIpAUElxY1j0AhILgCxxKBtIDg0qLmESgEBFfgWCKQFhBcWtQ8AoWA4AocSwTSAoJLi5pHoBAQXIFjiUBaQHBpUfMIFAKCK3AsEUgLCC4tah6BQmDgTpPsHSTFs39p6fQ7Q770UsV/Ov19X+2OFL9wxR+rJQJpAcGlRc0jUAgIrsCxRCAtILi0qHkECgHBFTiWCKQFBJcWNY9AISC4AscSgbSA4NKi5hEoBARX4FgikBYQXFrUPAKFgOAKHEsE0gKCS4uaR6AQEFyBY4lAWkBwaVHzCBQCgitwLBFICwguLWoegUJAcAWOJQJpAcGlRc0jUAgIrsCxRCAt8J4eePq89B0ar3ZnyOnve/rfn1+400/I810lILirjtPLnC4guNNPyPNdJSC4q47Ty5wuILjTT8jzXSUguKuO08ucLiC400/I810lILirjtPLnC4guNNPyPNdJSC4q47Ty5wuILjTT8jzXSUguKuO08ucLiC400/I810lILirjtPLnC4guNNPyPNdJSC4q47Ty5wuILjTT8jzXSUguKuO08ucLiC400/I810l8JZ/m78+szP/zI47fJo7Q37vgJ7PHwN/07/3TOv/9gu3avhMYFhAcMPAxhNYBQS3avhMYFhAcMPAxhNYBQS3avhMYFhAcMPAxhNYBQS3avhMYFhAcMPAxhNYBQS3avhMYFhAcMPAxhNYBQS3avhMYFhAcMPAxhNYBQS3avhMYFhAcMPAxhNYBQS3avhMYFhAcMPAxhNYBQS3avhMYFhAcMPAxhNYBQS3avhMYFhg4P6H9J0maYHXuiMlrXf+vOfA33Turf3C5SxNItAKCK4lsoFATkBwOUuTCLQCgmuJbCCQExBcztIkAq2A4FoiGwjkBASXszSJQCsguJbIBgI5AcHlLE0i0AoIriWygUBOQHA5S5MItAKCa4lsIJATEFzO0iQCrYDgWiIbCOQEBJezNIlAKyC4lsgGAjkBweUsTSLQCgiuJbKBQE5AcDlLkwi0Akff//Dz6U+/I6U1/sUNr3bnytl3kPzi4bXb/cK1RDYQyAkILmdpEoFWQHAtkQ0EcgKCy1maRKAVEFxLZAOBnIDgcpYmEWgFBNcS2UAgJyC4nKVJBFoBwbVENhDICQguZ2kSgVZAcC2RDQRyAoLLWZpEoBUQXEtkA4GcgOByliYRaAUE1xLZQCAnILicpUkEWgHBtUQ2EMgJCC5naRKBVkBwLZENBHIC/4M7TXIv+3PS22d24qvdQfL3C/7N5P5i/MLlLE0i0AoIriWygUBOQHA5S5MItAKCa4lsIJATEFzO0iQCrYDgWiIbCOQEBJezNIlAKyC4lsgGAjkBweUsTSLQCgiuJbKBQE5AcDlLkwi0AoJriWwgkBMQXM7SJAKtgOBaIhsI5AQEl7M0iUArILiWyAYCOQHB5SxNItAKCK4lsoFATkBwOUuTCBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIDAvyrwDySEJ2VQgUSoAAAAAElFTkSuQmCC\",\n\"originalname\":\"output-onlinepngtools.png\",\n\"caption\":\"Teste Base64 output-onlinepngtools.png\"\n}"
 			},
 			"parameters": [],
 			"headers": [
@@ -1026,7 +994,7 @@
 		{
 			"_id": "req_c721f2defb69430b822c3518c667bd23",
 			"parentId": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
-			"modified": 1643229717473,
+			"modified": 1657759619966,
 			"created": 1632079892771,
 			"url": "{{ _.Localhost }}/sistema/sendFileToBase64",
 			"name": "sendFileToBase64 - ✔️📝",
@@ -1055,7 +1023,7 @@
 						"description": "",
 						"id": "pair_307868b08b5b485fb69091085015eaf1",
 						"name": "phonefull",
-						"value": "+55(67)9 9678-7854"
+						"value": "+55(67)9 9975-7085"
 					},
 					{
 						"description": "",
@@ -1095,7 +1063,7 @@
 		{
 			"_id": "req_d618111332844a009d7195e46d8e1abb",
 			"parentId": "fld_3dcb940e11fe45b9a7464f58af1c63c7",
-			"modified": 1643229727878,
+			"modified": 1657759619982,
 			"created": 1632079892591,
 			"url": "{{ _.Localhost }}/sistema/sendFileFromBase64",
 			"name": "sendFileFromBase64 - ✔️📝",
@@ -1103,7 +1071,7 @@
 			"method": "POST",
 			"body": {
 				"mimeType": "application/json",
-				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"phonefull\":\"+55(67)9 9678-7854\",\n\"base64\":\"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\",\n\t\"mimetype\": \"image/png\",\n\t\"originalname\":\"onlinepngtools.png\",\n\t\"caption\":\"Teste image/png Base64 onlinepngtools.png\"\n}"
+				"text": "{\n\t\"AuthorizationToken\": \"{{ _.AuthorizationToken }}\",\n\t\"SessionName\": \"{{ _.SessionName }}\",\n\t\"phonefull\":\"+55(67)9 9975-7085\",\n\"base64\":\"iVBORw0KGgoAAAANSUhEUgAAANwAAADcCAYAAAAbWs+BAAAGwElEQVR4Ae3cwZFbNxBFUY5rkrDTmKAUk5QT03Aa44U22KC7NHptw+DRikVAXf8fzC3u8Hj4R4AAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAgZzAW26USQT+e4HPx+Mz+RRvj0e0kT+SD2cWAQK1gOBqH6sEogKCi3IaRqAWEFztY5VAVEBwUU7DCNQCgqt9rBKICgguymkYgVpAcLWPVQJRAcFFOQ0jUAsIrvaxSiAqILgop2EEagHB1T5WCUQFBBflNIxALSC42scqgaiA4KKchhGoBQRX+1glEBUQXJTTMAK1gOBqH6sEogKCi3IaRqAWeK+Xb1z9iN558fHxcSPS9p2ezx/ROz4e4TtIHt+3j/61hW9f+2+7/+UXbifjewIDAoIbQDWSwE5AcDsZ3xMYEBDcAKqRBHYCgtvJ+J7AgIDgBlCNJLATENxOxvcEBgQEN4BqJIGdgOB2Mr4nMCAguAFUIwnsBAS3k/E9gQEBwQ2gGklgJyC4nYzvCQwICG4A1UgCOwHB7WR8T2BAQHADqEYS2AkIbifjewIDAoIbQDWSwE5AcDsZ3xMYEEjfTzHwiK91B8npd6Q8n8/oGQ/ckRJ9vvQwv3BpUfMIFAKCK3AsEUgLCC4tah6BQkBwBY4lAmkBwaVFzSNQCAiuwLFEIC0guLSoeQQKAcEVOJYIpAUElxY1j0AhILgCxxKBtIDg0qLmESgEBFfgWCKQFhBcWtQ8AoWA4AocSwTSAoJLi5pHoBAQXIFjiUBaQHBpUfMIFAKCK3AsEUgLCC4tah6BQmDgTpPsHSTFs39p6fQ7Q770UsV/Ov19X+2OFL9wxR+rJQJpAcGlRc0jUAgIrsCxRCAtILi0qHkECgHBFTiWCKQFBJcWNY9AISC4AscSgbSA4NKi5hEoBARX4FgikBYQXFrUPAKFgOAKHEsE0gKCS4uaR6AQEFyBY4lAWkBwaVHzCBQCgitwLBFICwguLWoegUJAcAWOJQJpAcGlRc0jUAgIrsCxRCAt8J4eePq89B0ar3ZnyOnve/rfn1+400/I810lILirjtPLnC4guNNPyPNdJSC4q47Ty5wuILjTT8jzXSUguKuO08ucLiC400/I810lILirjtPLnC4guNNPyPNdJSC4q47Ty5wuILjTT8jzXSUguKuO08ucLiC400/I810lILirjtPLnC4guNNPyPNdJSC4q47Ty5wuILjTT8jzXSUguKuO08ucLiC400/I810l8JZ/m78+szP/zI47fJo7Q37vgJ7PHwN/07/3TOv/9gu3avhMYFhAcMPAxhNYBQS3avhMYFhAcMPAxhNYBQS3avhMYFhAcMPAxhNYBQS3avhMYFhAcMPAxhNYBQS3avhMYFhAcMPAxhNYBQS3avhMYFhAcMPAxhNYBQS3avhMYFhAcMPAxhNYBQS3avhMYFhAcMPAxhNYBQS3avhMYFhAcMPAxhNYBQS3avhMYFhg4P6H9J0maYHXuiMlrXf+vOfA33Turf3C5SxNItAKCK4lsoFATkBwOUuTCLQCgmuJbCCQExBcztIkAq2A4FoiGwjkBASXszSJQCsguJbIBgI5AcHlLE0i0AoIriWygUBOQHA5S5MItAKCa4lsIJATEFzO0iQCrYDgWiIbCOQEBJezNIlAKyC4lsgGAjkBweUsTSLQCgiuJbKBQE5AcDlLkwi0Akff//Dz6U+/I6U1/sUNr3bnytl3kPzi4bXb/cK1RDYQyAkILmdpEoFWQHAtkQ0EcgKCy1maRKAVEFxLZAOBnIDgcpYmEWgFBNcS2UAgJyC4nKVJBFoBwbVENhDICQguZ2kSgVZAcC2RDQRyAoLLWZpEoBUQXEtkA4GcgOByliYRaAUE1xLZQCAnILicpUkEWgHBtUQ2EMgJCC5naRKBVkBwLZENBHIC/4M7TXIv+3PS22d24qvdQfL3C/7N5P5i/MLlLE0i0AoIriWygUBOQHA5S5MItAKCa4lsIJATEFzO0iQCrYDgWiIbCOQEBJezNIlAKyC4lsgGAjkBweUsTSLQCgiuJbKBQE5AcDlLkwi0AoJriWwgkBMQXM7SJAKtgOBaIhsI5AQEl7M0iUArILiWyAYCOQHB5SxNItAKCK4lsoFATkBwOUuTCBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIDAvyrwDySEJ2VQgUSoAAAAAElFTkSuQmCC\",\n\t\"mimetype\": \"image/png\",\n\t\"originalname\":\"onlinepngtools.png\",\n\t\"caption\":\"Teste image/png Base64 onlinepngtools.png\"\n}"
 			},
 			"parameters": [],
 			"headers": [
@@ -1127,7 +1095,7 @@
 		{
 			"_id": "req_681a007d858345d9a1b94c787eda1e1b",
 			"parentId": "fld_ed56f852c9754e85bd49defffb4a48b5",
-			"modified": 1647364408575,
+			"modified": 1657759619903,
 			"created": 1632079892881,
 			"url": "{{ _.Localhost }}/sistema/getAllContacts",
 			"name": "getAllContacts - ✔️📝",
@@ -1159,7 +1127,7 @@
 		{
 			"_id": "fld_ed56f852c9754e85bd49defffb4a48b5",
 			"parentId": "wrk_43f3024baba5440caec06b068fd61b21",
-			"modified": 1639058050515,
+			"modified": 1657759619837,
 			"created": 1632079892843,
 			"name": "Retrieving Data - ✔️📝",
 			"description": "",
@@ -1171,7 +1139,7 @@
 		{
 			"_id": "req_a4a8c6a8297b40ef86be0e5b5bf988be",
 			"parentId": "fld_ed56f852c9754e85bd49defffb4a48b5",
-			"modified": 1639058050573,
+			"modified": 1657759619932,
 			"created": 1632079892930,
 			"url": "{{ _.Localhost }}/sistema/getAllGroups",
 			"name": "getAllGroups - ✔️📝",
@@ -1203,7 +1171,7 @@
 		{
 			"_id": "req_f3cf5b157b414247992d83733faff5f5",
 			"parentId": "fld_ed56f852c9754e85bd49defffb4a48b5",
-			"modified": 1639058050605,
+			"modified": 1657759620015,
 			"created": 1632079892890,
 			"url": "{{ _.Localhost }}/sistema/getSessionTokenBrowser",
 			"name": "getSessionTokenBrowser - ✔️📝",
@@ -1235,7 +1203,7 @@
 		{
 			"_id": "req_379a405570394b55bfed76a6d949dc05",
 			"parentId": "fld_ed56f852c9754e85bd49defffb4a48b5",
-			"modified": 1639058050527,
+			"modified": 1657759619856,
 			"created": 1632079892870,
 			"url": "{{ _.Localhost }}/sistema/getBlockList",
 			"name": "getBlockList - ✔️📝",
@@ -1267,7 +1235,7 @@
 		{
 			"_id": "req_2a9a705dc2df4b42aab2bccbaa435209",
 			"parentId": "fld_ed56f852c9754e85bd49defffb4a48b5",
-			"modified": 1639136896367,
+			"modified": 1657759619850,
 			"created": 1632079892901,
 			"url": "{{ _.Localhost }}/sistema/getStatus",
 			"name": "getStatus - ✔️📝",
@@ -1299,7 +1267,7 @@
 		{
 			"_id": "req_e525360265f94151a7a7e762f8dab247",
 			"parentId": "fld_ed56f852c9754e85bd49defffb4a48b5",
-			"modified": 1639142532505,
+			"modified": 1657759620004,
 			"created": 1632079892910,
 			"url": "{{ _.Localhost }}/sistema/getNumberProfile",
 			"name": "getNumberProfile - ✔️📝",
@@ -1331,7 +1299,7 @@
 		{
 			"_id": "req_af7c1208b5a5421b92a5d649d74d1a05",
 			"parentId": "fld_ed56f852c9754e85bd49defffb4a48b5",
-			"modified": 1639058050579,
+			"modified": 1657759619948,
 			"created": 1632079892921,
 			"url": "{{ _.Localhost }}/sistema/getProfilePicFromServer",
 			"name": "getProfilePicFromServer - ✔️📝",
@@ -1363,7 +1331,7 @@
 		{
 			"_id": "req_c15752429cdf43459b2eb0088723f024",
 			"parentId": "fld_ed56f852c9754e85bd49defffb4a48b5",
-			"modified": 1644943286857,
+			"modified": 1657759619954,
 			"created": 1632079892850,
 			"url": "{{ _.Localhost }}/sistema/checkNumberStatus",
 			"name": "checkNumberStatus - ✔️📝",
@@ -1395,7 +1363,7 @@
 		{
 			"_id": "req_3600af445f2b450ab241a9ded290cbd2",
 			"parentId": "fld_ed56f852c9754e85bd49defffb4a48b5",
-			"modified": 1643229641048,
+			"modified": 1657759619854,
 			"created": 1632079892860,
 			"url": "{{ _.Localhost }}/sistema/checkNumberStatusMassa",
 			"name": "checkNumberStatusMassa - ✔️📝",
@@ -1448,7 +1416,7 @@
 		{
 			"_id": "req_72c5e4333dca4c118c86d5be0170924e",
 			"parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
-			"modified": 1643720851513,
+			"modified": 1657759619911,
 			"created": 1632079892580,
 			"url": "{{ _.Localhost }}/sistema/sendTextGrupo",
 			"name": "sendTextGrupo - ✔️📝",
@@ -1480,7 +1448,7 @@
 		{
 			"_id": "fld_62966c1e99394b22ae8a80de93e2b0b6",
 			"parentId": "wrk_43f3024baba5440caec06b068fd61b21",
-			"modified": 1639058050512,
+			"modified": 1657759619831,
 			"created": 1632079893077,
 			"name": "Group Functions - ✔️📝",
 			"description": "",
@@ -1492,7 +1460,7 @@
 		{
 			"_id": "req_40faa0cc8a6e4443819a6c95b780bba1",
 			"parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
-			"modified": 1643720851512,
+			"modified": 1657759619864,
 			"created": 1632079892782,
 			"url": "{{ _.Localhost }}/sistema/sendLocationGroup",
 			"name": "sendLocationGroup - ✔️📝",
@@ -1524,7 +1492,7 @@
 		{
 			"_id": "req_c2079b72a7114353863dd7faf7480055",
 			"parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
-			"modified": 1643720851513,
+			"modified": 1657759619958,
 			"created": 1632079892741,
 			"url": "{{ _.Localhost }}/sistema/sendImageGroup",
 			"name": "sendImageGroup - ✔️📝",
@@ -1592,7 +1560,7 @@
 		{
 			"_id": "req_ec9f2bceb37e41dfb721639659df6466",
 			"parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
-			"modified": 1643720851514,
+			"modified": 1657759620013,
 			"created": 1632079892800,
 			"url": "{{ _.Localhost }}/sistema/sendFileGroup",
 			"name": "sendFileGroup - ✔️📝",
@@ -1660,7 +1628,7 @@
 		{
 			"_id": "req_770bcb68b441447f8ae4b8aa7cb18a0f",
 			"parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
-			"modified": 1643720851513,
+			"modified": 1657759619914,
 			"created": 1632079892810,
 			"url": "{{ _.Localhost }}/sistema/sendFileBase64Group",
 			"name": "sendFileBase64Group - ✔️📝",
@@ -1692,7 +1660,7 @@
 		{
 			"_id": "req_e278dec9fb1d4f9b9a362629d30495fc",
 			"parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
-			"modified": 1643720851514,
+			"modified": 1657759619995,
 			"created": 1632079892820,
 			"url": "{{ _.Localhost }}/sistema/sendFileToBase64Group",
 			"name": "sendFileToBase64Group - ✔️📝",
@@ -1757,7 +1725,7 @@
 		{
 			"_id": "req_d7791fe60f6d4950a210c3f777a90818",
 			"parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
-			"modified": 1643720851514,
+			"modified": 1657759619985,
 			"created": 1632079892830,
 			"url": "{{ _.Localhost }}/sistema/sendFileFromBase64Group",
 			"name": "sendFileFromBase64Group - ✔️📝",
@@ -1789,7 +1757,7 @@
 		{
 			"_id": "req_0851f638ded54a63aca677208c7bcc67",
 			"parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
-			"modified": 1639058050519,
+			"modified": 1657759619842,
 			"created": 1632079893082,
 			"url": "{{ _.Localhost }}/sistema/leaveGroup",
 			"name": "leaveGroup - ✔️📝",
@@ -1821,7 +1789,7 @@
 		{
 			"_id": "req_ccbd647cf2324b0983a3f23dafda0a97",
 			"parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
-			"modified": 1643130714835,
+			"modified": 1657759619969,
 			"created": 1632079893119,
 			"url": "{{ _.Localhost }}/sistema/createGroup",
 			"name": "createGroup - ✔️📝",
@@ -1884,7 +1852,7 @@
 		{
 			"_id": "req_c6b8cdd8fd3b44388ad911d6eab4fd6a",
 			"parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
-			"modified": 1643720851513,
+			"modified": 1657759619961,
 			"created": 1632079893092,
 			"url": "{{ _.Localhost }}/sistema/getGroupMembers",
 			"name": "getGroupMembers - ✔️📝",
@@ -1916,7 +1884,7 @@
 		{
 			"_id": "req_cf0a8a35234b4fc983c08af26c930ef7",
 			"parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
-			"modified": 1643720851513,
+			"modified": 1657759619973,
 			"created": 1632079893101,
 			"url": "{{ _.Localhost }}/sistema/getGroupMembersIds",
 			"name": "getGroupMembersIds - ✔️📝",
@@ -1948,7 +1916,7 @@
 		{
 			"_id": "req_47cc6af350d242af851905469f657a82",
 			"parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
-			"modified": 1643720851512,
+			"modified": 1657759619869,
 			"created": 1632079893110,
 			"url": "{{ _.Localhost }}/sistema/getGroupInviteLink",
 			"name": "getGroupInviteLink - ✔️📝",
@@ -1980,7 +1948,7 @@
 		{
 			"_id": "req_40acdb0d8bbb45b1888a15323a597818",
 			"parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
-			"modified": 1643130714833,
+			"modified": 1657759619861,
 			"created": 1632079893186,
 			"url": "{{ _.Localhost }}/sistema/createGroupSetAdminMembers",
 			"name": "createGroupSetAdminMembers - ✔️📝",
@@ -2039,7 +2007,7 @@
 		{
 			"_id": "req_deab0bf30773481093214824a95f56d4",
 			"parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
-			"modified": 1643130714836,
+			"modified": 1657759619992,
 			"created": 1632079893196,
 			"url": "{{ _.Localhost }}/sistema/createCountGroupSetAdminMembers",
 			"name": "createCountGroupSetAdminMembers - ✔️📝",
@@ -2104,7 +2072,7 @@
 		{
 			"_id": "req_aca2d1dcab9b4bb9bf1d51dfbae6b868",
 			"parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
-			"modified": 1639058050576,
+			"modified": 1657759619939,
 			"created": 1632079893129,
 			"url": "{{ _.Localhost }}/sistema/removeParticipant",
 			"name": "removeParticipant - ✔️📝",
@@ -2136,7 +2104,7 @@
 		{
 			"_id": "req_5f675c24a8474b428fcf9b5c013ff43f",
 			"parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
-			"modified": 1639058050553,
+			"modified": 1657759619895,
 			"created": 1632079893148,
 			"url": "{{ _.Localhost }}/sistema/addParticipant",
 			"name": "addParticipant - ✔️📝",
@@ -2168,7 +2136,7 @@
 		{
 			"_id": "req_94296d60965545d3ad99e46c42ee00d1",
 			"parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
-			"modified": 1639058050569,
+			"modified": 1657759619927,
 			"created": 1632079893138,
 			"url": "{{ _.Localhost }}/sistema/promoteParticipant",
 			"name": "promoteParticipant - ✔️📝",
@@ -2200,7 +2168,7 @@
 		{
 			"_id": "req_e32dfb041ee1455fa16c36d0838c5ab8",
 			"parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
-			"modified": 1639058050599,
+			"modified": 1657759620001,
 			"created": 1632079893157,
 			"url": "{{ _.Localhost }}/sistema/demoteParticipant",
 			"name": "demoteParticipant - ✔️📝",
@@ -2232,7 +2200,7 @@
 		{
 			"_id": "req_0c67134640e54c41a9d932ae968d6091",
 			"parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
-			"modified": 1643130714832,
+			"modified": 1657759619845,
 			"created": 1632079893167,
 			"url": "{{ _.Localhost }}/sistema/getGroupInfoFromInviteLink",
 			"name": "getGroupInfoFromInviteLink - ✔️📝",
@@ -2264,7 +2232,7 @@
 		{
 			"_id": "req_5f28b1e70781460790f1731882204fe9",
 			"parentId": "fld_62966c1e99394b22ae8a80de93e2b0b6",
-			"modified": 1643720851512,
+			"modified": 1657759619892,
 			"created": 1632079893177,
 			"url": "{{ _.Localhost }}/sistema/joinGroup",
 			"name": "joinGroup - ✔️📝",
@@ -2296,7 +2264,7 @@
 		{
 			"_id": "req_7f6b0ff16f354d0783871adf5485e834",
 			"parentId": "fld_eb4bab34468d4b7eb45db385b8790977",
-			"modified": 1643130714835,
+			"modified": 1657759619917,
 			"created": 1632079892949,
 			"url": "{{ _.Localhost }}/sistema/setProfileStatus",
 			"name": "setProfileStatus - ✔️📝",
@@ -2328,7 +2296,7 @@
 		{
 			"_id": "fld_eb4bab34468d4b7eb45db385b8790977",
 			"parentId": "wrk_43f3024baba5440caec06b068fd61b21",
-			"modified": 1643130714832,
+			"modified": 1657759619835,
 			"created": 1632079892944,
 			"name": "Profile Functions - ✔️📝",
 			"description": "",
@@ -2340,7 +2308,7 @@
 		{
 			"_id": "req_eb367f2f1be84363848fc692dfedb905",
 			"parentId": "fld_eb4bab34468d4b7eb45db385b8790977",
-			"modified": 1643130714836,
+			"modified": 1657759620010,
 			"created": 1632079892959,
 			"url": "{{ _.Localhost }}/sistema/setProfileName",
 			"name": "setProfileName - ✔️📝",
@@ -2372,7 +2340,7 @@
 		{
 			"_id": "req_831c9723cb8343f59cf6eb163f5b402f",
 			"parentId": "fld_eb4bab34468d4b7eb45db385b8790977",
-			"modified": 1643130714835,
+			"modified": 1657759619921,
 			"created": 1632079892968,
 			"url": "{{ _.Localhost }}/sistema/setProfilePic",
 			"name": "setProfilePic - ✔️📝",
@@ -2424,7 +2392,7 @@
 		{
 			"_id": "req_12ca585e335746238c43fd38a1a65a94",
 			"parentId": "fld_497055746cf8482b9082aa42dfe1f2b0",
-			"modified": 1643229595735,
+			"modified": 1657759619847,
 			"created": 1632079893033,
 			"url": "{{ _.Localhost }}/sistema/killServiceWorker",
 			"name": "killServiceWorker - ✔️📝",
@@ -2456,7 +2424,7 @@
 		{
 			"_id": "fld_497055746cf8482b9082aa42dfe1f2b0",
 			"parentId": "wrk_43f3024baba5440caec06b068fd61b21",
-			"modified": 1639058050511,
+			"modified": 1657759619829,
 			"created": 1632079892981,
 			"name": "Device Functions - ✔️📝",
 			"description": "",
@@ -2468,7 +2436,7 @@
 		{
 			"_id": "req_5a9112ac9a904fea9d979f20fe563718",
 			"parentId": "fld_497055746cf8482b9082aa42dfe1f2b0",
-			"modified": 1639058050547,
+			"modified": 1657759619884,
 			"created": 1632079893044,
 			"url": "{{ _.Localhost }}/sistema/restartService",
 			"name": "restartService - ✔️📝",
@@ -2500,7 +2468,7 @@
 		{
 			"_id": "req_48e2ea7882b747088eff544ed1dd884d",
 			"parentId": "fld_497055746cf8482b9082aa42dfe1f2b0",
-			"modified": 1643229598713,
+			"modified": 1657759619872,
 			"created": 1632079893064,
 			"url": "{{ _.Localhost }}/sistema/reloadService",
 			"name": "reloadService - ✔️📝",
@@ -2532,7 +2500,7 @@
 		{
 			"_id": "req_c6c7bee0a3634aa2ac907b4558732a46",
 			"parentId": "fld_497055746cf8482b9082aa42dfe1f2b0",
-			"modified": 1643229599579,
+			"modified": 1657759619963,
 			"created": 1632079892987,
 			"url": "{{ _.Localhost }}/sistema/getHostDevice",
 			"name": "getHostDevice - ✔️📝",
@@ -2564,7 +2532,7 @@
 		{
 			"_id": "req_4140010a3f6948a89f0dc28595d9f5bd",
 			"parentId": "fld_497055746cf8482b9082aa42dfe1f2b0",
-			"modified": 1643229600096,
+			"modified": 1657759619866,
 			"created": 1632079892996,
 			"url": "{{ _.Localhost }}/sistema/getConnectionState",
 			"name": "getConnectionState - ✔️📝",
@@ -2596,7 +2564,7 @@
 		{
 			"_id": "req_ab2cdbc45d94452fb5257b45b9c27631",
 			"parentId": "fld_497055746cf8482b9082aa42dfe1f2b0",
-			"modified": 1639058050575,
+			"modified": 1657759619935,
 			"created": 1632079893003,
 			"url": "{{ _.Localhost }}/sistema/getBatteryLevel",
 			"name": "getBatteryLevel - ✔️📝",
@@ -2628,7 +2596,7 @@
 		{
 			"_id": "req_ae2363876843420893e30f4fc21aff71",
 			"parentId": "fld_497055746cf8482b9082aa42dfe1f2b0",
-			"modified": 1643229604481,
+			"modified": 1657759619945,
 			"created": 1632079893011,
 			"url": "{{ _.Localhost }}/sistema/isConnected",
 			"name": "isConnected - ✔️📝",
@@ -2660,7 +2628,7 @@
 		{
 			"_id": "req_99de231e7242493189e7a17719c37c0c",
 			"parentId": "fld_497055746cf8482b9082aa42dfe1f2b0",
-			"modified": 1639058050570,
+			"modified": 1657759619929,
 			"created": 1632079893021,
 			"url": "{{ _.Localhost }}/sistema/getWAVersion",
 			"name": "getWAVersion - ✔️📝",
@@ -2692,7 +2660,7 @@
 		{
 			"_id": "req_d56db8c9b01d4acd98339935f5feff46",
 			"parentId": "fld_3366b95c9830421aa0c475cb56cdb832",
-			"modified": 1643130714836,
+			"modified": 1657759619979,
 			"created": 1632080005689,
 			"url": "{{ _.Localhost }}/sistema/startPhoneWatchdog",
 			"name": "startPhoneWatchdog - ✔️📝",
@@ -2724,7 +2692,7 @@
 		{
 			"_id": "fld_3366b95c9830421aa0c475cb56cdb832",
 			"parentId": "wrk_43f3024baba5440caec06b068fd61b21",
-			"modified": 1643130714832,
+			"modified": 1657759619825,
 			"created": 1632079935896,
 			"name": "Phone connection verification - ✔️📝",
 			"description": "",
@@ -2736,7 +2704,7 @@
 		{
 			"_id": "req_8f1036c12f494c108892a471b89a045c",
 			"parentId": "fld_3366b95c9830421aa0c475cb56cdb832",
-			"modified": 1639058050568,
+			"modified": 1657759619924,
 			"created": 1632080046625,
 			"url": "{{ _.Localhost }}/sistema/stopPhoneWatchdog",
 			"name": "stopPhoneWatchdog - ✔️📝",
@@ -2768,12 +2736,12 @@
 		{
 			"_id": "env_6c08fbf64b094b2a95e78c46dc5be1aa",
 			"parentId": "wrk_43f3024baba5440caec06b068fd61b21",
-			"modified": 1646228842640,
+			"modified": 1657759619820,
 			"created": 1632079892396,
 			"name": "Base Environment",
 			"data": {
-				"Localhost": "http://localhost:9001",
 				"AuthorizationToken": "jghgsgjkdgasjdgjasg",
+				"Localhost": "http://localhost:9001",
 				"SessionName": "BotWhats"
 			},
 			"dataPropertyOrder": {
@@ -2791,17 +2759,17 @@
 		{
 			"_id": "jar_81749637ae1959588fc760d2e1e5cc3e1b66882a",
 			"parentId": "wrk_43f3024baba5440caec06b068fd61b21",
-			"modified": 1639058052778,
-			"created": 1639058052778,
+			"modified": 1657759624217,
+			"created": 1657759624217,
 			"name": "Default Jar",
 			"cookies": [],
 			"_type": "cookie_jar"
 		},
 		{
-			"_id": "spc_4f9a42e9d2d947aa8c011abe61c3786e",
+			"_id": "spc_ef52e05c5b164fc48d77030b827e7bdb",
 			"parentId": "wrk_43f3024baba5440caec06b068fd61b21",
-			"modified": 1639058050608,
-			"created": 1639058050608,
+			"modified": 1657759620024,
+			"created": 1657759620024,
 			"fileName": "API My WhatsApp - WPPConnect v2.0",
 			"contents": "",
 			"contentType": "yaml",
@@ -2810,17 +2778,17 @@
 		{
 			"_id": "env_3b4420d303db410785d296e7d20642f7",
 			"parentId": "env_6c08fbf64b094b2a95e78c46dc5be1aa",
-			"modified": 1648243319068,
+			"modified": 1657764937189,
 			"created": 1632079892400,
 			"name": "Connect API",
 			"data": {
 				"encript": "http://",
 				"domain": "localhost",
-				"port": "9001",
-				"Localhost": "{{ _.encript }}{{ _.domain }}:{{ _.port }}",
+				"port": "80",
+				"Localhost": "{{ _.encript }}{{ _.domain }}",
 				"WebHook": "",
-				"AuthorizationToken": "786486865",
-				"SessionName": "Name"
+				"AuthorizationToken": "JK4JSE0GFNBEXRGPU9CR",
+				"SessionName": "JK4JSE0GFNBEXRGPU9CR"
 			},
 			"dataPropertyOrder": {
 				"&": [
@@ -2841,17 +2809,17 @@
 		{
 			"_id": "env_a91aa888ceaa4c79a0f0a638eee28cd4",
 			"parentId": "env_6c08fbf64b094b2a95e78c46dc5be1aa",
-			"modified": 1648243312391,
+			"modified": 1657764939210,
 			"created": 1637712392376,
 			"name": "Connect API (Homol)",
 			"data": {
 				"encript": "http://",
 				"domain": "localhost",
-				"port": "9001",
-				"Localhost": "{{ _.encript }}{{ _.domain }}:{{ _.port }}",
+				"port": "80",
+				"Localhost": "{{ _.encript }}{{ _.domain }}",
 				"WebHook": "",
-				"AuthorizationToken": "786486865",
-				"SessionName": "Name"
+				"AuthorizationToken": "JK4JSE0GFNBEXRGPU9CR",
+				"SessionName": "JK4JSE0GFNBEXRGPU9CR"
 			},
 			"dataPropertyOrder": {
 				"&": [
