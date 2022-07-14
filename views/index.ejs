@@ -336,36 +336,44 @@
 							$("#description").html("Por favor aguarde, sistema iniciando.");
 						},
 						success: function (response) {
+							$("#send_form").html('Iniciar');
+							if (response.state == 'CONNECTED') {
+								$('#imageQrcode').attr("src", '/imagens/body/ok.png');
+								$("#description").html("Sistema iniciado com sucesso.");
+							} else if (response.state == 'DISCONNECTED') {
+								$('#imageQrcode').attr("src", '/imagens/body/error.png');
+								$("#description").html("Sistema desconectado");
+							} else if (response.state == 'FAILURE') {
+								$('#imageQrcode').attr("src", '/imagens/body/error.png');
+								$("#description").html("Secret key não autorizada, verifique e tente novamente");
+							} else if (response.state == 'STARTING') {
+								$('#imageQrcode').attr("src", '/imagens/body/loading.gif');
+								$("#description").html("Por favor aguarde, sistema iniciando.");
+							}
+							window.scrollTo(0, 0);
+						},
+						error: function (response) {
 							console.log(response);
 							$("#send_form").html('Iniciar');
 							if (response.state == 'CONNECTED') {
 								$('#imageQrcode').attr("src", '/imagens/body/ok.png');
 								$("#description").html("Sistema iniciado com sucesso.");
-								window.scrollTo(0, 0);
 							} else if (response.state == 'DISCONNECTED') {
 								$('#imageQrcode').attr("src", '/imagens/body/error.png');
 								$("#description").html("Sistema desconectado");
-								window.scrollTo(0, 0);
 							} else if (response.state == 'FAILURE') {
 								$('#imageQrcode').attr("src", '/imagens/body/error.png');
 								$("#description").html("Secret key não autorizada, verifique e tente novamente");
-								window.scrollTo(0, 0);
 							} else if (response.state == 'STARTING') {
 								$('#imageQrcode').attr("src", '/imagens/body/loading.gif');
 								$("#description").html("Por favor aguarde, sistema iniciando.");
-								window.scrollTo(0, 0);
 							}
-						},
-						error: function (XMLHttpRequest, textStatus, errorThrown) {
-							$("#send_form").html('Iniciar');
-							$('#imageQrcode').attr("src", '/imagens/body/error.png');
-							$("#description").html("Sistema não iniciado");
 							window.scrollTo(0, 0);
 						}
 					}).fail(function (jqXHR, textStatus, error) {
 						$("#send_form").html('Iniciar');
 						$('#imageQrcode').attr("src", '/imagens/body/error.png');
-						$("#description").html("Sistema não iniciado");
+						$("#description").html("Falha interna, sistema não iniciado");
 						window.scrollTo(0, 0);
 					});
 				}
