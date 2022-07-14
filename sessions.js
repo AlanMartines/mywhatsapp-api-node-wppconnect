@@ -41,7 +41,7 @@ async function saudacao() {
 		var saudacao = "Boa noite";
 		//
 	} else {
-		var saudacao = "---";
+		var saudacao = "Boa madrugada";
 		//
 	}
 	return saudacao;
@@ -91,7 +91,7 @@ async function deletaCache(filePath, userDataDir) {
 		//
 		rimraf(`${filePath}/${userDataDir}`, (error) => {
 			if (error) {
-				console.error(`- Diretório "${filePath}/${userDataDir}" não removido`);
+				console.log(`- Diretório "${filePath}/${userDataDir}" não removido`);
 			} else {
 				console.log(`- Diretórios "${filePath}/${userDataDir}" removida com sucesso`);
 			}
@@ -519,7 +519,7 @@ module.exports = class Sessions {
 	//
 	// ------------------------------------------------------------------------------------------------------- //
 	//
-	static async initSession(socket, SessionName, whatsappVersion) {
+	static async initSession(socket, SessionName, MultiDevice, whatsappVersion) {
 		console.log("- Iniciando sessão");
 		var session = Sessions.getSession(SessionName);
 		session.browserSessionToken = null;
@@ -528,6 +528,16 @@ module.exports = class Sessions {
 		//
 		session.process = new pQueue({ concurrency: 1 });
 		//
+		if(MultiDevice == 'true'){
+			//
+			await deletaToken(`${tokenPatch}`, `${SessionName}.data.json`);
+			await deletaCache(`${tokenPatch}`, `WPP-${SessionName}`);
+			//
+		}else{
+			//
+			await deletaCache(`${tokenPatch}`, `WPP-${SessionName}`);
+			//
+		}
 		//
 		/*
 			╔═╗┌─┐┌┬┐┬┌─┐┌┐┌┌─┐┬    ╔═╗┬─┐┌─┐┌─┐┌┬┐┌─┐  ╔═╗┌─┐┬─┐┌─┐┌┬┐┌─┐┌┬┐┌─┐┬─┐┌─┐

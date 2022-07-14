@@ -9,7 +9,7 @@ exports.verify = async (req, res, next) => {
 				"result": "info",
 				"state": "FAILURE",
 				"status": "notProvided",
-				"message": "AuthorizationToken não informado, verifique e tente novamente"
+				"message": "Authorization Token não informado, verifique e tente novamente"
 			}
 		});
 	} else {
@@ -35,7 +35,7 @@ exports.verify = async (req, res, next) => {
 					"result": "info",
 					"state": "FAILURE",
 					"status": "notProvided",
-					"message": "Secret key não autorizada, verifique e tente novamente"
+					"message": "Authorization Token não autorizada, verifique e tente novamente"
 				}
 			});
 		}

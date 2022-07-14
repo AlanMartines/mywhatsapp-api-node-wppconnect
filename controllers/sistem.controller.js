@@ -145,7 +145,7 @@ router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next
 			case 'DISCONNECTED':
 			case 'NOTFOUND':
 				//
-				await Sessions.Start(req.io, removeWithspace(req.body.SessionName), req.body.whatsappVersion);
+				await Sessions.Start(req.io, removeWithspace(req.body.SessionName), req.body.MultiDevice, req.body.whatsappVersion);
 				var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
 				console.log("- Session Name:", removeWithspace(req.body.SessionName));
 				//

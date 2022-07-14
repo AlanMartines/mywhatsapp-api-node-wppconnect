@@ -348,7 +348,7 @@
 								window.scrollTo(0, 0);
 							} else if (response.state == 'FAILURE') {
 								$('#imageQrcode').attr("src", '/imagens/body/fingerprint-lock-2.png');
-								$("#description").html("Secret key não autorizada, verifique e tente novamente");
+								$("#description").html("Authorization Token não autorizada, verifique e tente novamente");
 								window.scrollTo(0, 0);
 							} else if (response.state == 'STARTING') {
 								$('#imageQrcode').attr("src", '/imagens/body/loading.gif');
@@ -413,7 +413,7 @@
 					} else if (update.status == 'notProvided') {
 						//
 						$('#imageQrcode').attr("src", '/imagens/body/fingerprint-lock-2.png');
-						$("#description").html("Secret key não autorizada, verifique e tente novamente.");
+						$("#description").html("Authorization Token não autorizada, verifique e tente novamente.");
 						//
 					}
 				}
