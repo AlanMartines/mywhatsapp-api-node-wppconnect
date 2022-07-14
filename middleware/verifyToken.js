@@ -23,6 +23,7 @@ exports.verify = async (req, res, next) => {
 				//
 				socket.emit('status',
 					{
+						state: "FAILURE",
 						status: 'notProvided',
 						SessionName: req.body.SessionName,
 						message: "Secret key não autorizada, verifique e tente novamente"
