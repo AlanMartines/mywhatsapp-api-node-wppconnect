@@ -320,7 +320,7 @@ module.exports = class Sessions {
 	//
 	// ------------------------------------------------------------------------------------------------------- //
 	//
-	static async restartToken(socket, SessionName, whatsappVersion) {
+	static async restartToken(socket, SessionName, MultiDevice, whatsappVersion) {
 		console.log("- Resetando sessão");
 		var session = Sessions.getSession(SessionName);
 		//
@@ -338,7 +338,7 @@ module.exports = class Sessions {
 			await deletaCache(`${tokenPatch}`, `WPP-${SessionName}`);
 			//
 			try {
-				session.client = Sessions.initSession(socket, SessionName, whatsappVersion);
+				session.client = Sessions.initSession(socket, SessionName, MultiDevice, whatsappVersion);
 				//
 				return {
 					result: "info",
@@ -373,7 +373,7 @@ module.exports = class Sessions {
 	//
 	// ------------------------------------------------------------------------------------------------//
 	//
-	static async Start(socket, SessionName, whatsappVersion) {
+	static async Start(socket, SessionName, MultiDevice, whatsappVersion) {
 		Sessions.sessions = Sessions.sessions || []; //start array
 
 		var session = Sessions.getSession(SessionName);
@@ -381,7 +381,7 @@ module.exports = class Sessions {
 		//
 		if (session == false) {
 			//create new session
-			session = await Sessions.addSesssion(socket, SessionName, whatsappVersion);
+			session = await Sessions.addSesssion(socket, SessionName, MultiDevice, whatsappVersion);
 			//
 		} else if (["CLOSED"].includes(session.state)) {
 			//restart session
@@ -397,7 +397,7 @@ module.exports = class Sessions {
 			console.log('- State do sistema:', session.state);
 			console.log('- Status da sessão:', session.status);
 			//
-			session.client = Sessions.initSession(socket, SessionName, whatsappVersion);
+			session.client = Sessions.initSession(socket, SessionName, MultiDevice, whatsappVersion);
 			//
 		} else if (["CONFLICT", "UNPAIRED", "UNLAUNCHED", "UNPAIRED_IDLE"].includes(session.state)) {
 			//
@@ -415,7 +415,7 @@ module.exports = class Sessions {
 				client.useHere();
 			});
 			//
-			session.client = Sessions.initSession(socket, SessionName, whatsappVersion);
+			session.client = Sessions.initSession(socket, SessionName, MultiDevice, whatsappVersion);
 			//
 		} else if (["DISCONNECTED"].includes(session.state)) {
 			//
@@ -431,7 +431,7 @@ module.exports = class Sessions {
 			console.log('- State do sistema:', session.state);
 			console.log('- Status da sessão:', session.status);
 			//
-			session.client = Sessions.initSession(socket, SessionName, whatsappVersion);
+			session.client = Sessions.initSession(socket, SessionName, MultiDevice, whatsappVersion);
 			//
 			//
 		} else if (["NOTFOUND"].includes(session.state)) {
@@ -448,7 +448,7 @@ module.exports = class Sessions {
 			console.log('- State do sistema:', session.state);
 			console.log('- Status da sessão:', session.status);
 			//
-			session = await Sessions.addSesssion(socket, SessionName, whatsappVersion);
+			session = await Sessions.addSesssion(socket, SessionName, MultiDevice, whatsappVersion);
 			//
 		} else {
 			//
@@ -463,7 +463,7 @@ module.exports = class Sessions {
 	//
 	// ------------------------------------------------------------------------------------------------------- //
 	//
-	static async addSesssion(socket, SessionName, whatsappVersion) {
+	static async addSesssion(socket, SessionName, MultiDevice, whatsappVersion) {
 		console.log("- Adicionando sessão");
 		var newSession = {
 			name: SessionName,
@@ -488,7 +488,7 @@ module.exports = class Sessions {
 		console.log("- Nova sessão: " + SessionName);
 
 		//setup session
-		newSession.client = Sessions.initSession(socket, SessionName, whatsappVersion);
+		newSession.client = Sessions.initSession(socket, SessionName, MultiDevice, whatsappVersion);
 		//
 
 		return newSession;
@@ -533,7 +533,7 @@ module.exports = class Sessions {
 			await deletaToken(`${tokenPatch}`, `${SessionName}.data.json`);
 			await deletaCache(`${tokenPatch}`, `WPP-${SessionName}`);
 			//
-		}else{
+		}else if(MultiDevice == 'false'){
 			//
 			await deletaCache(`${tokenPatch}`, `WPP-${SessionName}`);
 			//
