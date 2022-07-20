@@ -8,7 +8,6 @@ const fs = require('fs-extra');
 const path = require('path');
 const express = require("express");
 const multer = require('multer');
-const sleep = require('sleep-promise');
 const validUrl = require('valid-url');
 const mime = require('mime-types');
 // https://stackoverflow.com/questions/60408575/how-to-validate-file-extension-with-multer-middleware
@@ -628,7 +627,7 @@ router.post("/sendContactVcardList", upload.single('file'), verifyToken.verify, 
 								contactlistValid.push(numero + '@c.us');
 								//
 							}
-							//await sleep(1000);
+							
 						}
 						//
 						var sendContactVcardList = await session.process.add(async () => await Sessions.sendContactVcardList(
@@ -796,7 +795,7 @@ router.post("/sendTextMassa", upload.single('file'), verifyToken.verify, async (
 							sendTextMassa.push(sendTextMassaRes);
 							//
 						}
-						//await sleep(1000);
+						
 					}
 					//
 					//
@@ -1139,7 +1138,7 @@ router.post("/sendImageMassa", sendImageMassa, verifyToken.verify, async (req, r
 							//
 							sendImageMassa.push(sendImageMassaRes);
 						}
-						//await sleep(1000);
+						
 					}
 					//
 					await deletaArquivosTemp(filePathContato);
@@ -1235,7 +1234,7 @@ router.post("/sendMultImage", upload.array('file', 50), verifyToken.verify, asyn
 							//
 							sendMultImage.push(sendMultImageRes);
 							//
-							//await sleep(1000);
+							
 							//
 							await deletaArquivosTemp(filePathImagem);
 							//
@@ -1251,7 +1250,7 @@ router.post("/sendMultImage", upload.array('file', 50), verifyToken.verify, asyn
 							//
 							sendMultImage.push(erroStatus);
 							//
-							//await sleep(1000);
+							
 							//
 							await deletaArquivosTemp(filePathImagem);
 							//
@@ -1356,7 +1355,7 @@ router.post("/sendMultImageMassa", sendMultImageMassa, verifyToken.verify, async
 										//
 										sendMultImageMassa.push(sendMultImageMassaRes);
 										//
-										//await sleep(1000);
+										
 										//
 										//
 										await deletaArquivosTemp(filePathImagem);
@@ -1374,7 +1373,7 @@ router.post("/sendMultImageMassa", sendMultImageMassa, verifyToken.verify, async
 										//
 										sendMultImageMassa.push(erroStatus);
 										//
-										//await sleep(1000);
+										
 										//
 										//
 										await deletaArquivosTemp(filePathImagem);
@@ -1389,7 +1388,7 @@ router.post("/sendMultImageMassa", sendMultImageMassa, verifyToken.verify, async
 								var sendMultImageMassa = checkNumberStatus;
 							}
 						}
-						//await sleep(1000);
+						
 					}
 					//
 					//console.log(result);
@@ -2198,7 +2197,7 @@ router.post("/checkNumberStatusMassa", upload.single('file'), verifyToken.verify
 							var checkNumberStatusMassa = checkNumberStatus;
 						}
 					}
-					//await sleep(1000);
+					
 				}
 				//
 				await deletaArquivosTemp(filePath);
@@ -2777,7 +2776,7 @@ router.post("/createGroup", upload.single('file'), verifyToken.verify, async (re
 							//
 						}
 						//
-						//await sleep(1000);
+						
 					}
 					//
 					var createGroup = await session.process.add(async () => await Sessions.createGroup(
@@ -3035,7 +3034,7 @@ router.post("/createGroupSetAdminMembers", upload.single('file'), verifyToken.ve
 							//
 						}
 						//
-						//await sleep(1000);
+						
 					}
 					//
 					var createGroup = await session.process.add(async () => await Sessions.createGroup(
@@ -3061,7 +3060,7 @@ router.post("/createGroupSetAdminMembers", upload.single('file'), verifyToken.ve
 							//
 							createGroupSetAdminMembers.push(promoteParticipant);
 							//
-							//await sleep(1000);
+							
 						});
 						//
 					} else {
@@ -3176,7 +3175,7 @@ router.post("/createCountGroupSetAdminMembers", upload.single('file'), verifyTok
 							//
 						}
 						//
-						//await sleep(1000);
+						
 					}
 					//
 					for (count = 1; count <= req.body.count; count++) {
@@ -3203,7 +3202,7 @@ router.post("/createCountGroupSetAdminMembers", upload.single('file'), verifyTok
 								//
 								createCountGroupSetAdminMembers.push(promoteParticipant);
 								//
-								//await sleep(1000);
+								
 							});
 							//
 						} else {
