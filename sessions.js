@@ -6,7 +6,6 @@ const webhooks = require('./controllers/webhooks.js');
 const fnSocket = require('./controllers/fnSockets');
 const fs = require('fs-extra');
 const rimraf = require("rimraf");
-const sleep = require('sleep-promise');
 const {
 	forEach
 } = require('p-iteration');

@@ -441,7 +441,7 @@ module.exports = class Sessions {
         console.log(boxen(newVersionLog, { padding: 1 }));
         console.log(
             `Para mais informações visite: ${chalk.underline(
-                'https://github.com/eduardo-policarpo/MyZAP2.0-Premiun/releases'
+                'https://github.com/alanmartines/mywhatsapp-api-node-wppconnect/releases'
             )}\n`
         );
     }
