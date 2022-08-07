@@ -1,3 +1,4 @@
+'use strict';
 //
 // Configuração dos módulos
 const config = require('./config.global');
@@ -6,6 +7,7 @@ const webhooks = require('./controllers/webhooks.js');
 const fnSocket = require('./controllers/fnSockets');
 const fs = require('fs-extra');
 const rimraf = require("rimraf");
+const sleep = require('sleep-promise');
 const {
 	forEach
 } = require('p-iteration');
@@ -21,7 +23,7 @@ if (fs.existsSync('./wppconnect/dist/index.js')) {
 	var wppconnect = require('@wppconnect-team/wppconnect');
 }
 //
-const tokenPatch = "/usr/local/tokens";
+const tokenPatch = config.PATCH_TOKENS;
 //
 // ------------------------------------------------------------------------------------------------------- //
 //
@@ -90,7 +92,7 @@ async function deletaCache(filePath, userDataDir) {
 		//
 		rimraf(`${filePath}/${userDataDir}`, (error) => {
 			if (error) {
-				console.log(`- Diretório "${filePath}/${userDataDir}" não removido`);
+				console.error(`- Diretório "${filePath}/${userDataDir}" não removido`);
 			} else {
 				console.log(`- Diretórios "${filePath}/${userDataDir}" removida com sucesso`);
 			}
@@ -319,7 +321,7 @@ module.exports = class Sessions {
 	//
 	// ------------------------------------------------------------------------------------------------------- //
 	//
-	static async restartToken(socket, SessionName, MultiDevice, whatsappVersion) {
+	static async restartToken(socket, SessionName, AuthorizationToken, whatsappVersion) {
 		console.log("- Resetando sessão");
 		var session = Sessions.getSession(SessionName);
 		//
@@ -337,7 +339,7 @@ module.exports = class Sessions {
 			await deletaCache(`${tokenPatch}`, `WPP-${SessionName}`);
 			//
 			try {
-				session.client = Sessions.initSession(socket, SessionName, MultiDevice, whatsappVersion);
+				session.client = Sessions.initSession(socket, SessionName, AuthorizationToken, whatsappVersion);
 				//
 				return {
 					result: "info",
@@ -372,7 +374,7 @@ module.exports = class Sessions {
 	//
 	// ------------------------------------------------------------------------------------------------//
 	//
-	static async Start(socket, SessionName, MultiDevice, whatsappVersion) {
+	static async Start(socket, SessionName, AuthorizationToken, whatsappVersion) {
 		Sessions.sessions = Sessions.sessions || []; //start array
 
 		var session = Sessions.getSession(SessionName);
@@ -380,7 +382,7 @@ module.exports = class Sessions {
 		//
 		if (session == false) {
 			//create new session
-			session = await Sessions.addSesssion(socket, SessionName, MultiDevice, whatsappVersion);
+			session = await Sessions.addSesssion(socket, SessionName, AuthorizationToken, whatsappVersion);
 			//
 		} else if (["CLOSED"].includes(session.state)) {
 			//restart session
@@ -396,7 +398,8 @@ module.exports = class Sessions {
 			console.log('- State do sistema:', session.state);
 			console.log('- Status da sessão:', session.status);
 			//
-			session.client = Sessions.initSession(socket, SessionName, MultiDevice, whatsappVersion);
+			session.client = Sessions.initSession(socket, SessionName, AuthorizationToken, whatsappVersion);
+			//
 			//
 		} else if (["CONFLICT", "UNPAIRED", "UNLAUNCHED", "UNPAIRED_IDLE"].includes(session.state)) {
 			//
@@ -414,7 +417,7 @@ module.exports = class Sessions {
 				client.useHere();
 			});
 			//
-			session.client = Sessions.initSession(socket, SessionName, MultiDevice, whatsappVersion);
+			session.client = Sessions.initSession(socket, SessionName, AuthorizationToken, whatsappVersion);
 			//
 		} else if (["DISCONNECTED"].includes(session.state)) {
 			//
@@ -430,7 +433,7 @@ module.exports = class Sessions {
 			console.log('- State do sistema:', session.state);
 			console.log('- Status da sessão:', session.status);
 			//
-			session.client = Sessions.initSession(socket, SessionName, MultiDevice, whatsappVersion);
+			session.client = Sessions.initSession(socket, SessionName, AuthorizationToken, whatsappVersion);
 			//
 			//
 		} else if (["NOTFOUND"].includes(session.state)) {
@@ -447,7 +450,7 @@ module.exports = class Sessions {
 			console.log('- State do sistema:', session.state);
 			console.log('- Status da sessão:', session.status);
 			//
-			session = await Sessions.addSesssion(socket, SessionName, MultiDevice, whatsappVersion);
+			session = await Sessions.addSesssion(socket, SessionName, AuthorizationToken, whatsappVersion);
 			//
 		} else {
 			//
@@ -462,9 +465,10 @@ module.exports = class Sessions {
 	//
 	// ------------------------------------------------------------------------------------------------------- //
 	//
-	static async addSesssion(socket, SessionName, MultiDevice, whatsappVersion) {
+	static async addSesssion(socket, SessionName, AuthorizationToken, whatsappVersion) {
 		console.log("- Adicionando sessão");
 		var newSession = {
+			AuthorizationToken: AuthorizationToken,
 			name: SessionName,
 			process: null,
 			qrcode: null,
@@ -487,7 +491,7 @@ module.exports = class Sessions {
 		console.log("- Nova sessão: " + SessionName);
 
 		//setup session
-		newSession.client = Sessions.initSession(socket, SessionName, MultiDevice, whatsappVersion);
+		newSession.client = Sessions.initSession(socket, SessionName, AuthorizationToken, whatsappVersion);
 		//
 
 		return newSession;
@@ -518,25 +522,16 @@ module.exports = class Sessions {
 	//
 	// ------------------------------------------------------------------------------------------------------- //
 	//
-	static async initSession(socket, SessionName, MultiDevice, whatsappVersion) {
+	static async initSession(socket, SessionName, AuthorizationToken, whatsappVersion) {
 		console.log("- Iniciando sessão");
 		var session = Sessions.getSession(SessionName);
 		session.browserSessionToken = null;
+		session.AuthorizationToken = AuthorizationToken;
 		session.state = 'STARTING';
 		session.status = 'qrRead';
 		//
 		session.process = new pQueue({ concurrency: 1 });
 		//
-		if(MultiDevice == 'true'){
-			//
-			await deletaToken(`${tokenPatch}`, `${SessionName}.data.json`);
-			await deletaCache(`${tokenPatch}`, `WPP-${SessionName}`);
-			//
-		}else if(MultiDevice == 'false'){
-			//
-			await deletaCache(`${tokenPatch}`, `WPP-${SessionName}`);
-			//
-		}
 		//
 		/*
 			╔═╗┌─┐┌┬┐┬┌─┐┌┐┌┌─┐┬    ╔═╗┬─┐┌─┐┌─┐┌┬┐┌─┐  ╔═╗┌─┐┬─┐┌─┐┌┬┐┌─┐┌┬┐┌─┐┬─┐┌─┐
@@ -588,6 +583,7 @@ module.exports = class Sessions {
 					console.log('- Session name: ', session_wppconnect);
 					webhooks?.wh_connect(Sessions.getSession(SessionName), statusSession)
 					//
+					//
 					switch (statusSession) {
 						case 'isLogged':
 						case 'qrReadSuccess':
@@ -635,11 +631,12 @@ module.exports = class Sessions {
 							session.status = statusSession;
 							session.qrcode = null;
 							session.message = "Dispositivo desconetado";
-						//
+							//
 					}
 				},
 				whatsappVersion: whatsappVersion ? `${whatsappVersion}` : `${config.WA_VERSION}`, // whatsappVersion: '2.2142.12',
 				deviceName: config.DEVICE_NAME ? `${config.DEVICE_NAME}` : 'My-Whatsapp',
+				poweredBy: 'Alan Martines',
 				tokenStore: 'memory',
 				headless: true, // Headless chrome
 				devtools: false, // Open devtools by default
@@ -713,9 +710,32 @@ module.exports = class Sessions {
 
 				let phone = await client?.getWid();
 				let browserSessionToken = await client.getSessionTokenBrowser();
-				console.log("- Token WPPConnect:\n", JSON.parse(JSON.stringify(browserSessionToken)));
+				//console.log("- Token WPPConnect:\n", JSON.parse(JSON.stringify(browserSessionToken)));
 				session.state = "CONNECTED";
 				session.browserSessionToken = browserSessionToken;
+				//
+				try {
+					let obj = await fs.readFileSync(`${tokenPatch}/${SessionName}.data.json`);
+					let Object = JSON.parse(obj);
+					//
+					if (Object) {
+						//
+						Object.wh_status = session?.wh_status;
+						Object.wh_message = session?.wh_message;
+						Object.wh_qrcode = session?.wh_qrcode;
+						Object.wh_connect = session?.wh_connect;
+						//
+						//Object.push(newData);
+						let json = JSON.stringify(Object, null, 2);
+						await fs.writeFile(`${tokenPatch}/${SessionName}.data.json`, json, (err) => {
+							console.log('- Data written to file in Token WPPConnect');
+						});
+					}
+				} catch (err) {
+					console.log("- Error:", err);
+				}
+				//
+				console.log("- Token WPPConnect:\n", session.browserSessionToken);
 				//
 				webhooks?.wh_connect(Sessions.getSession(SessionName), 'CONNECTED', phone);
 				events?.receiveMessage(Sessions.getSession(SessionName), client, socket);
@@ -723,6 +743,7 @@ module.exports = class Sessions {
 				events?.statusConnection(Sessions.getSession(SessionName), client, socket);
 				//
 				console.log("- Sessão criada com sucesso");
+				console.log("- Telefone conectado:", phone?.split("@")[0]);
 				//
 				socket.emit('status',
 					{
@@ -739,6 +760,7 @@ module.exports = class Sessions {
 				session.attempts = 0;
 				session.message = 'Sistema desconectado';
 				console.log("- Sessão não criada");
+				console.log("- Error", error);
 				//
 				socket.emit('status',
 					{
@@ -798,7 +820,7 @@ module.exports = class Sessions {
 			try {
 				await client.close();
 				//
-				console.log("- Close");
+				console.log("- Close:", strClosed);
 				//
 				session.state = "CLOSED";
 				session.status = "CLOSED";
@@ -974,6 +996,98 @@ module.exports = class Sessions {
 		});
 		return sendResult;
 	} //sendContactVcardList
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
+	//Enviar Audio
+	static async sendPtt(
+		SessionName,
+		number,
+		filePath,
+		originalname,
+		quotedMessageId
+	) {
+		console.log("- Enviando audio.");
+		//
+		var session = Sessions.getSession(SessionName);
+		var sendResult = await session.client.then(async client => {
+			// Send audio
+			return await client.sendPtt(
+				number,
+				filePath,
+				originalname,
+				quotedMessageId
+			).then((result) => {
+				//console.log("Result: ", result); //return object success
+				//
+				return {
+					"erro": false,
+					"status": 200,
+					"number": number,
+					"message": "Audio enviado com sucesso."
+				};
+				//
+			}).catch((erro) => {
+				console.error("Error when:", erro); //return object error
+				//return { result: 'error', state: session.state, message: "Erro ao enviar menssagem" };
+				//return (erro);
+				//
+				return {
+					"erro": true,
+					"status": 404,
+					"number": number,
+					"message": "Erro ao enviar audio"
+				};
+				//
+			});
+		});
+		return sendResult;
+	} //sendPtt
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
+	//Enviar Audio
+	static async sendPttFromBase64(
+		SessionName,
+		number,
+		base64,
+		originalname
+	) {
+		console.log("- Enviando audio.");
+		//
+		var session = Sessions.getSession(SessionName);
+		var sendResult = await session.client.then(async client => {
+			// Send audio
+			return await client.sendPttFromBase64(
+				number,
+				base64,
+				originalname
+			).then((result) => {
+				//console.log("Result: ", result); //return object success
+				//
+				return {
+					"erro": false,
+					"status": 200,
+					"number": number,
+					"message": "Audio enviado com sucesso."
+				};
+				//
+			}).catch((erro) => {
+				console.error("Error when:", erro); //return object error
+				//return { result: 'error', state: session.state, message: "Erro ao enviar menssagem" };
+				//return (erro);
+				//
+				return {
+					"erro": true,
+					"status": 404,
+					"number": number,
+					"message": "Erro ao enviar audio"
+				};
+				//
+			});
+		});
+		return sendResult;
+	} //sendPtt
 	//
 	// ------------------------------------------------------------------------------------------------//
 	//
@@ -1256,6 +1370,96 @@ module.exports = class Sessions {
 	//
 	// ------------------------------------------------------------------------------------------------//
 	//
+	//Enviar button
+	static async sendButton(
+		SessionName,
+		number,
+		msg,
+		options
+	) {
+		console.log("- Enviando button.");
+		//
+		var session = Sessions.getSession(SessionName);
+		var sendResult = await session.client.then(async client => {
+			// Send basic text
+			return await client.sendText(
+				number,
+				msg,
+				options
+			).then((result) => {
+				//console.log("Result: ", result); //return object success
+				//
+				return {
+					"erro": false,
+					"status": 200,
+					"number": number,
+					"message": "Menssagem envida com sucesso."
+				};
+				//
+			}).catch((erro) => {
+				console.error("Error when:", erro); //return object error
+				//return { result: 'error', state: session.state, message: "Erro ao enviar menssagem" };
+				//return (erro);
+				//
+				return {
+					"erro": true,
+					"status": 404,
+					"number": number,
+					"message": "Erro ao enviar menssagem"
+				};
+				//
+			});
+		});
+		return sendResult;
+	} //sendButton
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
+	//Enviar button
+	static async sendMessageOptions(
+		SessionName,
+		number,
+		msg,
+		options
+	) {
+		console.log("- Enviando button.");
+		//
+		var session = Sessions.getSession(SessionName);
+		var sendResult = await session.client.then(async client => {
+			// Send basic text
+			return await client.sendMessageOptions(
+				number,
+				msg,
+				options
+			).then((result) => {
+				//console.log("Result: ", result); //return object success
+				//
+				return {
+					"erro": false,
+					"status": 200,
+					"number": number,
+					"message": "Menssagem envida com sucesso."
+				};
+				//
+			}).catch((erro) => {
+				console.error("Error when:", erro); //return object error
+				//return { result: 'error', state: session.state, message: "Erro ao enviar menssagem" };
+				//return (erro);
+				//
+				return {
+					"erro": true,
+					"status": 404,
+					"number": number,
+					"message": "Erro ao enviar menssagem"
+				};
+				//
+			});
+		});
+		return sendResult;
+	} //sendButton
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
 	/*
 	╦═╗┌─┐┌┬┐┬─┐┬┌─┐┬  ┬┬┌┐┌┌─┐  ╔╦╗┌─┐┌┬┐┌─┐
 	╠╦╝├┤  │ ├┬┘│├┤ └┐┌┘│││││ ┬   ║║├─┤ │ ├─┤
@@ -1277,7 +1481,7 @@ module.exports = class Sessions {
 				//
 				await forEach(result, async (resultAllContacts) => {
 					//
-					if (resultAllContacts.isMyContact === true || resultAllContacts.isMyContact === false) {
+					if (resultAllContacts.isMyContact === true || resultAllContacts.isWAContact === true) {
 						//
 						getChatGroupNewMsg.push({
 							"user": resultAllContacts.id.user,
@@ -2194,13 +2398,81 @@ module.exports = class Sessions {
 	//
 	// ------------------------------------------------------------------------------------------------//
 	//
+	// Get user
+	static async getMe(SessionName) {
+		console.log("- Obtendo user");
+		//
+		var session = Sessions.getSession(SessionName);
+		var resultgetMe = await session.client.then(async client => {
+			return await client.getMe().then((result) => {
+				console.log('Result: ', result); //return object success
+				//
+				return {
+					"erro": false,
+					"status": 200,
+					"message": "Usuario conectado obtido com sucesso",
+					"result": {
+						"user": result.split("@")[0],
+					}
+				};
+				//
+			}).catch((erro) => {
+				console.error("Error when:", erro); //return object error
+				//
+				return {
+					"erro": true,
+					"status": 404,
+					"message": "Erro ao obter usuario conectado"
+				};
+				//
+			});
+		});
+		return resultgetMe;
+	} //getMe
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
+	// Get user
+	static async getWid(SessionName) {
+		console.log("- Obtendo user");
+		//
+		var session = Sessions.getSession(SessionName);
+		var resultgetWid = await session.client.then(async client => {
+			return await client.getWid().then((result) => {
+				//console.log('Result: ', result); //return object success
+				//
+				return {
+					"erro": false,
+					"status": 200,
+					"message": "Usuario conectado obtido com sucesso",
+					"result": {
+						"user": result.split("@")[0],
+					}
+				};
+				//
+			}).catch((erro) => {
+				console.error("Error when:", erro); //return object error
+				//
+				return {
+					"erro": true,
+					"status": 404,
+					"message": "Erro ao obter usuario conectado"
+				};
+				//
+			});
+		});
+		return resultgetWid;
+	} //getWid
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
 	// Get device info
-	static async getHostDevice(SessionName) {
+	static async getHost(SessionName) {
 		console.log("- Obtendo informações do dispositivo");
 		//
 		var session = Sessions.getSession(SessionName);
-		var resultgetHostDevice = await session.client.then(async client => {
-			return await client.getHostDevice().then((result) => {
+		var resultgetHost = await session.client.then(async client => {
+			return await client.getHost().then((result) => {
 				console.log('Result: ', result); //return object success
 				//
 				return {
@@ -2234,6 +2506,45 @@ module.exports = class Sessions {
 				//
 			});
 		});
+		return resultgetHost;
+	} //getHost
+	//
+	// ------------------------------------------------------------------------------------------------//
+	//
+	// Get device info
+	static async getHostDevice(SessionName) {
+		console.log("- Obtendo informações do dispositivo");
+		//
+		var session = Sessions.getSession(SessionName);
+		var resultgetHostDevice = await session.client.then(async client => {
+			return await client.getHostDevice().then((info) => {
+				//console.log('Result: ', result); //return object success
+				//
+				return {
+					"erro": false,
+					"status": 200,
+					"message": "Dados do dispositivo obtido com sucesso",
+					"HostDevice": {
+						"user": info?.wid?.user,
+						"pushname": info?.pushname,
+						"battery": info?.battery,
+						"plugged": info?.plugged,
+						"device_manufacturer": info?.phone?.device_manufacturer,
+						"wa_version": info?.phone?.wa_version
+					}
+				};
+				//
+			}).catch((erro) => {
+				console.error("Error when:", erro); //return object error
+				//
+				return {
+					"erro": true,
+					"status": 404,
+					"message": "Erro ao obter dados do dispositivo"
+				};
+				//
+			});
+		});
 		return resultgetHostDevice;
 	} //getHostDevice
 	//
@@ -2252,7 +2563,7 @@ module.exports = class Sessions {
 					"erro": false,
 					"status": 200,
 					"message": "Estado do MultiDevice obtido com sucesso",
-					"isMultiDevice": result
+					"isMultiDevice": result ? result : null
 
 				};
 				//
@@ -2317,7 +2628,7 @@ module.exports = class Sessions {
 					"erro": false,
 					"status": 200,
 					"message": "Nivel da bateria obtido com sucesso",
-					"BatteryLevel": result
+					"BatteryLevel": result ? result : null
 
 				};
 				//

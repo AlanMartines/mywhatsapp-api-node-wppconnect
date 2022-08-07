@@ -1,3 +1,4 @@
+'use strict';
 //
 // Configuração dos módulos
 const os = require('os');
@@ -8,26 +9,29 @@ const fs = require('fs-extra');
 const path = require('path');
 const express = require("express");
 const multer = require('multer');
+const sleep = require('sleep-promise');
 const validUrl = require('valid-url');
 const mime = require('mime-types');
+const exec = require('await-exec');
+const ffmpeg = require('fluent-ffmpeg');
 // https://stackoverflow.com/questions/60408575/how-to-validate-file-extension-with-multer-middleware
-const upload = multer({})
+// https://www.edivaldobrito.com.br/como-instalar-o-ffmpeg-4-4-via-ppa-no-ubuntu-20-04-18-04-e-21-04/
+const upload = multer({});
 const router = express.Router();
 const Sessions = require("../sessions.js");
 const config = require('../config.global');
 const verifyToken = require("../middleware/verifyToken");
-const verifyJson = require("../middleware/validateJson");
 //
 // ------------------------------------------------------------------------------------------------//
 //
 async function deletaArquivosTemp(filePath) {
 	//
 	const cacheExists = await fs.pathExists(filePath);
-	console.log('- O arquivo é: ' + cacheExists);
 	if (cacheExists) {
 		fs.remove(filePath);
-		console.log('- O arquivo removido: ' + cacheExists);
+		console.log(`- O arquivo "${filePath}" removido`);
 	}
+	//
 }
 //
 function soNumeros(string) {
@@ -95,6 +99,29 @@ const convertBytes = function (bytes) {
 //
 // ------------------------------------------------------------------------------------------------//
 //
+async function converAudioToOgg(filePath) {
+	const ext = path.parse(filePath).ext;
+	const outputfilename = filePath.replace(ext, '.ogg');
+	//
+	const cacheExists = await fs.pathExists(filePath);
+	if (cacheExists) {
+		try {
+			//
+			//const { stdout, stderr } = await exec(`ffmpeg -y -i ${filePath} -c:a libvorbis -q:a 4 ${outputfilename}`);
+			//const { stdout, stderr } = await exec(`ffmpeg -y -i ${filePath} -c:v libtheora -q:v 10 -c:a libvorbis ${outputfilename}`);
+			const { stdout, stderr } = await exec(`ffmpeg -y -i ${filePath} -c:a libopus -b:a 128k ${outputfilename}`);
+			return outputfilename;
+			//
+		} catch (err) {
+			console.log("- Error:", err);
+		}
+	}
+	//
+}
+//
+//
+// ------------------------------------------------------------------------------------------------//
+//
 /*
 ╔═╗┌─┐┌┬┐┌┬┐┬┌┐┌┌─┐  ┌─┐┌┬┐┌─┐┬─┐┌┬┐┌─┐┌┬┐
 ║ ╦├┤  │  │ │││││ ┬  └─┐ │ ├─┤├┬┘ │ ├┤  ││
@@ -144,15 +171,53 @@ router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next
 			case 'DISCONNECTED':
 			case 'NOTFOUND':
 				//
-				await Sessions.Start(req.io, removeWithspace(req.body.SessionName), req.body.MultiDevice, req.body.whatsappVersion);
+				await Sessions.Start(req.io, removeWithspace(req.body.SessionName), removeWithspace(req.body.SessionName), req.body.whatsappVersion);
 				var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
-				console.log("- Session Name:", removeWithspace(req.body.SessionName));
-				//
-				session.wh_status = req.body.wh_status ? req.body.wh_status : '';
-				session.wh_message = req.body.wh_message ? req.body.wh_message : '';
-				session.wh_qrcode = req.body.wh_qrcode ? req.body.wh_qrcode : '';
-				session.wh_connect = req.body.wh_connect ? req.body.wh_connect : '';
-				//
+				console.log("- AuthorizationToken:", removeWithspace(req.body.SessionName));
+				if (parseInt(config.VALIDATE_MYSQL) == true) {
+					const conn = require('../config/dbConnection').promise();
+					try {
+						//
+						const sql = "SELECT * FROM tokens WHERE token=? LIMIT 1";
+						const values = [removeWithspace(req.body.SessionName)];
+						const [row] = await conn.execute(sql, values);
+						//conn.end();
+						//conn.release();
+						//
+						if (row.length == 1) {
+							//
+							const results = JSON.parse(JSON.stringify(row[0]));
+							//
+							const webHook = results.webhook;
+							//
+							if (webHook) {
+								//
+								session.wh_status = webHook;
+								session.wh_message = webHook;
+								session.wh_qrcode = webHook;
+								session.wh_connect = webHook;
+								//
+							} else {
+								session.wh_status = req.body.wh_status;
+								session.wh_message = req.body.wh_message;
+								session.wh_qrcode = req.body.wh_qrcode;
+								session.wh_connect = req.body.wh_connect;
+							}
+						} else {
+							session.wh_status = req.body.wh_status;
+							session.wh_message = req.body.wh_message;
+							session.wh_qrcode = req.body.wh_qrcode;
+							session.wh_connect = req.body.wh_connect;
+						}
+					} catch (err) {
+						console.log("- Error:", err);
+					}
+				} else {
+					session.wh_status = req.body.wh_status;
+					session.wh_message = req.body.wh_message;
+					session.wh_qrcode = req.body.wh_qrcode;
+					session.wh_connect = req.body.wh_connect;
+				}
 				var Start = {
 					result: "info",
 					state: 'STARTING',
@@ -197,7 +262,7 @@ router.post("/restartToken", verifyToken.verify, upload.none(''), async (req, re
 		//
 		var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
 		//
-		var resetToken = await Sessions.restartToken(req.io, session.name, session.whatsappVersion);
+		var resetToken = await Sessions.restartToken(req.io, session.name, session.AuthorizationToken, session.whatsappVersion);
 		res.setHeader('Content-Type', 'application/json');
 		res.status(200).json({
 			"Status": resetToken
@@ -627,7 +692,7 @@ router.post("/sendContactVcardList", upload.single('file'), verifyToken.verify, 
 								contactlistValid.push(numero + '@c.us');
 								//
 							}
-							
+							//await sleep(1000);
 						}
 						//
 						var sendContactVcardList = await session.process.add(async () => await Sessions.sendContactVcardList(
@@ -669,6 +734,378 @@ router.post("/sendContactVcardList", upload.single('file'), verifyToken.verify, 
 		}
 	}
 }); //sendContactVcardList
+//
+// ------------------------------------------------------------------------------------------------//
+//
+// Enviar audio
+// https://www.mpi.nl/corpus/html/lamus2/apa.html
+//
+router.post("/sendVoice", upload.single('file'), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName) || !req.body.phonefull || !req.file) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
+		//let ext = path.extname(file.originalname);
+		//if (ext !== '.wav' || ext !== '.aifc' || ext !== '.aiff' || ext !== '.mp3' || ext !== '.m4a' || ext !== '.mp2' || ext !== '.ogg') {
+		//let ext = path.parse(req.file.originalname).ext;
+		console.log("- acceptedTypes:", req.file.mimetype);
+		let acceptedTypes = req.file.mimetype.split('/')[0];
+		if (acceptedTypes !== "audio") {
+			//
+			var validate = {
+				result: "info",
+				state: 'FAILURE',
+				status: 'notProvided',
+				message: 'Arquivo selecionado não permitido, apenas arquivo de audio'
+			};
+			//
+			res.setHeader('Content-Type', 'application/json');
+			res.status(400).json({
+				"Status": validate
+			});
+			//
+		} else {
+			//
+			var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+			var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
+
+			switch (sessionStatus.status) {
+				case 'inChat':
+				case 'qrReadSuccess':
+				case 'isLogged':
+				case 'chatsAvailable':
+					//
+					try {
+						var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'WPP-' + removeWithspace(req.body.SessionName) + '-'));
+						var filePath = path.join(folderName, req.file.originalname);
+						fs.writeFileSync(filePath, req.file.buffer.toString('base64'), 'base64');
+						//
+						console.log("- File", filePath);
+						if (req.file.mimetype === 'application/ogg' || req.file.mimetype === 'audio/ogg') {
+							var filePathOgg = filePath;
+						} else {
+							var filePathOgg = await converAudioToOgg(filePath);
+							console.log("- File converted", filePathOgg);
+						}
+						//
+						var checkNumberStatus = await Sessions.checkNumberStatus(
+							removeWithspace(req.body.SessionName),
+							soNumeros(req.body.phonefull).trim() + '@c.us'
+						);
+						//
+						if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+							//
+							var sendPtt = await session.process.add(async () => await Sessions.sendPtt(
+								removeWithspace(req.body.SessionName),
+								checkNumberStatus.number + '@c.us',
+								filePathOgg
+							));
+							//
+						} else {
+							var sendPtt = checkNumberStatus;
+						}
+						//
+						//
+						await deletaArquivosTemp(filePath);
+						await deletaArquivosTemp(filePathOgg);
+						//
+						//console.log(result);
+						res.setHeader('Content-Type', 'application/json');
+						res.status(200).json({
+							"Status": sendPtt
+						});
+					} catch (error) {
+						console.log("Erro on sendVoice\n", error);
+						//
+						var erroStatus = {
+							"erro": true,
+							"status": 404,
+							"message": "Erro ao enviar menssagem"
+						};
+						//
+						res.setHeader('Content-Type', 'application/json');
+						res.status(400).json({
+							"Status": erroStatus
+						});
+					}
+					break;
+				default:
+					res.setHeader('Content-Type', 'application/json');
+					res.status(400).json({
+						"Status": sessionStatus
+					});
+			}
+		}
+	}
+}); //sendVoice
+//
+// ------------------------------------------------------------------------------------------------//
+//
+// Enviar audio
+router.post("/sendVoiceBase64", upload.none(''), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName) || !req.body.phonefull || !req.body.base64 || !req.body.originalname) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
+
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
+				//
+				try {
+					var folderName = fs.mkdtempSync(path.join(os.tmpdir(), 'WPP-' + removeWithspace(req.body.SessionName) + '-'));
+					var filePath = path.join(folderName, req.body.originalname);
+					fs.writeFileSync(filePath, req.body.base64, 'base64');
+					//
+					console.log("- File", filePath);
+					//
+					console.log("- acceptedTypes:", mime.lookup(filePath));
+					let acceptedTypes = mime.lookup(filePath).split('/')[0];
+					if (acceptedTypes !== "audio") {
+						//
+						var validate = {
+							result: "info",
+							state: 'FAILURE',
+							status: 'notProvided',
+							message: 'Arquivo selecionado não permitido, apenas arquivo de audio'
+						};
+						//
+						res.setHeader('Content-Type', 'application/json');
+						res.status(400).json({
+							"Status": validate
+						});
+						//
+					}
+					//
+					if (mime.lookup(filePath) === 'application/ogg' || mime.lookup(filePath) === 'audio/ogg') {
+						var filePathOgg = filePath;
+					} else {
+						var filePathOgg = await converAudioToOgg(filePath);
+						console.log("- File converted", filePathOgg);
+					}
+					//
+					var checkNumberStatus = await Sessions.checkNumberStatus(
+						removeWithspace(req.body.SessionName),
+						soNumeros(req.body.phonefull).trim() + '@c.us'
+					);
+					//
+					if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+						//
+						var sendPtt = await session.process.add(async () => await Sessions.sendPtt(
+							removeWithspace(req.body.SessionName),
+							checkNumberStatus.number + '@c.us',
+							filePathOgg
+						));
+						//
+					} else {
+						var sendPtt = checkNumberStatus;
+					}
+					//
+					//
+					await deletaArquivosTemp(filePath);
+					await deletaArquivosTemp(filePathOgg);
+					//
+					//console.log(result);
+					res.setHeader('Content-Type', 'application/json');
+					res.status(200).json({
+						"Status": sendPtt
+					});
+				} catch (error) {
+					console.log("Erro on sendVoice\n", error);
+					//
+					var erroStatus = {
+						"erro": true,
+						"status": 404,
+						"message": "Erro ao enviar audio"
+					};
+					//
+					res.setHeader('Content-Type', 'application/json');
+					res.status(400).json({
+						"Status": erroStatus
+					});
+				}
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
+	}
+}); //sendVoiceBase64
+//
+// ------------------------------------------------------------------------------------------------//
+//
+// Enviar audio
+router.post("/sendVoiceToBase64", upload.single('file'), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName) || !req.body.phonefull || !req.file) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
+
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
+				//
+				var checkNumberStatus = await Sessions.checkNumberStatus(
+					removeWithspace(req.body.SessionName),
+					soNumeros(req.body.phonefull).trim() + '@c.us'
+				);
+				//
+				if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+					//
+					var sendPttFromBase64 = await session.process.add(async () => await Sessions.sendPttFromBase64(
+						removeWithspace(req.body.SessionName),
+						checkNumberStatus.number + '@c.us',
+						req.file.buffer.toString('base64'),
+						req.file.originalname,
+						req.file.mimetype
+					));
+					//
+				} else {
+					var sendPttFromBase64 = checkNumberStatus;
+				}
+				//
+				//console.log(result);
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": sendPttFromBase64
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
+	}
+}); //sendPttFromBase64
+//
+// ------------------------------------------------------------------------------------------------//
+//
+// Enviar audio
+router.post("/sendVoiceFromBase64", upload.none(''), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName) || !req.body.phonefull || !req.body.base64 || !req.body.originalname) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
+		//
+		console.log("- acceptedTypes:", mime.lookup(req.body.originalname));
+		let acceptedTypes = mime.lookup(req.body.originalname).split('/')[0];
+		if (acceptedTypes !== "audio") {
+			//
+			var validate = {
+				result: "info",
+				state: 'FAILURE',
+				status: 'notProvided',
+				message: 'Arquivo selecionado não permitido, apenas arquivo de audio'
+			};
+			//
+			res.setHeader('Content-Type', 'application/json');
+			res.status(400).json({
+				"Status": validate
+			});
+			//
+		} else {
+			//
+			var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+			var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
+
+			switch (sessionStatus.status) {
+				case 'inChat':
+				case 'qrReadSuccess':
+				case 'isLogged':
+				case 'chatsAvailable':
+					//
+					var checkNumberStatus = await Sessions.checkNumberStatus(
+						removeWithspace(req.body.SessionName),
+						soNumeros(req.body.phonefull).trim() + '@c.us'
+					);
+					//
+					if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+						//
+						var sendPttFromBase64 = await session.process.add(async () => await Sessions.sendPttFromBase64(
+							removeWithspace(req.body.SessionName),
+							checkNumberStatus.number + '@c.us',
+							req.body.base64,
+							req.body.originalname,
+						));
+						//
+					} else {
+						var sendPttFromBase64 = checkNumberStatus;
+					}
+					//
+					//console.log(result);
+					res.setHeader('Content-Type', 'application/json');
+					res.status(200).json({
+						"Status": sendPttFromBase64
+					});
+					break;
+				default:
+					res.setHeader('Content-Type', 'application/json');
+					res.status(400).json({
+						"Status": sessionStatus
+					});
+			}
+		}
+	}
+}); //sendPttFromBase64
 //
 // ------------------------------------------------------------------------------------------------//
 //
@@ -795,7 +1232,7 @@ router.post("/sendTextMassa", upload.single('file'), verifyToken.verify, async (
 							sendTextMassa.push(sendTextMassaRes);
 							//
 						}
-						
+						//await sleep(1000);
 					}
 					//
 					//
@@ -1138,7 +1575,7 @@ router.post("/sendImageMassa", sendImageMassa, verifyToken.verify, async (req, r
 							//
 							sendImageMassa.push(sendImageMassaRes);
 						}
-						
+						//await sleep(1000);
 					}
 					//
 					await deletaArquivosTemp(filePathContato);
@@ -1234,7 +1671,7 @@ router.post("/sendMultImage", upload.array('file', 50), verifyToken.verify, asyn
 							//
 							sendMultImage.push(sendMultImageRes);
 							//
-							
+							//await sleep(1000);
 							//
 							await deletaArquivosTemp(filePathImagem);
 							//
@@ -1250,7 +1687,7 @@ router.post("/sendMultImage", upload.array('file', 50), verifyToken.verify, asyn
 							//
 							sendMultImage.push(erroStatus);
 							//
-							
+							//await sleep(1000);
 							//
 							await deletaArquivosTemp(filePathImagem);
 							//
@@ -1355,7 +1792,7 @@ router.post("/sendMultImageMassa", sendMultImageMassa, verifyToken.verify, async
 										//
 										sendMultImageMassa.push(sendMultImageMassaRes);
 										//
-										
+										//await sleep(1000);
 										//
 										//
 										await deletaArquivosTemp(filePathImagem);
@@ -1373,7 +1810,7 @@ router.post("/sendMultImageMassa", sendMultImageMassa, verifyToken.verify, async
 										//
 										sendMultImageMassa.push(erroStatus);
 										//
-										
+										//await sleep(1000);
 										//
 										//
 										await deletaArquivosTemp(filePathImagem);
@@ -1388,7 +1825,7 @@ router.post("/sendMultImageMassa", sendMultImageMassa, verifyToken.verify, async
 								var sendMultImageMassa = checkNumberStatus;
 							}
 						}
-						
+						//await sleep(1000);
 					}
 					//
 					//console.log(result);
@@ -1721,6 +2158,130 @@ router.post("/sendFileFromBase64", upload.none(''), verifyToken.verify, async (r
 		}
 	}
 }); //sendFileFromBase64
+//
+// ------------------------------------------------------------------------------------------------//
+//
+//Enviar button
+router.post("/sendButton", upload.none(''), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName) || !req.body.phonefull || !req.body.msg || !req.body.options) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
+				//
+				var checkNumberStatus = await Sessions.checkNumberStatus(
+					removeWithspace(req.body.SessionName),
+					soNumeros(req.body.phonefull).trim() + '@c.us'
+				);
+				//
+				if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+					//
+					var sendText = await session.process.add(async () => await Sessions.sendButton(
+						removeWithspace(req.body.SessionName),
+						checkNumberStatus.number + '@c.us',
+						req.body.msg,
+						req.body.options,
+					));
+
+					//
+				} else {
+					var sendText = checkNumberStatus;
+				}
+				//
+				//console.log(result);
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": sendText
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
+	}
+}); //sendButton
+//
+// ------------------------------------------------------------------------------------------------//
+//
+//Enviar button
+router.post("/sendMessageOptions", upload.none(''), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName) || !req.body.phonefull || !req.body.msg || !req.body.options) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
+				//
+				var checkNumberStatus = await Sessions.checkNumberStatus(
+					removeWithspace(req.body.SessionName),
+					soNumeros(req.body.phonefull).trim() + '@c.us'
+				);
+				//
+				if (checkNumberStatus.status === 200 && checkNumberStatus.erro === false) {
+					//
+					var sendText = await session.process.add(async () => await Sessions.sendMessageOptions(
+						removeWithspace(req.body.SessionName),
+						checkNumberStatus.number + '@c.us',
+						req.body.msg,
+						req.body.options,
+					));
+
+					//
+				} else {
+					var sendText = checkNumberStatus;
+				}
+				//
+				//console.log(result);
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": sendText
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
+	}
+}); //sendMessageOptions
 //
 // ------------------------------------------------------------------------------------------------//
 //
@@ -2197,7 +2758,7 @@ router.post("/checkNumberStatusMassa", upload.single('file'), verifyToken.verify
 							var checkNumberStatusMassa = checkNumberStatus;
 						}
 					}
-					
+					//await sleep(1000);
 				}
 				//
 				await deletaArquivosTemp(filePath);
@@ -2776,7 +3337,7 @@ router.post("/createGroup", upload.single('file'), verifyToken.verify, async (re
 							//
 						}
 						//
-						
+						//await sleep(1000);
 					}
 					//
 					var createGroup = await session.process.add(async () => await Sessions.createGroup(
@@ -3034,7 +3595,7 @@ router.post("/createGroupSetAdminMembers", upload.single('file'), verifyToken.ve
 							//
 						}
 						//
-						
+						//await sleep(1000);
 					}
 					//
 					var createGroup = await session.process.add(async () => await Sessions.createGroup(
@@ -3060,7 +3621,7 @@ router.post("/createGroupSetAdminMembers", upload.single('file'), verifyToken.ve
 							//
 							createGroupSetAdminMembers.push(promoteParticipant);
 							//
-							
+							//await sleep(1000);
 						});
 						//
 					} else {
@@ -3175,7 +3736,7 @@ router.post("/createCountGroupSetAdminMembers", upload.single('file'), verifyTok
 							//
 						}
 						//
-						
+						//await sleep(1000);
 					}
 					//
 					for (count = 1; count <= req.body.count; count++) {
@@ -3202,7 +3763,7 @@ router.post("/createCountGroupSetAdminMembers", upload.single('file'), verifyTok
 								//
 								createCountGroupSetAdminMembers.push(promoteParticipant);
 								//
-								
+								//await sleep(1000);
 							});
 							//
 						} else {
@@ -3910,6 +4471,144 @@ router.post("/reloadService", upload.none(''), verifyToken.verify, async (req, r
 		//
 	}
 }); //reloadService
+//
+// ------------------------------------------------------------------------------------------------//
+//
+// Get device info
+router.post("/getMe", upload.none(''), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName)) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
+
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
+				//
+				var getMe = await session.process.add(async () => await Sessions.getMe(removeWithspace(req.body.SessionName)));
+				//
+				//console.log(result);
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": getMe
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
+	}
+}); //getMe
+//
+// ------------------------------------------------------------------------------------------------//
+//
+// Get device info
+router.post("/getWid", upload.none(''), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName)) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
+
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
+				//
+				var getWid = await session.process.add(async () => await Sessions.getWid(removeWithspace(req.body.SessionName)));
+				//
+				//console.log(result);
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": getWid
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
+	}
+}); //getWid
+//
+// ------------------------------------------------------------------------------------------------//
+//
+// Get device info
+router.post("/getHost", upload.none(''), verifyToken.verify, async (req, res, next) => {
+	//
+	if (!removeWithspace(req.body.SessionName)) {
+		var validate = {
+			result: "info",
+			state: 'FAILURE',
+			status: 'notProvided',
+			message: 'Todos os valores deverem ser preenchidos, corrija e tente novamente.'
+		};
+		//
+		res.setHeader('Content-Type', 'application/json');
+		res.status(400).json({
+			"Status": validate
+		});
+		//
+	} else {
+		//
+		var sessionStatus = await Sessions.ApiStatus(removeWithspace(req.body.SessionName));
+		var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
+
+		switch (sessionStatus.status) {
+			case 'inChat':
+			case 'qrReadSuccess':
+			case 'isLogged':
+			case 'chatsAvailable':
+				//
+				var getHost = await session.process.add(async () => await Sessions.getHost(removeWithspace(req.body.SessionName)));
+				//
+				//console.log(result);
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200).json({
+					"Status": getHost
+				});
+				break;
+			default:
+				res.setHeader('Content-Type', 'application/json');
+				res.status(400).json({
+					"Status": sessionStatus
+				});
+		}
+	}
+}); //getHost
 //
 // ------------------------------------------------------------------------------------------------//
 //
