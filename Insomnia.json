@@ -3159,8 +3159,8 @@
 				"port": "443",
 				"Localhost": "{{ _.encript }}{{ _.domain }}:{{ _.port }}",
 				"WebHook": "",
-				"AuthorizationToken": "JK4JSE0GFNBEXRGPU9CR",
-				"SessionName": "JK4JSE0GFNBEXRGPU9CR"
+				"AuthorizationToken": "Teste",
+				"SessionName": "Teste"
 			},
 			"dataPropertyOrder": {
 				"&": [
@@ -3190,8 +3190,8 @@
 				"port": "443",
 				"Localhost": "{{ _.encript }}{{ _.domain }}:{{ _.port }}",
 				"WebHook": "",
-				"AuthorizationToken": "JK4JSE0GFNBEXRGPU9CR",
-				"SessionName": "JK4JSE0GFNBEXRGPU9CR"
+				"AuthorizationToken": "Teste",
+				"SessionName": "Teste"
 			},
 			"dataPropertyOrder": {
 				"&": [
