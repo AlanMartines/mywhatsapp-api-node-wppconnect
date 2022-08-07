@@ -171,53 +171,15 @@ router.post("/Start", upload.none(''), verifyToken.verify, async (req, res, next
 			case 'DISCONNECTED':
 			case 'NOTFOUND':
 				//
-				await Sessions.Start(req.io, removeWithspace(req.body.SessionName), removeWithspace(req.body.SessionName), req.body.whatsappVersion);
+				await Sessions.Start(req.io, removeWithspace(req.body.SessionName), req.body.whatsappVersion);
 				var session = await Sessions.getSession(removeWithspace(req.body.SessionName));
-				console.log("- AuthorizationToken:", removeWithspace(req.body.SessionName));
-				if (parseInt(config.VALIDATE_MYSQL) == true) {
-					const conn = require('../config/dbConnection').promise();
-					try {
-						//
-						const sql = "SELECT * FROM tokens WHERE token=? LIMIT 1";
-						const values = [removeWithspace(req.body.SessionName)];
-						const [row] = await conn.execute(sql, values);
-						//conn.end();
-						//conn.release();
-						//
-						if (row.length == 1) {
-							//
-							const results = JSON.parse(JSON.stringify(row[0]));
-							//
-							const webHook = results.webhook;
-							//
-							if (webHook) {
-								//
-								session.wh_status = webHook;
-								session.wh_message = webHook;
-								session.wh_qrcode = webHook;
-								session.wh_connect = webHook;
-								//
-							} else {
-								session.wh_status = req.body.wh_status;
-								session.wh_message = req.body.wh_message;
-								session.wh_qrcode = req.body.wh_qrcode;
-								session.wh_connect = req.body.wh_connect;
-							}
-						} else {
-							session.wh_status = req.body.wh_status;
-							session.wh_message = req.body.wh_message;
-							session.wh_qrcode = req.body.wh_qrcode;
-							session.wh_connect = req.body.wh_connect;
-						}
-					} catch (err) {
-						console.log("- Error:", err);
-					}
-				} else {
-					session.wh_status = req.body.wh_status;
-					session.wh_message = req.body.wh_message;
-					session.wh_qrcode = req.body.wh_qrcode;
-					session.wh_connect = req.body.wh_connect;
-				}
+				console.log("- SessionName:", removeWithspace(req.body.SessionName));
+				//
+				session.wh_status = req.body.wh_status;
+				session.wh_message = req.body.wh_message;
+				session.wh_qrcode = req.body.wh_qrcode;
+				session.wh_connect = req.body.wh_connect;
+				//
 				var Start = {
 					result: "info",
 					state: 'STARTING',

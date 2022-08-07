@@ -321,7 +321,7 @@ module.exports = class Sessions {
 	//
 	// ------------------------------------------------------------------------------------------------------- //
 	//
-	static async restartToken(socket, SessionName, AuthorizationToken, whatsappVersion) {
+	static async restartToken(socket, SessionName, whatsappVersion) {
 		console.log("- Resetando sessão");
 		var session = Sessions.getSession(SessionName);
 		//
@@ -339,7 +339,7 @@ module.exports = class Sessions {
 			await deletaCache(`${tokenPatch}`, `WPP-${SessionName}`);
 			//
 			try {
-				session.client = Sessions.initSession(socket, SessionName, AuthorizationToken, whatsappVersion);
+				session.client = Sessions.initSession(socket, SessionName, whatsappVersion);
 				//
 				return {
 					result: "info",
@@ -374,7 +374,7 @@ module.exports = class Sessions {
 	//
 	// ------------------------------------------------------------------------------------------------//
 	//
-	static async Start(socket, SessionName, AuthorizationToken, whatsappVersion) {
+	static async Start(socket, SessionName, whatsappVersion) {
 		Sessions.sessions = Sessions.sessions || []; //start array
 
 		var session = Sessions.getSession(SessionName);
@@ -382,7 +382,7 @@ module.exports = class Sessions {
 		//
 		if (session == false) {
 			//create new session
-			session = await Sessions.addSesssion(socket, SessionName, AuthorizationToken, whatsappVersion);
+			session = await Sessions.addSesssion(socket, SessionName, whatsappVersion);
 			//
 		} else if (["CLOSED"].includes(session.state)) {
 			//restart session
@@ -398,7 +398,7 @@ module.exports = class Sessions {
 			console.log('- State do sistema:', session.state);
 			console.log('- Status da sessão:', session.status);
 			//
-			session.client = Sessions.initSession(socket, SessionName, AuthorizationToken, whatsappVersion);
+			session.client = Sessions.initSession(socket, SessionName, whatsappVersion);
 			//
 			//
 		} else if (["CONFLICT", "UNPAIRED", "UNLAUNCHED", "UNPAIRED_IDLE"].includes(session.state)) {
@@ -417,7 +417,7 @@ module.exports = class Sessions {
 				client.useHere();
 			});
 			//
-			session.client = Sessions.initSession(socket, SessionName, AuthorizationToken, whatsappVersion);
+			session.client = Sessions.initSession(socket, SessionName, whatsappVersion);
 			//
 		} else if (["DISCONNECTED"].includes(session.state)) {
 			//
@@ -433,7 +433,7 @@ module.exports = class Sessions {
 			console.log('- State do sistema:', session.state);
 			console.log('- Status da sessão:', session.status);
 			//
-			session.client = Sessions.initSession(socket, SessionName, AuthorizationToken, whatsappVersion);
+			session.client = Sessions.initSession(socket, SessionName, whatsappVersion);
 			//
 			//
 		} else if (["NOTFOUND"].includes(session.state)) {
@@ -450,7 +450,7 @@ module.exports = class Sessions {
 			console.log('- State do sistema:', session.state);
 			console.log('- Status da sessão:', session.status);
 			//
-			session = await Sessions.addSesssion(socket, SessionName, AuthorizationToken, whatsappVersion);
+			session = await Sessions.addSesssion(socket, SessionName, whatsappVersion);
 			//
 		} else {
 			//
@@ -465,10 +465,9 @@ module.exports = class Sessions {
 	//
 	// ------------------------------------------------------------------------------------------------------- //
 	//
-	static async addSesssion(socket, SessionName, AuthorizationToken, whatsappVersion) {
+	static async addSesssion(socket, SessionName, whatsappVersion) {
 		console.log("- Adicionando sessão");
 		var newSession = {
-			AuthorizationToken: AuthorizationToken,
 			name: SessionName,
 			process: null,
 			qrcode: null,
@@ -491,7 +490,7 @@ module.exports = class Sessions {
 		console.log("- Nova sessão: " + SessionName);
 
 		//setup session
-		newSession.client = Sessions.initSession(socket, SessionName, AuthorizationToken, whatsappVersion);
+		newSession.client = Sessions.initSession(socket, SessionName, whatsappVersion);
 		//
 
 		return newSession;
@@ -522,11 +521,10 @@ module.exports = class Sessions {
 	//
 	// ------------------------------------------------------------------------------------------------------- //
 	//
-	static async initSession(socket, SessionName, AuthorizationToken, whatsappVersion) {
+	static async initSession(socket, SessionName, whatsappVersion) {
 		console.log("- Iniciando sessão");
 		var session = Sessions.getSession(SessionName);
 		session.browserSessionToken = null;
-		session.AuthorizationToken = AuthorizationToken;
 		session.state = 'STARTING';
 		session.status = 'qrRead';
 		//
