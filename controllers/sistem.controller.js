@@ -109,7 +109,7 @@ async function converAudioToOgg(filePath) {
 			//
 			//const { stdout, stderr } = await exec(`ffmpeg -y -i ${filePath} -c:a libvorbis -q:a 4 ${outputfilename}`);
 			//const { stdout, stderr } = await exec(`ffmpeg -y -i ${filePath} -c:v libtheora -q:v 10 -c:a libvorbis ${outputfilename}`);
-			const { stdout, stderr } = await exec(`ffmpeg -y -i ${filePath} -c:a libopus -b:a 128k ${outputfilename}`);
+			const { stdout, stderr } = await exec(`ffmpeg -y -i ${filePath} -c:a libopus -b 19.1k -ac 1 -r 16k ${outputfilename}`);
 			return outputfilename;
 			//
 		} catch (err) {
