@@ -28,6 +28,8 @@ async function saudacao() {
 	return saudacao;
 }
 //
+// ------------------------------------------------------------------------------------------------------- //
+//
 module.exports = class Events {
 
 	static async receiveMessage(session, client, socket) {
@@ -476,6 +478,21 @@ module.exports = class Events {
 
 	static statusConnection(session, client, socket) {
 		try {
+			// function to detect conflits and change status
+			// Force it to keep the current session
+			// Possible state values:
+			// CONFLICT
+			// CONNECTED
+			// DEPRECATED_VERSION
+			// OPENING
+			// PAIRING
+			// PROXYBLOCK
+			// SMB_TOS_BLOCK
+			// TIMEOUT
+			// TOS_BLOCK
+			// UNLAUNCHED
+			// UNPAIRED
+			// UNPAIRED_IDLE
 			client?.onStateChange(async (state) => {
 				console?.log('- Nome da sessão:', session.name);
 				console?.log('- State changed: ', state);
@@ -487,11 +504,31 @@ module.exports = class Events {
 					client?.startPhoneWatchdog(15000); // 15s
 					client?.stopPhoneWatchdog(15000); // 15s
 				}
-
+				//
 			});
 		} catch (error) {
 			console?.log('- Nome da sessão:', session.name);
 			console.log("- Error onStateChange:", error);
+		}
+		//
+		try {
+			// DISCONNECTED
+			// SYNCING
+			// RESUMING
+			// CONNECTED
+			let time = 0;
+			client?.onStreamChange(async (state) => {
+				console.log('- State Connection Stream: ' + state);
+				clearTimeout(time);
+				if (state === 'DISCONNECTED' || state === 'SYNCING') {
+					time = setTimeout(() => {
+						client.close();
+					}, 80000);
+				}
+			});
+		} catch (error) {
+			console?.log('- Nome da sessão:', session.name);
+			console.log("- Error onStreamChange:", error);
 		}
 	}
 
@@ -499,7 +536,7 @@ module.exports = class Events {
 		//
 		// function to detect incoming call
 		try {
-			client.onIncomingCall(async (call) => {
+			client?.onIncomingCall(async (call) => {
 				console?.log('- Nome da sessão:', session.name);
 				console?.log('- onIncomingCall: ', call?.peerJid);
 				await client?.rejectCall();
